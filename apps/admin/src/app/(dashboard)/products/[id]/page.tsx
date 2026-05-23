@@ -2,13 +2,9 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { Loader2, ArrowLeft, Trash2, Save } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import {
-  Breadcrumb, BreadcrumbItem, BreadcrumbLink,
-  BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,6 +15,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { DashboardPage } from "@/components/dashboard-page";
 import { ProductForm, type ProductFormData } from "../_components/ProductForm";
 import type { ProductImage } from "@udo-craft/shared";
 
@@ -169,71 +166,33 @@ export default function ProductDetailPage() {
   if (!product) return null;
 
   return (
-    <div className="flex flex-col flex-1 h-0 overflow-hidden">
-      {/* Header */}
-      <div className="shrink-0 px-4 md:px-6 py-3 border-b border-border bg-background">
-        <div className="flex items-center justify-between gap-4">
-          {/* Left: back + breadcrumb */}
-          <div className="flex items-center gap-3 min-w-0">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 shrink-0"
-              onClick={() => router.push("/catalog?tab=products")}
-              aria-label="Назад"
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink
-                    render={<button onClick={() => router.push("/catalog?tab=products")} />}
-                    className="text-xs"
-                  >
-                    Каталог
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage className="text-xs truncate max-w-[200px]">
-                    {product.name}
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-
-          {/* Right: actions */}
-          <div className="flex items-center gap-2 shrink-0">
-            {isDirty && (
-              <span className="text-xs text-amber-600 font-medium hidden sm:block">Незбережені зміни</span>
-            )}
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-8 text-xs text-destructive border-destructive/30 hover:bg-destructive/10 hover:text-destructive"
-              onClick={() => setShowDeleteDialog(true)}
-              disabled={deleting}
-            >
-              {deleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
-              <span className="hidden sm:inline ml-1">Видалити</span>
-            </Button>
-            <Button size="sm" className="h-8 text-xs" onClick={triggerSave} disabled={saving}>
-              {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-              <span className="ml-1">Зберегти</span>
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Title */}
-      <div className="shrink-0 px-4 md:px-6 pt-5 pb-3">
-        <h1 className="text-2xl font-bold tracking-tight">{product.name}</h1>
-      </div>
-
-      {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto px-4 md:px-6 pb-8">
+    <DashboardPage
+      eyebrow="Каталог"
+      title={product.name}
+      subtitle={isDirty ? "Незбережені зміни" : undefined}
+      contentClassName="px-4 py-6 md:px-6"
+      actions={
+        <>
+          <Button variant="outline" size="sm" onClick={() => router.push("/catalog?tab=products")}>
+            Назад
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-destructive hover:text-destructive"
+            onClick={() => setShowDeleteDialog(true)}
+            disabled={deleting}
+          >
+            {deleting && <Loader2 className="size-4 animate-spin" />}
+            Видалити
+          </Button>
+          <Button size="sm" onClick={triggerSave} disabled={saving}>
+            {saving && <Loader2 className="size-4 animate-spin" />}
+            Зберегти
+          </Button>
+        </>
+      }
+    >
         <ProductForm
           product={product}
           categories={categories}
@@ -243,9 +202,7 @@ export default function ProductDetailPage() {
           onChange={() => setIsDirty(true)}
           saving={saving}
         />
-      </div>
 
-      {/* Delete confirmation */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -265,6 +222,6 @@ export default function ProductDetailPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </DashboardPage>
   );
 }

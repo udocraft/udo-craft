@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { SearchX, Shirt } from "lucide-react";
+import { AdminTablePanel, AdminToolbar } from "@/components/admin-layout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -125,8 +126,7 @@ export function ProductsTab({ products, categories, loading, onRefresh, variantC
 
   return (
     <div className="flex flex-col">
-      {/* Filter bar */}
-      <div className="flex flex-wrap items-center gap-2 px-4 py-2 border-b border-border">
+      <AdminToolbar>
         <Input
           placeholder="Пошук..."
           value={searchInput}
@@ -151,11 +151,10 @@ export function ProductsTab({ products, categories, loading, onRefresh, variantC
             </SelectContent>
           </Select>
         </div>
-      </div>
+      </AdminToolbar>
 
-      {/* Category chips */}
       {categories.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2 px-4 py-2 border-b border-border">
+        <AdminToolbar>
           <button
             onClick={() => setCategoryFilter("")}
             className={`text-xs px-3 py-1 rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
@@ -179,10 +178,10 @@ export function ProductsTab({ products, categories, loading, onRefresh, variantC
               {c.name}
             </button>
           ))}
-        </div>
+        </AdminToolbar>
       )}
 
-      {/* Table */}
+      <AdminTablePanel className="m-4 md:m-6">
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
@@ -247,6 +246,7 @@ export function ProductsTab({ products, categories, loading, onRefresh, variantC
           )}
         </TableBody>
       </Table>
+      </AdminTablePanel>
     </div>
   );
 }

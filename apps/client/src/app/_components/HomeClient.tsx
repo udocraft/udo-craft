@@ -25,6 +25,7 @@ const BoxOfTouchSection = dynamic(() => import("@/app/_sections/BoxOfTouchSectio
 const PopupStandSection = dynamic(() => import("@/app/_sections/PopupStandSection").then(m => m.PopupStandSection), { ssr: true });
 const SubscriptionSection = dynamic(() => import("@/app/_sections/SubscriptionSection").then(m => m.SubscriptionSection), { ssr: true });
 const DesignerSection = dynamic(() => import("@/app/_sections/DesignerSection").then(m => m.DesignerSection), { ssr: true });
+const CustomizerPreviewSection = dynamic(() => import("@/app/_sections/CustomizerPreviewSection").then(m => m.CustomizerPreviewSection), { ssr: true });
 const TrustSection = dynamic(() => import("@/app/_sections/TrustSection").then(m => m.TrustSection), { ssr: true });
 const ComparisonSection = dynamic(() => import("@/app/_sections/ComparisonSection").then(m => m.ComparisonSection), { ssr: true });
 const TestimonialsSection = dynamic(() => import("@/app/_sections/TestimonialsSection").then(m => m.TestimonialsSection), { ssr: true });
@@ -110,6 +111,7 @@ export function HomeClient({
         <PopupStandSection />
         <SubscriptionSection />
         <DesignerSection />
+        <CustomizerPreviewSection />
         <TrustSection />
         <ComparisonSection />
         <TestimonialsSection />
@@ -135,4 +137,3 @@ export function HomeClient({
     </div>
   );
 }
-

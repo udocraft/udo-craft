@@ -1,23 +1,22 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { Shirt, Palette, Layers, FolderTree, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AdminTabs } from "@/components/admin-layout";
+import { DashboardPage } from "@/components/dashboard-page";
 import { useProductsData } from "../products/_components/useProductsData";
 import { ProductsTab } from "../products/_components/ProductsTab";
 import { CategoriesTab } from "../products/_components/CategoriesTab";
 import ColorsTab from "./_components/ColorsTab";
 import SizesTab from "./_components/SizesTab";
 
-import { DashboardHeader } from "@/components/dashboard-header";
-
 type CatalogTab = "products" | "categories" | "colors" | "sizes";
 
 const TABS = [
-  { key: "products", label: "Товари", icon: Shirt },
-  { key: "categories", label: "Категорії", icon: FolderTree },
-  { key: "colors", label: "Кольори", icon: Palette },
-  { key: "sizes", label: "Розміри", icon: Layers },
+  { key: "products", label: "Товари" },
+  { key: "categories", label: "Категорії" },
+  { key: "colors", label: "Кольори" },
+  { key: "sizes", label: "Розміри" },
 ] as const;
 
 export default function CatalogPage() {
@@ -37,37 +36,21 @@ export default function CatalogPage() {
   };
 
   return (
-    <div className="flex flex-1 h-0 flex-col overflow-hidden">
-      <DashboardHeader
+    <DashboardPage
         title="Каталог"
-        subtitle={
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1">
-              <Shirt className="size-3.5" /> {products.length} товарів
-            </span>
-            <span className="flex items-center gap-1 text-muted-foreground/60">
-              <FolderTree className="size-3.5" /> {categories.length} категорій
-            </span>
-          </div>
-        }
+        subtitle={`${products.length} товарів · ${categories.length} категорій`}
+        tabs={<AdminTabs tabs={TABS} value={tab} onValueChange={(next) => router.push(`/catalog?tab=${next}`)} />}
         actions={
           tab === "products" ? (
             <Button
               size="sm"
-              className="gap-1.5 shadow-sm hover:shadow-md transition-all active:scale-[0.98]"
               onClick={() => router.push("/products/new")}
             >
-              <Plus className="size-4" />
-              <span>Додати товар</span>
+              Додати товар
             </Button>
           ) : undefined
         }
-      />
-
-
-
-      <div className="flex-1 overflow-y-auto selection:bg-primary/10">
-        <div className="mx-auto max-w-full">
+      >
           {tab === "products" && (
             <ProductsTab
               products={products}
@@ -82,8 +65,6 @@ export default function CatalogPage() {
           )}
           {tab === "colors" && <ColorsTab />}
           {tab === "sizes" && <SizesTab />}
-        </div>
-      </div>
-    </div>
+    </DashboardPage>
   );
 }

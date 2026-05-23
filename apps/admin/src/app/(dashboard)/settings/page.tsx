@@ -9,10 +9,11 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
-import { Activity, Bell, Loader2, Lock, User } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { Loader2 } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SystemTab } from "./_components/SystemTab";
-import { PageHeader } from "@/components/page-header";
+import { AdminTabs } from "@/components/admin-layout";
+import { DashboardPage } from "@/components/dashboard-page";
 
 function NotifRow({ label, desc, checked, onChange, disabled }: { label: string; desc: string; checked: boolean; onChange: (v: boolean) => void; disabled?: boolean }) {
   return (
@@ -28,7 +29,15 @@ function NotifRow({ label, desc, checked, onChange, disabled }: { label: string;
 
 type Tab = "profile" | "security" | "notifications" | "system";
 
+const TABS = [
+  { key: "profile", label: "Профіль" },
+  { key: "security", label: "Безпека" },
+  { key: "notifications", label: "Сповіщення" },
+  { key: "system", label: "Система" },
+] as const;
+
 export default function SettingsPage() {
+  const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
   const searchParams = useSearchParams();
   const tab = (searchParams.get("tab") || "profile") as Tab;
@@ -96,12 +105,11 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="flex flex-1 h-0 flex-col overflow-hidden">
-      <PageHeader title="Налаштування" />
-
-
-      {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 flex justify-center">
+    <DashboardPage
+      title="Налаштування"
+      tabs={<AdminTabs tabs={TABS} value={tab} onValueChange={(next) => router.push(`/settings?tab=${next}`)} />}
+      contentClassName="flex-1 overflow-y-auto p-4 md:p-6 flex justify-center"
+    >
         <div className="w-full max-w-2xl space-y-4">
 
           {tab === "profile" && (
@@ -186,7 +194,6 @@ export default function SettingsPage() {
           {tab === "system" && <SystemTab />}
 
         </div>
-      </div>
-    </div>
+    </DashboardPage>
   );
 }

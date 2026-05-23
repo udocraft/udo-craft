@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Shirt, FolderTree, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AdminTabs } from "@/components/admin-layout";
 import { DashboardPage } from "@/components/dashboard-page";
 import { useProductsData } from "./_components/useProductsData";
 import { ProductsTab } from "./_components/ProductsTab";
@@ -13,10 +13,10 @@ import { CategoriesTab } from "./_components/CategoriesTab";
 
 type Tab = "products" | "categories";
 
-const TABS: { key: Tab; icon: React.ElementType; label: string }[] = [
-  { key: "products",   icon: Shirt,      label: "Товари" },
-  { key: "categories", icon: FolderTree, label: "Категорії" },
-];
+const TABS = [
+  { key: "products", label: "Товари" },
+  { key: "categories", label: "Категорії" },
+] as const;
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
@@ -41,33 +41,14 @@ export default function ProductsPage() {
     refreshProducts();
   };
 
-  const tabs = (
-    <nav className="flex h-full">
-      {TABS.map(({ key, icon: Icon, label }) => (
-        <button
-          key={key}
-          onClick={() => setTab(key)}
-          className={`flex items-center gap-1.5 px-3 h-full text-sm font-medium border-b-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset ${
-            tab === key
-              ? "border-primary text-foreground"
-              : "border-transparent text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <Icon className="w-3.5 h-3.5" />
-          {label}
-        </button>
-      ))}
-    </nav>
-  );
-
   return (
     <DashboardPage
       title="Товари"
-      tabs={tabs}
+      tabs={<AdminTabs tabs={TABS} value={tab} onValueChange={setTab} />}
       actions={
         tab === "products" ? (
           <Button size="sm" onClick={() => router.push("/products/new")}>
-            <Plus className="w-3.5 h-3.5 mr-1" /> Додати товар
+            Додати товар
           </Button>
         ) : undefined
       }

@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { Plus, Pencil, Trash2, GripVertical } from "lucide-react";
+import { AdminSection, AdminTablePanel } from "@/components/admin-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -107,17 +108,14 @@ export default function ColorsTab() {
     ));
 
   return (
-    <div className="p-4 md:p-6 space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-semibold">Кольори матеріалів</p>
-          <p className="text-xs text-muted-foreground mt-0.5">Словник кольорів для варіантів товарів</p>
-        </div>
-        <Button size="sm" onClick={openCreate} className="h-8 text-xs">
-          <Plus className="w-3.5 h-3.5 mr-1.5" /> Додати колір
-        </Button>
-      </div>
+    <div className="space-y-4 p-4 md:p-6">
+      <AdminSection
+        title="Кольори матеріалів"
+        description="Словник кольорів для варіантів товарів"
+        actions={<Button size="sm" onClick={openCreate}>Додати колір</Button>}
+      >
 
+      <AdminTablePanel>
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
@@ -192,6 +190,8 @@ export default function ColorsTab() {
           ))}
         </TableBody>
       </Table>
+      </AdminTablePanel>
+      </AdminSection>
 
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
         <DialogContent className="max-w-sm">

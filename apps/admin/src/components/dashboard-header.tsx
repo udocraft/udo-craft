@@ -27,9 +27,9 @@ export function DashboardHeader({
   const supportingText = subtitle ?? description;
 
   return (
-    <div
+    <header
       className={cn(
-        "z-30 flex h-16 shrink-0 items-center justify-between gap-4 border-b border-border bg-background px-4 md:px-6",
+        "z-30 flex min-h-16 shrink-0 flex-col gap-3 border-b border-border bg-background px-4 py-3 sm:flex-row sm:items-center sm:justify-between md:px-6",
         sticky && "sticky top-0",
         className
       )}
@@ -51,10 +51,10 @@ export function DashboardHeader({
         )}
       </div>
       {actions && (
-        <div className="flex shrink-0 items-center justify-end gap-2">
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:shrink-0 sm:justify-end">
           {actions}
         </div>
       )}
-    </div>
+    </header>
   );
 }

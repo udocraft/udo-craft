@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Plus, Pencil, Trash2, GripVertical, Check, X as XIcon } from "lucide-react";
 import { toast } from "sonner";
+import { AdminSection, AdminTablePanel } from "@/components/admin-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -113,18 +114,19 @@ export function CategoriesTab({ categories: propCategories, onRefresh, loading =
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
-    <div className="p-4 md:p-6 space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-semibold">Категорії</p>
-          <p className="text-xs text-muted-foreground mt-0.5">Групи товарів для навігації та фільтрації</p>
-        </div>
-        <Button size="sm" onClick={() => { setEditingCategory(undefined); setDialogOpen(true); }} className="h-8 text-xs">
-          <Plus className="w-3.5 h-3.5 mr-1.5" /> Нова категорія
-        </Button>
-      </div>
+    <div className="space-y-4 p-4 md:p-6">
+      <AdminSection
+        title="Категорії"
+        description="Групи товарів для навігації та фільтрації"
+        actions={
+          <Button size="sm" onClick={() => { setEditingCategory(undefined); setDialogOpen(true); }}>
+            Нова категорія
+          </Button>
+        }
+      >
 
       {loading ? (
+        <AdminTablePanel>
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -142,6 +144,7 @@ export function CategoriesTab({ categories: propCategories, onRefresh, loading =
             ))}
           </TableBody>
         </Table>
+        </AdminTablePanel>
       ) : categories.length === 0 ? (
         <EmptyState
           icon={Plus}
@@ -150,6 +153,7 @@ export function CategoriesTab({ categories: propCategories, onRefresh, loading =
           action={<Button size="sm" onClick={() => { setEditingCategory(undefined); setDialogOpen(true); }}><Plus className="w-3.5 h-3.5 mr-1" /> Нова категорія</Button>}
         />
       ) : (
+        <AdminTablePanel>
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -265,7 +269,9 @@ export function CategoriesTab({ categories: propCategories, onRefresh, loading =
             })}
           </TableBody>
         </Table>
+        </AdminTablePanel>
       )}
+      </AdminSection>
 
       {/* Full edit dialog (for image, sort_order etc) */}
       <CategoryDialog

@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Edit3, Loader2, Plus, Search, Settings2, Trash2 } from "lucide-react";
+import { Edit3, Loader2, Search, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
-import { DashboardHeader } from "@/components/dashboard-header";
+import { AdminTablePanel, AdminToolbar } from "@/components/admin-layout";
+import { DashboardPage } from "@/components/dashboard-page";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { ErpMaterial, ErpMaterialKind, ErpMaterialType } from "@udo-craft/shared";
 
 type MaterialWithType = ErpMaterial & { type?: ErpMaterialType | null };
@@ -167,27 +169,21 @@ export default function WarehousePage() {
   };
 
   return (
-    <div className="flex h-0 flex-1 flex-col overflow-hidden">
-      <DashboardHeader
+    <DashboardPage
         title="Склад"
         actions={
           <>
             <Button variant="outline" size="sm" onClick={() => setTypesOpen(true)}>
-              <Settings2 className="h-4 w-4" />
               Типи
             </Button>
             <Button size="sm" onClick={createNew}>
-              <Plus className="h-4 w-4" />
               Створити
             </Button>
           </>
         }
-      />
-
-      <div className="flex-1 overflow-y-auto selection:bg-primary/10">
-        <div className="mx-auto max-w-full">
+      >
           <div className="flex flex-col">
-            <div className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-2">
+            <AdminToolbar>
               <div className="relative w-full sm:w-64">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
                 <Input
@@ -212,44 +208,44 @@ export default function WarehousePage() {
                   </SelectContent>
                 </Select>
               </div>
-            </div>
+            </AdminToolbar>
 
             {loading ? (
               <div className="flex h-64 items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[1040px] text-sm">
-                  <thead className="bg-muted/50 text-xs text-muted-foreground">
-                  <tr>
-                    <th className="px-4 py-2 text-left font-medium">Номенклатура</th>
-                    <th className="px-4 py-2 text-left font-medium">Тип</th>
-                    <th className="px-4 py-2 text-right font-medium">Собівартість</th>
-                    <th className="px-4 py-2 text-right font-medium">Залишок</th>
-                    <th className="px-4 py-2 text-right font-medium">Резерв</th>
-                    <th className="px-4 py-2 text-right font-medium">Доступно</th>
-                    <th className="px-4 py-2 text-right font-medium">Мін.</th>
-                    <th className="px-4 py-2 text-left font-medium">Постачальник</th>
-                    <th className="w-24 px-2 py-2" />
-                  </tr>
-                  </thead>
-                  <tbody>
+              <AdminTablePanel className="m-4 md:m-6">
+                <Table className="min-w-[1040px]">
+                  <TableHeader>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead>Номенклатура</TableHead>
+                    <TableHead>Тип</TableHead>
+                    <TableHead className="text-right">Собівартість</TableHead>
+                    <TableHead className="text-right">Залишок</TableHead>
+                    <TableHead className="text-right">Резерв</TableHead>
+                    <TableHead className="text-right">Доступно</TableHead>
+                    <TableHead className="text-right">Мін.</TableHead>
+                    <TableHead>Постачальник</TableHead>
+                    <TableHead className="w-32 text-right">Дії</TableHead>
+                  </TableRow>
+                  </TableHeader>
+                  <TableBody>
                   {filtered.length === 0 && (
-                    <tr>
-                      <td colSpan={9} className="px-4 py-14 text-center text-sm text-muted-foreground">
+                    <TableRow>
+                      <TableCell colSpan={9} className="py-14 text-center text-sm text-muted-foreground">
                         Немає позицій. Створіть тканину, фурнітуру, нитки, матеріали друку або роботу.
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   )}
                   {filtered.map((m) => {
                     const available = Number(m.stock_quantity || 0) - Number(m.reserved_quantity || 0);
                     const isLow = Number(m.reorder_point || 0) > 0 && Number(m.stock_quantity || 0) <= Number(m.reorder_point || 0);
                     return (
-                      <tr key={m.id} className="border-t hover:bg-muted/30">
-                        <td className="px-4 py-3">
+                      <TableRow key={m.id}>
+                        <TableCell>
                           <button className="text-left font-medium hover:text-primary" onClick={() => edit(m)}>{m.name}</button>
                           <div className="text-xs text-muted-foreground">{m.sku || "Без SKU"} · {m.unit}</div>
-                        </td>
-                        <td className="px-4 py-3">
+                        </TableCell>
+                        <TableCell>
                           {m.type ? (
                             <span className="inline-flex items-center gap-2 rounded-full border px-2 py-1 text-xs">
                               <span className="h-2 w-2 rounded-full" style={{ backgroundColor: m.type.color }} />
@@ -258,33 +254,33 @@ export default function WarehousePage() {
                           ) : (
                             <span className="text-muted-foreground">—</span>
                           )}
-                        </td>
-                        <td className="px-4 py-3 text-right font-medium">{money(m.unit_cost_cents)} / {m.unit}</td>
-                        <td className="px-4 py-3 text-right">
+                        </TableCell>
+                        <TableCell className="text-right font-medium tabular-nums">{money(m.unit_cost_cents)} / {m.unit}</TableCell>
+                        <TableCell className="text-right tabular-nums">
                           <span className={isLow ? "font-semibold text-amber-700" : ""}>{Number(m.stock_quantity).toLocaleString("uk-UA")} {m.unit}</span>
-                        </td>
-                        <td className="px-4 py-3 text-right">{Number(m.reserved_quantity).toLocaleString("uk-UA")} {m.unit}</td>
-                        <td className="px-4 py-3 text-right">{available.toLocaleString("uk-UA")} {m.unit}</td>
-                        <td className="px-4 py-3 text-right text-muted-foreground">{Number(m.reorder_point).toLocaleString("uk-UA")} {m.unit}</td>
-                        <td className="px-4 py-3 text-muted-foreground">{m.supplier || "—"}</td>
-                        <td className="px-2 py-3 text-right">
-                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => edit(m)}>
-                            <Edit3 className="h-4 w-4" />
+                        </TableCell>
+                        <TableCell className="text-right tabular-nums">{Number(m.reserved_quantity).toLocaleString("uk-UA")} {m.unit}</TableCell>
+                        <TableCell className="text-right tabular-nums">{available.toLocaleString("uk-UA")} {m.unit}</TableCell>
+                        <TableCell className="text-right text-muted-foreground tabular-nums">{Number(m.reorder_point).toLocaleString("uk-UA")} {m.unit}</TableCell>
+                        <TableCell className="text-muted-foreground">{m.supplier || "—"}</TableCell>
+                        <TableCell>
+                          <div className="flex justify-end gap-1">
+                          <Button variant="ghost" size="sm" onClick={() => edit(m)}>
+                            Редагувати
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => remove(m)}>
-                            <Trash2 className="h-4 w-4" />
+                          <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => remove(m)}>
+                            Видалити
                           </Button>
-                        </td>
-                      </tr>
+                          </div>
+                        </TableCell>
+                      </TableRow>
                     );
                   })}
-                  </tbody>
-                </table>
-              </div>
+                  </TableBody>
+                </Table>
+              </AdminTablePanel>
             )}
           </div>
-        </div>
-      </div>
 
       <MaterialDialog
         open={dialogOpen}
@@ -301,7 +297,7 @@ export default function WarehousePage() {
         onOpenChange={setTypesOpen}
         onRefresh={fetchData}
       />
-    </div>
+    </DashboardPage>
   );
 }
 

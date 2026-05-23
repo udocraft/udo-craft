@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { PageHeader } from "@/components/page-header";
+import { DashboardPage } from "@/components/dashboard-page";
 import { ProductForm, type ProductFormData } from "../_components/ProductForm";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -92,14 +92,14 @@ export default function ProductNewPage() {
   }
 
   return (
-    <div className="p-4 md:p-6 space-y-6">
-      <PageHeader
+    <DashboardPage
         eyebrow="Каталог"
         title="Новий товар"
+        contentClassName="p-4 md:p-6"
         actions={
           <>
             <Button variant="outline" onClick={() => router.push("/products")}>
-              ← Назад
+              Назад
             </Button>
             <Button onClick={triggerSave} disabled={saving}>
               {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
@@ -107,8 +107,7 @@ export default function ProductNewPage() {
             </Button>
           </>
         }
-      />
-
+      >
       <ProductForm
         categories={categories}
         sizeCharts={sizeCharts}
@@ -116,6 +115,6 @@ export default function ProductNewPage() {
         onSave={handleSave}
         saving={saving}
       />
-    </div>
+    </DashboardPage>
   );
 }

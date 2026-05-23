@@ -1,14 +1,12 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { toast } from "sonner";
-import { Plus, Trash2, Loader2, Save, Pencil, Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
+import { Pencil, Eye, EyeOff } from "lucide-react";
+import { AdminCardGrid, AdminSection, AdminTablePanel } from "@/components/admin-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -43,15 +41,9 @@ export default function PrintTypesTab() {
   };
 
   return (
-    <div className="p-4 md:p-6 space-y-8">
-      {/* Print Types */}
-      <div className="space-y-4">
-        <div>
-          <p className="text-sm font-semibold">Типи друку</p>
-          <p className="text-xs text-muted-foreground mt-0.5">Керування доступними типами друку</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <div className="space-y-8 p-4 md:p-6">
+      <AdminSection title="Типи друку" description="Керування доступними типами друку">
+        <AdminCardGrid className="xl:grid-cols-2">
           {printTypes.map(type => (
             <Card key={type.id} className={!type.is_active ? "opacity-50" : ""}>
               <CardContent className="p-3">
@@ -75,16 +67,11 @@ export default function PrintTypesTab() {
               </CardContent>
             </Card>
           ))}
-        </div>
-      </div>
+        </AdminCardGrid>
+      </AdminSection>
 
-      {/* Discounts */}
-      <div className="space-y-4">
-        <div>
-          <p className="text-sm font-semibold">Таблиця знижок</p>
-          <p className="text-xs text-muted-foreground mt-0.5">Знижки за кількість замовлених одиниць</p>
-        </div>
-
+      <AdminSection title="Таблиця знижок" description="Знижки за кількість замовлених одиниць">
+        <AdminTablePanel>
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -113,7 +100,8 @@ export default function PrintTypesTab() {
             ))}
           </TableBody>
         </Table>
-      </div>
+        </AdminTablePanel>
+      </AdminSection>
 
       {/* Edit Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
