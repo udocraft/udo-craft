@@ -25,6 +25,7 @@ import type { TextComposition } from "@udo-craft/shared";
 import { useLayersBadge } from "@/hooks/useLayersBadge";
 import type { AiQuotaState } from "@/hooks/useAiQuota";
 import { PaywallModal } from "@/components/PaywallModal";
+import { AuthModal } from "@/components/AuthModal";
 import { cancelRemoveBg } from "@/lib/remove-bg-client";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -117,6 +118,7 @@ export function Customizer({
   const [shareUrl, setShareUrl] = useState(initialShare && typeof window !== "undefined" ? `${window.location.origin}/order?share=${initialShare.token}` : "");
   const [shareLoading, setShareLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [shareAuthOpen, setShareAuthOpen] = useState(false);
   const [comments, setComments] = useState<CustomizerShareComment[]>(initialShare?.comments ?? []);
   const [commentDraft, setCommentDraft] = useState("");
   const [commentLoading, setCommentLoading] = useState(false);
@@ -138,7 +140,8 @@ export function Customizer({
 
   const createOrUpdateShare = async () => {
     if (!isAuthenticated) {
-      setPaywallOpen(true);
+      setShareOpen(false);
+      setShareAuthOpen(true);
       return;
     }
     setShareLoading(true);
@@ -169,7 +172,8 @@ export function Customizer({
   const postComment = async () => {
     if (!initialShare || !commentDraft.trim()) return;
     if (!isAuthenticated) {
-      setPaywallOpen(true);
+      setShareOpen(false);
+      setShareAuthOpen(true);
       return;
     }
     setCommentLoading(true);
@@ -618,7 +622,7 @@ export function Customizer({
               </div>
               <Button type="button" className="w-full" onClick={createOrUpdateShare} disabled={shareLoading}>
                 {shareLoading ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
-                {shareUrl ? "Оновити посилання" : "Створити посилання"}
+                {!isAuthenticated ? "Увійти, щоб створити посилання" : shareUrl ? "Оновити посилання" : "Створити посилання"}
               </Button>
             </div>
           ) : null}
@@ -657,6 +661,16 @@ export function Customizer({
           )}
         </DialogContent>
       </Dialog>
+      <AuthModal
+        open={shareAuthOpen}
+        onClose={() => setShareAuthOpen(false)}
+        initialScreen="login"
+        onAuthSuccess={() => {
+          setShareAuthOpen(false);
+          setShareOpen(true);
+          onAuthSuccess?.();
+        }}
+      />
     </>,
     document.body
   );
