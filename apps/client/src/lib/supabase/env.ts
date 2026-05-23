@@ -8,3 +8,13 @@ export function getSupabasePublicEnv() {
     anonKey: anonKey ?? "",
   };
 }
+
+export function getSupabaseServiceEnv() {
+  const publicEnv = getSupabasePublicEnv();
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+
+  return {
+    url: publicEnv.url,
+    serviceRoleKey: serviceRoleKey ?? "",
+  };
+}

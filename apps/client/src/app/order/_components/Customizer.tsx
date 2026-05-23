@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import type { PrintLayer, SidebarTabId } from "@udo-craft/shared";
@@ -9,7 +9,7 @@ import { QtyPriceContent } from "./QtyPriceContent";
 import { CustomizerLayout } from "./CustomizerLayout";
 import { CustomizerCanvas } from "./CustomizerCanvas";
 import { Button } from "@/components/ui/button";
-import { Layers, LayoutList, Loader2, MirrorRound, Pencil, Ruler, Shapes, Type, Upload, X } from "lucide-react";
+import { Check, Copy, Loader2, MessageSquare, MirrorRound, Save, Share2, X } from "lucide-react";
 import { useCustomizerState } from "./useCustomizerState";
 import { GenerationDrawer } from "./GenerationDrawer";
 import EditorSidebar from "./editor/EditorSidebar";
@@ -26,6 +26,11 @@ import { useLayersBadge } from "@/hooks/useLayersBadge";
 import type { AiQuotaState } from "@/hooks/useAiQuota";
 import { PaywallModal } from "@/components/PaywallModal";
 import { cancelRemoveBg } from "@/lib/remove-bg-client";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import type { CustomizerShareComment, LoadedCustomizerShare, ShareAccess } from "../_lib/customizerShare";
+import { buildSharePayload } from "../_lib/customizerShare";
 
 interface ProductWithConfig extends Product {
   size_chart_id?: string | null;
@@ -72,6 +77,7 @@ export interface CustomizerProps {
   initialLayers?: PrintLayer[];
   autoOpenCanvas?: boolean;
   existingMockupUploadedUrl?: string;
+  initialShare?: LoadedCustomizerShare;
   cartItemId?: string;
   isAuthenticated: boolean;
   aiQuota: AiQuotaState;
@@ -90,6 +96,7 @@ export function Customizer({
   initialColor,
   initialLayers,
   existingMockupUploadedUrl,
+  initialShare,
   cartItemId,
   isAuthenticated,
   aiQuota,
@@ -99,11 +106,89 @@ export function Customizer({
     product, printZones, materials, variants, 
     onAdd: (item) => onAdd({ ...item, cartItemId }),
     initialSize, initialColor, initialLayers, existingMockupUploadedUrl,
+    initialSharePayload: initialShare?.payload,
   });
 
   const [aiDrawerOpen, setAiDrawerOpen] = useState(false);
   const [mobilePriceOpen, setMobilePriceOpen] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [shareAccess, setShareAccess] = useState<ShareAccess>(initialShare?.access ?? "view");
+  const [shareUrl, setShareUrl] = useState(initialShare && typeof window !== "undefined" ? `${window.location.origin}/order?share=${initialShare.token}` : "");
+  const [shareLoading, setShareLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [comments, setComments] = useState<CustomizerShareComment[]>(initialShare?.comments ?? []);
+  const [commentDraft, setCommentDraft] = useState("");
+  const [commentLoading, setCommentLoading] = useState(false);
+
+  const isSharedSession = Boolean(initialShare);
+  const canEditShare = !initialShare || initialShare.access === "edit";
+  const canCommentShare = initialShare?.access === "comment" || initialShare?.access === "edit";
+  const isReadOnly = isSharedSession && (!canEditShare || !isAuthenticated);
+
+  const currentPayload = useMemo(() => buildSharePayload({
+    productId: product.id,
+    selectedColor: s.selectedColor,
+    selectedSize: s.selectedSize,
+    quantity: s.quantity,
+    itemNote: s.itemNote,
+    activeSide: s.activeSide,
+    layers: s.layers,
+  }), [product.id, s.selectedColor, s.selectedSize, s.quantity, s.itemNote, s.activeSide, s.layers]);
+
+  const createOrUpdateShare = async () => {
+    if (!isAuthenticated) {
+      setPaywallOpen(true);
+      return;
+    }
+    setShareLoading(true);
+    try {
+      const endpoint = initialShare ? `/api/customizer-shares/${initialShare.token}` : "/api/customizer-shares";
+      const res = await fetch(endpoint, {
+        method: initialShare ? "PATCH" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId: product.id, access: shareAccess, payload: currentPayload }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Не вдалося створити посилання");
+      setShareUrl(data.url ?? `${window.location.origin}/order?share=${data.token}`);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Не вдалося створити посилання");
+    } finally {
+      setShareLoading(false);
+    }
+  };
+
+  const copyShareUrl = async () => {
+    if (!shareUrl) return;
+    await navigator.clipboard.writeText(shareUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
+  const postComment = async () => {
+    if (!initialShare || !commentDraft.trim()) return;
+    if (!isAuthenticated) {
+      setPaywallOpen(true);
+      return;
+    }
+    setCommentLoading(true);
+    try {
+      const res = await fetch(`/api/customizer-shares/${initialShare.token}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ body: commentDraft }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Не вдалося додати коментар");
+      setComments((prev) => [...prev, data]);
+      setCommentDraft("");
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Не вдалося додати коментар");
+    } finally {
+      setCommentLoading(false);
+    }
+  };
 
   // Tab title badge — shows layer count
   useLayersBadge(s.layers.length, `${product.name} — U:DO CRAFT`);
@@ -122,8 +207,8 @@ export function Customizer({
     onClose();
   };
 
-  const addLayer = (file: File) => s.addLayer(file);
-  const addTextLayer = () => s.addTextLayer();
+  const addLayer = (file: File) => { if (!isReadOnly) s.addLayer(file); };
+  const addTextLayer = () => { if (!isReadOnly) s.addTextLayer(); };
 
   const handleAddComposition = (composition: TextComposition) => {
     const now = Date.now();
@@ -183,6 +268,20 @@ export function Customizer({
 
   const panelContent = (tab: SidebarTabId | null) => {
     if (!tab) return null;
+    if (isReadOnly) {
+      return (
+        <div className="p-4 space-y-3">
+          <p className="text-sm font-medium">Перегляд макета</p>
+          <p className="text-xs text-muted-foreground">
+            {canEditShare && !isAuthenticated
+              ? "Увійдіть в акаунт, щоб редагувати цей макет."
+              : `Це посилання дозволяє перегляд${canCommentShare ? " і коментування" : ""}. Редагування вимкнено власником.`}
+          </p>
+          {canEditShare && !isAuthenticated && <Button type="button" variant="outline" size="sm" onClick={() => setPaywallOpen(true)}>Увійти для редагування</Button>}
+          {canCommentShare && <Button type="button" variant="outline" size="sm" onClick={() => setShareOpen(true)}><MessageSquare className="size-4" /> Коментарі</Button>}
+        </div>
+      );
+    }
     if (tab === "prints") return <PrintsPanel activeSide={s.activeSide} printPricing={s.printPricing} onAddLayer={addLayer} isAuthenticated={isAuthenticated} aiQuota={aiQuota} onPaywall={() => setPaywallOpen(true)} />;
     if (tab === "shapes") return <ShapesPanel onAddLayer={addLayer} />;
     if (tab === "draw") return (
@@ -292,7 +391,7 @@ export function Customizer({
               const isSelected = s.selectedVariant?.id === v.id;
               const isWhite = mat.hex_code.toLowerCase() === "#ffffff" || mat.hex_code.toLowerCase() === "#f5f5f5";
               return (
-                <button key={v.id} onClick={() => { s.setSelectedColor(mat.name); s.setSelectedVariant(v); }}
+                <button key={v.id} onClick={() => { if (!isReadOnly) { s.setSelectedColor(mat.name); s.setSelectedVariant(v); } }}
                   title={mat.name} aria-label={mat.name} aria-pressed={isSelected}
                   className={`relative size-7 rounded-full transition-all flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${isSelected ? "ring-2 ring-primary ring-offset-2 scale-110" : "hover:scale-105"} ${isWhite ? "border border-border" : ""}`}
                   style={{ backgroundColor: mat.hex_code }}>
@@ -310,7 +409,7 @@ export function Customizer({
           <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Розмір</p>
           <div className="flex gap-1.5 flex-wrap">
             {(product.available_sizes as string[]).map((size) => (
-              <button key={size} onClick={() => s.setSelectedSize(size)} aria-pressed={s.selectedSize === size}
+              <button key={size} onClick={() => { if (!isReadOnly) s.setSelectedSize(size); }} aria-pressed={s.selectedSize === size}
                 className={`min-w-[36px] h-9 px-2 rounded-lg text-sm font-semibold border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${s.selectedSize === size ? "bg-foreground text-background border-foreground shadow-sm" : "border-border hover:border-foreground/40 hover:bg-muted/50"}`}>
                 {size}
               </button>
@@ -338,7 +437,7 @@ export function Customizer({
       showTitle={false}
       addDisabled={!!s.addDisabledReason || s.removingBg}
       addDisabledReason={s.addDisabledReason || (s.removingBg ? "Видаляємо фон..." : null)}
-      disabled={s.removingBg}
+      disabled={s.removingBg || isReadOnly}
       hideButton
     />
     </>
@@ -366,7 +465,7 @@ export function Customizer({
       {(s.addDisabledReason && !s.addingToCart && !s.removingBg) && (
         <p className="text-xs text-destructive text-center">{s.addDisabledReason}</p>
       )}
-      <Button
+      {!isReadOnly && <Button
         className="w-full h-11 text-sm font-semibold"
         disabled={s.addingToCart || s.removingBg || !!s.addDisabledReason}
         onClick={() => void s.handleAddToCart()}
@@ -374,6 +473,14 @@ export function Customizer({
         {(s.addingToCart || s.removingBg)
           ? <><Loader2 className="size-3.5 animate-spin mr-1.5" />{s.removingBg ? "Видаляємо фон..." : "Додаємо..."}</>
           : "Додати до замовлення"}
+      </Button>}
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full h-11 text-sm font-semibold"
+        onClick={() => setShareOpen(true)}
+      >
+        <Share2 className="size-4" /> {isSharedSession ? "Доступ і коментарі" : "Поділитися макетом"}
       </Button>
     </div>
   );
@@ -418,6 +525,7 @@ export function Customizer({
       onRedo={s.handleRedo}
       canUndo={s.canUndo}
       canRedo={s.canRedo}
+      readOnly={isReadOnly}
     />
   );
 
@@ -486,6 +594,69 @@ export function Customizer({
 
       {/* PaywallModal — shown when unauthenticated user clicks an AI feature */}
       <PaywallModal open={paywallOpen} onClose={() => setPaywallOpen(false)} onAuthSuccess={onAuthSuccess} />
+      <Dialog open={shareOpen} onOpenChange={setShareOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Спільний доступ</DialogTitle>
+            <DialogDescription>
+              Перегляд доступний за посиланням. Коментарі та редагування потребують входу в акаунт.
+            </DialogDescription>
+          </DialogHeader>
+          {!isSharedSession || canEditShare ? (
+            <div className="space-y-3">
+              <div className="grid grid-cols-3 gap-1 rounded-lg bg-muted p-1">
+                {(["view", "comment", "edit"] as ShareAccess[]).map((access) => (
+                  <button
+                    key={access}
+                    type="button"
+                    onClick={() => setShareAccess(access)}
+                    className={`h-9 rounded-md text-xs font-medium transition-colors ${shareAccess === access ? "bg-background shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                  >
+                    {access === "view" ? "Перегляд" : access === "comment" ? "Коментарі" : "Редагування"}
+                  </button>
+                ))}
+              </div>
+              <Button type="button" className="w-full" onClick={createOrUpdateShare} disabled={shareLoading}>
+                {shareLoading ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
+                {shareUrl ? "Оновити посилання" : "Створити посилання"}
+              </Button>
+            </div>
+          ) : null}
+          {shareUrl && (
+            <div className="flex gap-2">
+              <Input value={shareUrl} readOnly className="text-xs" />
+              <Button type="button" variant="outline" size="icon" onClick={copyShareUrl} aria-label="Скопіювати посилання">
+                {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
+              </Button>
+            </div>
+          )}
+          {isSharedSession && (
+            <div className="space-y-3 border-t pt-3">
+              <p className="text-sm font-medium">Коментарі</p>
+              <div className="max-h-44 space-y-2 overflow-y-auto">
+                {comments.length === 0 ? (
+                  <p className="text-xs text-muted-foreground">Коментарів ще немає.</p>
+                ) : comments.map((comment) => (
+                  <div key={comment.id} className="rounded-lg border bg-muted/30 p-2">
+                    <p className="text-xs font-medium">{comment.author_email ?? "Користувач"}</p>
+                    <p className="text-sm">{comment.body}</p>
+                  </div>
+                ))}
+              </div>
+              {canCommentShare ? (
+                <div className="space-y-2">
+                  <Textarea value={commentDraft} onChange={(event) => setCommentDraft(event.target.value)} placeholder="Додати коментар" />
+                  <Button type="button" size="sm" onClick={postComment} disabled={commentLoading || !commentDraft.trim()}>
+                    {commentLoading ? <Loader2 className="size-4 animate-spin" /> : <MessageSquare className="size-4" />} Надіслати
+                  </Button>
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground">Коментарі вимкнено для цього посилання.</p>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </>,
     document.body
   );

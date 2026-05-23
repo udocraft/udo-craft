@@ -18,6 +18,7 @@ import { useCipherText } from "./_components/useCipherText";
 import { LogoLoader } from "@udo-craft/ui";
 import { createClient } from "@/lib/supabase/client";
 import { useAiQuota } from "@/hooks/useAiQuota";
+import type { LoadedCustomizerShare } from "./_lib/customizerShare";
 
 // ── Types ─────────────────────────────────────────────────────────────────
 
@@ -75,6 +76,7 @@ export function OrderPageInner({
   const [editingCartIndex, setEditingCartIndex] = useState<number | null>(null);
   const [customizerInitialSize, setCustomizerInitialSize] = useState<string | null>(null);
   const [customizerInitialColor, setCustomizerInitialColor] = useState<string | null>(null);
+  const [activeShare, setActiveShare] = useState<LoadedCustomizerShare | null>(null);
   const [contact, setContact] = useState<ContactData>({ name: "", email: "", phone: "", company: "", edrpou: "", socialNetwork: "telegram", socialHandle: "", delivery: "nova_poshta", novaPoshtaDetails: "", deadline: "", comment: "" });
   const [extraFiles, setExtraFiles] = useState<File[]>([]);
   const [successEmail, setSuccessEmail] = useState<string | null>(null);
@@ -137,6 +139,27 @@ export function OrderPageInner({
   // Handle URL query params (product pre-selection, edit mode)
   useEffect(() => {
     if (loading || products.length === 0) return;
+    const shareToken = searchParams.get("share");
+    if (shareToken) {
+      fetch(`/api/customizer-shares/${encodeURIComponent(shareToken)}`)
+        .then(async (r) => {
+          if (!r.ok) throw new Error((await r.json()).error ?? "Не вдалося відкрити посилання");
+          return r.json() as Promise<LoadedCustomizerShare>;
+        })
+        .then((share) => {
+          const p = products.find((x) => x.id === share.productId);
+          if (!p) {
+            toast.error("Товар із посилання більше недоступний");
+            return;
+          }
+          setActiveShare(share);
+          setCustomizerInitialSize(share.payload.selectedSize);
+          setCustomizerInitialColor(share.payload.selectedColor);
+          setCustomizing(p);
+        })
+        .catch((err) => toast.error(err instanceof Error ? err.message : "Не вдалося відкрити посилання"));
+      return;
+    }
     const pid = searchParams.get("product");
     const editIdx = searchParams.get("edit");
 
@@ -213,11 +236,12 @@ export function OrderPageInner({
           materials={materials}
           variants={variants.filter((v) => v.product_id === customizing.id)}
           onAdd={handleAddItem}
-          onClose={() => { setCustomizing(null); setEditingCartIndex(null); setCustomizerInitialSize(null); setCustomizerInitialColor(null); }}
+          onClose={() => { setCustomizing(null); setEditingCartIndex(null); setCustomizerInitialSize(null); setCustomizerInitialColor(null); setActiveShare(null); }}
           initialSize={editingCartIndex !== null ? cart[editingCartIndex]?.size : (customizerInitialSize ?? searchParams.get("size") ?? undefined)}
           initialColor={editingCartIndex !== null ? cart[editingCartIndex]?.color : (customizerInitialColor ?? searchParams.get("color") ?? undefined)}
           initialLayers={editingCartIndex !== null ? cart[editingCartIndex]?.layers : undefined}
           existingMockupUploadedUrl={editingCartIndex !== null ? cart[editingCartIndex]?.mockupUploadedUrl : undefined}
+          initialShare={activeShare ?? undefined}
           isAuthenticated={isAuthenticated}
           aiQuota={aiQuota}
           onAuthSuccess={() => setIsAuthenticated(true)}

@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import { useLayerHandlers } from "./useLayerHandlers";
 import type { CartItem } from "./Customizer";
 import { useCustomizerDraft } from "./useCustomizerDraft";
+import type { CustomizerSharePayload } from "../_lib/customizerShare";
+import { hydrateSharePayload } from "../_lib/customizerShare";
 
 interface ProductWithConfig extends Product {
   size_chart_id?: string | null;
@@ -24,6 +26,7 @@ interface UseCustomizerStateProps {
   initialColor?: string;
   initialLayers?: PrintLayer[];
   existingMockupUploadedUrl?: string;
+  initialSharePayload?: CustomizerSharePayload;
 }
 
 export function useCustomizerState({
@@ -36,6 +39,7 @@ export function useCustomizerState({
   initialColor,
   initialLayers,
   existingMockupUploadedUrl,
+  initialSharePayload,
 }: UseCustomizerStateProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasSaveRef = useRef<(() => string) | null>(null);
@@ -75,26 +79,28 @@ export function useCustomizerState({
   // ── Draft persistence ─────────────────────────────────────────────────
   const { loadDraft, saveDraft, clearDraft } = useCustomizerDraft(product.id);
   const draft = useRef(loadDraft()).current; // load once synchronously before state init
+  const sharedDraft = useRef(initialSharePayload ? hydrateSharePayload(initialSharePayload) : null).current;
 
-  const [selectedSize, setSelectedSize] = useState(initialSize ?? draft?.selectedSize ?? "");
-  const [selectedColor, setSelectedColor] = useState(initialColor ?? draft?.selectedColor ?? defaultColor);
+  const [selectedSize, setSelectedSize] = useState(initialSize ?? sharedDraft?.selectedSize ?? draft?.selectedSize ?? "");
+  const [selectedColor, setSelectedColor] = useState(initialColor ?? sharedDraft?.selectedColor ?? draft?.selectedColor ?? defaultColor);
   const initialVariant = (() => {
-    const colorToMatch = initialColor ?? draft?.selectedColor;
+    const colorToMatch = initialColor ?? sharedDraft?.selectedColor ?? draft?.selectedColor;
     return colorToMatch
       ? (variants.find((v) => materials.find((m) => m.id === v.material_id)?.name === colorToMatch) ?? variants[0] ?? null)
       : (variants[0] ?? null);
   })();
   const [selectedVariant, setSelectedVariant] = useState(initialVariant);
-  const [quantity, setQuantity] = useState(draft?.quantity ?? 1);
-  const [qtyStr, setQtyStr] = useState(String(draft?.quantity ?? 1));
+  const [quantity, setQuantity] = useState(sharedDraft?.quantity ?? draft?.quantity ?? 1);
+  const [qtyStr, setQtyStr] = useState(String(sharedDraft?.quantity ?? draft?.quantity ?? 1));
   const [activeSide, setActiveSide] = useState<string>(() => {
+    if (sharedDraft?.activeSide) return sharedDraft.activeSide;
     if (draft?.activeSide) return draft.activeSide;
     const imgs = (variants[0]?.images && Object.keys(variants[0].images).length > 0
       ? variants[0].images : product.images) as Record<string, string> ?? {};
     return (Object.keys(imgs)[0] ?? "front") as string;
   });
   const [offsetTopMm, setOffsetTopMm] = useState(0);
-  const [itemNote, setItemNote] = useState(draft?.itemNote ?? "");
+  const [itemNote, setItemNote] = useState(sharedDraft?.itemNote ?? draft?.itemNote ?? "");
   const [printPricing, setPrintPricing] = useState<PrintTypePricingRow[]>([]);
   const [layerScales, setLayerScales] = useState<Record<string, number>>({});
   const [removingBg, setRemovingBg] = useState(false);
@@ -113,6 +119,8 @@ export function useCustomizerState({
     if (initialLayers && initialLayers.length > 0) {
       // Edit mode — cart item takes priority over any saved draft
       setLayersWithRef(initialLayers);
+    } else if (sharedDraft?.layers && sharedDraft.layers.length > 0) {
+      setLayersWithRef(sharedDraft.layers);
     } else if (draft?.layers && draft.layers.length > 0) {
       // Restore draft layers (only uploaded images + text layers survive reload)
       setLayersWithRef(draft.layers);

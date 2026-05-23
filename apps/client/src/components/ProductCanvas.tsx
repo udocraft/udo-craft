@@ -51,6 +51,7 @@ interface ProductCanvasProps {
   onRedo?: () => void;
   canUndo?: boolean;
   canRedo?: boolean;
+  readOnly?: boolean;
 }
 
 const CANVAS_SIZE = 520;
@@ -81,6 +82,7 @@ export default function ProductCanvas({
   onRedo,
   canUndo,
   canRedo,
+  readOnly = false,
 }: ProductCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -160,7 +162,7 @@ export default function ProductCanvas({
       width: CANVAS_SIZE,
       height: CANVAS_SIZE,
       preserveObjectStacking: true,
-      selection: false,
+      selection: !readOnly,
     });
     // Fabric.js does not read CSS variables natively — read at runtime
     const primary = typeof document !== "undefined" ? getComputedStyle(document.documentElement).getPropertyValue("--color-primary").trim() || "#1B3BFF" : "#1B3BFF";
@@ -179,9 +181,9 @@ export default function ProductCanvas({
       snapAngle: 0,
     });
     fabric.Object.prototype.setControlsVisibility({ ml: false, mr: false, mt: false, mb: false });
-    canvas.on("selection:created", (e) => onLayerSelectRef.current?.((e as any).selected?.[0]?._layerId ?? null));
-    canvas.on("selection:updated", (e) => onLayerSelectRef.current?.((e as any).selected?.[0]?._layerId ?? null));
-    canvas.on("selection:cleared", () => { onLayerSelectRef.current?.(null); setIsCentered(false); });
+    canvas.on("selection:created", (e) => { if (!readOnly) onLayerSelectRef.current?.((e as any).selected?.[0]?._layerId ?? null); });
+    canvas.on("selection:updated", (e) => { if (!readOnly) onLayerSelectRef.current?.((e as any).selected?.[0]?._layerId ?? null); });
+    canvas.on("selection:cleared", () => { if (!readOnly) onLayerSelectRef.current?.(null); setIsCentered(false); });
     const saveTransform = (e: any) => {
       const obj = e.target;
       if (!obj || !(obj as any)._isLayer) return;
@@ -425,8 +427,10 @@ export default function ProductCanvas({
         scaleY: saved.scaleY,
         angle: saved.angle,
         flipX: saved.flipX,
-        hasControls: true,
-        hasBorders: true,
+          hasControls: !readOnly,
+          hasBorders: !readOnly,
+          selectable: !readOnly,
+          evented: !readOnly,
         lockUniScaling: true,
       });
     } else {
@@ -445,7 +449,7 @@ export default function ProductCanvas({
     (img as any)._layerUrl = layer.url;
     syncLayerSizing(img, layer);
     canvas.add(img);
-    canvas.setActiveObject(img);
+        if (!readOnly) canvas.setActiveObject(img);
     if (overlayRef.current) canvas.bringToFront(overlayRef.current);
     try { canvas.renderAll(); } catch {}
     setHasObjects(true);
@@ -485,14 +489,16 @@ export default function ProductCanvas({
         path,
         pathStartOffset: 0,
         pathSide: "left",
-        hasControls: true,
-        hasBorders: true,
+        hasControls: !readOnly,
+        hasBorders: !readOnly,
+        selectable: !readOnly,
+        evented: !readOnly,
         left: baseLeft,
         top: baseTop,
         scaleX,
         scaleY,
         angle,
-        editable: true,
+        editable: !readOnly,
       } as any);
     }
 
@@ -501,15 +507,17 @@ export default function ProductCanvas({
       fontSize,
       fill,
       textAlign: align,
-      hasControls: true,
-      hasBorders: true,
+      hasControls: !readOnly,
+      hasBorders: !readOnly,
+      selectable: !readOnly,
+      evented: !readOnly,
       left: baseLeft,
       top: baseTop,
       scaleX,
       scaleY,
       angle,
       width: 400,
-      editable: true,
+      editable: !readOnly,
     });
   };
 
@@ -523,7 +531,7 @@ export default function ProductCanvas({
       (text as any)._textCurve = layer.textCurve ?? 0;
       syncLayerSizing(text, layer);
       canvas.add(text);
-      canvas.setActiveObject(text);
+      if (!readOnly) canvas.setActiveObject(text);
       if (overlayRef.current) canvas.bringToFront(overlayRef.current);
       try { canvas.renderAll(); } catch {}
       setHasObjects(true);
@@ -634,8 +642,10 @@ export default function ProductCanvas({
             scaleY: saved.scaleY,
             angle: saved.angle,
             flipX: saved.flipX,
-            hasControls: true,
-            hasBorders: true,
+            hasControls: !readOnly,
+            hasBorders: !readOnly,
+            selectable: !readOnly,
+            evented: !readOnly,
             lockUniScaling: true,
           });
           (img as any)._isLayer = true;
@@ -644,7 +654,7 @@ export default function ProductCanvas({
           if (!fabricRef.current) return;
           syncLayerSizing(img, layer);
           canvas.add(img);
-          canvas.setActiveObject(img);
+    if (!readOnly) canvas.setActiveObject(img);
           if (overlayRef.current) canvas.bringToFront(overlayRef.current);
           canvas.renderAll();
         }, options as any);
@@ -773,6 +783,7 @@ export default function ProductCanvas({
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (readOnly) return;
       // Never intercept when user is typing in an input, textarea, or contenteditable
       const tag = (document.activeElement as HTMLElement)?.tagName?.toLowerCase();
       const isEditable = tag === "input" || tag === "textarea" || (document.activeElement as HTMLElement)?.isContentEditable;
@@ -871,12 +882,12 @@ export default function ProductCanvas({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [readOnly]);
 
   return (
     <div className="flex flex-col items-center gap-3 w-full">
       {/* ── Dynamic contextual toolbar — only shown when a layer is selected ── */}
-      {activeLayerId && (() => {
+      {!readOnly && activeLayerId && (() => {
         const activeLayer = layers.find(l => l.id === activeLayerId) ?? null;
         if (!activeLayer) return null;
 

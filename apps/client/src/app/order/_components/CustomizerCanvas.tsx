@@ -39,6 +39,7 @@ interface CustomizerCanvasProps {
   onRedo?: () => void;
   canUndo?: boolean;
   canRedo?: boolean;
+  readOnly?: boolean;
 }
 
 export function CustomizerCanvas({
@@ -46,7 +47,7 @@ export function CustomizerCanvas({
   selectedVariantImages, canvasSaveRef, captureRef, fabricCanvasRef,
   onSideChange, onSave, onOffsetChange, onLayerSelect,
   onRemoveBg, onRemoveBgStateChange, onLayerDelete, onLayerDuplicate, onLayerTransformChange,
-  onTextChange, onLayerPatch, onAIGenerate, onOpenDrawingStudio, onUndo, onRedo, canUndo, canRedo,
+  onTextChange, onLayerPatch, onAIGenerate, onOpenDrawingStudio, onUndo, onRedo, canUndo, canRedo, readOnly,
 }: CustomizerCanvasProps) {
   return (
     <ProductCanvas
@@ -76,6 +77,7 @@ export function CustomizerCanvas({
       onRedo={onRedo}
       canUndo={canUndo}
       canRedo={canRedo}
+      readOnly={readOnly}
     />
   );
 }
