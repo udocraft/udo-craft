@@ -9,7 +9,7 @@ import { QtyPriceContent } from "./QtyPriceContent";
 import { CustomizerLayout } from "./CustomizerLayout";
 import { CustomizerCanvas } from "./CustomizerCanvas";
 import { Button } from "@/components/ui/button";
-import { Check, Copy, Loader2, MessageSquare, MirrorRound, Save, Share2, X } from "lucide-react";
+import { Check, Copy, Eye, Link2, Loader2, MessageSquare, MirrorRound, PencilLine, Save, Share2, ShieldCheck, X } from "lucide-react";
 import { useCustomizerState } from "./useCustomizerState";
 import { GenerationDrawer } from "./GenerationDrawer";
 import EditorSidebar from "./editor/EditorSidebar";
@@ -127,6 +127,39 @@ export function Customizer({
   const canEditShare = !initialShare || initialShare.access === "edit";
   const canCommentShare = initialShare?.access === "comment" || initialShare?.access === "edit";
   const isReadOnly = isSharedSession && (!canEditShare || !isAuthenticated);
+  const shareAccessOptions: Array<{
+    value: ShareAccess;
+    title: string;
+    caption: string;
+    detail: string;
+    Icon: React.ElementType;
+    requiresAccount?: boolean;
+  }> = [
+    {
+      value: "view",
+      title: "Перегляд",
+      caption: "Для швидкого погодження",
+      detail: "Будь-хто з посиланням бачить макет, товар, колір, розмір і тираж. Змінювати або коментувати не може.",
+      Icon: Eye,
+    },
+    {
+      value: "comment",
+      title: "Коментарі",
+      caption: "Для правок від клієнта",
+      detail: "Посилання відкриває перегляд, а коментарі можуть залишати тільки користувачі після входу в акаунт.",
+      Icon: MessageSquare,
+      requiresAccount: true,
+    },
+    {
+      value: "edit",
+      title: "Редагування",
+      caption: "Для спільної роботи над макетом",
+      detail: "Користувачі після входу можуть змінювати шари, текст, розміщення, колір, розмір і зберігати оновлення в цьому посиланні.",
+      Icon: PencilLine,
+      requiresAccount: true,
+    },
+  ];
+  const selectedShareAccess = shareAccessOptions.find((option) => option.value === shareAccess) ?? shareAccessOptions[0];
 
   const currentPayload = useMemo(() => buildSharePayload({
     productId: product.id,
@@ -599,39 +632,91 @@ export function Customizer({
       {/* PaywallModal — shown when unauthenticated user clicks an AI feature */}
       <PaywallModal open={paywallOpen} onClose={() => setPaywallOpen(false)} onAuthSuccess={onAuthSuccess} />
       <Dialog open={shareOpen} onOpenChange={setShareOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Спільний доступ</DialogTitle>
-            <DialogDescription>
-              Перегляд доступний за посиланням. Коментарі та редагування потребують входу в акаунт.
-            </DialogDescription>
+        <DialogContent className="sm:max-w-lg gap-5">
+          <DialogHeader className="pr-8">
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <Share2 className="size-4" />
+              </div>
+              <div className="min-w-0">
+                <DialogTitle>Спільний доступ до макета</DialogTitle>
+                <DialogDescription className="mt-1">
+                  Створіть посилання для погодження, коментарів або спільного редагування. Доступ можна оновити пізніше.
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
           {!isSharedSession || canEditShare ? (
-            <div className="space-y-3">
-              <div className="grid grid-cols-3 gap-1 rounded-lg bg-muted p-1">
-                {(["view", "comment", "edit"] as ShareAccess[]).map((access) => (
+            <div className="space-y-4">
+              <div className="grid gap-2">
+                {shareAccessOptions.map(({ value, title, caption, detail, Icon, requiresAccount }) => {
+                  const active = shareAccess === value;
+                  return (
                   <button
-                    key={access}
+                    key={value}
                     type="button"
-                    onClick={() => setShareAccess(access)}
-                    className={`h-9 rounded-md text-xs font-medium transition-colors ${shareAccess === access ? "bg-background shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                    onClick={() => setShareAccess(value)}
+                    aria-pressed={active}
+                    className={`w-full rounded-xl border p-3 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${active ? "border-primary bg-primary/5 shadow-sm" : "border-border bg-background hover:border-foreground/20 hover:bg-muted/40"}`}
                   >
-                    {access === "view" ? "Перегляд" : access === "comment" ? "Коментарі" : "Редагування"}
+                    <span className="flex items-start gap-3">
+                      <span className={`flex size-9 shrink-0 items-center justify-center rounded-full ${active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
+                        <Icon className="size-4" />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="flex flex-wrap items-center gap-2">
+                          <span className="text-sm font-semibold text-foreground">{title}</span>
+                          {requiresAccount && (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                              <ShieldCheck className="size-3" />
+                              акаунт
+                            </span>
+                          )}
+                        </span>
+                        <span className="mt-0.5 block text-xs font-medium text-muted-foreground">{caption}</span>
+                        <span className="mt-1.5 block text-xs leading-relaxed text-muted-foreground">{detail}</span>
+                      </span>
+                      {active && <Check className="mt-1 size-4 shrink-0 text-primary" />}
+                    </span>
                   </button>
-                ))}
+                  );
+                })}
               </div>
-              <Button type="button" className="w-full" onClick={createOrUpdateShare} disabled={shareLoading}>
-                {shareLoading ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
-                {!isAuthenticated ? "Увійти, щоб створити посилання" : shareUrl ? "Оновити посилання" : "Створити посилання"}
+              {!isAuthenticated && (
+                <div className="rounded-xl border border-primary/20 bg-primary/5 p-3 text-xs leading-relaxed text-muted-foreground">
+                  Щоб створити посилання або зберегти зміни доступу, потрібно увійти. Перегляд готового посилання залишиться відкритим для отримувача.
+                </div>
+              )}
+              <div className="rounded-xl border bg-muted/30 p-3">
+                <div className="flex items-start gap-3">
+                  <selectedShareAccess.Icon className="mt-0.5 size-4 shrink-0 text-primary" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium">Обрано: {selectedShareAccess.title}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{selectedShareAccess.detail}</p>
+                  </div>
+                </div>
+              </div>
+              <Button type="button" className="h-10 w-full text-sm font-semibold" onClick={createOrUpdateShare} disabled={shareLoading}>
+                {shareLoading ? <Loader2 className="size-4 animate-spin" /> : !isAuthenticated ? <ShieldCheck className="size-4" /> : shareUrl ? <Save className="size-4" /> : <Link2 className="size-4" />}
+                {!isAuthenticated ? "Увійти, щоб створити посилання" : shareUrl ? "Оновити доступ і макет" : "Створити посилання"}
               </Button>
             </div>
           ) : null}
           {shareUrl && (
-            <div className="flex gap-2">
-              <Input value={shareUrl} readOnly className="text-xs" />
-              <Button type="button" variant="outline" size="icon" onClick={copyShareUrl} aria-label="Скопіювати посилання">
-                {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
-              </Button>
+            <div className="space-y-2 rounded-xl border bg-background p-3">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-sm font-medium">Посилання готове</p>
+                <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">активне</span>
+              </div>
+              <div className="flex gap-2">
+                <Input value={shareUrl} readOnly className="h-9 text-xs" />
+                <Button type="button" variant="outline" size="icon" onClick={copyShareUrl} aria-label="Скопіювати посилання">
+                  {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Надішліть це посилання клієнту або менеджеру. Поточний доступ: {selectedShareAccess.title.toLowerCase()}.
+              </p>
             </div>
           )}
           {isSharedSession && (
