@@ -12,6 +12,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     name: user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Admin",
     email: user?.email || "",
     avatar: user?.user_metadata?.avatar_url || "",
+    role: user?.user_metadata?.role || "viewer",
   };
 
   return (

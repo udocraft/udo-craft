@@ -33,7 +33,7 @@ import { Badge } from "@/components/ui/badge";
 
 export function CheckoutForm({
   contact, setContact, orderTags, setOrderTags,
-  extraFiles, setExtraFiles, cart: _cart, totalCents: _totalCents,
+  extraFiles, setExtraFiles,
   onReview, onBack,
 }: CheckoutFormProps) {
   const [showExtraDetails, setShowExtraDetails] = useState(false);
@@ -272,9 +272,9 @@ export function CheckoutForm({
             )}
           </div>
 
-          <div className="flex gap-4 pt-4">
-            <Button variant="outline" size="lg" className="flex-1 font-bold uppercase tracking-widest text-xs" onClick={onBack}>Назад</Button>
-            <Button size="lg" className="flex-1 font-bold uppercase tracking-widest text-xs shadow-lg shadow-primary/20" onClick={handleNext} disabled={!canProceed}>
+          <div className="sticky bottom-4 z-20 -mx-2 mt-4 flex gap-3 rounded-2xl border border-border/60 bg-background/85 p-3 shadow-xl backdrop-blur-xl">
+            <Button variant="outline" size="lg" className="flex-1 rounded-full font-semibold" onClick={onBack}>Назад</Button>
+            <Button size="lg" className="flex-1 rounded-full font-semibold shadow-lg shadow-primary/20" onClick={handleNext} disabled={!canProceed}>
               Перевірити замовлення
             </Button>
           </div>
@@ -283,4 +283,3 @@ export function CheckoutForm({
     </div>
   );
 }
-

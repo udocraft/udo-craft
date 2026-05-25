@@ -6,21 +6,17 @@
  * Opens over everything. Has its own Fabric.js canvas (transparent background).
  * When done the user can:
  *   • "Вставити" — paste the drawing as a new image layer
- *   • "Покращити з AI" — enhance with AI then paste
  *
  * Each paste creates a NEW layer (no 1-per-side limit).
  */
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import dynamic from "next/dynamic";
 import {
-  AlertCircle, Check, Eraser, Minus, Pencil, RefreshCw,
-  RotateCcw, RotateCw, Trash2, Wand2, X,
+  Check, Eraser, Minus, Pencil, RefreshCw,
+  RotateCcw, RotateCw, Trash2, X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useAIIllustration } from "./useAIIllustration";
-import type { AiQuotaState } from "@/hooks/useAiQuota";
 
 // ── Types ─────────────────────────────────────────────────────────────────
 
@@ -28,9 +24,7 @@ export interface DrawingModalProps {
   open: boolean;
   onClose: () => void;
   onPaste: (file: File) => void;
-  isAuthenticated: boolean;
-  aiQuota: AiQuotaState;
-  onPaywall: () => void;
+  initialImageUrl?: string | null;
 }
 
 type Tool = "pen" | "eraser" | "line";
@@ -84,9 +78,33 @@ async function isCanvasBlank(canvas: import("fabric").fabric.Canvas): Promise<bo
   });
 }
 
+function getContentBounds(canvas: import("fabric").fabric.Canvas) {
+  const objects = canvas.getObjects().filter((obj) => obj.visible !== false);
+  if (objects.length === 0) return null;
+
+  const bounds = objects.map((obj) => obj.getBoundingRect(true, true));
+  const left = Math.min(...bounds.map((b) => b.left));
+  const top = Math.min(...bounds.map((b) => b.top));
+  const right = Math.max(...bounds.map((b) => b.left + b.width));
+  const bottom = Math.max(...bounds.map((b) => b.top + b.height));
+  const padding = 24;
+
+  const cropLeft = Math.max(0, Math.floor(left - padding));
+  const cropTop = Math.max(0, Math.floor(top - padding));
+  const cropRight = Math.min(CANVAS_W, Math.ceil(right + padding));
+  const cropBottom = Math.min(CANVAS_H, Math.ceil(bottom + padding));
+
+  return {
+    left: cropLeft,
+    top: cropTop,
+    width: Math.max(1, cropRight - cropLeft),
+    height: Math.max(1, cropBottom - cropTop),
+  };
+}
+
 // ── Component ─────────────────────────────────────────────────────────────
 
-export default function DrawingModal({ open, onClose, onPaste, isAuthenticated, aiQuota, onPaywall }: DrawingModalProps) {
+export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }: DrawingModalProps) {
   const canvasElRef = useRef<HTMLCanvasElement>(null);
   const fabricRef = useRef<import("fabric").fabric.Canvas | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -98,26 +116,24 @@ export default function DrawingModal({ open, onClose, onPaste, isAuthenticated, 
   const [undoStack, setUndoStack] = useState<string[]>([]);
   const [redoStack, setRedoStack] = useState<string[]>([]);
   const [pasting, setPasting] = useState(false);
-  const [enhancing, setEnhancing] = useState(false);
-  const [enhanceStep, setEnhanceStep] = useState(false);
-  const [enhancePrompt, setEnhancePrompt] = useState("");
 
   // Line drawing state
   const lineStartRef = useRef<{ x: number; y: number } | null>(null);
   const previewLineRef = useRef<import("fabric").fabric.Line | null>(null);
 
-  const ai = useAIIllustration();
-
   // ── Init Fabric.js ────────────────────────────────────────────────────
 
   useEffect(() => {
     if (!open || !canvasElRef.current) return;
+    let disposed = false;
+    let canvas: import("fabric").fabric.Canvas | null = null;
+    let onPathAdded: (() => void) | null = null;
 
     // Dynamically import fabric to avoid SSR issues
     import("fabric").then(({ fabric }) => {
-      if (!canvasElRef.current) return;
+      if (!canvasElRef.current || disposed) return;
 
-      const canvas = new fabric.Canvas(canvasElRef.current, {
+      canvas = new fabric.Canvas(canvasElRef.current, {
         width: CANVAS_W,
         height: CANVAS_H,
         backgroundColor: "rgba(0,0,0,0)",
@@ -131,26 +147,58 @@ export default function DrawingModal({ open, onClose, onPaste, isAuthenticated, 
 
       fabricRef.current = canvas;
 
-      // Save initial blank state
-      setUndoStack([canvas.toJSON() as unknown as string]);
-      setRedoStack([]);
-
       // Snapshot after each path added
-      const onPathAdded = () => {
+      onPathAdded = () => {
+        if (!canvas) return;
         const json = JSON.stringify(canvas.toJSON());
         setUndoStack((prev) => [...prev, json]);
         setRedoStack([]);
       };
       canvas.on("path:created", onPathAdded);
 
-      return () => {
-        canvas.off("path:created", onPathAdded);
-        canvas.dispose();
-        fabricRef.current = null;
+      const saveInitialState = () => {
+        if (!canvas || disposed) return;
+        const json = JSON.stringify(canvas.toJSON());
+        setUndoStack([json]);
+        setRedoStack([]);
+        canvas.renderAll();
       };
+
+      if (initialImageUrl) {
+        fabric.Image.fromURL(
+          initialImageUrl,
+          (img) => {
+            if (!canvas || disposed) return;
+            const maxW = CANVAS_W * 0.8;
+            const maxH = CANVAS_H * 0.8;
+            const scale = Math.min(maxW / (img.width || maxW), maxH / (img.height || maxH), 1);
+            img.set({
+              left: (CANVAS_W - (img.width || 0) * scale) / 2,
+              top: (CANVAS_H - (img.height || 0) * scale) / 2,
+              scaleX: scale,
+              scaleY: scale,
+              selectable: false,
+              evented: false,
+            });
+            canvas.add(img);
+            canvas.sendToBack(img);
+            saveInitialState();
+          },
+          { crossOrigin: "anonymous" }
+        );
+      } else {
+        saveInitialState();
+      }
     });
+
+    return () => {
+      disposed = true;
+      if (canvas && onPathAdded) canvas.off("path:created", onPathAdded);
+      canvas?.dispose();
+      fabricRef.current = null;
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, initialImageUrl]);
 
   // ── Apply tool settings ───────────────────────────────────────────────
 
@@ -258,7 +306,9 @@ export default function DrawingModal({ open, onClose, onPaste, isAuthenticated, 
   const exportPng = useCallback((): string | null => {
     const canvas = fabricRef.current;
     if (!canvas) return null;
-    return canvas.toDataURL({ format: "png", multiplier: 2 });
+    const bounds = getContentBounds(canvas);
+    if (!bounds) return null;
+    return canvas.toDataURL({ format: "png", multiplier: 2, ...bounds });
   }, []);
 
   const handlePaste = useCallback(async () => {
@@ -279,57 +329,7 @@ export default function DrawingModal({ open, onClose, onPaste, isAuthenticated, 
     }
   }, [exportPng, onPaste, onClose]);
 
-  const handleEnhanceAndPaste = useCallback(async () => {
-    const canvas = fabricRef.current;
-    if (!canvas) return;
-    if (!isAuthenticated) {
-      onPaywall();
-      return;
-    }
-    if (aiQuota.isExhausted) {
-      // Inline message is shown in the footer — just return
-      return;
-    }
-    if (await isCanvasBlank(canvas)) {
-      toast.warning("Полотно порожнє — намалюйте щось спочатку.");
-      return;
-    }
-    setEnhanceStep(true);
-  }, [isAuthenticated, aiQuota.isExhausted, onPaywall]);
-
-  const handleEnhanceConfirm = useCallback(async () => {
-    setEnhanceStep(false);
-    setEnhancing(true);
-    try {
-      const dataUrl = exportPng();
-      if (!dataUrl) return;
-      const prompt = enhancePrompt.trim() || "Enhance this sketch into polished print-ready artwork.";
-      const enhanced = await ai.enhance(dataUrl, prompt);
-      if (!enhanced) return;
-      const res = await fetch(enhanced);
-      const blob = await res.blob();
-      onPaste(new File([blob], `ai-enhanced-${Date.now()}.png`, { type: "image/png" }));
-      await aiQuota.increment();
-      onClose();
-    } finally {
-      setEnhancing(false);
-    }
-  }, [exportPng, enhancePrompt, ai, onPaste, aiQuota, onClose]);
-
   if (!open) return null;
-
-  const STYLE_PRESETS = [
-    "Дитячий малюнок",
-    "3D рендер",
-    "Аніме",
-    "Акварель",
-    "Піксель-арт",
-    "Вектор / флет",
-    "Олійний живопис",
-    "Неон / кіберпанк",
-    "Мінімалізм",
-    "Вишиванка / орнамент",
-  ];
 
   const TOOLS: { id: Tool; label: string; Icon: React.ElementType }[] = [
     { id: "pen",    label: "Олівець", Icon: Pencil  },
@@ -425,23 +425,8 @@ export default function DrawingModal({ open, onClose, onPaste, isAuthenticated, 
       {/* ── Footer ── */}
       <div className="shrink-0 flex flex-col gap-1.5 px-4 py-3 border-t border-border bg-card">
         <div className="flex items-center justify-end gap-2">
-          {ai.error && (
-            <div className="flex items-center gap-1.5 mr-auto text-destructive text-xs">
-              <AlertCircle className="size-3.5 shrink-0" />
-              <span>{ai.error}</span>
-              <button type="button" onClick={ai.clearError} className="underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded">Закрити</button>
-            </div>
-          )}
-          <Button type="button" variant="outline" onClick={handleEnhanceAndPaste}
-            disabled={enhancing || pasting || ai.loading || aiQuota.isExhausted}
-            className="rounded-full gap-2">
-            {enhancing || ai.loading
-              ? <RefreshCw className="size-4 animate-spin" />
-              : <Wand2 className="size-4 text-primary" />}
-            Покращити з AI
-          </Button>
           <Button type="button" onClick={handlePaste}
-            disabled={pasting || enhancing || ai.loading}
+            disabled={pasting}
             className="rounded-full gap-2">
             {pasting
               ? <RefreshCw className="size-4 animate-spin" />
@@ -449,11 +434,6 @@ export default function DrawingModal({ open, onClose, onPaste, isAuthenticated, 
             Вставити
           </Button>
         </div>
-        {aiQuota.isExhausted && (
-          <p className="text-xs text-muted-foreground text-right">
-            Ви використали {aiQuota.limit} безкоштовні генерації AI
-          </p>
-        )}
       </div>
     </div>
   );

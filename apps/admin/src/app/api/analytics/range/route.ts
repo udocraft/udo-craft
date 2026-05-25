@@ -33,8 +33,10 @@ export async function GET(request: NextRequest) {
       { data: prevEvents },
       { data: leads },
       { data: prevLeads },
+      { data: messages },
       { data: items },
       { data: materials },
+      { data: authUsers },
     ] = await Promise.all([
       supabase.from("site_events").select("event_type, session_id, visitor_id, created_at")
         .gte("created_at", from.toISOString()).lte("created_at", to.toISOString()),
@@ -42,19 +44,31 @@ export async function GET(request: NextRequest) {
         .gte("created_at", prevFrom.toISOString()).lt("created_at", prevTo.toISOString()),
       supabase.from("leads").select("id, status, total_amount_cents, customer_data, created_at")
         .gte("created_at", from.toISOString()).lte("created_at", to.toISOString()),
-      supabase.from("leads").select("id, status, total_amount_cents, created_at")
+      supabase.from("leads").select("id, status, total_amount_cents, customer_data, created_at")
         .gte("created_at", prevFrom.toISOString()).lt("created_at", prevTo.toISOString()),
+      supabase.from("messages").select("sender, lead_id, created_at")
+        .gte("created_at", from.toISOString()).lte("created_at", to.toISOString()),
       supabase.from("order_items").select("id, quantity, lead_id, created_at")
         .gte("created_at", from.toISOString()).lte("created_at", to.toISOString()),
       supabase.from("erp_materials").select("id, unit_cost_cents, stock_quantity, reserved_quantity, reorder_point"),
+      supabase.auth.admin.listUsers({ perPage: 200 }),
     ]);
 
     const ev = events || [];
     const pev = prevEvents || [];
     const lds = leads || [];
     const plds = prevLeads || [];
+    const msgs = messages || [];
     const its = items || [];
     const mats = materials || [];
+    const users = authUsers?.users || [];
+    const internalRoles = new Set(["admin", "manager", "viewer", "seamstress"]);
+    const staffByRole = users.reduce<Record<string, number>>((acc, user) => {
+      const role = String(user.user_metadata?.role || "");
+      if (internalRoles.has(role)) acc[role] = (acc[role] || 0) + 1;
+      return acc;
+    }, {});
+    const externalAccounts = users.filter((user) => !internalRoles.has(String(user.user_metadata?.role || "")));
 
     const sessions = new Set(ev.filter((e) => e.event_type === "session_start").map((e) => e.session_id)).size;
     const sessionsPrev = new Set(pev.filter((e) => e.event_type === "session_start").map((e) => e.session_id)).size;
@@ -81,6 +95,25 @@ export async function GET(request: NextRequest) {
     const itemsSold = its.reduce((s, i) => s + (i.quantity || 0), 0);
     const totalClients = new Set(lds.map((l) => l.customer_data?.email).filter(Boolean)).size;
     const totalClientsPrev = new Set(plds.map((l: any) => l.customer_data?.email).filter(Boolean)).size;
+    const clientEmails = new Set(lds.map((l) => String(l.customer_data?.email || "").toLowerCase()).filter(Boolean));
+    const leadsById = new Map(lds.map((lead) => [lead.id, lead]));
+    msgs
+      .filter((message) => message.sender === "manager")
+      .forEach((message) => {
+        const email = String(leadsById.get(message.lead_id)?.customer_data?.email || "").toLowerCase();
+        if (email) clientEmails.add(email);
+      });
+    const registeredProspects = externalAccounts.filter((user) => {
+      const email = String(user.email || "").toLowerCase();
+      return email && !clientEmails.has(email);
+    }).length;
+    const accountClients = externalAccounts.filter((user) => {
+      const email = String(user.email || "").toLowerCase();
+      return email && clientEmails.has(email);
+    }).length;
+    const anonymousVisitors = uniqueVisitors;
+    const visitorToAccountRate = anonymousVisitors > 0 ? (externalAccounts.length / anonymousVisitors) * 100 : 0;
+    const accountToClientRate = externalAccounts.length > 0 ? (accountClients / externalAccounts.length) * 100 : 0;
     const warehouseItems = mats.length;
     const warehouseStockValue = mats.reduce((s, m) => s + Number(m.stock_quantity || 0) * Number(m.unit_cost_cents || 0), 0);
     const warehouseReservedValue = mats.reduce((s, m) => s + Number(m.reserved_quantity || 0) * Number(m.unit_cost_cents || 0), 0);
@@ -111,6 +144,19 @@ export async function GET(request: NextRequest) {
       totalOrders, totalOrdersPrev, totalRevenue, totalRevenuePrev,
       paidRevenue, paidRevenuePrev, avgOrderValue, avgOrderValuePrev,
       itemsSold, totalClients, totalClientsPrev,
+      anonymousVisitors,
+      registeredAccounts: externalAccounts.length,
+      registeredProspects,
+      accountClients,
+      visitorToAccountRate,
+      accountToClientRate,
+      staffTotal: Object.values(staffByRole).reduce((sum, count) => sum + count, 0),
+      staffByRole: {
+        admins: staffByRole.admin || 0,
+        managers: staffByRole.manager || 0,
+        production: staffByRole.seamstress || 0,
+        viewers: staffByRole.viewer || 0,
+      },
       completedOrders: completed.length, completedOrdersPrev: completedPrev.length,
       warehouseItems,
       warehouseStockValue,

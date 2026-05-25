@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { Product, PrintZone, Material, ProductColorVariant, useCustomizer, type SidebarTabId, resolveProductImages, getCustomizableImages } from "@udo-craft/shared";
-import { ArrowLeft, X, Ruler, Loader2, Layers, Pencil, Type, Upload, LayoutList, Shapes, MirrorRound, PackageOpen } from "lucide-react";
+import { ArrowLeft, X, Loader2, Layers, Pencil, Type, Upload, LayoutList, MirrorRound, PackageOpen } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { type PrintLayer } from "@/components/print-types";
@@ -17,7 +17,6 @@ import PrintsPanel from "./editor/PrintsPanel";
 import DrawPanel from "./editor/DrawPanel";
 import TextPanel from "./editor/TextPanel";
 import UploadPanel from "./editor/UploadPanel";
-import ShapesPanel from "./editor/ShapesPanel";
 import MobileSheet from "./editor/MobileSheet";
 import LayersList from "@/components/layers-list";
 import type { TextComposition } from "@udo-craft/shared";
@@ -61,7 +60,6 @@ export interface CustomizerProps {
 
 const MOBILE_TABS: { id: SidebarTabId; label: string; Icon: React.ElementType }[] = [
   { id: "prints",  label: "Принти",  Icon: Layers      },
-  { id: "shapes",  label: "Фігури",  Icon: Shapes      },
   { id: "draw",    label: "Малюнок", Icon: Pencil      },
   { id: "text",    label: "Текст",   Icon: Type        },
   { id: "upload",  label: "Файл",    Icon: Upload      },
@@ -110,6 +108,7 @@ export function Customizer({ product, printZones, sizeChart, materials, variants
   const [mobilePriceOpen, setMobilePriceOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [aiDrawerOpen, setAiDrawerOpen] = useState(false);
+  const [drawingEditLayerId, setDrawingEditLayerId] = useState<string | null>(null);
 
   // Tab title badge
   useLayersBadge(layers.length, `${product.name} — U:DO CRAFT Admin`);
@@ -271,17 +270,18 @@ export function Customizer({ product, printZones, sizeChart, materials, variants
   const panelContent = (tab: SidebarTabId | null) => {
     if (!tab) return null;
     if (tab === "prints") return <PrintsPanel activeSide={activeSide} printPricing={printPricing} onAddLayer={addLayer} />;
-    if (tab === "shapes") return <ShapesPanel onAddLayer={addLayer} />;
     if (tab === "draw") return (
       <DrawPanel
         fabricCanvasRef={fabricCanvasRef} layers={layers} activeSide={activeSide}
         activeLayerId={activeLayerId} onAddLayer={addLayer}
         onReplaceDrawLayer={(id, file) => setLayersWithRef((prev) => prev.map((l) => {
           if (l.id !== id) return l;
-          return { ...l, file, url: URL.createObjectURL(file), uploadedUrl: undefined };
+          return { ...l, file, kind: "drawing", url: URL.createObjectURL(file), uploadedUrl: undefined };
         }))}
         setLayersWithRef={setLayersWithRef}
         printZoneBounds={{ left: 0, top: 0, width: 0, height: 0 }}
+        editRequestLayerId={drawingEditLayerId}
+        onEditRequestHandled={() => setDrawingEditLayerId(null)}
       />
     );
     if (tab === "text") return (
@@ -306,7 +306,6 @@ export function Customizer({ product, printZones, sizeChart, materials, variants
 
   const tabLabel = (tab: SidebarTabId | null) => {
     if (tab === "prints") return "Принти";
-    if (tab === "shapes") return "Фігури";
     if (tab === "draw") return "Малюнок";
     if (tab === "text") return "Текст";
     if (tab === "upload") return "Завантажити";
@@ -346,6 +345,11 @@ export function Customizer({ product, printZones, sizeChart, materials, variants
         } else {
           setLayersWithRef((prev) => prev.map((l) => l.id === id ? { ...l, ...patch } : l));
         }
+      }}
+      onOpenDrawingStudio={(layerId) => {
+        setActiveLayerId(layerId);
+        setActiveTab("draw");
+        setDrawingEditLayerId(layerId);
       }}
     />
   );

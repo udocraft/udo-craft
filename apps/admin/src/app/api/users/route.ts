@@ -10,14 +10,54 @@ export async function GET() {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const service = createServiceClient();
-  const { data, error } = await service.auth.admin.listUsers({ perPage: 200 });
+  const [{ data, error }, { data: leads }, { data: messages }] = await Promise.all([
+    service.auth.admin.listUsers({ perPage: 200 }),
+    service.from("leads").select("id, customer_data, total_amount_cents, created_at"),
+    service.from("messages").select("lead_id, sender, created_at"),
+  ]);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  const internalRoles = new Set(["admin", "manager", "viewer", "seamstress"]);
+  const leadsById = new Map((leads || []).map((lead) => [lead.id, lead]));
+  const clientEmails = new Set<string>();
+  const orderCountByEmail = new Map<string, number>();
+  const revenueByEmail = new Map<string, number>();
+  const lastActivityByEmail = new Map<string, string>();
+
+  for (const lead of leads || []) {
+    const email = String(lead.customer_data?.email || "").toLowerCase();
+    if (!email) continue;
+    clientEmails.add(email);
+    orderCountByEmail.set(email, (orderCountByEmail.get(email) || 0) + 1);
+    revenueByEmail.set(email, (revenueByEmail.get(email) || 0) + (lead.total_amount_cents || 0));
+    const previous = lastActivityByEmail.get(email);
+    if (!previous || new Date(lead.created_at) > new Date(previous)) lastActivityByEmail.set(email, lead.created_at);
+  }
+
+  for (const message of messages || []) {
+    if (message.sender !== "manager") continue;
+    const lead = leadsById.get(message.lead_id);
+    const email = String(lead?.customer_data?.email || "").toLowerCase();
+    if (!email) continue;
+    clientEmails.add(email);
+    const previous = lastActivityByEmail.get(email);
+    if (!previous || new Date(message.created_at) > new Date(previous)) lastActivityByEmail.set(email, message.created_at);
+  }
 
   const users = data.users.map((u) => ({
     id: u.id,
     email: u.email,
     full_name: u.user_metadata?.full_name ?? "",
-    role: u.user_metadata?.role ?? "viewer",
+    role: u.user_metadata?.role ?? "",
+    access_role: internalRoles.has(String(u.user_metadata?.role || "")) ? u.user_metadata?.role : null,
+    lifecycle_stage: internalRoles.has(String(u.user_metadata?.role || ""))
+      ? "internal_staff"
+      : clientEmails.has(String(u.email || "").toLowerCase())
+        ? "client"
+        : "registered_lead",
+    order_count: orderCountByEmail.get(String(u.email || "").toLowerCase()) || 0,
+    lifetime_value_cents: revenueByEmail.get(String(u.email || "").toLowerCase()) || 0,
+    last_customer_activity_at: lastActivityByEmail.get(String(u.email || "").toLowerCase()) || null,
     avatar_url: u.user_metadata?.avatar_url ?? "",
     created_at: u.created_at,
     last_sign_in_at: u.last_sign_in_at,

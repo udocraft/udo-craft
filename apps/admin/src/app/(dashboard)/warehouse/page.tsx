@@ -2,7 +2,18 @@
 
 import type React from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Edit3, Loader2, Search, Trash2 } from "lucide-react";
+import {
+  ClipboardCheck,
+  Edit3,
+  Factory,
+  Loader2,
+  PackagePlus,
+  Repeat2,
+  Search,
+  Trash2,
+  Truck,
+  WalletCards,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,14 +28,40 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { AdminTablePanel, AdminToolbar } from "@/components/admin-layout";
 import { DashboardPage } from "@/components/dashboard-page";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import type { ErpMaterial, ErpMaterialKind, ErpMaterialType } from "@udo-craft/shared";
+import type { ErpMaterial, ErpMaterialKind, ErpMaterialType, ErpSupplier, ErpWarehouse, ProductVariantSku } from "@udo-craft/shared";
 
 type MaterialWithType = ErpMaterial & { type?: ErpMaterialType | null };
 type MaterialForm = Omit<ErpMaterial, "id"> & { id?: string };
 type TypeForm = Omit<ErpMaterialType, "id"> & { id?: string };
+type Product = { id: string; name: string; slug: string };
+type LeadOption = {
+  id: string;
+  status: string;
+  customer_data?: { name?: string; email?: string; keycrm_id?: string };
+  total_amount_cents?: number;
+  created_at?: string;
+};
+type ProductionOrder = {
+  id: string;
+  status: string;
+  quantity: number;
+  lead_id?: string | null;
+  notes?: string | null;
+  lines?: ProductionLine[];
+};
+type ProductionLine = {
+  id: string;
+  quantity: number;
+  due_date?: string | null;
+  comment?: string | null;
+  variant_sku?: ProductVariantSku | null;
+  product?: Product | null;
+  material_requirements?: Array<{ material?: ErpMaterial; required_quantity: number; available_quantity: number; shortage_quantity: number }>;
+};
 
 const KINDS: { value: ErpMaterialKind; label: string; unit: string }[] = [
   { value: "fabric", label: "Тканина", unit: "м" },
@@ -69,24 +106,61 @@ const kindLabel = (kind: string) => KINDS.find((k) => k.value === kind)?.label ?
 export default function WarehousePage() {
   const [materials, setMaterials] = useState<MaterialWithType[]>([]);
   const [types, setTypes] = useState<ErpMaterialType[]>([]);
+  const [warehouses, setWarehouses] = useState<ErpWarehouse[]>([]);
+  const [suppliers, setSuppliers] = useState<ErpSupplier[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [variantSkus, setVariantSkus] = useState<ProductVariantSku[]>([]);
+  const [orders, setOrders] = useState<ProductionOrder[]>([]);
+  const [leads, setLeads] = useState<LeadOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [processSaving, setProcessSaving] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [typesOpen, setTypesOpen] = useState(false);
   const [form, setForm] = useState<MaterialForm>(EMPTY_FORM);
+  const [receipt, setReceipt] = useState({ material_id: "", supplier_id: "", warehouse_id: "", quantity: 1, unit_cost: 0, comment: "" });
+  const [production, setProduction] = useState({ lead_id: "", variant_sku_id: "", product_id: "", quantity: 1, due_date: "", comment: "" });
+  const [act, setAct] = useState({ production_order_id: "", warehouse_id: "", comment: "" });
+  const [transfer, setTransfer] = useState({ material_id: "", from_warehouse_id: "", to_warehouse_id: "", quantity: 1, comment: "" });
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [materialsRes, typesRes] = await Promise.all([
+      const [materialsRes, typesRes, warehousesRes, suppliersRes, productsRes, skusRes, ordersRes, leadsRes] = await Promise.all([
         fetch("/api/erp/materials"),
         fetch("/api/erp/types"),
+        fetch("/api/erp/warehouses"),
+        fetch("/api/erp/suppliers"),
+        fetch("/api/products"),
+        fetch("/api/erp/variant-skus"),
+        fetch("/api/erp/production-orders"),
+        fetch("/api/leads?limit=80"),
       ]);
       if (!materialsRes.ok) throw new Error("ERP tables are not ready");
-      setMaterials(await materialsRes.json());
-      setTypes(typesRes.ok ? await typesRes.json() : []);
+      const [materialsData, typesData, warehousesData, suppliersData, productsData, skusData, ordersData, leadsData] = await Promise.all([
+        materialsRes.json(),
+        typesRes.ok ? typesRes.json() : [],
+        warehousesRes.ok ? warehousesRes.json() : [],
+        suppliersRes.ok ? suppliersRes.json() : [],
+        productsRes.ok ? productsRes.json() : [],
+        skusRes.ok ? skusRes.json() : [],
+        ordersRes.ok ? ordersRes.json() : [],
+        leadsRes.ok ? leadsRes.json() : [],
+      ]);
+      setMaterials(materialsData);
+      setTypes(typesData);
+      setWarehouses(warehousesData);
+      setSuppliers(suppliersData);
+      setProducts(productsData);
+      setVariantSkus(skusData);
+      setOrders(ordersData);
+      setLeads(leadsData);
+      setReceipt((prev) => ({ ...prev, material_id: prev.material_id || materialsData[0]?.id || "", warehouse_id: prev.warehouse_id || warehousesData[0]?.id || "" }));
+      setProduction((prev) => ({ ...prev, lead_id: prev.lead_id || leadsData[0]?.id || "", variant_sku_id: prev.variant_sku_id || skusData[0]?.id || "", product_id: prev.product_id || productsData[0]?.id || "" }));
+      setAct((prev) => ({ ...prev, production_order_id: prev.production_order_id || ordersData[0]?.id || "", warehouse_id: prev.warehouse_id || warehousesData.find((w: ErpWarehouse) => w.code === "READY")?.id || warehousesData[0]?.id || "" }));
+      setTransfer((prev) => ({ ...prev, material_id: prev.material_id || materialsData[0]?.id || "", from_warehouse_id: prev.from_warehouse_id || warehousesData[0]?.id || "", to_warehouse_id: prev.to_warehouse_id || warehousesData[1]?.id || "" }));
     } catch {
       toast.error("Не вдалося завантажити склад. Перевірте, що ERP-міграція застосована.");
     } finally {
@@ -110,6 +184,24 @@ export default function WarehousePage() {
   const itemCountLabel = `${filtered.length} ${
     filtered.length === 1 ? "позиція" : filtered.length > 1 && filtered.length < 5 ? "позиції" : "позицій"
   }`;
+  const selectedMaterial = useMemo(() => materials.find((m) => m.id === receipt.material_id), [materials, receipt.material_id]);
+  const totalStockValue = materials.reduce((sum, m) => sum + Number(m.stock_quantity || 0) * Number(m.unit_cost_cents || 0), 0);
+  const shortages = orders.flatMap((order) => order.lines ?? []).flatMap((line) => (line.material_requirements ?? []).filter((req) => Number(req.shortage_quantity || 0) > 0));
+  const leadById = useMemo(() => new Map(leads.map((lead) => [lead.id, lead])), [leads]);
+
+  async function postProcess(kind: string, url: string, body: unknown, success: string) {
+    setProcessSaving(kind);
+    try {
+      const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      if (!res.ok) throw new Error((await res.json()).error || "Помилка документа");
+      toast.success(success);
+      fetchData();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Помилка документа");
+    } finally {
+      setProcessSaving(null);
+    }
+  }
 
   const createNew = () => {
     setForm(EMPTY_FORM);
@@ -170,7 +262,8 @@ export default function WarehousePage() {
 
   return (
     <DashboardPage
-        title="Склад"
+        title="Склад CRM-ERP"
+        subtitle="Матеріали, залишки, постачання, виробництво, пошиття і переміщення з прив'язкою до замовлень"
         actions={
           <>
             <Button variant="outline" size="sm" onClick={() => setTypesOpen(true)}>
@@ -183,6 +276,107 @@ export default function WarehousePage() {
         }
       >
           <div className="flex flex-col">
+            <div className="grid gap-3 p-4 pb-0 md:grid-cols-4 md:p-6 md:pb-0">
+              <Metric icon={PackagePlus} label="Номенклатура" value={materials.length.toString()} sub="матеріали та роботи" />
+              <Metric icon={WalletCards} label="Вартість складу" value={money(Math.round(totalStockValue))} sub="за собівартістю" />
+              <Metric icon={ClipboardCheck} label="Виробничі документи" value={orders.length.toString()} sub="пов'язані із замовленнями" />
+              <Metric icon={Factory} label="Дефіцит" value={shortages.length.toString()} sub="рядків нестачі" tone={shortages.length ? "danger" : "ok"} />
+            </div>
+
+            <div className="grid gap-4 p-4 md:p-6 xl:grid-cols-2">
+              <ProcessPanel icon={PackagePlus} title="Постачання на склад">
+                <div className="grid gap-3 md:grid-cols-2">
+                  <Field label="Товар / матеріал"><Select value={receipt.material_id} onValueChange={(v) => setReceipt({ ...receipt, material_id: v ?? "" })}><SelectTrigger><span>{selectedMaterial?.name ?? "Матеріал"}</span></SelectTrigger><SelectContent>{materials.map((m) => <SelectItem key={m.id} value={m.id}>{m.name} · {m.unit}</SelectItem>)}</SelectContent></Select></Field>
+                  <Field label="Постачальник"><Select value={receipt.supplier_id || "none"} onValueChange={(v) => setReceipt({ ...receipt, supplier_id: v === "none" || !v ? "" : v })}><SelectTrigger><span>{suppliers.find((s) => s.id === receipt.supplier_id)?.name ?? "Без постачальника"}</span></SelectTrigger><SelectContent><SelectItem value="none">Без постачальника</SelectItem>{suppliers.map((s) => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}</SelectContent></Select></Field>
+                  <Field label="Склад"><WarehouseSelect value={receipt.warehouse_id} warehouses={warehouses} onChange={(v) => setReceipt({ ...receipt, warehouse_id: v })} /></Field>
+                  <Field label={`Кількість, ${selectedMaterial?.unit ?? "од."}`}><Input type="number" min="0" step="0.001" value={receipt.quantity} onChange={(e) => setReceipt({ ...receipt, quantity: Number(e.target.value) })} /></Field>
+                  <Field label="Ціна за одиницю, UAH"><Input type="number" min="0" step="0.01" value={receipt.unit_cost} onChange={(e) => setReceipt({ ...receipt, unit_cost: Number(e.target.value) })} /></Field>
+                  <Field label="Сума"><Input readOnly value={money(Math.round(receipt.quantity * receipt.unit_cost * 100))} /></Field>
+                </div>
+                <Textarea rows={2} value={receipt.comment} onChange={(e) => setReceipt({ ...receipt, comment: e.target.value })} placeholder="Партія, інвойс, коментар..." />
+                <Button onClick={() => postProcess("receipt", "/api/erp/receipts", { supplier_id: receipt.supplier_id || null, warehouse_id: receipt.warehouse_id || null, comment: receipt.comment, lines: [{ erp_material_id: receipt.material_id, unit: selectedMaterial?.unit ?? "шт.", quantity: receipt.quantity, unit_cost_cents: Math.round(receipt.unit_cost * 100) }] }, "Постачання оприбутковано")} disabled={processSaving === "receipt"}>
+                  {processSaving === "receipt" ? <Loader2 className="h-4 w-4 animate-spin" /> : <PackagePlus className="h-4 w-4" />}Оприбуткувати
+                </Button>
+              </ProcessPanel>
+
+              <ProcessPanel icon={ClipboardCheck} title="Виробництво по замовленню">
+                <div className="grid gap-3 md:grid-cols-2">
+                  <Field label="Замовлення / клієнт"><LeadSelect value={production.lead_id} leads={leads} onChange={(v) => setProduction({ ...production, lead_id: v })} /></Field>
+                  <Field label="Варіація SKU"><Select value={production.variant_sku_id || "none"} onValueChange={(v) => setProduction({ ...production, variant_sku_id: v === "none" || !v ? "" : v })}><SelectTrigger><span>{variantSkus.find((s) => s.id === production.variant_sku_id)?.sku ?? "Без SKU"}</span></SelectTrigger><SelectContent><SelectItem value="none">Без SKU</SelectItem>{variantSkus.map((s) => <SelectItem key={s.id} value={s.id}>{s.sku} · {s.size}</SelectItem>)}</SelectContent></Select></Field>
+                  <Field label="Продукт"><Select value={production.product_id} onValueChange={(v) => setProduction({ ...production, product_id: v ?? "" })}><SelectTrigger><span>{products.find((p) => p.id === production.product_id)?.name ?? "Продукт"}</span></SelectTrigger><SelectContent>{products.map((p) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent></Select></Field>
+                  <Field label="Кількість"><Input type="number" min="1" value={production.quantity} onChange={(e) => setProduction({ ...production, quantity: Number(e.target.value) })} /></Field>
+                  <Field label="Термін"><Input type="date" value={production.due_date} onChange={(e) => setProduction({ ...production, due_date: e.target.value })} /></Field>
+                </div>
+                <Textarea rows={2} value={production.comment} onChange={(e) => setProduction({ ...production, comment: e.target.value })} placeholder="Коментар для швеї, розкрій, пошиття, контроль..." />
+                <Button onClick={() => postProcess("production", "/api/erp/production-orders", { lead_id: production.lead_id || null, notes: production.comment || null, lines: [{ variant_sku_id: production.variant_sku_id || null, product_id: production.product_id || null, quantity: production.quantity, due_date: production.due_date || null, comment: production.comment }] }, "Замовлення на виробництво створено")} disabled={processSaving === "production"}>
+                  {processSaving === "production" ? <Loader2 className="h-4 w-4 animate-spin" /> : <ClipboardCheck className="h-4 w-4" />}Створити документ
+                </Button>
+              </ProcessPanel>
+
+              <ProcessPanel icon={Factory} title="Акт пошиття / переробки">
+                <Field label="Виробничий документ"><Select value={act.production_order_id} onValueChange={(v) => setAct({ ...act, production_order_id: v ?? "" })}><SelectTrigger><span>{orders.find((o) => o.id === act.production_order_id)?.id.slice(0, 8).toUpperCase() ?? "Документ"}</span></SelectTrigger><SelectContent>{orders.map((o) => <SelectItem key={o.id} value={o.id}>#{o.id.slice(0, 8).toUpperCase()} · {o.quantity} шт. · {leadById.get(o.lead_id || "")?.customer_data?.name ?? "без клієнта"}</SelectItem>)}</SelectContent></Select></Field>
+                <Field label="Склад готової продукції"><WarehouseSelect value={act.warehouse_id} warehouses={warehouses} onChange={(v) => setAct({ ...act, warehouse_id: v })} /></Field>
+                <Textarea rows={2} value={act.comment} onChange={(e) => setAct({ ...act, comment: e.target.value })} placeholder="Факт пошиття, брак, контроль якості..." />
+                <Button onClick={() => postProcess("act", "/api/erp/processing-acts", { production_order_id: act.production_order_id, warehouse_id: act.warehouse_id || null, comment: act.comment }, "Акт пошиття проведено")} disabled={processSaving === "act"}>
+                  {processSaving === "act" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Factory className="h-4 w-4" />}Провести акт
+                </Button>
+              </ProcessPanel>
+
+              <ProcessPanel icon={Repeat2} title="Переміщення між складами">
+                <Field label="Матеріал"><Select value={transfer.material_id} onValueChange={(v) => setTransfer({ ...transfer, material_id: v ?? "" })}><SelectTrigger><span>{materials.find((m) => m.id === transfer.material_id)?.name ?? "Матеріал"}</span></SelectTrigger><SelectContent>{materials.map((m) => <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>)}</SelectContent></Select></Field>
+                <div className="grid gap-3 md:grid-cols-2">
+                  <Field label="Зі складу"><WarehouseSelect value={transfer.from_warehouse_id} warehouses={warehouses} onChange={(v) => setTransfer({ ...transfer, from_warehouse_id: v })} /></Field>
+                  <Field label="На склад"><WarehouseSelect value={transfer.to_warehouse_id} warehouses={warehouses} onChange={(v) => setTransfer({ ...transfer, to_warehouse_id: v })} /></Field>
+                </div>
+                <Field label="Кількість"><Input type="number" min="0" step="0.001" value={transfer.quantity} onChange={(e) => setTransfer({ ...transfer, quantity: Number(e.target.value) })} /></Field>
+                <Textarea rows={2} value={transfer.comment} onChange={(e) => setTransfer({ ...transfer, comment: e.target.value })} placeholder="Причина переміщення..." />
+                <Button onClick={() => postProcess("transfer", "/api/erp/transfers", { from_warehouse_id: transfer.from_warehouse_id || null, to_warehouse_id: transfer.to_warehouse_id || null, comment: transfer.comment, lines: [{ erp_material_id: transfer.material_id, quantity: transfer.quantity, unit: materials.find((m) => m.id === transfer.material_id)?.unit ?? "шт." }] }, "Переміщення проведено")} disabled={processSaving === "transfer"}>
+                  {processSaving === "transfer" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Truck className="h-4 w-4" />}Перемістити
+                </Button>
+              </ProcessPanel>
+            </div>
+
+            <div className="px-4 md:px-6">
+              <AdminTablePanel>
+                <Table className="min-w-[920px]">
+                  <TableHeader>
+                    <TableRow className="hover:bg-transparent">
+                      <TableHead>Виробничий документ</TableHead>
+                      <TableHead>Замовлення / клієнт</TableHead>
+                      <TableHead>Виріб</TableHead>
+                      <TableHead className="text-right">К-сть</TableHead>
+                      <TableHead>Статус</TableHead>
+                      <TableHead>Участь швеї</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {orders.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={6} className="py-10 text-center text-sm text-muted-foreground">Виробничих документів ще немає.</TableCell>
+                      </TableRow>
+                    )}
+                    {orders.map((order) => {
+                      const lead = leadById.get(order.lead_id || "");
+                      const firstLine = order.lines?.[0];
+                      return (
+                        <TableRow key={order.id}>
+                          <TableCell className="font-medium">#{order.id.slice(0, 8).toUpperCase()}</TableCell>
+                          <TableCell>
+                            <div className="font-medium">{lead?.customer_data?.name ?? "Не прив'язано"}</div>
+                            <div className="text-xs text-muted-foreground">{lead ? `${lead.status}${lead.customer_data?.keycrm_id ? ` · KeyCRM #${lead.customer_data.keycrm_id}` : ""}` : "Створіть документ із замовленням"}</div>
+                          </TableCell>
+                          <TableCell>{firstLine?.variant_sku?.sku ?? firstLine?.product?.name ?? "Виріб"}</TableCell>
+                          <TableCell className="text-right tabular-nums">{order.quantity}</TableCell>
+                          <TableCell><Badge variant={order.status === "completed" ? "default" : "secondary"}>{order.status}</Badge></TableCell>
+                          <TableCell className="text-sm text-muted-foreground">{firstLine?.comment || order.notes || "Розкрій, пошиття, контроль якості"}</TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </AdminTablePanel>
+            </div>
+
             <AdminToolbar>
               <div className="relative w-full sm:w-64">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
@@ -525,5 +719,55 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       <Label className="text-xs text-muted-foreground">{label}</Label>
       {children}
     </div>
+  );
+}
+
+function Metric({ icon: Icon, label, value, sub, tone }: { icon: typeof PackagePlus; label: string; value: string; sub: string; tone?: "danger" | "ok" }) {
+  return (
+    <div className="rounded-xl border border-border bg-card p-4">
+      <div className="flex items-center justify-between gap-3">
+        <Icon className="h-4 w-4 text-primary" />
+        <Badge variant={tone === "danger" ? "destructive" : "secondary"}>{sub}</Badge>
+      </div>
+      <p className="mt-4 text-2xl font-semibold">{value}</p>
+      <p className="text-xs text-muted-foreground">{label}</p>
+    </div>
+  );
+}
+
+function ProcessPanel({ icon: Icon, title, children }: { icon: typeof PackagePlus; title: string; children: React.ReactNode }) {
+  return (
+    <section className="space-y-3 rounded-xl border border-border bg-card p-4">
+      <div className="flex items-center gap-2">
+        <Icon className="h-4 w-4 text-primary" />
+        <h2 className="text-sm font-semibold">{title}</h2>
+      </div>
+      <div className="space-y-3">{children}</div>
+    </section>
+  );
+}
+
+function WarehouseSelect({ value, warehouses, onChange }: { value: string; warehouses: ErpWarehouse[]; onChange: (value: string) => void }) {
+  return (
+    <Select value={value} onValueChange={(next) => onChange(next ?? "")}>
+      <SelectTrigger><span>{warehouses.find((w) => w.id === value)?.name ?? "Склад"}</span></SelectTrigger>
+      <SelectContent>{warehouses.map((w) => <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>)}</SelectContent>
+    </Select>
+  );
+}
+
+function LeadSelect({ value, leads, onChange }: { value: string; leads: LeadOption[]; onChange: (value: string) => void }) {
+  return (
+    <Select value={value || "none"} onValueChange={(next) => onChange(next === "none" ? "" : next ?? "")}>
+      <SelectTrigger><span>{leads.find((lead) => lead.id === value)?.customer_data?.name ?? "Без замовлення"}</span></SelectTrigger>
+      <SelectContent>
+        <SelectItem value="none">Без замовлення</SelectItem>
+        {leads.map((lead) => (
+          <SelectItem key={lead.id} value={lead.id}>
+            {lead.customer_data?.name ?? "Клієнт"} · {lead.status}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }

@@ -4,7 +4,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { FileDown, Loader2 } from "lucide-react";
 import type { CartItem } from "./CartSummary";
-import { PREDEFINED_TAGS, DELIVERY_OPTIONS, getDiscount } from "../_lib/constants";
+import { PREDEFINED_TAGS, DELIVERY_OPTIONS } from "../_lib/constants";
 
 const KEY_LABELS: Record<string, string> = { front: "Перед", back: "Зад", left: "Ліво", right: "Право" };
 
@@ -27,7 +27,7 @@ interface ReviewStepProps {
   onDownloadInvoice: () => void;
 }
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 export function ReviewStep({ cart, totalCents, contact, orderTags, extraFiles, generatingPdf, submitting, onBack, onSubmit, onDownloadInvoice }: ReviewStepProps) {
@@ -226,24 +226,24 @@ export function ReviewStep({ cart, totalCents, contact, orderTags, extraFiles, g
           </div>
 
           {/* Bottom Total Bar */}
-          <div className="bg-primary/[0.04] border-t border-primary/10 p-6 md:p-10 flex flex-col sm:flex-row items-center justify-between gap-8">
+          <div className="sticky bottom-4 z-20 mx-3 mb-3 rounded-3xl border border-primary/10 bg-background/90 p-4 shadow-2xl backdrop-blur-xl md:mx-6 md:mb-6 md:p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="space-y-1 text-center sm:text-left">
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">Загальна сума</p>
-              <p className="text-4xl font-black text-primary tracking-tighter">₴{(totalCents / 100).toFixed(0)}</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">Загальна сума</p>
+              <p className="text-3xl font-black text-primary tracking-tight">₴{(totalCents / 100).toFixed(0)}</p>
             </div>
             
             <div className="flex gap-4 w-full sm:w-auto">
               <Button 
                 variant="outline" 
                 size="lg" 
-                className="flex-1 sm:flex-none rounded-2xl px-8 font-black uppercase tracking-widest text-[10px] h-14 border-border/60 hover:bg-background/80 transition-all shadow-sm"
+                className="flex-1 sm:flex-none rounded-full px-8 font-semibold h-12 border-border/60 hover:bg-background/80 transition-all shadow-sm"
                 onClick={onBack}
               >
                 Редагувати
               </Button>
               <Button 
                 size="lg" 
-                className="flex-1 sm:flex-none rounded-2xl px-12 font-black uppercase tracking-widest text-[10px] h-14 shadow-xl shadow-primary/30 gap-3 group active:scale-[0.98] transition-all"
+                className="flex-1 sm:flex-none rounded-full px-10 font-semibold h-12 shadow-xl shadow-primary/30 gap-3 group active:scale-[0.98] transition-all"
                 onClick={onSubmit} 
                 disabled={submitting}
               >
@@ -261,4 +261,3 @@ export function ReviewStep({ cart, totalCents, contact, orderTags, extraFiles, g
     </div>
   );
 }
-

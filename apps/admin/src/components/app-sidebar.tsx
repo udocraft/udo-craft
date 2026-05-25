@@ -4,9 +4,9 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
-  BarChart2, Users, MessagesSquare, ShoppingBag, Box, Boxes,
+  BarChart2, Users, MessagesSquare, ShoppingBag, Box,
   Settings, ChevronRight, UserCog, Factory,
-  LayoutDashboard, FileEdit, Palette, Search,
+  FileEdit, Palette, Search,
 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { NavUser } from "@/components/nav-user";
@@ -62,6 +62,8 @@ interface NavItem {
   children?: NavSubItem[];
 }
 
+type AdminRole = "admin" | "manager" | "viewer" | "seamstress";
+
 const SALES_NAV: NavItem[] = [
   { title: "Замовлення",   url: "/orders",    icon: ShoppingBag,    badgeKey: "orders" },
   { title: "Клієнти",      url: "/clients",   icon: Users },
@@ -69,8 +71,7 @@ const SALES_NAV: NavItem[] = [
 ];
 
 const INVENTORY_NAV: NavItem[] = [
-  { title: "Склад", url: "/warehouse", icon: Boxes },
-  { title: "CRM-ERP", url: "/erp", icon: Factory },
+  { title: "Склад CRM-ERP", url: "/warehouse", icon: Factory },
   {
     title: "Каталог",
     url: "/catalog",
@@ -117,6 +118,7 @@ const SYSTEM_NAV: NavItem[] = [
       { title: "Всі",        url: "/users?role=all" },
       { title: "Адміни",     url: "/users?role=admin" },
       { title: "Менеджери",  url: "/users?role=manager" },
+      { title: "Швеї",       url: "/users?role=seamstress" },
       { title: "Перегляд",   url: "/users?role=viewer" },
     ],
   },
@@ -136,7 +138,7 @@ const SYSTEM_NAV: NavItem[] = [
 // ── Component ─────────────────────────────────────────────────────────────────
 
 interface AppSidebarProps {
-  user: { name: string; email: string; avatar: string };
+  user: { name: string; email: string; avatar: string; role?: string };
 }
 
 export function AppSidebar({ user }: AppSidebarProps) {
@@ -149,6 +151,8 @@ export function AppSidebar({ user }: AppSidebarProps) {
   const [badges, setBadges] = React.useState({ orders: 0, messages: 0 });
   const [unreadMessages, setUnreadMessages] = React.useState(0);
   const [pendingUrl, setPendingUrl] = React.useState<string | null>(null);
+  const role = (user.role || "viewer") as AdminRole;
+  const isSeamstress = role === "seamstress";
 
   // Track which collapsibles are open
   const [openGroups, setOpenGroups] = React.useState<Record<string, boolean>>({
@@ -362,7 +366,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
         <SidebarGroup className="p-1">
           <SidebarGroupLabel className="mb-1 h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/60">Продажі та CRM</SidebarGroupLabel>
           <SidebarMenu className="gap-0.5">
-            {SALES_NAV.map(renderSimpleItem)}
+            {(isSeamstress ? SALES_NAV.filter((item) => item.url !== "/clients") : SALES_NAV).map(renderSimpleItem)}
           </SidebarMenu>
         </SidebarGroup>
 
@@ -370,7 +374,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
         <SidebarGroup className="p-1">
           <SidebarGroupLabel className="mb-1 h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/60">Інвентар</SidebarGroupLabel>
           <SidebarMenu className="gap-0.5">
-            {INVENTORY_NAV.map((item) =>
+            {(isSeamstress ? INVENTORY_NAV.filter((item) => item.url === "/warehouse") : INVENTORY_NAV).map((item) =>
               item.children ? renderCollapsibleItem(item) : renderSimpleItem(item)
             )}
           </SidebarMenu>
@@ -380,7 +384,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
         <SidebarGroup className="p-1">
           <SidebarGroupLabel className="mb-1 h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/60">Аналітика</SidebarGroupLabel>
           <SidebarMenu className="gap-0.5">
-            {INSIGHTS_NAV.map(renderSimpleItem)}
+            {!isSeamstress && INSIGHTS_NAV.map(renderSimpleItem)}
           </SidebarMenu>
         </SidebarGroup>
 
@@ -388,7 +392,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
         <SidebarGroup className="p-1">
           <SidebarGroupLabel className="mb-1 h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/60">Керування</SidebarGroupLabel>
           <SidebarMenu className="gap-0.5">
-            {SYSTEM_NAV.map((item) =>
+            {!isSeamstress && SYSTEM_NAV.map((item) =>
               item.children ? renderCollapsibleItem(item) : renderSimpleItem(item)
             )}
           </SidebarMenu>

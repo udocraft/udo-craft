@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ArrowLeft, Layers, LayoutList, Loader2, Palette, Pencil, Ruler, Shapes, PackageOpen, Type, Upload } from "lucide-react";
+import { ArrowLeft, Layers, LayoutList, Loader2, Palette, Pencil, PackageOpen, Type, Upload } from "lucide-react";
 import { type SidebarTabId } from "@udo-craft/shared";
 import { CustomizerMobileSheet } from "./CustomizerMobileSheet";
 
@@ -9,7 +9,6 @@ import { CustomizerMobileSheet } from "./CustomizerMobileSheet";
 
 const MOBILE_TABS: { id: SidebarTabId; label: string; Icon: React.ElementType }[] = [
   { id: "prints",  label: "Принти",  Icon: Layers      },
-  { id: "shapes",  label: "Фігури",  Icon: Shapes      },
   { id: "draw",    label: "Малюнок", Icon: Pencil      },
   { id: "text",    label: "Текст",   Icon: Type        },
   { id: "upload",  label: "Файл",    Icon: Upload      },
@@ -239,4 +238,3 @@ export function CustomizerLayout({
     </div>
   );
 }
-

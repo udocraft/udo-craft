@@ -49,9 +49,9 @@ export async function updateSession(request: NextRequest) {
     request.nextUrl.pathname.startsWith("/auth") ||
     request.nextUrl.pathname.startsWith("/reset-password");
 
-  // Only users explicitly granted admin/manager role may access the dashboard.
+  // Only users explicitly granted an internal role may access the dashboard.
   // Regular client-side signups have no role set — they are rejected.
-  const ALLOWED_ROLES = ["admin", "manager", "viewer"];
+  const ALLOWED_ROLES = ["admin", "manager", "viewer", "seamstress"];
   const role: string | undefined = user?.user_metadata?.role;
   const isAdminUser = !!role && ALLOWED_ROLES.includes(role);
 
@@ -59,6 +59,16 @@ export async function updateSession(request: NextRequest) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/login";
     return NextResponse.redirect(redirectUrl);
+  }
+
+  if (role === "seamstress" && !request.nextUrl.pathname.startsWith("/api")) {
+    const allowedForSeamstress = ["/warehouse", "/erp", "/orders", "/messages"];
+    const canView = allowedForSeamstress.some((path) => request.nextUrl.pathname.startsWith(path));
+    if (!isPublicPath && !canView) {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = "/warehouse";
+      return NextResponse.redirect(redirectUrl);
+    }
   }
 
   if (user && isAdminUser && request.nextUrl.pathname.startsWith("/login")) {

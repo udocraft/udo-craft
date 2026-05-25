@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { generateInvoicePDF } from "@/lib/generate-invoice";
 import { Product, PrintZone, Material, ProductColorVariant, resolveProductImages, getCustomizableImages } from "@udo-craft/shared";
-import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -258,8 +257,8 @@ export default function NewOrderPage() {
 
       {/* Body */}
       <div className="flex-1 min-h-0 flex overflow-hidden">
-        <div className="flex-1 overflow-y-auto lg:pr-96 selection:bg-primary/10">
-          <div className="mx-auto px-6 py-8 space-y-10 max-w-7xl">
+        <div className={`flex-1 overflow-y-auto selection:bg-primary/10 ${step === "catalog" ? "lg:pr-80" : ""}`}>
+          <div className="mx-auto px-4 md:px-6 py-6 md:py-8 space-y-10 max-w-7xl">
 
             {step === "catalog" && (
               <div className="space-y-10">
@@ -323,7 +322,7 @@ export default function NewOrderPage() {
             )}
 
             {step === "checkout" && (
-              <div className="max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="max-w-3xl mx-auto pb-28 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <CheckoutForm contact={contact} setContact={setContact}
                   orderTags={orderTags} setOrderTags={setOrderTags}
                   extraFiles={extraFiles} setExtraFiles={setExtraFiles}
@@ -334,7 +333,7 @@ export default function NewOrderPage() {
             )}
 
             {step === "review" && (
-              <div className="max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-500">
+              <div className="max-w-4xl mx-auto pb-28 animate-in fade-in zoom-in-95 duration-500">
                 <ReviewStep cart={cart} totalCents={totalCents} contact={contact}
                   orderTags={orderTags} extraFiles={extraFiles}
                   generatingPdf={generatingPdf} submitting={submitting}
@@ -347,18 +346,20 @@ export default function NewOrderPage() {
         </div>
 
         {/* Desktop cart side panel */}
-        <div className="hidden lg:block w-96 border-l border-border/40 bg-background/50 backdrop-blur-xl sticky top-16 h-[calc(100vh-4rem)] overflow-hidden">
-          <DesktopCartPanel cart={cart} totalCents={totalCents} products={products}
-            variants={variants} materials={materials} onEdit={handleEditCartItem}
-            onRemove={(i: number) => setCart((prev) => prev.filter((_, idx) => idx !== i))}
-            onCheckout={() => setStep("checkout")} />
-        </div>
+        <DesktopCartPanel cart={cart} totalCents={totalCents} products={products}
+          variants={variants} materials={materials} onEdit={handleEditCartItem}
+          onRemove={(i: number) => setCart((prev) => prev.filter((_, idx) => idx !== i))}
+          onCheckout={() => setStep("checkout")}
+          collapsible={step === "catalog"}
+          hidden={step !== "catalog"} />
       </div>
 
       {/* Mobile cart bar */}
-      <MobileAdminCart cart={cart} totalCents={totalCents} onEdit={handleEditCartItem}
-        onRemove={(i: number) => setCart((prev) => prev.filter((_, idx) => idx !== i))}
-        onCheckout={() => setStep("checkout")} />
+      {step === "catalog" && (
+        <MobileAdminCart cart={cart} totalCents={totalCents} onEdit={handleEditCartItem}
+          onRemove={(i: number) => setCart((prev) => prev.filter((_, idx) => idx !== i))}
+          onCheckout={() => setStep("checkout")} />
+      )}
     </div>
   );
 }

@@ -354,6 +354,14 @@ interface AnalyticsData {
   avgOrderValue: number; avgOrderValuePrev: number;
   itemsSold: number;
   totalClients: number; totalClientsPrev: number;
+  anonymousVisitors: number;
+  registeredAccounts: number;
+  registeredProspects: number;
+  accountClients: number;
+  visitorToAccountRate: number;
+  accountToClientRate: number;
+  staffTotal: number;
+  staffByRole: { admins: number; managers: number; production: number; viewers: number };
   completedOrders: number; completedOrdersPrev: number;
   warehouseItems: number;
   warehouseStockValue: number;
@@ -488,11 +496,28 @@ export default function AnalyticsPage() {
                 {/* ── Funnel ── */}
                 <section className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground/60">Ефективність Воронки</h2>
+                    <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground/60">Життєвий цикл аудиторії</h2>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <MetricCard label="Анонімні відвідувачі" value={d.anonymousVisitors.toLocaleString()} trend={calcTrend(d.uniqueVisitors, d.uniqueVisitorsPrev)} sub="Visitor role: IP, місто, сесії, події" sparkData={[d.uniqueVisitorsPrev, d.uniqueVisitors]} />
+                    <MetricCard label="Зареєстровані ліди" value={d.registeredProspects.toLocaleString()} sub="Є акаунт, ще без замовлення/чату" sparkData={[0, d.registeredProspects]} />
+                    <MetricCard label="Клієнти" value={d.accountClients.toLocaleString()} trend={calcTrend(d.totalClients, d.totalClientsPrev)} sub="Є замовлення або чат з менеджером" sparkData={[d.totalClientsPrev, d.totalClients]} />
+                    <MetricCard label="Команда" value={d.staffTotal.toLocaleString()} sub={`Адміни ${d.staffByRole.admins} · Менеджери ${d.staffByRole.managers} · Виробництво ${d.staffByRole.production}`} sparkData={[0, d.staffTotal]} />
+                  </div>
+                </section>
+
+                {/* ── Funnel ── */}
+                <section className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground/60">Ефективність воронки</h2>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <MetricCard label="Заявки (форми)" value={d.formSubmissions} trend={calcTrend(d.formSubmissions, d.formSubmissionsPrev)} sub="Ліди з сайту" sparkData={[d.formSubmissionsPrev, d.formSubmissions]} />
                     <MetricCard label="Конверсія" value={`${d.conversionRate.toFixed(1)}%`} trend={calcTrend(d.conversionRate, d.conversionRatePrev)} sub="Сесії у заявки" sparkData={[d.conversionRatePrev, d.conversionRate]} />
+                    <MetricCard label="Відвідувачі → акаунти" value={`${d.visitorToAccountRate.toFixed(1)}%`} sub="Частка реєстрацій від visitor pool" sparkData={[0, d.visitorToAccountRate]} />
+                    <MetricCard label="Акаунти → клієнти" value={`${d.accountToClientRate.toFixed(1)}%`} sub="Замовлення або чат після реєстрації" sparkData={[0, d.accountToClientRate]} />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <MetricCard label="Старти кастомізації" value={d.customizationStarts} sub="Інтерес до конструктора" sparkData={[0, d.customizationStarts]} />
                     <MetricCard label="Фініші кастомізації" value={d.customizationCompletions} trend={d.customizationStarts > 0 ? Math.round((d.customizationCompletions / d.customizationStarts) * 100) : 0} sub="% завершення" sparkData={[0, d.customizationCompletions]} />
                   </div>

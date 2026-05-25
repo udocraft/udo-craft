@@ -87,7 +87,7 @@ export function HomeClient({
           subheading={get("home_hero", "subheading", "Ми створюємо речі, які стають улюбленими в гардеробі.")}
           ctaPrimaryText={get("home_hero", "cta_primary_text", "Переглянути каталог")}
           ctaPrimaryUrl={get("home_hero", "cta_primary_url", "#catalog")}
-          ctaSecondaryText={get("home_hero", "cta_secondary_text", "Дивитись відео")}
+          ctaSecondaryText="Контакти"
         />
         <SocialProofBar />
         <ProblemSolutionSection />

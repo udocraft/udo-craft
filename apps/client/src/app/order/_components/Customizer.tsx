@@ -9,7 +9,7 @@ import { QtyPriceContent } from "./QtyPriceContent";
 import { CustomizerLayout } from "./CustomizerLayout";
 import { CustomizerCanvas } from "./CustomizerCanvas";
 import { Button } from "@/components/ui/button";
-import { Check, Copy, Eye, Link2, Loader2, MessageSquare, MirrorRound, PencilLine, Save, Share2, ShieldCheck, X } from "lucide-react";
+import { Check, Copy, Link2, Loader2, MessageSquare, MirrorRound, PencilLine, Save, Share2, ShieldCheck, X } from "lucide-react";
 import { useCustomizerState } from "./useCustomizerState";
 import { GenerationDrawer } from "./GenerationDrawer";
 import EditorSidebar from "./editor/EditorSidebar";
@@ -20,7 +20,6 @@ import UploadPanel from "./editor/UploadPanel";
 import MobileSheet from "./editor/MobileSheet";
 import type { TextLayerPatch } from "./editor/TextPanel";
 import LayersList from "@/components/LayersList";
-import ShapesPanel from "./editor/ShapesPanel";
 import type { TextComposition } from "@udo-craft/shared";
 import { useLayersBadge } from "@/hooks/useLayersBadge";
 import type { AiQuotaState } from "@/hooks/useAiQuota";
@@ -30,6 +29,7 @@ import { cancelRemoveBg } from "@/lib/remove-bg-client";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import type { CustomizerShareComment, LoadedCustomizerShare, ShareAccess } from "../_lib/customizerShare";
 import { buildSharePayload } from "../_lib/customizerShare";
 
@@ -114,7 +114,8 @@ export function Customizer({
   const [mobilePriceOpen, setMobilePriceOpen] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
-  const [shareAccess, setShareAccess] = useState<ShareAccess>(initialShare?.access ?? "view");
+  const [drawingEditLayerId, setDrawingEditLayerId] = useState<string | null>(null);
+  const [shareAccess, setShareAccess] = useState<ShareAccess>(initialShare?.access ?? "comment");
   const [shareUrl, setShareUrl] = useState(initialShare && typeof window !== "undefined" ? `${window.location.origin}/order?share=${initialShare.token}` : "");
   const [shareLoading, setShareLoading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -127,39 +128,11 @@ export function Customizer({
   const canEditShare = !initialShare || initialShare.access === "edit";
   const canCommentShare = initialShare?.access === "comment" || initialShare?.access === "edit";
   const isReadOnly = isSharedSession && (!canEditShare || !isAuthenticated);
-  const shareAccessOptions: Array<{
-    value: ShareAccess;
-    title: string;
-    caption: string;
-    detail: string;
-    Icon: React.ElementType;
-    requiresAccount?: boolean;
-  }> = [
-    {
-      value: "view",
-      title: "Перегляд",
-      caption: "Для швидкого погодження",
-      detail: "Будь-хто з посиланням бачить макет, товар, колір, розмір і тираж. Змінювати або коментувати не може.",
-      Icon: Eye,
-    },
-    {
-      value: "comment",
-      title: "Коментарі",
-      caption: "Для правок від клієнта",
-      detail: "Посилання відкриває перегляд, а коментарі можуть залишати тільки користувачі після входу в акаунт.",
-      Icon: MessageSquare,
-      requiresAccount: true,
-    },
-    {
-      value: "edit",
-      title: "Редагування",
-      caption: "Для спільної роботи над макетом",
-      detail: "Користувачі після входу можуть змінювати шари, текст, розміщення, колір, розмір і зберігати оновлення в цьому посиланні.",
-      Icon: PencilLine,
-      requiresAccount: true,
-    },
-  ];
-  const selectedShareAccess = shareAccessOptions.find((option) => option.value === shareAccess) ?? shareAccessOptions[0];
+  const allowGroupEdit = shareAccess === "edit";
+  const selectedShareAccessTitle = allowGroupEdit ? "редагування" : "перегляд і коментарі";
+  const selectedShareAccessDetail = allowGroupEdit
+    ? "Учасники після входу можуть коментувати, змінювати макет і зберігати оновлення в цьому посиланні."
+    : "Будь-хто з посиланням бачить макет. Коментарі доступні після входу, редагування вимкнено.";
 
   const currentPayload = useMemo(() => buildSharePayload({
     productId: product.id,
@@ -320,7 +293,6 @@ export function Customizer({
       );
     }
     if (tab === "prints") return <PrintsPanel activeSide={s.activeSide} printPricing={s.printPricing} onAddLayer={addLayer} isAuthenticated={isAuthenticated} aiQuota={aiQuota} onPaywall={() => setPaywallOpen(true)} />;
-    if (tab === "shapes") return <ShapesPanel onAddLayer={addLayer} />;
     if (tab === "draw") return (
       <DrawPanel
         fabricCanvasRef={s.fabricCanvasRef}
@@ -328,13 +300,12 @@ export function Customizer({
         onAddLayer={addLayer}
         onReplaceDrawLayer={(id, file) => s.setLayersWithRef((prev) => prev.map((l) => {
           if (l.id !== id) return l;
-          return { ...l, file, url: URL.createObjectURL(file), uploadedUrl: undefined };
+          return { ...l, file, kind: "drawing", url: URL.createObjectURL(file), uploadedUrl: undefined };
         }))}
         setLayersWithRef={s.setLayersWithRef}
         printZoneBounds={{ left: 0, top: 0, width: 0, height: 0 }}
-        isAuthenticated={isAuthenticated}
-        aiQuota={aiQuota}
-        onPaywall={() => setPaywallOpen(true)}
+        editRequestLayerId={drawingEditLayerId}
+        onEditRequestHandled={() => setDrawingEditLayerId(null)}
       />
     );
     if (tab === "text") return (
@@ -359,7 +330,6 @@ export function Customizer({
 
   const tabLabel = (tab: SidebarTabId | null) => {
     if (tab === "prints") return "Принти";
-    if (tab === "shapes") return "Фігури";
     if (tab === "draw") return "Малюнок";
     if (tab === "text") return "Текст";
     if (tab === "upload") return "Завантажити";
@@ -562,6 +532,11 @@ export function Customizer({
       onRedo={s.handleRedo}
       canUndo={s.canUndo}
       canRedo={s.canRedo}
+      onOpenDrawingStudio={(layerId) => {
+        s.setActiveLayerId(layerId);
+        s.setActiveTab("draw");
+        setDrawingEditLayerId(layerId);
+      }}
       readOnly={isReadOnly}
     />
   );
@@ -632,67 +607,70 @@ export function Customizer({
       {/* PaywallModal — shown when unauthenticated user clicks an AI feature */}
       <PaywallModal open={paywallOpen} onClose={() => setPaywallOpen(false)} onAuthSuccess={onAuthSuccess} />
       <Dialog open={shareOpen} onOpenChange={setShareOpen}>
-        <DialogContent className="sm:max-w-lg gap-5">
+        <DialogContent className="bottom-0 left-0 top-auto max-h-[92svh] max-w-none translate-x-0 translate-y-0 gap-4 overflow-y-auto rounded-b-none rounded-t-2xl p-4 pb-[max(16px,env(safe-area-inset-bottom))] sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-w-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-xl sm:p-5">
           <DialogHeader className="pr-8">
             <div className="flex items-start gap-3">
-              <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <Share2 className="size-4" />
               </div>
               <div className="min-w-0">
-                <DialogTitle>Спільний доступ до макета</DialogTitle>
-                <DialogDescription className="mt-1">
-                  Створіть посилання для погодження, коментарів або спільного редагування. Доступ можна оновити пізніше.
+                <DialogTitle>Поділитися макетом</DialogTitle>
+                <DialogDescription className="mt-1 text-sm leading-relaxed">
+                  За замовчуванням люди з посиланням можуть переглядати макет і залишати коментарі. Редагування вмикається окремо.
                 </DialogDescription>
               </div>
             </div>
           </DialogHeader>
           {!isSharedSession || canEditShare ? (
-            <div className="space-y-4">
-              <div className="grid gap-2">
-                {shareAccessOptions.map(({ value, title, caption, detail, Icon, requiresAccount }) => {
-                  const active = shareAccess === value;
-                  return (
-                  <button
-                    key={value}
-                    type="button"
-                    onClick={() => setShareAccess(value)}
-                    aria-pressed={active}
-                    className={`w-full rounded-xl border p-3 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${active ? "border-primary bg-primary/5 shadow-sm" : "border-border bg-background hover:border-foreground/20 hover:bg-muted/40"}`}
-                  >
-                    <span className="flex items-start gap-3">
-                      <span className={`flex size-9 shrink-0 items-center justify-center rounded-full ${active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
-                        <Icon className="size-4" />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="flex flex-wrap items-center gap-2">
-                          <span className="text-sm font-semibold text-foreground">{title}</span>
-                          {requiresAccount && (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
-                              <ShieldCheck className="size-3" />
-                              акаунт
-                            </span>
-                          )}
-                        </span>
-                        <span className="mt-0.5 block text-xs font-medium text-muted-foreground">{caption}</span>
-                        <span className="mt-1.5 block text-xs leading-relaxed text-muted-foreground">{detail}</span>
-                      </span>
-                      {active && <Check className="mt-1 size-4 shrink-0 text-primary" />}
-                    </span>
-                  </button>
-                  );
-                })}
+            <div className="space-y-3">
+              <div className="rounded-xl border bg-background p-3">
+                <div className="flex items-start gap-3">
+                  <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
+                    <MessageSquare className="size-4" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold">Перегляд і коментарі</p>
+                        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                          Отримувачі бачать макет. Коментувати можна після входу.
+                        </p>
+                      </div>
+                      <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                    </div>
+                  </div>
+                </div>
               </div>
+
+              <label className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3 transition-colors ${allowGroupEdit ? "border-primary bg-primary/5" : "border-border bg-background hover:bg-muted/40"}`}>
+                <div className={`flex size-9 shrink-0 items-center justify-center rounded-full ${allowGroupEdit ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
+                  <PencilLine className="size-4" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-sm font-semibold">Дозволити редагування команді</p>
+                    <Switch
+                      checked={allowGroupEdit}
+                      onCheckedChange={(checked) => setShareAccess(checked ? "edit" : "comment")}
+                    />
+                  </div>
+                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                    Увімкніть, якщо менеджер або клієнт має сам змінювати текст, шари, колір чи розмір.
+                  </p>
+                </div>
+              </label>
+
               {!isAuthenticated && (
-                <div className="rounded-xl border border-primary/20 bg-primary/5 p-3 text-xs leading-relaxed text-muted-foreground">
-                  Щоб створити посилання або зберегти зміни доступу, потрібно увійти. Перегляд готового посилання залишиться відкритим для отримувача.
+                <div className="rounded-xl border bg-muted/30 p-3 text-xs leading-relaxed text-muted-foreground">
+                  Щоб створити посилання або змінити доступ, потрібно увійти.
                 </div>
               )}
-              <div className="rounded-xl border bg-muted/30 p-3">
-                <div className="flex items-start gap-3">
-                  <selectedShareAccess.Icon className="mt-0.5 size-4 shrink-0 text-primary" />
+              <div className="rounded-xl bg-muted/40 p-3">
+                <div className="flex items-start gap-2.5">
+                  <ShieldCheck className="mt-0.5 size-4 shrink-0 text-primary" />
                   <div className="min-w-0">
-                    <p className="text-sm font-medium">Обрано: {selectedShareAccess.title}</p>
-                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{selectedShareAccess.detail}</p>
+                    <p className="text-sm font-medium">Доступ: {selectedShareAccessTitle}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{selectedShareAccessDetail}</p>
                   </div>
                 </div>
               </div>
@@ -715,7 +693,7 @@ export function Customizer({
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground">
-                Надішліть це посилання клієнту або менеджеру. Поточний доступ: {selectedShareAccess.title.toLowerCase()}.
+                Надішліть це посилання клієнту або менеджеру. Поточний доступ: {selectedShareAccessTitle}.
               </p>
             </div>
           )}

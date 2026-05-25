@@ -150,6 +150,7 @@ export function useCustomizer(config: UseCustomizerConfig): UseCustomizerReturn 
         url: URL.createObjectURL(file),
         type: "dtf",
         side: activeSide,
+        kind: file.name.startsWith("drawing-") ? "drawing" : "image",
         sizeLabel: minSizeRow?.size_label,
         sizeMinCm: minSizeRow?.size_min_cm,
         sizeMaxCm: minSizeRow?.size_max_cm,

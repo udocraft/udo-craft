@@ -16,11 +16,11 @@ interface NavBarProps {
 }
 
 const navLinks = [
-  { href: "#catalog", label: "Каталог" },
+  { href: "/#catalog", label: "Каталог" },
   { href: "/popup", label: "Popup" },
-  { href: "#about", label: "Про нас" },
-  { href: "#how", label: "Як це працює" },
-  { href: "#contact", label: "Контакти" },
+  { href: "/#about", label: "Про нас" },
+  { href: "/#how", label: "Як це працює" },
+  { href: "/#contact", label: "Контакти" },
 ];
 
 export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOpen }: NavBarProps) {
@@ -212,7 +212,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
               <Link
                 href="/order"
                 onClick={() => setMenuOpen(false)}
-                className="block mt-1 text-center bg-primary text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-primary/90 transition-colors duration-200"
+                className="block mt-1 text-center bg-primary text-white text-sm font-semibold px-4 py-2.5 rounded-full hover:bg-primary/90 transition-colors duration-200"
               >
                 Почати проєкт
               </Link>

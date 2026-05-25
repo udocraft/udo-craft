@@ -3,7 +3,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { MockupViewer } from "@/components/mockup-viewer";
-import { Trash2, ShoppingCart } from "lucide-react";
+import { ChevronLeft, ShoppingCart, Trash2 } from "lucide-react";
 import type { PrintLayer } from "@/components/print-types";
 import type { ProductColorVariant, Material, Product } from "@udo-craft/shared";
 import { Badge } from "@/components/ui/badge";
@@ -34,13 +34,6 @@ export interface CartItem {
   offsetTopMm?: number;
 }
 
-const KEY_LABELS: Record<string, string> = {
-  front: "Перед",
-  back: "Зад",
-  left: "Ліво",
-  right: "Право",
-};
-
 // ── Desktop cart side panel ───────────────────────────────────────────────
 
 interface DesktopCartPanelProps {
@@ -52,52 +45,75 @@ interface DesktopCartPanelProps {
   onEdit: (i: number) => void;
   onRemove: (i: number) => void;
   onCheckout: () => void;
+  collapsible?: boolean;
+  hidden?: boolean;
 }
 
 export function DesktopCartPanel({
   cart,
   totalCents,
   products,
-  variants,
-  materials,
   onEdit,
   onRemove,
   onCheckout,
+  collapsible = false,
+  hidden = false,
 }: DesktopCartPanelProps) {
+  const [collapsed, setCollapsed] = React.useState(collapsible);
+
+  if (hidden) return null;
+
+  if (collapsed) {
+    return (
+      <button
+        onClick={() => setCollapsed(false)}
+        className="hidden lg:flex fixed top-1/2 right-0 z-40 -translate-y-1/2 flex-col items-center gap-1.5 rounded-l-2xl border border-r-0 border-border bg-background px-2 py-4 shadow-xl transition-colors hover:bg-muted"
+        aria-label="Відкрити кошик"
+      >
+        <ShoppingCart className="size-5 text-primary" />
+        {cart.length > 0 && (
+          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-black leading-none text-primary-foreground">
+            {cart.length}
+          </span>
+        )}
+      </button>
+    );
+  }
+
   return (
-    <div className="flex flex-col h-full bg-background/30 backdrop-blur-2xl border-l border-border/40 selection:bg-primary/10">
-      {/* Header */}
-      <div className="h-16 px-6 border-b border-border/40 flex items-center justify-between shrink-0 glass-morphic">
+    <div className="hidden lg:flex fixed top-16 right-0 bottom-0 z-30 w-80 flex-col border-l border-border bg-background shadow-xl selection:bg-primary/10">
+      <div className="h-14 px-4 border-b border-border flex items-center justify-between shrink-0 bg-background/90 backdrop-blur">
         <div className="flex items-center gap-3">
-          <div className="size-9 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/5 shadow-sm">
-            <ShoppingCart className="size-4.5 text-primary" />
+          <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/10">
+            <ShoppingCart className="size-4 text-primary" />
           </div>
-          <span className="font-black text-[11px] uppercase tracking-[0.2em] text-foreground/80">Кошик</span>
+          <span className="font-bold text-sm">Кошик ({cart.length})</span>
         </div>
-        <Badge variant="outline" className="font-black text-[10px] h-6 px-3 bg-muted/20 border-border/40 text-muted-foreground">
-          {cart.length}
-        </Badge>
+        <div className="flex items-center gap-2">
+          <Badge variant="outline" className="font-bold text-[10px] h-6 px-2 bg-muted/30">
+            ₴{(totalCents / 100).toFixed(0)}
+          </Badge>
+          {collapsible && (
+            <button onClick={() => setCollapsed(true)} className="p-1.5 rounded-lg hover:bg-muted transition-colors" aria-label="Згорнути кошик">
+              <ChevronLeft className="size-4 text-muted-foreground" />
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Cart Items List */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide">
+      <div className="flex-1 overflow-y-auto p-3 space-y-2">
         {cart.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full gap-5 text-center py-20 animate-in fade-in zoom-in-95 duration-700">
-            <div className="size-24 rounded-3xl bg-muted/10 flex items-center justify-center border border-border/20 shadow-inner">
-              <ShoppingCart className="size-10 text-muted-foreground/10" />
-            </div>
-            <div className="space-y-2">
-              <p className="text-[10px] font-black uppercase tracking-widest text-foreground/40">Кошик порожній</p>
-              <p className="text-[11px] text-muted-foreground/50 max-w-[180px] font-medium leading-relaxed">Додайте товари з каталогу, щоб почати оформлення</p>
-            </div>
+          <div className="flex flex-col items-center justify-center h-full gap-3 text-center text-muted-foreground py-12">
+            <ShoppingCart className="size-10 opacity-30" />
+            <p className="text-sm font-medium">Кошик порожній</p>
+            <p className="max-w-44 text-xs">Додайте товари з каталогу, щоб оформити замовлення.</p>
           </div>
         ) : (
           cart.map((item, i) => {
             const prod = products.find((p) => p.id === item.productId);
             return (
-              <div key={i} className="group relative rounded-3xl border border-border/40 bg-background/50 overflow-hidden hover:border-primary/20 hover:shadow-premium transition-all duration-300 animate-in slide-in-from-right-8" style={{ animationDelay: `${i * 100}ms` }}>
-                {/* Product Image/Mockup */}
-                <div className="relative aspect-square bg-white/[0.03] p-6 flex items-center justify-center overflow-hidden border-b border-border/20">
+              <div key={i} className="group rounded-xl border border-border bg-card overflow-hidden">
+                <div className="relative aspect-square bg-muted/20">
                   <MockupViewer
                     images={item.mockupsMap}
                     frontUrl={item.mockupDataUrl}
@@ -105,46 +121,35 @@ export function DesktopCartPanel({
                     fallbackUrl={item.productImage}
                     alt={item.productName}
                     size="lg"
-                    className="w-full h-full object-contain drop-shadow-2xl transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-full object-contain"
                   />
-                  <div className="absolute top-4 left-4 flex gap-1.5">
-                    <Badge variant="glass" className="h-6 px-2.5 text-[9px] font-black uppercase tracking-wider">{item.size}</Badge>
-                    <Badge variant="glass" className="h-6 px-2.5 text-[9px] font-black uppercase tracking-wider">{item.color}</Badge>
-                  </div>
                   <button
                     onClick={() => onRemove(i)}
-                    className="absolute top-4 right-4 size-9 rounded-2xl bg-white/60 backdrop-blur-md border border-white/40 flex items-center justify-center text-muted-foreground hover:bg-destructive hover:text-white hover:border-destructive transition-all opacity-0 group-hover:opacity-100 shadow-sm active:scale-90"
+                    className="absolute top-3 right-3 size-8 rounded-full border border-border bg-background/80 backdrop-blur flex items-center justify-center text-muted-foreground hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30 transition-colors"
                   >
                     <Trash2 className="size-4" />
                   </button>
                 </div>
 
-                {/* Info & Price */}
-                <div className="p-5 space-y-4">
-                  <div className="space-y-1.5">
-                    <p className="text-sm font-black tracking-tight line-clamp-2 text-foreground/90 group-hover:text-primary transition-colors">
-                      {item.productName}
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-black text-primary/60 bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10">{item.quantity} шт</span>
-                      <span className="text-[10px] font-bold text-muted-foreground/40">×</span>
-                      <span className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest">{((item.unitPriceCents + item.printCostCents) / 100).toFixed(0)} ₴</span>
-                    </div>
+                <div className="p-3 space-y-2">
+                  <div>
+                    <p className="text-xs font-semibold line-clamp-2">{item.productName}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{item.quantity} шт. · {item.size} · {item.color}</p>
                   </div>
 
                   {item.layers && item.layers.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5">
+                    <div className="flex flex-wrap gap-1">
                       {item.layers.map((layer, li) => (
-                        <Badge key={li} variant="info" className="text-[8px] font-black h-5 px-2 border-primary/5 bg-primary/[0.03]">
+                        <Badge key={li} variant="secondary" className="text-[9px] h-5 px-1.5">
                           {layer.side}
                         </Badge>
                       ))}
                     </div>
                   )}
 
-                  <div className="pt-4 border-t border-border/40 flex items-center justify-between">
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/30">Підсумок</span>
-                    <span className="text-lg font-black text-primary tracking-tight">
+                  <div className="pt-2 border-t border-border/50 flex items-center justify-between">
+                    <span className="text-[10px] font-medium text-muted-foreground">Разом</span>
+                    <span className="text-sm font-bold text-primary">
                       ₴{((item.unitPriceCents + item.printCostCents) * item.quantity / 100).toFixed(0)}
                     </span>
                   </div>
@@ -153,9 +158,9 @@ export function DesktopCartPanel({
                     variant="outline" 
                     size="sm"
                     onClick={() => { if (!prod) return; onEdit(i); }}
-                    className="w-full h-11 rounded-2xl text-[10px] font-black uppercase tracking-[0.15em] border-border/60 hover:border-primary/30 hover:text-primary hover:bg-primary/[0.02] transition-all"
+                    className="w-full h-9 rounded-full text-xs font-semibold"
                   >
-                    Налаштувати
+                    Редагувати
                   </Button>
                 </div>
               </div>
@@ -164,24 +169,23 @@ export function DesktopCartPanel({
         )}
       </div>
 
-      {/* Footer / Summary */}
-      <div className="p-8 border-t border-border/40 bg-background/60 backdrop-blur-2xl space-y-6">
-        <div className="flex items-end justify-between px-1">
+      <div className="p-4 border-t border-border bg-background space-y-3">
+        <div className="flex items-end justify-between">
           <div className="space-y-1.5">
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">Загальна сума</span>
-            <p className="text-3xl font-black text-foreground tracking-tighter">₴{(totalCents / 100).toFixed(0)}</p>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Загальна сума</span>
+            <p className="text-2xl font-black text-foreground tracking-tight">₴{(totalCents / 100).toFixed(0)}</p>
           </div>
-          <Badge variant="outline" className="h-7 px-3 font-black text-[10px] uppercase tracking-wider border-border/60 text-muted-foreground">
+          <Badge variant="outline" className="h-7 px-3 font-bold text-[10px]">
             {cart.length} позицій
           </Badge>
         </div>
         
         <Button 
-          className="w-full h-15 rounded-3xl font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-primary/30 transition-all active:scale-[0.98] gap-3"
+          className="w-full h-11 rounded-full font-semibold"
           onClick={onCheckout}
           disabled={cart.length === 0}
         >
-          <span>Перейти до оплати</span>
+          <span>Перейти до контактів</span>
           <ShoppingCart className="size-4" />
         </Button>
       </div>

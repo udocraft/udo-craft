@@ -1,10 +1,3 @@
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
 function getOrCreateId(key: string): string {
   if (typeof window === "undefined") return "ssr";
   let id = localStorage.getItem(key);
@@ -48,14 +41,19 @@ export async function track(
   const session_id = getOrCreateSession();
 
   try {
-    await supabase.from("site_events").insert({
-      event_type,
-      session_id,
-      visitor_id,
-      page: window.location.pathname,
-      referrer: document.referrer || null,
-      user_agent: navigator.userAgent,
-      metadata: metadata || null,
+    await fetch("/api/analytics/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      keepalive: true,
+      body: JSON.stringify({
+        event_type,
+        session_id,
+        visitor_id,
+        page: window.location.pathname,
+        referrer: document.referrer || null,
+        user_agent: navigator.userAgent,
+        metadata: metadata || null,
+      }),
     });
   } catch {
     // Analytics failures should never block the user flow

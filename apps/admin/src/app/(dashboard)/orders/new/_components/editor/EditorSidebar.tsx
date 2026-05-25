@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ArrowLeft, Layers, LayoutList, Pencil, Shapes, Type, Upload } from "lucide-react";
+import { ArrowLeft, Layers, LayoutList, Pencil, Type, Upload } from "lucide-react";
 import { type SidebarTabId } from "@udo-craft/shared";
 
 export interface EditorSidebarProps {
@@ -13,7 +13,6 @@ export interface EditorSidebarProps {
 
 const TABS: { id: SidebarTabId; label: string; Icon: React.ElementType }[] = [
   { id: "prints",  label: "Принти",  Icon: Layers      },
-  { id: "shapes",  label: "Фігури",  Icon: Shapes      },
   { id: "draw",    label: "Малюнок", Icon: Pencil      },
   { id: "text",    label: "Текст",   Icon: Type        },
   { id: "upload",  label: "Файл",    Icon: Upload      },

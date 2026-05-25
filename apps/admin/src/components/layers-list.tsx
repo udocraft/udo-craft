@@ -220,7 +220,7 @@ export default function LayersList({
                           <ChevronDown className={`size-3.5 text-muted-foreground transition-transform shrink-0 ${typeOpen === layer.id ? "rotate-180" : ""}`} />
                         </button>
                         {typeOpen === layer.id && (
-                          <div className="absolute bottom-full left-0 right-0 mb-1 rounded-xl border border-border bg-card shadow-lg overflow-hidden z-50">
+                          <div className="absolute left-0 right-0 top-full mt-1 rounded-xl border border-border bg-card shadow-lg overflow-hidden z-[80]">
                             <div className="max-h-48 overflow-y-auto">
                               {PRINT_TYPES.map((t) => (
                                 <button key={t.id} type="button"
@@ -261,7 +261,7 @@ export default function LayersList({
                               <ChevronDown className={`size-3.5 text-muted-foreground transition-transform shrink-0 ${sizeOpen === layer.id ? "rotate-180" : ""}`} />
                             </button>
                             {sizeOpen === layer.id && (
-                              <div className="absolute bottom-full left-0 right-0 mb-1 rounded-xl border border-border bg-card shadow-lg overflow-hidden z-50">
+                              <div className="absolute left-0 right-0 top-full mt-1 rounded-xl border border-border bg-card shadow-lg overflow-hidden z-[80]">
                                 <div className="max-h-48 overflow-y-auto">
                                   {sizePriceRows.map((r) => {
                                     const p = calcPrice(r.qty_tiers, quantity);
