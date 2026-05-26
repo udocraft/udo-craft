@@ -6,7 +6,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Product, Material, ProductColorVariant, ProductMarketingMeta } from "@udo-craft/shared";
 import { DEFAULT_PRODUCT_FEATURE_GROUPS, getAllImages, getCustomizableImages, normalizeProductMarketingMeta, resolveProductImages } from "@udo-craft/shared";
-import { ArrowLeft, ArrowRight, Award, BadgeCheck, BadgePercent, Check, ChevronLeft, ChevronRight, Clock3, Layers3, Minus, PackageCheck, Paintbrush, Ruler, Shield, ShieldCheck, Shirt, ShoppingBag, Star, Tags, Truck, Zap, Plus } from "lucide-react";
+import { ArrowLeft, ArrowRight, Award, BadgeCheck, BadgePercent, Check, ChevronDown, ChevronLeft, ChevronRight, CircleSlash, Clock3, Layers3, Minus, PackageCheck, Ruler, Shield, ShieldCheck, Shirt, Star, Tags, ToolCase, Truck, Zap, Plus } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { FooterSection } from "@/app/_sections/FooterSection";
 import { ProductCardDetailed } from "@/components/ProductCardDetailed";
@@ -114,6 +114,7 @@ export function ProductDetailClient({
   const [imageKeys, setImageKeys]                 = useState<string[]>(initialKeys);
   const [added, setAdded]                         = useState(false);
   const [activeInfoTab, setActiveInfoTab]          = useState<InfoTab>("description");
+  const [bulkOpen, setBulkOpen]                    = useState(false);
 
   const selectedVariant = variants.find((v) => v.id === selectedVariantId) ?? null;
 
@@ -140,7 +141,7 @@ export function ProductDetailClient({
   const nextDiscount = discountTiers.find((tier) => quantity < tier.qty);
   const sliderMax = Math.max(100, meta.min_order_qty, quantity, discountTiers[discountTiers.length - 1]?.qty ?? 0);
   const sliderMarks = Array.from(new Set([1, meta.min_order_qty, ...discountTiers.map((tier) => tier.qty), sliderMax])).sort((a, b) => a - b);
-  const trustBadges = [
+  const deliveryBadges = [
     { icon: Clock3, label: `${meta.delivery_min_days}–${meta.delivery_max_days} днів виробництво` },
     { icon: PackageCheck, label: `Від ${meta.min_order_qty} одиниць` },
     { icon: Shield, label: "Контроль якості" },
@@ -413,8 +414,13 @@ export function ProductDetailClient({
               </div>
 
               {/* Bulk pricing */}
-              <div className="rounded-2xl border border-border bg-muted/30 p-4 space-y-4">
-                <div className="flex items-start justify-between gap-3">
+              <div className="rounded-2xl border border-border bg-muted/30">
+                <button
+                  type="button"
+                  onClick={() => setBulkOpen((value) => !value)}
+                  aria-expanded={bulkOpen}
+                  className="flex w-full items-start justify-between gap-3 p-4 text-left transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
                   <div>
                     <p className="flex items-center gap-2 text-sm font-black">
                       <BadgePercent className="w-4 h-4 text-primary" />
@@ -422,65 +428,88 @@ export function ProductDetailClient({
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">{meta.promo_note}</p>
                   </div>
-                </div>
+                  <ChevronDown className={`mt-1 size-4 text-muted-foreground transition-transform ${bulkOpen ? "rotate-180" : ""}`} />
+                </button>
 
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between gap-4">
-                    <input
-                      type="range"
-                      min={1}
-                      max={sliderMax}
-                      value={Math.min(quantity, sliderMax)}
-                      onChange={(event) => setQuantity(Number(event.target.value))}
-                      list="product-quantity-marks"
-                      className="h-2 flex-1 cursor-pointer accent-foreground"
-                      aria-label="Кількість товарів для оптової ціни"
-                    />
-                    <span className="w-28 text-right text-lg font-bold">{quantity} товарів</span>
-                  </div>
-                  <datalist id="product-quantity-marks">
-                    {sliderMarks.map((mark) => (
-                      <option key={mark} value={mark} />
-                    ))}
-                  </datalist>
-                  <div className="relative h-5">
-                    {sliderMarks.map((mark) => (
-                      <button
-                        key={mark}
-                        type="button"
-                        onClick={() => setQuantity(mark)}
-                        className="absolute top-0 -translate-x-1/2 text-[10px] font-semibold text-muted-foreground hover:text-foreground"
-                        style={{ left: `${((mark - 1) / Math.max(1, sliderMax - 1)) * 100}%` }}
-                      >
-                        {mark}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                <AnimatePresence initial={false}>
+                  {bulkOpen && (
+                    <motion.div
+                      key="bulk-calculator"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <div className="space-y-4 border-t border-border p-4">
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between gap-4">
+                            <input
+                              type="range"
+                              min={1}
+                              max={sliderMax}
+                              value={Math.min(quantity, sliderMax)}
+                              onChange={(event) => setQuantity(Number(event.target.value))}
+                              list="product-quantity-marks"
+                              className="h-2 flex-1 cursor-pointer accent-foreground"
+                              aria-label="Кількість товарів для оптової ціни"
+                            />
+                            <span className="w-28 text-right text-lg font-bold">{quantity} товарів</span>
+                          </div>
+                          <datalist id="product-quantity-marks">
+                            {sliderMarks.map((mark) => (
+                              <option key={mark} value={mark} />
+                            ))}
+                          </datalist>
+                          <div className="relative h-5">
+                            {sliderMarks.map((mark) => (
+                              <button
+                                key={mark}
+                                type="button"
+                                onClick={() => setQuantity(mark)}
+                                className="absolute top-0 -translate-x-1/2 text-[10px] font-semibold text-muted-foreground hover:text-foreground"
+                                style={{ left: `${((mark - 1) / Math.max(1, sliderMax - 1)) * 100}%` }}
+                              >
+                                {mark}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
 
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-xs text-muted-foreground">Ціна зі знижкою</p>
-                    <p className="text-2xl font-black">{fmtPrice(discountedCents)}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs text-muted-foreground">Поточна знижка</p>
-                    <p className="text-2xl font-black">{discountPct}%</p>
-                  </div>
-                </div>
-                {nextDiscount && (
-                  <Link href={meta.guide_url || "/#contact"} className="flex items-start gap-2 text-sm text-primary hover:underline">
-                    <Tags className="mt-0.5 w-4 h-4 shrink-0" />
-                    Замовте ще {nextDiscount.qty - quantity} шт, щоб отримати знижку {nextDiscount.discount_pct}%.
-                  </Link>
-                )}
+                        <div className="flex items-center justify-between gap-4">
+                          <div>
+                            <p className="text-xs text-muted-foreground">Ціна зі знижкою</p>
+                            <p className="text-2xl font-black">{fmtPrice(discountedCents)}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-xs text-muted-foreground">Поточна знижка</p>
+                            <p className="text-2xl font-black">{discountPct}%</p>
+                          </div>
+                        </div>
+                        {nextDiscount && (
+                          <p className="flex items-start gap-2 text-sm text-muted-foreground">
+                            <Tags className="mt-0.5 w-4 h-4 shrink-0 text-primary" />
+                            Замовте ще {nextDiscount.qty - quantity} шт, щоб отримати знижку {nextDiscount.discount_pct}%.
+                          </p>
+                        )}
+                        <Link
+                          href={meta.guide_url || "/#contact"}
+                          className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        >
+                          Отримати консультацію по тиражу
+                          <ArrowRight className="size-4" />
+                        </Link>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <button onClick={handleCustomize}
                   className="flex-1 inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold text-sm px-6 py-3.5 rounded-full active:scale-95 transition-all duration-200 shadow-md hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                  <Paintbrush className="w-4 h-4" />
+                  <ToolCase className="w-4 h-4" />
                   Додати принт
                 </button>
                 <button onClick={handleAddToCart}
@@ -494,21 +523,11 @@ export function ProductDetailClient({
                     ) : (
                       <motion.span key="add" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
                         className="flex items-center gap-2">
-                        <ShoppingBag className="w-4 h-4" /> Без принту
+                        <CircleSlash className="w-4 h-4" /> Без принту
                       </motion.span>
                     )}
                   </AnimatePresence>
                 </button>
-              </div>
-
-              {/* Trust badges */}
-              <div className="grid grid-cols-3 gap-3 pt-1">
-                {trustBadges.map(({ icon: Icon, label }) => (
-                  <div key={label} className="flex flex-col items-center gap-1.5 p-3 rounded-lg bg-muted/50 text-center">
-                    <Icon className="w-4 h-4 text-primary" strokeWidth={1.5} />
-                    <span className="text-[10px] font-medium text-muted-foreground leading-tight">{label}</span>
-                  </div>
-                ))}
               </div>
 
               {/* Back link */}
@@ -576,7 +595,7 @@ export function ProductDetailClient({
                 >
                   <RichTextBlock text={meta.delivery_note || ""} />
                   <div className="grid gap-3 sm:grid-cols-3 md:grid-cols-1">
-                    {trustBadges.map(({ icon: Icon, label }) => (
+                    {deliveryBadges.map(({ icon: Icon, label }) => (
                       <div key={label} className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 p-4">
                         <Icon className="size-5 text-primary" strokeWidth={1.7} />
                         <span className="text-sm font-bold">{label}</span>

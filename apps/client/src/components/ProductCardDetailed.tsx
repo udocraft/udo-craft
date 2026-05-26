@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, CircleSlash, ToolCase } from "lucide-react";
 import { Product, ProductColorVariant, Material, resolveProductImages, getCustomizableImages } from "@udo-craft/shared";
 
 interface ProductCardDetailedProps {
@@ -236,6 +236,7 @@ export function ProductCardDetailed({
             disabled={isOutOfStock}
             className="w-full py-2.5 rounded-full bg-primary text-white text-xs font-bold hover:bg-primary/90 active:scale-[0.98] transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
           >
+            <ToolCase className="mr-1.5 inline size-3.5 align-[-2px]" />
             Додати принт
           </button>
           <button
@@ -244,6 +245,7 @@ export function ProductCardDetailed({
             disabled={isOutOfStock}
             className="w-full py-2.5 rounded-full border border-border bg-background text-foreground text-xs font-bold hover:border-foreground/40 hover:bg-muted active:scale-[0.98] transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
           >
+            <CircleSlash className="mr-1.5 inline size-3.5 align-[-2px]" />
             Додати без принта
           </button>
         </div>
