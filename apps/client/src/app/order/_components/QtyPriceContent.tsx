@@ -68,8 +68,6 @@ export function QtyPriceContent({
 }: QtyPriceContentProps) {
   const [noteOpen, setNoteOpen] = React.useState(false);
   const sortedDiscounts = [...(product.discount_grid ?? [])].sort((a, b) => a.qty - b.qty);
-  const sliderMax = Math.max(100, quantity, sortedDiscounts[sortedDiscounts.length - 1]?.qty ?? 0);
-  const sliderMarks = Array.from(new Set([1, ...sortedDiscounts.map((tier) => tier.qty), sliderMax])).sort((a, b) => a - b);
 
   return (
     <div className={`space-y-5 pb-4 ${disabled ? "opacity-50 pointer-events-none" : ""}`}>
@@ -111,38 +109,30 @@ export function QtyPriceContent({
       </div>
 
       {sortedDiscounts.length > 0 && (
-        <div className="rounded-xl border border-border bg-muted/30 p-3 space-y-2">
-          <div className="flex items-center justify-between gap-3">
-            <input
-              type="range"
-              min={1}
-              max={sliderMax}
-              value={Math.min(quantity, sliderMax)}
-              onChange={(e) => { const next = Number(e.target.value); setQuantity(next); setQtyStr(String(next)); }}
-              list="order-quantity-marks"
-              className="h-2 flex-1 cursor-pointer accent-foreground"
-              disabled={disabled}
-              aria-label="Кількість товарів для розрахунку ціни"
-            />
-            <span className="w-20 text-right text-sm font-bold">{quantity} шт</span>
-          </div>
-          <datalist id="order-quantity-marks">
-            {sliderMarks.map((mark) => <option key={mark} value={mark} />)}
-          </datalist>
-          <div className="relative h-5">
-            {sliderMarks.map((mark) => (
+        <div
+          className="grid gap-1.5"
+          style={{ gridTemplateColumns: `repeat(${sortedDiscounts.length}, minmax(0, 1fr))` }}
+        >
+          {sortedDiscounts.map((tier, index) => {
+            const nextQty = sortedDiscounts[index + 1]?.qty;
+            const active = quantity >= tier.qty && (nextQty === undefined || quantity < nextQty);
+            return (
               <button
-                key={mark}
+                key={tier.qty}
                 type="button"
                 disabled={disabled}
-                onClick={() => { setQuantity(mark); setQtyStr(String(mark)); }}
-                className="absolute top-0 -translate-x-1/2 text-[10px] font-semibold text-muted-foreground hover:text-foreground disabled:pointer-events-none"
-                style={{ left: `${((mark - 1) / Math.max(1, sliderMax - 1)) * 100}%` }}
+                onClick={() => { setQuantity(tier.qty); setQtyStr(String(tier.qty)); }}
+                className={`cursor-pointer rounded-xl border px-1 py-2 text-center text-xs transition-all disabled:cursor-not-allowed disabled:opacity-50 ${
+                  active
+                    ? "border-primary bg-primary font-semibold text-primary-foreground"
+                    : "border-primary/40 text-primary hover:border-primary hover:bg-primary/5"
+                }`}
               >
-                {mark}
+                <div className="font-bold whitespace-nowrap">від {tier.qty}</div>
+                <div className="text-[10px] opacity-80">−{tier.discount_pct}%</div>
               </button>
-            ))}
-          </div>
+            );
+          })}
         </div>
       )}
 

@@ -142,8 +142,14 @@ export function Customizer({ product, printZones, sizeChart, materials, variants
   const addDisabledReason = requiresGarmentSize && !selectedSize ? "Оберіть розмір товару."
     : hasIncompletePrintSizes ? "Оберіть розмір для кожного нанесення." : null;
 
-  const addLayer = (file: File) => addLayerFromHook(file, activeSide, printPricing);
-  const addTextLayer = () => addTextLayerFromHook(activeSide, printPricing);
+  const addLayer = (file: File) => {
+    addLayerFromHook(file, activeSide, printPricing);
+    setActiveTab("layers");
+  };
+  const addTextLayer = () => {
+    addTextLayerFromHook(activeSide, printPricing);
+    setActiveTab("layers");
+  };
 
   const handleAddComposition = (composition: TextComposition) => {
     const now = Date.now();
@@ -173,6 +179,7 @@ export function Customizer({ product, printZones, sizeChart, materials, variants
     }));
     setLayersWithRef((prev) => [...prev, ...newLayers]);
     setActiveLayerId(newLayers[0].id);
+    setActiveTab("layers");
   };
 
   const selectedLayer = layers.find((l) => l.id === activeLayerId) ?? null;

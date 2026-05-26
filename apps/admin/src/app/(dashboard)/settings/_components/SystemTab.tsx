@@ -2,9 +2,22 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { RefreshCw, CheckCircle2, AlertTriangle, XCircle, Clock } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { RefreshCw, CheckCircle2, AlertTriangle, XCircle, Clock, Loader2, Trash2 } from "lucide-react";
 import type { AdminHealthResponse, CheckStatus, HealthCheck } from "@/app/api/health/types";
+import { toast } from "sonner";
 
 // ── Status Badge ──────────────────────────────────────────────────────────────
 
@@ -129,6 +142,10 @@ export function SystemTab() {
   const [data, setData] = useState<AdminHealthResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [resetOpen, setResetOpen] = useState(false);
+  const [resetArmed, setResetArmed] = useState(false);
+  const [resetPhrase, setResetPhrase] = useState("");
+  const [resetting, setResetting] = useState(false);
 
   const fetch_ = useCallback(async () => {
     setLoading(true);
@@ -154,6 +171,33 @@ export function SystemTab() {
   const clientChecks = data?.client && !clientIsError ? (data.client as { checks: HealthCheck[] }).checks : [];
   const clientEnv = data?.client && !clientIsError ? (data.client as { env: Record<string, boolean> }).env : null;
   const clientDeployment = data?.client && !clientIsError ? (data.client as { deployment: AdminHealthResponse["admin"]["deployment"] }).deployment : null;
+  const canHardReset = resetArmed && resetPhrase === "HARD RESET ALL DATA";
+
+  const hardReset = async () => {
+    if (!canHardReset) return;
+    setResetting(true);
+    try {
+      const res = await fetch("/api/admin/hard-reset", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirmation: resetPhrase }),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body?.error ?? "Не вдалося виконати hard reset");
+      const deleted = Array.isArray(body.results)
+        ? body.results.reduce((sum: number, row: { deleted?: number | null }) => sum + (row.deleted ?? 0), 0)
+        : 0;
+      toast.success(`Hard reset завершено. Видалено рядків: ${deleted}`);
+      setResetOpen(false);
+      setResetArmed(false);
+      setResetPhrase("");
+      fetch_();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Не вдалося виконати hard reset");
+    } finally {
+      setResetting(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -237,6 +281,78 @@ export function SystemTab() {
           </div>
         </div>
       )}
+
+      <SectionCard title="Danger zone">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="space-y-1">
+            <p className="text-sm font-semibold text-destructive">Hard reset all data</p>
+            <p className="text-xs text-muted-foreground">
+              Deletes orders, catalog, print settings, CMS, analytics, shares and ERP records. Admin users are not deleted.
+            </p>
+          </div>
+          <Button type="button" variant="destructive" onClick={() => setResetOpen(true)} className="shrink-0">
+            <Trash2 className="size-4" />
+            Hard reset
+          </Button>
+        </div>
+      </SectionCard>
+
+      <AlertDialog open={resetOpen} onOpenChange={(open) => {
+        if (resetting) return;
+        setResetOpen(open);
+        if (!open) {
+          setResetArmed(false);
+          setResetPhrase("");
+        }
+      }}>
+        <AlertDialogContent className="max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogMedia className="bg-destructive/10 text-destructive">
+              <Trash2 className="size-5" />
+            </AlertDialogMedia>
+            <AlertDialogTitle>Hard reset all data?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This permanently removes operational data from Supabase. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="space-y-3">
+            <label className="flex items-start gap-2 rounded-lg border border-destructive/20 bg-destructive/5 p-3 text-sm">
+              <input
+                type="checkbox"
+                checked={resetArmed}
+                onChange={(event) => setResetArmed(event.target.checked)}
+                className="mt-0.5"
+                disabled={resetting}
+              />
+              <span>I understand this will delete all admin data except admin users.</span>
+            </label>
+            <div className="space-y-1.5">
+              <p className="text-xs font-semibold text-muted-foreground">
+                Type <span className="font-mono text-foreground">HARD RESET ALL DATA</span> to confirm.
+              </p>
+              <Input
+                value={resetPhrase}
+                onChange={(event) => setResetPhrase(event.target.value)}
+                disabled={resetting}
+                autoComplete="off"
+                className="font-mono"
+              />
+            </div>
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={resetting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              type="button"
+              variant="destructive"
+              disabled={!canHardReset || resetting}
+              onClick={hardReset}
+            >
+              {resetting ? <Loader2 className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
+              Delete everything
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

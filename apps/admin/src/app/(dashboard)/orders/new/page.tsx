@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { generateInvoicePDF } from "@/lib/generate-invoice";
 import { Product, PrintZone, Material, ProductColorVariant, resolveProductImages, getCustomizableImages } from "@udo-craft/shared";
-import { useSidebar } from "@/components/ui/sidebar";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Customizer } from "./_components/Customizer";
@@ -29,7 +28,6 @@ interface SizeChart { id: string; name: string; rows: Record<string, string>[]; 
 
 export default function NewOrderPage() {
   const router = useRouter();
-  const { setOpen: setSidebarOpen } = useSidebar();
 
   // Data
   const [products, setProducts] = useState<ProductWithConfig[]>([]);
@@ -42,7 +40,6 @@ export default function NewOrderPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setSidebarOpen(false);
     Promise.all([
       fetch("/api/products").then((r) => r.json()),
       fetch("/api/product-color-variants").then((r) => r.json()),
@@ -78,7 +75,6 @@ export default function NewOrderPage() {
       })
       .catch(() => toast.error("Помилка завантаження даних"))
       .finally(() => setLoading(false));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Cart

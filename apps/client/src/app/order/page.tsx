@@ -24,36 +24,49 @@ function OrderPageLoader() {
   const [variants, setVariants] = useState<ProductColorVariant[]>([]);
   const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
+
+    const jsonOrFallback = async <T,>(url: string, fallback: T): Promise<T> => {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) return fallback;
+        return (await res.json()) as T;
+      } catch {
+        return fallback;
+      }
+    };
+
     const load = async () => {
-      const [{ data: prods }, chartsRes, zonesRes, { data: mats }, { data: vars }] = await Promise.all([
-        fetch("/api/products?active=true").then(async (r) => ({ data: r.ok ? await r.json() : [] })),
-        fetch("/api/size-charts"),
-        fetch("/api/print-zones").then(async (r) => ({ data: r.ok ? await r.json() : [] })),
-        fetch("/api/materials").then(async (r) => ({ data: r.ok ? await r.json() : [] })),
-        fetch("/api/product-color-variants").then(async (r) => ({ data: r.ok ? await r.json() : [] })),
+      setLoading(true);
+      setLoadError(null);
+
+      const [prods, charts, zones, mats, vars, cats] = await Promise.all([
+        jsonOrFallback<ProductWithConfig[]>("/api/products?active=true", []),
+        jsonOrFallback<SizeChart[]>("/api/size-charts", []),
+        jsonOrFallback<PrintZone[]>("/api/print-zones", []),
+        jsonOrFallback<Material[]>("/api/materials", []),
+        jsonOrFallback<ProductColorVariant[]>("/api/product-color-variants", []),
+        jsonOrFallback<{ id: string; name: string }[]>("/api/categories", []),
       ]);
 
-      const prodList = (prods || []) as ProductWithConfig[];
+      if (cancelled) return;
+
+      const prodList = prods || [];
       setProducts(prodList);
-      setMaterials((mats || []) as Material[]);
-      setVariants((vars || []) as ProductColorVariant[]);
+      setMaterials(mats || []);
+      setVariants(vars || []);
+      setCategories(cats || []);
 
-      const catsRes = await fetch("/api/categories");
-      const cats = catsRes.ok ? await catsRes.json() : [];
-      setCategories((cats || []) as { id: string; name: string }[]);
-
-      if (chartsRes.ok) {
-        const charts: SizeChart[] = await chartsRes.json();
-        const map: Record<string, SizeChart> = {};
-        charts.forEach((c) => { map[c.id] = c; });
-        setSizeCharts(map);
-      }
+      const map: Record<string, SizeChart> = {};
+      (charts || []).forEach((c) => { map[c.id] = c; });
+      setSizeCharts(map);
 
       const zoneMap: Record<string, { front?: PrintZone | null; back?: PrintZone | null }> = {};
       prodList.forEach((p) => { zoneMap[p.id] = {}; });
-      ((zonesRes.data || []) as PrintZone[]).forEach((z) => {
+      (zones || []).forEach((z) => {
         if (!zoneMap[z.product_id]) zoneMap[z.product_id] = {};
         const side = (z as any).side as "front" | "back";
         if (!zoneMap[z.product_id][side]) zoneMap[z.product_id][side] = z;
@@ -61,7 +74,13 @@ function OrderPageLoader() {
       setPrintZones(zoneMap);
       setLoading(false);
     };
-    load();
+    load().catch(() => {
+      if (cancelled) return;
+      setLoadError("Не вдалося завантажити каталог. Спробуйте оновити сторінку.");
+      setLoading(false);
+    });
+
+    return () => { cancelled = true; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -76,6 +95,7 @@ function OrderPageLoader() {
       variants={variants}
       categories={categories}
       loading={loading}
+      loadError={loadError}
     />
   );
 }

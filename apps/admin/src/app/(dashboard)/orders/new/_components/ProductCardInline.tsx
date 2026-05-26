@@ -5,6 +5,7 @@ import { Product, Material, ProductColorVariant, resolveProductImages, getCustom
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { CircleSlash, ToolCase } from "lucide-react";
 
 interface ProductWithConfig extends Product {
   size_chart_id?: string | null;
@@ -176,17 +177,19 @@ export function ProductCardInline({ product, variants, materials, onOpen, onAddW
           <Button 
             size="sm"
             onClick={(e) => { e.stopPropagation(); onOpen(activeVariant, resolveSize()); }}
-            className="w-full font-bold uppercase tracking-widest text-[10px]"
+            className="w-full gap-2 font-bold text-xs"
           >
-            Налаштувати Принт
+            <ToolCase className="size-5" />
+            Додати принт
           </Button>
           <Button 
             variant="outline" 
             size="sm"
             onClick={(e) => { e.stopPropagation(); onAddWithoutPrint(activeVariant, resolveSize()); }}
-            className="w-full font-bold uppercase tracking-widest text-[10px] border-border/60"
+            className="w-full gap-2 border-border/60 font-bold text-xs"
           >
-            Додати як є
+            <CircleSlash className="size-5" />
+            Без принту
           </Button>
         </div>
       </CardContent>

@@ -217,8 +217,16 @@ export function Customizer({
     onClose();
   };
 
-  const addLayer = (file: File) => { if (!isReadOnly) s.addLayer(file); };
-  const addTextLayer = () => { if (!isReadOnly) s.addTextLayer(); };
+  const addLayer = (file: File) => {
+    if (isReadOnly) return;
+    s.addLayer(file);
+    s.setActiveTab("layers");
+  };
+  const addTextLayer = () => {
+    if (isReadOnly) return;
+    s.addTextLayer();
+    s.setActiveTab("layers");
+  };
 
   const handleAddComposition = (composition: TextComposition) => {
     const now = Date.now();
@@ -251,6 +259,7 @@ export function Customizer({
     }));
     s.setLayersWithRef((prev) => [...prev, ...newLayers]);
     s.setActiveLayerId(newLayers[0].id);
+    s.setActiveTab("layers");
   };
 
   const selectedLayer = s.layers.find((l) => l.id === s.activeLayerId) ?? null;

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import { GripVertical, Trash2, Type, Copy, ChevronDown } from "lucide-react";
+import { GripVertical, Trash2, Type, Copy } from "lucide-react";
 import { PRINT_TYPES, type PrintLayer, type PrintTypeId } from "@udo-craft/shared";
 
 export interface PrintTypePricingRow {
@@ -59,8 +59,6 @@ export default function LayersList({
   const dragItem = useRef<number | null>(null);
   const [dropTarget, setDropTarget] = useState<number | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
-  const [typeOpen, setTypeOpen] = useState<string | null>(null);
-  const [sizeOpen, setSizeOpen] = useState<string | null>(null);
 
   const pricingRef = useRef(pricing);
   pricingRef.current = pricing;
@@ -157,8 +155,12 @@ export default function LayersList({
       {sideLayers.map((layer, idx) => {
         const isActive = activeLayerId === layer.id;
         const sizeLabel = layer.sizeLabel;
-        const sizePriceRows = pricing.filter((r) => r.print_type === layer.type);
+        const sizePriceRows = pricing
+          .filter((r) => r.print_type === layer.type)
+          .sort((a, b) => (a.size_min_cm + a.size_max_cm) / 2 - (b.size_min_cm + b.size_max_cm) / 2)
+          .slice(0, 5);
         const isText = layer.kind === "text";
+        const currentType = PRINT_TYPES.find(t => t.id === layer.type) ?? PRINT_TYPES[0];
 
         return (
           <div key={layer.id} data-layer-idx={idx}>
@@ -227,61 +229,77 @@ export default function LayersList({
 
             {isActive && (
               <div className="mt-1 rounded-xl border border-border bg-card overflow-visible">
-                <div className="p-3 space-y-2">
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">Тип нанесення</label>
-                      <div className="relative">
-                        <button type="button" onClick={() => { setTypeOpen(typeOpen === layer.id ? null : layer.id); setSizeOpen(null); }}
-                          className="w-full flex items-center justify-between gap-2 h-9 px-3 rounded-lg border border-border bg-background hover:border-primary/50 transition-colors text-left">
-                          <span className="text-sm truncate">{PRINT_TYPES.find(t => t.id === layer.type)?.label ?? layer.type}</span>
-                          <ChevronDown className={`size-3.5 text-muted-foreground transition-transform shrink-0 ${typeOpen === layer.id ? "rotate-180" : ""}`} />
+                <div className="p-3 space-y-3">
+                  <div className="flex gap-3 rounded-xl bg-muted/30 p-2">
+                    <div className="size-14 rounded-lg overflow-hidden shrink-0 flex items-center justify-center border border-border/40 bg-background"
+                      style={{ background: "repeating-conic-gradient(#e5e7eb 0% 25%, transparent 0% 50%) 0 0 / 8px 8px" }}>
+                      {isText ? (
+                        <svg width="56" height="56" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+                          <text x="50%" y="55%" dominantBaseline="middle" textAnchor="middle"
+                            fontFamily={`'${layer.textFont ?? "Montserrat"}', sans-serif`}
+                            fontSize="20" fill={layer.textColor ?? "#000000"}>
+                            {(layer.textContent ?? "T").replace(/\n/g, " ").slice(0, 3)}
+                          </text>
+                        </svg>
+                      ) : (
+                        <img src={layer.url} alt="" className="size-full object-contain" />
+                      )}
+                    </div>
+                    <div className="min-w-0 space-y-1">
+                      <p className="text-xs font-semibold text-foreground">Налаштуйте шар</p>
+                      <p className="text-[11px] leading-relaxed text-muted-foreground">
+                        Оберіть тип нанесення та розмір. Вартість оновиться автоматично.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">Тип нанесення</label>
+                    <div className="flex flex-wrap gap-1.5">
+                      {PRINT_TYPES.map((t) => (
+                        <button
+                          key={t.id}
+                          type="button"
+                          onClick={() => onTypeChange(layer.id, t.id as PrintTypeId)}
+                          className={`rounded-full border px-2.5 py-1.5 text-[11px] font-semibold transition-all ${
+                            layer.type === t.id
+                              ? "border-transparent text-white shadow-sm"
+                              : "border-border bg-background text-muted-foreground hover:border-foreground/30 hover:text-foreground"
+                          }`}
+                          style={layer.type === t.id ? { backgroundColor: currentType.color } : undefined}
+                        >
+                          {t.label}
                         </button>
-                        {typeOpen === layer.id && (
-                          <div className="absolute left-0 right-0 top-full mt-1 rounded-xl border border-border bg-card shadow-lg overflow-hidden z-[80]">
-                            <div className="max-h-48 overflow-y-auto">
-                              {PRINT_TYPES.map((t) => (
-                                <button key={t.id} type="button"
-                                  onClick={() => { onTypeChange(layer.id, t.id as PrintTypeId); setTypeOpen(null); }}
-                                  className={`w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-muted/60 transition-colors text-sm ${layer.type === t.id ? "bg-primary/5 text-primary" : ""}`}>
-                                  {t.label}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
+                      ))}
+                    </div>
+                  </div>
+
+                  {sizePriceRows.length > 0 && onSizeLabelChange && (
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">Розмір нанесення</label>
+                      <div className="grid grid-cols-5 gap-1.5">
+                        {sizePriceRows.map((r) => {
+                          const p = calcPrice(r.qty_tiers, quantity);
+                          const selected = sizeLabel === r.size_label;
+                          return (
+                            <button
+                              key={r.size_label}
+                              type="button"
+                              onClick={() => onSizeLabelChange(layer.id, r.size_label ?? "")}
+                              className={`min-w-0 rounded-xl border px-1.5 py-2 text-center transition-all ${
+                                selected
+                                  ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                                  : "border-border bg-background text-foreground hover:border-primary/40 hover:bg-primary/5"
+                              }`}
+                            >
+                              <span className="block truncate text-xs font-black uppercase">{r.size_label}</span>
+                              {p ? <span className="block truncate text-[10px] opacity-75">{(p / 100).toFixed(0)} ₴</span> : null}
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
-                    {sizePriceRows.length > 0 && onSizeLabelChange && (
-                      <div className="space-y-1">
-                        <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">Розмір нанесення</label>
-                        <div className="relative">
-                          <button type="button" onClick={() => { setSizeOpen(sizeOpen === layer.id ? null : layer.id); setTypeOpen(null); }}
-                            className="w-full flex items-center justify-between gap-2 h-9 px-3 rounded-lg border border-border bg-background hover:border-primary/50 transition-colors text-left">
-                            <span className="text-sm truncate">{sizeLabel ?? "Розмір"}</span>
-                            <ChevronDown className={`size-3.5 text-muted-foreground transition-transform shrink-0 ${sizeOpen === layer.id ? "rotate-180" : ""}`} />
-                          </button>
-                          {sizeOpen === layer.id && (
-                            <div className="absolute left-0 right-0 top-full mt-1 rounded-xl border border-border bg-card shadow-lg overflow-hidden z-[80]">
-                              <div className="max-h-48 overflow-y-auto">
-                                {sizePriceRows.map((r) => {
-                                  const p = calcPrice(r.qty_tiers, quantity);
-                                  return (
-                                    <button key={r.size_label} type="button"
-                                      onClick={() => { onSizeLabelChange(layer.id, r.size_label ?? ""); setSizeOpen(null); }}
-                                      className={`w-full flex items-center justify-between px-3 py-2 text-left hover:bg-muted/60 transition-colors gap-2 ${sizeLabel === r.size_label ? "bg-primary/5 text-primary" : ""}`}>
-                                      <span className="text-sm font-medium">{r.size_label}</span>
-                                      {p ? <span className="text-xs text-muted-foreground shrink-0">{(p / 100).toFixed(0)} ₴/шт</span> : null}
-                                    </button>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  )}
                 </div>
               </div>
             )}

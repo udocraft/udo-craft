@@ -499,7 +499,7 @@ export function ProductDetailClient({
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <button onClick={handleCustomize}
                   className="flex-1 inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold text-sm px-6 py-3.5 rounded-full active:scale-95 transition-all duration-200 shadow-md hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                  <ToolCase className="w-4 h-4" />
+                  <ToolCase className="size-5" />
                   Додати принт
                 </button>
                 <button onClick={handleAddToCart}
@@ -508,12 +508,12 @@ export function ProductDetailClient({
                     {added ? (
                       <motion.span key="added" initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 4 }}
                         className="flex items-center gap-2">
-                        <Check className="w-4 h-4" /> Додано до кошика
+                        <Check className="size-5" /> Додано до кошика
                       </motion.span>
                     ) : (
                       <motion.span key="add" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
                         className="flex items-center gap-2">
-                        <CircleSlash className="w-4 h-4" /> Без принту
+                        <CircleSlash className="size-5" /> Без принту
                       </motion.span>
                     )}
                   </AnimatePresence>

@@ -39,6 +39,7 @@ export interface OrderPageInnerProps {
   variants: ProductColorVariant[];
   categories: { id: string; name: string }[];
   loading: boolean;
+  loadError?: string | null;
 }
 
 export function OrderPageInner({
@@ -49,6 +50,7 @@ export function OrderPageInner({
   variants,
   categories,
   loading,
+  loadError,
 }: OrderPageInnerProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -224,6 +226,22 @@ export function OrderPageInner({
 
   if (loading) {
     return <LogoLoader />;
+  }
+
+  if (loadError && products.length === 0) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 px-6 text-center">
+        <p className="text-lg font-bold">Не вдалося завантажити каталог</p>
+        <p className="max-w-md text-sm text-muted-foreground">{loadError}</p>
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+          className="mt-2 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90"
+        >
+          Спробувати ще раз
+        </button>
+      </div>
+    );
   }
 
   return (
