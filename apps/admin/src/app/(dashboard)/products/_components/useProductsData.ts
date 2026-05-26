@@ -60,7 +60,24 @@ export interface Product {
   print_area_ids?: string[];
   category_id?: string | null;
   discount_grid?: { qty: number; discount_pct: number }[];
+  marketing_meta?: ProductMarketingMeta;
   product_images?: ProductImage[];
+}
+
+export interface ProductMarketingMeta {
+  rating_avg?: number;
+  rating_count?: number;
+  delivery_min_days?: number;
+  delivery_max_days?: number;
+  min_order_qty?: number;
+  promo_note?: string;
+  guide_url?: string;
+  badges?: string[];
+  feature_groups?: Array<{
+    title: string;
+    icon?: string;
+    items: Array<{ title: string; description?: string }>;
+  }>;
 }
 
 // ── Hook ──────────────────────────────────────────────────────────────────────

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Product, Material, ProductColorVariant } from "@udo-craft/shared";
 import { resolveProductImages, getCustomizableImages, getAllImages } from "@udo-craft/shared";
-import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Minus, Plus, Paintbrush, ShoppingBag, Check, Truck, Shield, RotateCcw } from "lucide-react";
+import { ArrowLeft, ArrowRight, Award, BadgePercent, Check, ChevronDown, ChevronLeft, ChevronRight, Clock3, Layers3, Minus, PackageCheck, Paintbrush, Ruler, Shield, Shirt, ShoppingBag, Sparkles, Star, Tags, Truck, Zap, Plus } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { FooterSection } from "@/app/_sections/FooterSection";
 import { ProductCardDetailed } from "@/components/ProductCardDetailed";
@@ -14,11 +14,28 @@ import { SizeChartModal } from "@/components/SizeChartModal";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-export interface ProductWithMeta extends Omit<Product, "description"> {
+export interface ProductWithMeta extends Omit<Product, "description" | "marketing_meta"> {
   description?: string;
   category_id?: string | null;
   size_chart_id?: string | null;
   discount_grid?: { qty: number; discount_pct: number }[];
+  marketing_meta?: ProductMarketingMeta;
+}
+
+interface ProductMarketingMeta {
+  rating_avg?: number;
+  rating_count?: number;
+  delivery_min_days?: number;
+  delivery_max_days?: number;
+  min_order_qty?: number;
+  promo_note?: string;
+  guide_url?: string;
+  badges?: string[];
+  feature_groups?: Array<{
+    title: string;
+    icon?: string;
+    items: Array<{ title: string; description?: string }>;
+  }>;
 }
 
 const SESSION_KEY = "client-order-draft";
@@ -34,11 +51,58 @@ function getDiscount(grid: { qty: number; discount_pct: number }[] | undefined, 
 
 // ── Trust badges ──────────────────────────────────────────────────────────────
 
-const TRUST_BADGES = [
-  { icon: Truck,      label: "7–14 днів виробництво" },
-  { icon: Shield,     label: "Гарантія якості" },
-  { icon: RotateCcw,  label: "Від 10 одиниць" },
+const FEATURE_ICONS = {
+  layers: Layers3,
+  shirt: Shirt,
+  award: Award,
+  truck: Truck,
+  ruler: Ruler,
+  tags: Tags,
+  sparkles: Sparkles,
+  zap: Zap,
+};
+
+const DEFAULT_FEATURE_GROUPS: NonNullable<ProductMarketingMeta["feature_groups"]> = [
+  {
+    title: "Кастомізація",
+    icon: "layers",
+    items: [
+      { title: "DTG та DTFlex", description: "Перед, спина, рукави та внутрішня бірка" },
+      { title: "Вишивка", description: "Груди, центр, рукав і брендовані деталі" },
+    ],
+  },
+  {
+    title: "Матеріал",
+    icon: "shirt",
+    items: [
+      { title: "Зручна посадка", description: "Підходить для щоденного носіння команди" },
+      { title: "Стабільна тканина", description: "Добре тримає форму після догляду" },
+    ],
+  },
+  {
+    title: "Сервіс",
+    icon: "award",
+    items: [
+      { title: "Контроль макета", description: "Перевіряємо файли перед запуском" },
+      { title: "Вироблено відповідально", description: "Планування тиражу, якості та відправки" },
+    ],
+  },
 ];
+
+function normalizeMeta(product: ProductWithMeta): Required<Pick<ProductMarketingMeta, "rating_avg" | "rating_count" | "delivery_min_days" | "delivery_max_days" | "min_order_qty">> & ProductMarketingMeta {
+  const meta = product.marketing_meta ?? {};
+  return {
+    rating_avg: meta.rating_avg ?? 4.8,
+    rating_count: meta.rating_count ?? 128,
+    delivery_min_days: meta.delivery_min_days ?? 7,
+    delivery_max_days: meta.delivery_max_days ?? 14,
+    min_order_qty: meta.min_order_qty ?? 10,
+    promo_note: meta.promo_note ?? "Більший тираж відкриває кращу ціну за одиницю.",
+    guide_url: meta.guide_url ?? "/#contact",
+    badges: meta.badges?.length ? meta.badges : ["Від 10 одиниць", "Доставка по Україні", "Контроль якості"],
+    feature_groups: meta.feature_groups?.length ? meta.feature_groups : DEFAULT_FEATURE_GROUPS,
+  };
+}
 
 export interface ProductDetailClientProps {
   product: ProductWithMeta;
@@ -86,10 +150,17 @@ export function ProductDetailClient({
   });
 
   const sizes          = product.available_sizes ?? [];
+  const meta           = normalizeMeta(product);
   const discountPct    = getDiscount(product.discount_grid, quantity);
   const unitCents      = product.base_price_cents ?? 0;
   const discountedCents = Math.round(unitCents * (1 - discountPct / 100));
   const totalCents     = discountedCents * quantity;
+  const nextDiscount = [...(product.discount_grid ?? [])].sort((a, b) => a.qty - b.qty).find((tier) => quantity < tier.qty);
+  const trustBadges = [
+    { icon: Clock3, label: `${meta.delivery_min_days}–${meta.delivery_max_days} днів виробництво` },
+    { icon: PackageCheck, label: `Від ${meta.min_order_qty} одиниць` },
+    { icon: Shield, label: "Контроль якості" },
+  ];
 
   // Similar products — same category, exclude current
   const similarProducts = allProducts
@@ -226,6 +297,23 @@ export function ProductDetailClient({
               {/* Name + price */}
               <div>
                 <h1 className="text-3xl sm:text-4xl font-black tracking-tight leading-tight">{product.name}</h1>
+                <div className="flex flex-wrap items-center gap-3 mt-3">
+                  <div className="inline-flex items-center gap-1.5" aria-label={`Рейтинг ${meta.rating_avg} із 5`}>
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`w-4 h-4 ${i < Math.round(meta.rating_avg) ? "fill-amber-400 text-amber-400" : "text-amber-200"}`}
+                      />
+                    ))}
+                    <span className="text-sm font-semibold">{meta.rating_avg.toFixed(1)}</span>
+                  </div>
+                  <span className="text-sm text-primary font-medium">{meta.rating_count.toLocaleString("uk-UA")} відгуків</span>
+                  {(meta.badges ?? []).slice(0, 2).map((badge) => (
+                    <span key={badge} className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs font-semibold text-muted-foreground">
+                      <Sparkles className="w-3 h-3" /> {badge}
+                    </span>
+                  ))}
+                </div>
                 <div className="flex items-baseline gap-3 mt-3">
                   <span className="text-3xl font-black text-primary">{fmtPrice(discountedCents)}</span>
                   {discountPct > 0 && (
@@ -327,6 +415,58 @@ export function ProductDetailClient({
                 </div>
               </div>
 
+              {/* Bulk pricing */}
+              <div className="rounded-2xl border border-border bg-muted/30 p-4 space-y-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="flex items-center gap-2 text-sm font-black">
+                      <BadgePercent className="w-4 h-4 text-primary" />
+                      Калькулятор оптової ціни
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">{meta.promo_note}</p>
+                  </div>
+                  <button type="button" className="shrink-0 rounded-full p-1 text-muted-foreground hover:bg-background" aria-label="Згорнути калькулятор">
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2">
+                  {(product.discount_grid ?? []).slice(0, 3).map((tier) => {
+                    const active = quantity >= tier.qty;
+                    return (
+                      <button
+                        key={`${tier.qty}-${tier.discount_pct}`}
+                        type="button"
+                        onClick={() => setQuantity(tier.qty)}
+                        className={`rounded-xl border px-3 py-2 text-left transition-all ${
+                          active ? "border-primary bg-primary/5 text-primary" : "border-border bg-background hover:border-primary/40"
+                        }`}
+                      >
+                        <span className="block text-xs font-bold">{tier.qty}+ шт</span>
+                        <span className="block text-lg font-black">-{tier.discount_pct}%</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-xs text-muted-foreground">Ціна зі знижкою</p>
+                    <p className="text-2xl font-black">{fmtPrice(discountedCents)}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-muted-foreground">Поточна знижка</p>
+                    <p className="text-2xl font-black">{discountPct}%</p>
+                  </div>
+                </div>
+                {nextDiscount && (
+                  <Link href={meta.guide_url || "/#contact"} className="flex items-start gap-2 text-sm text-primary hover:underline">
+                    <Tags className="mt-0.5 w-4 h-4 shrink-0" />
+                    Замовте ще {nextDiscount.qty - quantity} шт, щоб отримати знижку {nextDiscount.discount_pct}%.
+                  </Link>
+                )}
+              </div>
+
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <button onClick={handleCustomize}
@@ -354,7 +494,7 @@ export function ProductDetailClient({
 
               {/* Trust badges */}
               <div className="grid grid-cols-3 gap-3 pt-1">
-                {TRUST_BADGES.map(({ icon: Icon, label }) => (
+                {trustBadges.map(({ icon: Icon, label }) => (
                   <div key={label} className="flex flex-col items-center gap-1.5 p-3 rounded-lg bg-muted/50 text-center">
                     <Icon className="w-4 h-4 text-primary" strokeWidth={1.5} />
                     <span className="text-[10px] font-medium text-muted-foreground leading-tight">{label}</span>
@@ -379,12 +519,46 @@ export function ProductDetailClient({
           </div>
         </div>
 
+        {/* ── Product confidence details ───────────────────────────────── */}
+        <section className="border-y border-border bg-muted/20">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+            <div className="grid md:grid-cols-3 gap-8">
+              {(meta.feature_groups ?? DEFAULT_FEATURE_GROUPS).slice(0, 4).map((group) => {
+                const Icon = FEATURE_ICONS[group.icon as keyof typeof FEATURE_ICONS] ?? Sparkles;
+                return (
+                  <div key={group.title} className="space-y-4">
+                    <div className="flex items-center gap-3 border-b border-border pb-3">
+                      <div className="size-10 rounded-xl bg-background border border-border flex items-center justify-center shadow-sm">
+                        <Icon className="w-5 h-5 text-primary" strokeWidth={1.8} />
+                      </div>
+                      <h2 className="text-lg font-black tracking-tight">{group.title}</h2>
+                    </div>
+                    <div className="space-y-3">
+                      {group.items.map((item) => (
+                        <div key={`${group.title}-${item.title}`} className="flex gap-2.5">
+                          <Check className="mt-1 w-4 h-4 shrink-0 text-primary" />
+                          <div>
+                            <p className="text-sm font-bold">{item.title}</p>
+                            {item.description && (
+                              <p className="text-sm text-muted-foreground leading-relaxed mt-0.5">{item.description}</p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
         {/* ── CTA banner ─────────────────────────────────────────────────── */}
         <div className="bg-primary">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 flex flex-col sm:flex-row items-center justify-between gap-6">
             <div>
               <p className="text-white font-black text-xl sm:text-2xl">Потрібен корпоративний тираж?</p>
-              <p className="text-white/70 text-sm mt-1">Від 10 одиниць · Знижки до 15% · Доставка по Україні</p>
+              <p className="text-white/70 text-sm mt-1">Від {meta.min_order_qty} одиниць · Знижки до {Math.max(0, ...(product.discount_grid ?? []).map((tier) => tier.discount_pct))}% · {meta.delivery_min_days}–{meta.delivery_max_days} днів виробництво</p>
             </div>
             <Link href="/#contact"
               className="shrink-0 inline-flex items-center gap-2 bg-white text-primary font-bold text-sm px-7 py-3.5 rounded-full hover:bg-white/90 active:scale-95 transition-all duration-200 shadow-lg">

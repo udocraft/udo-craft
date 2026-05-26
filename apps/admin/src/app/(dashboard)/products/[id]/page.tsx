@@ -33,6 +33,22 @@ interface Product {
   size_chart_id?: string | null;
   print_area_ids?: string[];
   product_images?: ProductImage[];
+  discount_grid?: { qty: number; discount_pct: number }[];
+  marketing_meta?: {
+    rating_avg?: number;
+    rating_count?: number;
+    delivery_min_days?: number;
+    delivery_max_days?: number;
+    min_order_qty?: number;
+    promo_note?: string;
+    guide_url?: string;
+    badges?: string[];
+    feature_groups?: Array<{
+      title: string;
+      icon?: string;
+      items: Array<{ title: string; description?: string }>;
+    }>;
+  };
 }
 
 interface Category { id: string; name: string; slug: string; is_active: boolean; sort_order: number; }

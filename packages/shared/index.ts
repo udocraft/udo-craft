@@ -70,6 +70,8 @@ export const ProductSchema = z.object({
   slug: z.string(),
   description: z.string().default(""),
   base_price_cents: z.number().int(),
+  discount_grid: z.array(z.object({ qty: z.number().int(), discount_pct: z.number() })).default([]).optional(),
+  marketing_meta: z.record(z.string(), z.unknown()).default({}).optional(),
   images: z.record(z.string(), z.string()), // legacy — kept for backward compat
   product_images: z.array(ProductImageSchema).default([]), // new single source of truth
   px_to_mm_ratio: z.number(),

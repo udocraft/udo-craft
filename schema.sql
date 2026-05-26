@@ -524,6 +524,12 @@ BEGIN
   ) THEN
     ALTER TABLE products ADD COLUMN discount_grid JSONB DEFAULT '[]';
   END IF;
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'products' AND column_name = 'marketing_meta'
+  ) THEN
+    ALTER TABLE products ADD COLUMN marketing_meta JSONB DEFAULT '{}';
+  END IF;
 END $$;
 
 -- ─────────────────────────────────────────────

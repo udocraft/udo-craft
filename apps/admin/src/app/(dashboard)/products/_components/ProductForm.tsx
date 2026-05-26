@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { X, Plus, Ruler } from "lucide-react";
+import { X, Plus, Ruler, Star, Truck, Tags, Sparkles } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,6 +19,22 @@ interface Category { id: string; name: string; slug: string; is_active: boolean;
 interface SizeChart { id: string; name: string; rows: Record<string, string>[]; }
 interface PrintArea { id: string; name: string; label: string; }
 
+interface ProductMarketingMeta {
+  rating_avg?: number;
+  rating_count?: number;
+  delivery_min_days?: number;
+  delivery_max_days?: number;
+  min_order_qty?: number;
+  promo_note?: string;
+  guide_url?: string;
+  badges?: string[];
+  feature_groups?: Array<{
+    title: string;
+    icon?: string;
+    items: Array<{ title: string; description?: string }>;
+  }>;
+}
+
 export interface ProductFormData {
   name: string;
   slug: string;
@@ -33,6 +49,8 @@ export interface ProductFormData {
   px_to_mm_ratio: number;
   collar_y_px: number;
   available_sizes: string[];
+  discount_grid: { qty: number; discount_pct: number }[];
+  marketing_meta: ProductMarketingMeta;
 }
 
 interface ProductFormProps {
@@ -48,6 +66,8 @@ interface ProductFormProps {
     size_chart_id?: string | null;
     print_area_ids?: string[];
     available_sizes?: string[];
+    discount_grid?: { qty: number; discount_pct: number }[];
+    marketing_meta?: ProductMarketingMeta;
   };
   categories: Category[];
   sizeCharts: SizeChart[];
@@ -79,6 +99,76 @@ function getDefaultSizes(): string[] {
   } catch { return ["S", "M", "L", "XL"]; }
 }
 
+const DEFAULT_FEATURE_GROUPS: NonNullable<ProductMarketingMeta["feature_groups"]> = [
+  {
+    title: "Кастомізація",
+    icon: "layers",
+    items: [
+      { title: "DTG-друк", description: "Перед, спина, рукави та внутрішня бірка" },
+      { title: "DTFlex", description: "Яскраве нанесення для малих і середніх тиражів" },
+      { title: "Вишивка", description: "Груди, центр, рукав та брендовані деталі" },
+    ],
+  },
+  {
+    title: "Матеріал",
+    icon: "shirt",
+    items: [
+      { title: "Приємна тканина", description: "Збалансована щільність для щоденного носіння" },
+      { title: "Стабільна посадка", description: "Тримає форму після виробництва і догляду" },
+    ],
+  },
+  {
+    title: "Сервіс",
+    icon: "award",
+    items: [
+      { title: "B2B-бестселер", description: "Добре підходить для корпоративних наборів" },
+      { title: "Контроль якості", description: "Перевірка макета й виробу перед відправкою" },
+    ],
+  },
+];
+
+const DEFAULT_BADGES = ["Від 10 одиниць", "Доставка по Україні", "Контроль якості"];
+
+function normalizeMarketingMeta(meta?: ProductMarketingMeta): ProductMarketingMeta {
+  return {
+    rating_avg: meta?.rating_avg ?? 4.8,
+    rating_count: meta?.rating_count ?? 128,
+    delivery_min_days: meta?.delivery_min_days ?? 7,
+    delivery_max_days: meta?.delivery_max_days ?? 14,
+    min_order_qty: meta?.min_order_qty ?? 10,
+    promo_note: meta?.promo_note ?? "Більший тираж відкриває кращу ціну за одиницю.",
+    guide_url: meta?.guide_url ?? "/#contact",
+    badges: meta?.badges?.length ? meta.badges : DEFAULT_BADGES,
+    feature_groups: meta?.feature_groups?.length ? meta.feature_groups : DEFAULT_FEATURE_GROUPS,
+  };
+}
+
+function parseLines(value: string) {
+  return value.split("\n").map((line) => line.trim()).filter(Boolean);
+}
+
+function serializeFeatureGroups(groups: NonNullable<ProductMarketingMeta["feature_groups"]>) {
+  return groups
+    .map((group) => `${group.title}|${group.icon || "sparkles"}\n${group.items.map((item) => `- ${item.title}${item.description ? `: ${item.description}` : ""}`).join("\n")}`)
+    .join("\n\n");
+}
+
+function parseFeatureGroups(value: string): NonNullable<ProductMarketingMeta["feature_groups"]> {
+  return value
+    .split(/\n{2,}/)
+    .map((block) => {
+      const lines = parseLines(block);
+      const [titleRaw = "", iconRaw = "sparkles"] = (lines[0] || "").split("|");
+      const items = lines.slice(1).map((line) => {
+        const clean = line.replace(/^[-•]\s*/, "");
+        const [title = "", ...rest] = clean.split(":");
+        return { title: title.trim(), description: rest.join(":").trim() || undefined };
+      }).filter((item) => item.title);
+      return { title: titleRaw.trim(), icon: iconRaw.trim() || "sparkles", items };
+    })
+    .filter((group) => group.title && group.items.length);
+}
+
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function ProductForm({ product, categories, sizeCharts, printAreas, onSave, onChange, saving = false }: ProductFormProps) {
@@ -95,6 +185,19 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
   const [availableSizes, setAvailableSizes] = useState<string[]>(
     product?.available_sizes?.length ? product.available_sizes : getDefaultSizes()
   );
+  const initialMeta = normalizeMarketingMeta(product?.marketing_meta);
+  const [discountRows, setDiscountRows] = useState(
+    product?.discount_grid?.length ? product.discount_grid : [{ qty: 10, discount_pct: 5 }, { qty: 50, discount_pct: 10 }, { qty: 100, discount_pct: 15 }]
+  );
+  const [ratingAvg, setRatingAvg] = useState(String(initialMeta.rating_avg ?? ""));
+  const [ratingCount, setRatingCount] = useState(String(initialMeta.rating_count ?? ""));
+  const [deliveryMinDays, setDeliveryMinDays] = useState(String(initialMeta.delivery_min_days ?? ""));
+  const [deliveryMaxDays, setDeliveryMaxDays] = useState(String(initialMeta.delivery_max_days ?? ""));
+  const [minOrderQty, setMinOrderQty] = useState(String(initialMeta.min_order_qty ?? ""));
+  const [promoNote, setPromoNote] = useState(initialMeta.promo_note ?? "");
+  const [guideUrl, setGuideUrl] = useState(initialMeta.guide_url ?? "");
+  const [badgesText, setBadgesText] = useState((initialMeta.badges ?? []).join("\n"));
+  const [featureGroupsText, setFeatureGroupsText] = useState(serializeFeatureGroups(initialMeta.feature_groups ?? []));
   const [customSizeInput, setCustomSizeInput] = useState("");
   const [nameError, setNameError] = useState("");
   const [dirty, setDirty] = useState(false);
@@ -133,6 +236,21 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
       px_to_mm_ratio: 0.5,
       collar_y_px: 0,
       available_sizes: availableSizes,
+      discount_grid: discountRows
+        .map((row) => ({ qty: Math.max(1, Number(row.qty) || 1), discount_pct: Math.max(0, Number(row.discount_pct) || 0) }))
+        .filter((row) => row.qty > 0)
+        .sort((a, b) => a.qty - b.qty),
+      marketing_meta: {
+        rating_avg: Number(ratingAvg) || 0,
+        rating_count: Math.max(0, Math.round(Number(ratingCount) || 0)),
+        delivery_min_days: Math.max(0, Math.round(Number(deliveryMinDays) || 0)),
+        delivery_max_days: Math.max(0, Math.round(Number(deliveryMaxDays) || 0)),
+        min_order_qty: Math.max(1, Math.round(Number(minOrderQty) || 1)),
+        promo_note: promoNote.trim(),
+        guide_url: guideUrl.trim(),
+        badges: parseLines(badgesText),
+        feature_groups: parseFeatureGroups(featureGroupsText),
+      },
     });
   };
 
@@ -237,6 +355,81 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
                 <p className="text-xs text-muted-foreground">Дозволяє нанесення принтів</p>
               </div>
               <Switch checked={isCustomizable} onCheckedChange={v => { setIsCustomizable(v); markDirty(); }} />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* ── Sales details ─────────────────────────────────────────────── */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-semibold">Продажі, доставка та рейтинг</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <div className="space-y-1.5">
+              <Label className="flex items-center gap-1.5"><Star className="size-3.5" /> Рейтинг</Label>
+              <Input type="number" min="0" max="5" step="0.1" value={ratingAvg} onChange={e => { setRatingAvg(e.target.value); markDirty(); }} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>К-сть відгуків</Label>
+              <Input type="number" min="0" value={ratingCount} onChange={e => { setRatingCount(e.target.value); markDirty(); }} />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="flex items-center gap-1.5"><Truck className="size-3.5" /> Доставка від</Label>
+              <Input type="number" min="0" value={deliveryMinDays} onChange={e => { setDeliveryMinDays(e.target.value); markDirty(); }} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Доставка до</Label>
+              <Input type="number" min="0" value={deliveryMaxDays} onChange={e => { setDeliveryMaxDays(e.target.value); markDirty(); }} />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="space-y-1.5">
+              <Label>Мін. тираж</Label>
+              <Input type="number" min="1" value={minOrderQty} onChange={e => { setMinOrderQty(e.target.value); markDirty(); }} />
+            </div>
+            <div className="md:col-span-2 space-y-1.5">
+              <Label>Посилання на інструкції / консультацію</Label>
+              <Input value={guideUrl} onChange={e => { setGuideUrl(e.target.value); markDirty(); }} placeholder="/#contact або https://..." />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label className="flex items-center gap-1.5"><Tags className="size-3.5" /> Оптові знижки</Label>
+              <button type="button" onClick={() => { setDiscountRows(prev => [...prev, { qty: 500, discount_pct: 20 }]); markDirty(); }} className="text-xs text-primary hover:underline">
+                + Додати рівень
+              </button>
+            </div>
+            <div className="space-y-2">
+              {discountRows.map((row, index) => (
+                <div key={index} className="grid grid-cols-[1fr_1fr_auto] gap-2">
+                  <Input type="number" min="1" value={row.qty} onChange={e => { setDiscountRows(prev => prev.map((r, i) => i === index ? { ...r, qty: Number(e.target.value) } : r)); markDirty(); }} placeholder="Кількість" />
+                  <Input type="number" min="0" max="100" value={row.discount_pct} onChange={e => { setDiscountRows(prev => prev.map((r, i) => i === index ? { ...r, discount_pct: Number(e.target.value) } : r)); markDirty(); }} placeholder="% знижки" />
+                  <button type="button" onClick={() => { setDiscountRows(prev => prev.filter((_, i) => i !== index)); markDirty(); }} className="size-10 inline-flex items-center justify-center rounded-md border border-border text-muted-foreground hover:text-destructive">
+                    <X className="size-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label>Промо-підказка біля калькулятора</Label>
+            <Textarea rows={2} value={promoNote} onChange={e => { setPromoNote(e.target.value); markDirty(); }} />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label>Бейджі довіри, кожен з нового рядка</Label>
+              <Textarea rows={5} value={badgesText} onChange={e => { setBadgesText(e.target.value); markDirty(); }} />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="flex items-center gap-1.5"><Sparkles className="size-3.5" /> Інформаційні блоки</Label>
+              <Textarea rows={8} value={featureGroupsText} onChange={e => { setFeatureGroupsText(e.target.value); markDirty(); }} />
+              <p className="text-xs text-muted-foreground">Формат: Заголовок|icon, нижче пункти "- Назва: опис". Порожній рядок розділяє колонки.</p>
             </div>
           </div>
         </CardContent>

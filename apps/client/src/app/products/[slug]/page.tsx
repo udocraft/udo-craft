@@ -55,6 +55,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const materialsList = (mats ?? []) as Material[];
 
   const imageUrl = prod.images?.front || Object.values(prod.images || {})[0] || "";
+  const marketing = prod.marketing_meta ?? {};
 
   // JSON-LD Microdata for Google Rich Snippets
   const jsonLd = {
@@ -70,6 +71,17 @@ export default async function ProductDetailPage({ params }: PageProps) {
       price: Math.round((prod.base_price_cents || 0) / 100),
       availability: "https://schema.org/InStock",
       itemCondition: "https://schema.org/NewCondition",
+      deliveryLeadTime: {
+        "@type": "QuantitativeValue",
+        minValue: marketing.delivery_min_days ?? 7,
+        maxValue: marketing.delivery_max_days ?? 14,
+        unitCode: "DAY",
+      },
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: marketing.rating_avg ?? 4.8,
+      reviewCount: marketing.rating_count ?? 128,
     },
   };
 
