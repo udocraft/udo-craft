@@ -52,6 +52,8 @@ interface CustomerData {
   social_channel?: string;
   delivery?: string;
   delivery_details?: string;
+  source?: string;
+  source_details?: string;
   deadline?: string;
   comment?: string;
 }
@@ -172,6 +174,10 @@ export default function OrderDetailPage() {
   const handleSave = async () => {
     if (!contactData.name.trim()) {
       toast.error("Ім'я обов'язкове");
+      return;
+    }
+    if (!contactData.phone?.trim() || !contactData.email?.trim()) {
+      toast.error("Телефон та email обов'язкові");
       return;
     }
     setSaving(true);
@@ -387,7 +393,7 @@ export default function OrderDetailPage() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="phone">Телефон</Label>
+                  <Label htmlFor="phone">Телефон *</Label>
                   <Input
                     id="phone"
                     type="tel"
@@ -397,7 +403,7 @@ export default function OrderDetailPage() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">Email *</Label>
                   <Input
                     id="email"
                     type="email"
@@ -458,14 +464,34 @@ export default function OrderDetailPage() {
                   />
                 </div>
               </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="delivery_details">Адреса доставки</Label>
+	              <div className="space-y-1.5">
+	                <Label htmlFor="delivery_details">Адреса доставки</Label>
                 <Input
                   id="delivery_details"
                   value={contactData.delivery_details ?? ""}
                   onChange={(e) => setContactData({ ...contactData, delivery_details: e.target.value })}
                   placeholder="м. Київ, відділення №1"
                 />
+	              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="source">Як дізнались</Label>
+                  <Input
+                    id="source"
+                    value={contactData.source ?? ""}
+                    onChange={(e) => setContactData({ ...contactData, source: e.target.value })}
+                    placeholder="Instagram, Google, рекомендація..."
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="source_details">Контекст</Label>
+                  <Input
+                    id="source_details"
+                    value={contactData.source_details ?? ""}
+                    onChange={(e) => setContactData({ ...contactData, source_details: e.target.value })}
+                    placeholder="Додаткові деталі"
+                  />
+                </div>
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="comment">Коментар клієнта</Label>

@@ -87,6 +87,8 @@ function matchesSearch(lead: Lead, query: string) {
     customer.email,
     customer.phone,
     customer.company,
+    customer.source,
+    customer.source_details,
     ...(lead.order_items ?? []).flatMap((item) => [
       item.size,
       item.color,

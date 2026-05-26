@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { NextRequest, NextResponse } from "next/server";
 
 // SERVICE ROLE JUSTIFICATION:
@@ -11,7 +11,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const supabase = createServiceClient();
     const productId = new URL(request.url).searchParams.get("product_id");
 
     let query = supabase.from("print_zones").select("*");

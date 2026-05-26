@@ -96,10 +96,12 @@ export function OrderReview({
             {[
               { label: "Ім'я", value: contact.name },
               { label: "Телефон", value: contact.phone },
-              { label: "Email", value: contact.email || "—" },
+              { label: "Email", value: contact.email },
               { label: "Компанія", value: contact.company || "—" },
               { label: "ЄДРПОУ", value: contact.edrpou || "—" },
               { label: "Соцмережа", value: contact.socialHandle ? `${contact.socialNetwork}: ${contact.socialHandle}` : "—" },
+              { label: "Джерело", value: contact.source || "—" },
+              { label: "Контекст", value: contact.sourceDetails || "—" },
             ].map(({ label, value }) => (
               <div key={label}>
                 <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-medium">{label}</p>
@@ -141,7 +143,7 @@ export function OrderReview({
         </div>
       </div>
 
-      <div className="sticky bottom-0 bg-background border-t border-border pt-3 pb-[max(12px,env(safe-area-inset-bottom))] flex gap-2">
+      <div className="sticky bottom-0 z-10 -mx-6 bg-background/95 border-t border-border px-6 pt-3 pb-[max(12px,env(safe-area-inset-bottom))] flex gap-2 backdrop-blur">
         <Button variant="outline" className="flex-1" onClick={onBack}>Редагувати</Button>
         <Button className="flex-1 gap-1.5" onClick={onSubmit} disabled={submitting}>
           {submitting ? <><Loader2 className="size-3.5 animate-spin" /> Відправляємо...</> : "Відправити замовлення"}

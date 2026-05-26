@@ -77,7 +77,7 @@ export function OrderPageInner({
   const [customizerInitialSize, setCustomizerInitialSize] = useState<string | null>(null);
   const [customizerInitialColor, setCustomizerInitialColor] = useState<string | null>(null);
   const [activeShare, setActiveShare] = useState<LoadedCustomizerShare | null>(null);
-  const [contact, setContact] = useState<ContactData>({ name: "", email: "", phone: "", company: "", edrpou: "", socialNetwork: "telegram", socialHandle: "", delivery: "nova_poshta", novaPoshtaDetails: "", deadline: "", comment: "" });
+  const [contact, setContact] = useState<ContactData>({ name: "", email: "", phone: "", company: "", edrpou: "", socialNetwork: "telegram", socialHandle: "", delivery: "nova_poshta", novaPoshtaDetails: "", source: "", sourceDetails: "", deadline: "", comment: "" });
   const [extraFiles, setExtraFiles] = useState<File[]>([]);
   const [successEmail, setSuccessEmail] = useState<string | null>(null);
   const processedAddQueryRef = useRef(false);

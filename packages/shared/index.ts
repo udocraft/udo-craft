@@ -29,12 +29,17 @@ export interface ProductMarketingMeta {
   delivery_note?: string;
   file_guidelines?: string;
   guide_url?: string;
-  badges?: string[];
+  badges?: Array<string | ProductTrustBadge>;
   feature_groups?: Array<{
     title: string;
     icon?: string;
     items: Array<{ title: string; description?: string }>;
   }>;
+}
+
+export interface ProductTrustBadge {
+  label: string;
+  icon?: string;
 }
 
 export const DEFAULT_PRODUCT_FEATURE_GROUPS: NonNullable<ProductMarketingMeta["feature_groups"]> = [
@@ -64,7 +69,11 @@ export const DEFAULT_PRODUCT_FEATURE_GROUPS: NonNullable<ProductMarketingMeta["f
   },
 ];
 
-export const DEFAULT_PRODUCT_BADGES = ["Від 10 одиниць", "Доставка по Україні", "Контроль якості"];
+export const DEFAULT_PRODUCT_BADGES: ProductTrustBadge[] = [
+  { label: "Від 10 одиниць", icon: "package-check" },
+  { label: "Доставка по Україні", icon: "truck" },
+  { label: "Контроль якості", icon: "shield" },
+];
 
 export const DEFAULT_PRODUCT_MARKETING_META: Required<
   Pick<ProductMarketingMeta, "rating_avg" | "rating_count" | "delivery_min_days" | "delivery_max_days" | "min_order_qty" | "promo_note" | "delivery_note" | "file_guidelines" | "guide_url" | "badges" | "feature_groups">
@@ -82,7 +91,11 @@ export const DEFAULT_PRODUCT_MARKETING_META: Required<
   feature_groups: DEFAULT_PRODUCT_FEATURE_GROUPS,
 };
 
-export function normalizeProductMarketingMeta(meta?: ProductMarketingMeta): typeof DEFAULT_PRODUCT_MARKETING_META {
+export type NormalizedProductMarketingMeta = Omit<typeof DEFAULT_PRODUCT_MARKETING_META, "badges"> & {
+  badges: ProductTrustBadge[];
+};
+
+export function normalizeProductMarketingMeta(meta?: ProductMarketingMeta): NormalizedProductMarketingMeta {
   return {
     rating_avg: meta?.rating_avg ?? DEFAULT_PRODUCT_MARKETING_META.rating_avg,
     rating_count: meta?.rating_count ?? DEFAULT_PRODUCT_MARKETING_META.rating_count,
@@ -93,13 +106,35 @@ export function normalizeProductMarketingMeta(meta?: ProductMarketingMeta): type
     delivery_note: meta?.delivery_note ?? DEFAULT_PRODUCT_MARKETING_META.delivery_note,
     file_guidelines: meta?.file_guidelines ?? DEFAULT_PRODUCT_MARKETING_META.file_guidelines,
     guide_url: meta?.guide_url ?? DEFAULT_PRODUCT_MARKETING_META.guide_url,
-    badges: meta?.badges?.length ? meta.badges : DEFAULT_PRODUCT_BADGES,
+    badges: normalizeProductTrustBadges(meta?.badges),
     feature_groups: meta?.feature_groups?.length ? meta.feature_groups : DEFAULT_PRODUCT_FEATURE_GROUPS,
   };
 }
 
+export function normalizeProductTrustBadges(badges?: ProductMarketingMeta["badges"]): ProductTrustBadge[] {
+  if (!badges?.length) return DEFAULT_PRODUCT_BADGES;
+  return badges
+    .map((badge) => {
+      if (typeof badge !== "string") return { label: badge.label.trim(), icon: badge.icon?.trim() || "badge-check" };
+      const [label = "", icon = "badge-check"] = badge.split("|");
+      return { label: label.trim(), icon: icon.trim() || "badge-check" };
+    })
+    .filter((badge) => badge.label);
+}
+
 export function parseMarketingLines(value: string) {
   return value.split("\n").map((line) => line.trim()).filter(Boolean);
+}
+
+export function parseProductTrustBadges(value: string): ProductTrustBadge[] {
+  return parseMarketingLines(value).map((line) => {
+    const [label = "", icon = "badge-check"] = line.split("|");
+    return { label: label.trim(), icon: icon.trim() || "badge-check" };
+  }).filter((badge) => badge.label);
+}
+
+export function serializeProductTrustBadges(badges: ProductMarketingMeta["badges"]) {
+  return normalizeProductTrustBadges(badges).map((badge) => `${badge.label}${badge.icon ? `|${badge.icon}` : ""}`).join("\n");
 }
 
 export function serializeProductFeatureGroups(groups: NonNullable<ProductMarketingMeta["feature_groups"]>) {
@@ -204,6 +239,15 @@ export const LeadSchema = z.object({
     name: z.string(),
     email: z.string().email(),
     social_channel: z.string().url().optional(),
+    phone: z.string().optional(),
+    company: z.string().optional(),
+    topic: z.string().optional(),
+    source: z.string().optional(),
+    source_details: z.string().optional(),
+    delivery: z.string().optional(),
+    delivery_details: z.string().optional(),
+    deadline: z.string().optional(),
+    comment: z.string().optional(),
   }),
   total_amount_cents: z.number().int(),
 });
@@ -701,9 +745,9 @@ export const CreateLeadSchema = z.object({
   status: LeadStatusEnum,
   customer_data: z.object({
     name: z.string().min(1),
-    email: z.string().email().optional(),
+    email: z.string().email(),
     social_channel: z.string().optional(),
-    phone: z.string().optional(),
+    phone: z.string().min(1),
     website: z.string().optional(), // honeypot — should always be empty for real users
     company: z.string().optional(),
     topic: z.string().optional(),

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { MockupViewer } from "@/components/MockupViewer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,6 +45,8 @@ export interface ContactData {
   socialHandle: string;
   delivery: string;
   novaPoshtaDetails: string;
+  source: string;
+  sourceDetails: string;
   deadline: string;
   comment: string;
 }
@@ -93,7 +94,6 @@ export function CartSummary({
   extraFiles,
   setExtraFiles,
 }: CartSummaryProps) {
-  const supabase = createClient();
   const [submitting, setSubmitting] = useState(false);
   const [generatingPdf, setGeneratingPdf] = useState(false);
 
@@ -103,10 +103,7 @@ export function CartSummary({
   );
 
   const handleSubmit = async () => {
-    if (!contact.name || !contact.phone) { toast.error("Заповніть обов'язкові поля"); sound.caution(); return; }
-    if (contact.delivery === "nova_poshta" && !contact.novaPoshtaDetails.trim()) {
-      toast.error("Вкажіть адресу Нової Пошти"); sound.caution(); return;
-    }
+    if (!contact.name.trim() || !contact.phone.trim() || !contact.email.trim()) { toast.error("Заповніть ім'я, телефон та email"); sound.caution(); return; }
     if (cart.length === 0) { toast.error("Додайте товар"); sound.caution(); return; }
     setSubmitting(true);
     sound.button();
@@ -119,55 +116,10 @@ export function CartSummary({
         if (res.ok) attachmentUrls = (await res.json()).urls ?? [];
       }
 
-      const { data: lead, error: leadErr } = await supabase.from("leads").insert({
-        status: "new",
-        customer_data: {
-          name: contact.name,
-          ...(contact.email ? { email: contact.email } : {}),
-          phone: contact.phone,
-          company: contact.company || undefined,
-          edrpou: contact.edrpou || undefined,
-          social_channel: contact.socialHandle ? `${contact.socialNetwork}:${contact.socialHandle}` : undefined,
-          delivery: contact.delivery,
-          delivery_details: contact.novaPoshtaDetails || undefined,
-          deadline: contact.deadline || undefined,
-          comment: contact.comment || undefined,
-          attachments: attachmentUrls,
-        },
-        total_amount_cents: Math.round(totalCents),
-      }).select().single();
-
-      if (leadErr || !lead) throw leadErr;
-
-      track("form_submit", { form: "order", lead_id: lead.id });
-      sessionStorage.removeItem(SESSION_KEY);
-      sound.celebration();
-      onSubmitSuccess(contact.email);
-
-      for (const item of cart) {
-        const mockupUrl = item.mockupUploadedUrl;
-        const uploadedMockupsMap: Record<string, string> = {};
-        if (item.mockupsMap && Object.keys(item.mockupsMap).length > 0) {
-          for (const [side, dataUrl] of Object.entries(item.mockupsMap)) {
-            if (!dataUrl.startsWith("data:image")) continue;
-            try {
-              const res = await fetch(dataUrl);
-              const blob = await res.blob();
-              const fd = new FormData();
-              fd.append("files", new File([blob], `mockup-${side}.png`, { type: "image/png" }));
-              const up = await fetch("/api/upload", { method: "POST", body: fd });
-              if (up.ok) {
-                const url = (await up.json()).urls?.[0];
-                if (url) uploadedMockupsMap[side] = url;
-              }
-            } catch { /* non-critical */ }
-          }
-        }
-
+      const orderItems = cart.map((item) => {
         const layerUrls: { url: string; type: string; side: string; kind?: string; textContent?: string; sizeLabel?: string; sizeMinCm?: number; sizeMaxCm?: number; priceCents?: number }[] = [];
         for (const layer of (item.layers ?? [])) {
           if (layer.kind === "text") {
-            // Text layers have no uploadedUrl — include them with their text content
             layerUrls.push({ url: "", type: layer.type, side: layer.side, kind: "text", textContent: layer.textContent, sizeLabel: layer.sizeLabel, sizeMinCm: layer.sizeMinCm, sizeMaxCm: layer.sizeMaxCm, priceCents: layer.priceCents });
             continue;
           }
@@ -175,20 +127,63 @@ export function CartSummary({
           if (!url) continue;
           layerUrls.push({ url, type: layer.type, side: layer.side, sizeLabel: layer.sizeLabel, sizeMinCm: layer.sizeMinCm, sizeMaxCm: layer.sizeMaxCm, priceCents: layer.priceCents });
         }
-        await supabase.from("order_items").insert({
-          lead_id: lead.id, product_id: item.productId,
-          size: item.size, color: item.color, quantity: item.quantity,
-          mockup_url: mockupUrl,
+        return {
+          product_id: item.productId,
+          size: item.size,
+          color: item.color,
+          quantity: item.quantity,
+          mockup_url: item.mockupUploadedUrl,
           custom_print_url: layerUrls[0]?.url,
+          unit_price_cents: item.unitPriceCents,
+          print_cost_cents: item.printCostCents,
           technical_metadata: {
+            unit_price_cents: item.unitPriceCents,
+            print_cost_cents: item.printCostCents,
             ...(item.offsetTopMm !== undefined ? { offset_top_mm: item.offsetTopMm } : {}),
             layers: layerUrls,
             product_image_url: item.productImage || undefined,
+            product_name: item.productName,
             ...(item.itemNote ? { item_note: item.itemNote } : {}),
-            ...(Object.keys(uploadedMockupsMap).length > 0 ? { mockups_map: uploadedMockupsMap } : {}),
           },
-        });
-      }
+        };
+      });
+
+      const leadRes = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          status: "new",
+          customer_data: {
+            name: contact.name,
+            email: contact.email,
+            phone: contact.phone,
+            company: contact.company || undefined,
+            edrpou: contact.edrpou || undefined,
+            social_channel: contact.socialHandle ? `${contact.socialNetwork}:${contact.socialHandle}` : undefined,
+            delivery: contact.delivery,
+            delivery_details: contact.novaPoshtaDetails || undefined,
+            source: contact.source || undefined,
+            source_details: contact.sourceDetails || undefined,
+            deadline: contact.deadline || undefined,
+            comment: contact.comment || undefined,
+            attachments: attachmentUrls,
+          },
+          total_amount_cents: Math.round(totalCents),
+          order_items: orderItems,
+          initial_message: [
+            contact.comment ? `Коментар: ${contact.comment}` : null,
+            contact.source ? `Як дізнались: ${contact.source}${contact.sourceDetails ? ` — ${contact.sourceDetails}` : ""}` : null,
+          ].filter(Boolean).join("\n"),
+        }),
+      });
+
+      if (!leadRes.ok) throw new Error((await leadRes.json().catch(() => ({}))).error || "Lead submit failed");
+      const lead = await leadRes.json();
+
+      track("form_submit", { form: "order", lead_id: lead.id });
+      sessionStorage.removeItem(SESSION_KEY);
+      sound.celebration();
+      onSubmitSuccess(contact.email);
     } catch (err) {
       console.error("[handleSubmit]", err);
       toast.error("Помилка при відправці замовлення");

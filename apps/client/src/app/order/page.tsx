@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 import type { Product, PrintZone, Material, ProductColorVariant } from "@udo-craft/shared";
 import { resolveProductImages, getCustomizableImages } from "@udo-craft/shared";
 import { LogoLoader } from "@udo-craft/ui";
@@ -16,7 +15,6 @@ interface ProductWithConfig extends Product {
 interface SizeChart { id: string; name: string; rows: Record<string, string>[]; }
 
 function OrderPageLoader() {
-  const supabase = createClient();
   const searchParams = useSearchParams();
 
   const [products, setProducts] = useState<ProductWithConfig[]>([]);
@@ -30,11 +28,11 @@ function OrderPageLoader() {
   useEffect(() => {
     const load = async () => {
       const [{ data: prods }, chartsRes, zonesRes, { data: mats }, { data: vars }] = await Promise.all([
-        supabase.from("products").select("*").eq("is_active", true).order("name"),
+        fetch("/api/products?active=true").then(async (r) => ({ data: r.ok ? await r.json() : [] })),
         fetch("/api/size-charts"),
-        supabase.from("print_zones").select("*"),
-        supabase.from("materials").select("*").eq("is_active", true),
-        supabase.from("product_color_variants").select("*").eq("is_active", true).order("sort_order"),
+        fetch("/api/print-zones").then(async (r) => ({ data: r.ok ? await r.json() : [] })),
+        fetch("/api/materials").then(async (r) => ({ data: r.ok ? await r.json() : [] })),
+        fetch("/api/product-color-variants").then(async (r) => ({ data: r.ok ? await r.json() : [] })),
       ]);
 
       const prodList = (prods || []) as ProductWithConfig[];
@@ -42,7 +40,8 @@ function OrderPageLoader() {
       setMaterials((mats || []) as Material[]);
       setVariants((vars || []) as ProductColorVariant[]);
 
-      const { data: cats } = await supabase.from("categories").select("id, name").eq("is_active", true).order("sort_order");
+      const catsRes = await fetch("/api/categories");
+      const cats = catsRes.ok ? await catsRes.json() : [];
       setCategories((cats || []) as { id: string; name: string }[]);
 
       if (chartsRes.ok) {

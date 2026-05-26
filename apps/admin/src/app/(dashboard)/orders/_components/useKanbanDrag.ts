@@ -22,6 +22,8 @@ export interface Lead {
     keycrm_shipping_status?: string;
     delivery?: string;
     delivery_details?: string;
+    source?: string;
+    source_details?: string;
   };
   status: "draft" | "new" | "in_progress" | "production" | "completed" | "archived";
   tags?: string[];

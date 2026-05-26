@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { NextRequest, NextResponse } from "next/server";
 
 // SERVICE ROLE JUSTIFICATION:
@@ -10,7 +10,7 @@ import { NextRequest, NextResponse } from "next/server";
 // anon key, this could be replaced with the anon client.
 
 export async function GET(request: NextRequest) {
-  const supabase = await createClient();
+  const supabase = createServiceClient();
   const printType = new URL(request.url).searchParams.get("print_type");
 
   let query = supabase.from("print_type_pricing").select("id,print_type,size_label,size_min_cm,size_max_cm,qty_tiers,sort_order").eq("is_active", true);

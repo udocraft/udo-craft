@@ -12,6 +12,16 @@ const DELIVERY_OPTIONS = [
   { id: "pickup", label: "Самовивіз", desc: "Львів, Джерельна, 69, офіс 10" },
 ];
 
+const SOURCE_OPTIONS = [
+  { id: "", label: "Оберіть варіант" },
+  { id: "instagram", label: "Instagram" },
+  { id: "google", label: "Google / пошук" },
+  { id: "recommendation", label: "Рекомендація" },
+  { id: "printful", label: "Порівнювали з Printful / POD" },
+  { id: "event", label: "Подія або виставка" },
+  { id: "other", label: "Інше" },
+];
+
 interface ContactFormProps {
   contact: ContactData;
   setContact: (c: ContactData) => void;
@@ -50,10 +60,11 @@ export function ContactForm({
               className={!contact.phone && highlightRequired ? "animate-shake" : ""} />
           </div>
           <div>
-            <Label className="text-sm font-medium mb-1.5 block">Email</Label>
+            <Label className="text-sm font-medium mb-1.5 block">Email *</Label>
             <Input type="email" value={contact.email}
               onChange={(e) => setContact({ ...contact, email: e.target.value })}
-              placeholder="hr@company.com" />
+              placeholder="hr@company.com"
+              className={!contact.email && highlightRequired ? "animate-shake" : ""} />
           </div>
           <div>
             <Label className="text-sm font-medium mb-1.5 block">Компанія</Label>
@@ -100,13 +111,29 @@ export function ContactForm({
           </div>
           {contact.delivery === "nova_poshta" && (
             <div className="mt-2 space-y-1">
-              <Label className="text-xs font-medium">Адреса доставки *</Label>
+              <Label className="text-xs font-medium">Адреса доставки або відділення</Label>
               <Input type="text" value={contact.novaPoshtaDetails}
                 onChange={(e) => setContact({ ...contact, novaPoshtaDetails: e.target.value })}
-                placeholder="Місто, відділення або номер поштомату"
-                className={!contact.novaPoshtaDetails.trim() && highlightRequired ? "animate-shake" : ""} />
+                placeholder="Місто, відділення або номер поштомату. Можна додати пізніше." />
             </div>
           )}
+        </div>
+
+        <div className="rounded-xl border border-border bg-muted/30 p-4 space-y-3">
+          <div>
+            <Label className="text-sm font-medium mb-1.5 block">Як ви дізнались про нас?</Label>
+            <select value={contact.source}
+              onChange={(e) => setContact({ ...contact, source: e.target.value })}
+              className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
+              {SOURCE_OPTIONS.map((opt) => <option key={opt.id} value={opt.id}>{opt.label}</option>)}
+            </select>
+          </div>
+          <div>
+            <Label className="text-sm font-medium mb-1.5 block">Додатковий контекст</Label>
+            <Input type="text" value={contact.sourceDetails}
+              onChange={(e) => setContact({ ...contact, sourceDetails: e.target.value })}
+              placeholder="Напр.: шукаємо прозорий процес як у Printful, але локально" />
+          </div>
         </div>
 
         <button type="button" onClick={() => setShowExtraDetails(!showExtraDetails)}
@@ -155,10 +182,10 @@ export function ContactForm({
             </div>
           </div>
         )}
-        <div className="sticky bottom-0 bg-background border-t border-border px-0 pt-3 pb-[max(12px,env(safe-area-inset-bottom))] flex gap-2">
+        <div className="sticky bottom-0 z-10 -mx-6 bg-background/95 border-t border-border px-6 pt-3 pb-[max(12px,env(safe-area-inset-bottom))] flex gap-2 backdrop-blur">
           <Button variant="outline" className="flex-1" onClick={onBack}>Назад</Button>
           <Button className="flex-1" onClick={onNext}
-            disabled={!contact.name.trim() || !contact.phone.trim() || (contact.delivery === "nova_poshta" && !contact.novaPoshtaDetails.trim())}>
+            disabled={!contact.name.trim() || !contact.phone.trim() || !contact.email.trim()}>
             Перевірити
           </Button>
         </div>

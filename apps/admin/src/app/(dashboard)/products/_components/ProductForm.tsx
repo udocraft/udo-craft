@@ -4,9 +4,10 @@ import { useState, useEffect, useCallback } from "react";
 import { X, Plus, Ruler } from "lucide-react";
 import {
   normalizeProductMarketingMeta,
-  parseMarketingLines,
   parseProductFeatureGroups,
+  parseProductTrustBadges,
   serializeProductFeatureGroups,
+  serializeProductTrustBadges,
   type ProductMarketingMeta,
 } from "@udo-craft/shared";
 import { Input } from "@/components/ui/input";
@@ -120,7 +121,7 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
   const [deliveryNote, setDeliveryNote] = useState(initialMeta.delivery_note ?? "");
   const [fileGuidelines, setFileGuidelines] = useState(initialMeta.file_guidelines ?? "");
   const [guideUrl, setGuideUrl] = useState(initialMeta.guide_url ?? "");
-  const [badgesText, setBadgesText] = useState((initialMeta.badges ?? []).join("\n"));
+  const [badgesText, setBadgesText] = useState(serializeProductTrustBadges(initialMeta.badges ?? []));
   const [featureGroupsText, setFeatureGroupsText] = useState(serializeProductFeatureGroups(initialMeta.feature_groups ?? []));
   const [customSizeInput, setCustomSizeInput] = useState("");
   const [nameError, setNameError] = useState("");
@@ -174,7 +175,7 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
         delivery_note: deliveryNote.trim(),
         file_guidelines: fileGuidelines.trim(),
         guide_url: guideUrl.trim(),
-        badges: parseMarketingLines(badgesText),
+        badges: parseProductTrustBadges(badgesText),
         feature_groups: parseProductFeatureGroups(featureGroupsText),
       },
     });
@@ -373,8 +374,9 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label>Бейджі довіри, кожен з нового рядка</Label>
+              <Label>Бейджі довіри</Label>
               <Textarea rows={5} value={badgesText} onChange={e => { setBadgesText(e.target.value); markDirty(); }} />
+              <p className="text-xs text-muted-foreground">Формат: Текст|lucide-icon-code. Напр.: Контроль якості|shield-check</p>
             </div>
             <div className="space-y-1.5">
               <Label>Інформаційні блоки</Label>

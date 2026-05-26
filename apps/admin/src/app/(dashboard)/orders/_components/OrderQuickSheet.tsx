@@ -54,6 +54,8 @@ interface Lead {
     keycrm_status_expired_at?: string;
     delivery?: string;
     delivery_details?: string;
+    source?: string;
+    source_details?: string;
   };
   tags?: string[];
   notes?: string;
@@ -157,6 +159,12 @@ export function OrderQuickSheet({ lead, open, onClose, onStatusChange }: OrderQu
               <div className="flex items-center gap-2 text-sm">
                 <Building2 className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                 <span>{cd.company}</span>
+              </div>
+            )}
+            {(cd.source || cd.source_details) && (
+              <div className="rounded-lg bg-muted/40 p-2 text-xs text-muted-foreground">
+                <span className="font-semibold text-foreground">Джерело:</span>{" "}
+                {[cd.source, cd.source_details].filter(Boolean).join(" · ")}
               </div>
             )}
             {!cd.email && !cd.phone && !cd.company && (

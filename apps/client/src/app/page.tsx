@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { HomeClient } from "@/app/_components/HomeClient";
 import { Metadata } from "next";
 
@@ -16,9 +17,10 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const supabase = await createClient();
+  const service = createServiceClient();
 
   const [prodRes, catRes, matRes, varRes, cmsRes] = await Promise.all([
-    supabase.from("products").select("*").order("created_at", { ascending: true }),
+    service.from("products").select("*").eq("is_active", true).order("created_at", { ascending: true }),
     supabase.from("categories").select("*").eq("is_active", true).order("sort_order", { ascending: true }),
     supabase.from("materials").select("*").eq("is_active", true),
     supabase.from("product_color_variants").select("*").eq("is_active", true).order("sort_order", { ascending: true }),

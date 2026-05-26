@@ -6,7 +6,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Product, Material, ProductColorVariant, ProductMarketingMeta } from "@udo-craft/shared";
 import { DEFAULT_PRODUCT_FEATURE_GROUPS, getAllImages, getCustomizableImages, normalizeProductMarketingMeta, resolveProductImages } from "@udo-craft/shared";
-import { ArrowLeft, ArrowRight, Award, BadgePercent, Check, ChevronLeft, ChevronRight, Clock3, Layers3, Minus, PackageCheck, Paintbrush, Ruler, Shield, Shirt, ShoppingBag, Star, Tags, Truck, Zap, Plus } from "lucide-react";
+import { ArrowLeft, ArrowRight, Award, BadgeCheck, BadgePercent, Check, ChevronLeft, ChevronRight, Clock3, Layers3, Minus, PackageCheck, Paintbrush, Ruler, Shield, ShieldCheck, Shirt, ShoppingBag, Star, Tags, Truck, Zap, Plus } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { FooterSection } from "@/app/_sections/FooterSection";
 import { ProductCardDetailed } from "@/components/ProductCardDetailed";
@@ -36,9 +36,14 @@ function getDiscount(grid: { qty: number; discount_pct: number }[] | undefined, 
 // ── Trust badges ──────────────────────────────────────────────────────────────
 
 const FEATURE_ICONS = {
+  "badge-check": BadgeCheck,
   layers: Layers3,
+  package: PackageCheck,
+  "package-check": PackageCheck,
   shirt: Shirt,
   award: Award,
+  shield: Shield,
+  "shield-check": ShieldCheck,
   truck: Truck,
   ruler: Ruler,
   tags: Tags,
@@ -133,7 +138,7 @@ export function ProductDetailClient({
   const totalCents     = discountedCents * quantity;
   const discountTiers = [...(product.discount_grid ?? [])].sort((a, b) => a.qty - b.qty);
   const nextDiscount = discountTiers.find((tier) => quantity < tier.qty);
-  const sliderMax = Math.max(100, meta.min_order_qty, quantity, discountTiers.at(-1)?.qty ?? 0);
+  const sliderMax = Math.max(100, meta.min_order_qty, quantity, discountTiers[discountTiers.length - 1]?.qty ?? 0);
   const sliderMarks = Array.from(new Set([1, meta.min_order_qty, ...discountTiers.map((tier) => tier.qty), sliderMax])).sort((a, b) => a - b);
   const trustBadges = [
     { icon: Clock3, label: `${meta.delivery_min_days}–${meta.delivery_max_days} днів виробництво` },
@@ -288,11 +293,14 @@ export function ProductDetailClient({
                     <span className="text-sm font-semibold">{meta.rating_avg.toFixed(1)}</span>
                   </div>
                   <span className="text-sm text-primary font-medium">{meta.rating_count.toLocaleString("uk-UA")} відгуків</span>
-                  {(meta.badges ?? []).slice(0, 2).map((badge) => (
-                    <span key={badge} className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs font-semibold text-muted-foreground">
-                      {badge}
+                  {(meta.badges ?? []).slice(0, 2).map((badge) => {
+                    const Icon = FEATURE_ICONS[badge.icon as keyof typeof FEATURE_ICONS] ?? BadgeCheck;
+                    return (
+                    <span key={badge.label} className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs font-semibold text-muted-foreground">
+                      <Icon className="size-3" strokeWidth={1.8} /> {badge.label}
                     </span>
-                  ))}
+                    );
+                  })}
                 </div>
                 <div className="flex items-baseline gap-3 mt-3">
                   <span className="text-3xl font-black text-primary">{fmtPrice(discountedCents)}</span>

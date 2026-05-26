@@ -1,5 +1,5 @@
 import { CreateLeadSchema } from "@udo-craft/shared";
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { sendOrderConfirmation, sendContactNotification } from "@/lib/email";
 import { rateLimit } from "@/lib/rate-limit";
 import { NextRequest, NextResponse } from "next/server";
@@ -18,14 +18,21 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const supabase = await createClient();
+    const supabase = createServiceClient();
 
     const body = await request.json();
     const parsed = CreateLeadSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
     }
-    const { status, customer_data, total_amount_cents } = parsed.data;
+    const { status, total_amount_cents } = parsed.data;
+    const customer_data = {
+      ...(body.customer_data ?? {}),
+      name: parsed.data.customer_data.name,
+      email: parsed.data.customer_data.email,
+      phone: parsed.data.customer_data.phone,
+      social_channel: parsed.data.customer_data.social_channel,
+    };
 
     // Honeypot check — bots fill this field, real users don't
     if (customer_data.website) {

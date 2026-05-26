@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { ProductDetailClient, type ProductWithMeta } from "./_client";
 import type { Material, ProductColorVariant } from "@udo-craft/shared";
 
@@ -10,8 +10,8 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = await createClient();
-  const { data: prods } = await supabase.from("products").select("*, discount_grid, category_id, size_chart_id").eq("is_active", true);
+  const supabase = createServiceClient();
+  const { data: prods } = await supabase.from("products").select("*, discount_grid, category_id, size_chart_id, marketing_meta").eq("is_active", true);
   const prodList = (prods ?? []) as ProductWithMeta[];
   const prod = prodList.find((p) => p.slug === slug || p.id === slug);
 
@@ -35,10 +35,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProductDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const supabase = await createClient();
+  const supabase = createServiceClient();
 
   const [{ data: prods }, { data: vars }, { data: mats }] = await Promise.all([
-    supabase.from("products").select("*, discount_grid, category_id, size_chart_id").eq("is_active", true),
+    supabase.from("products").select("*, discount_grid, category_id, size_chart_id, marketing_meta").eq("is_active", true),
     supabase.from("product_color_variants").select("*").eq("is_active", true).order("sort_order"),
     supabase.from("materials").select("*").eq("is_active", true),
   ]);
