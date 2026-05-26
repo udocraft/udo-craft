@@ -29,6 +29,8 @@ interface ProductMarketingMeta {
   delivery_max_days?: number;
   min_order_qty?: number;
   promo_note?: string;
+  delivery_note?: string;
+  file_guidelines?: string;
   guide_url?: string;
   badges?: string[];
   feature_groups?: Array<{
@@ -98,10 +100,45 @@ function normalizeMeta(product: ProductWithMeta): Required<Pick<ProductMarketing
     delivery_max_days: meta.delivery_max_days ?? 14,
     min_order_qty: meta.min_order_qty ?? 10,
     promo_note: meta.promo_note ?? "Більший тираж відкриває кращу ціну за одиницю.",
+    delivery_note: meta.delivery_note ?? "Виробництво займає 7-14 робочих днів після погодження макета. Доставка по Україні виконується зручним для вас перевізником.",
+    file_guidelines: meta.file_guidelines ?? "- Приймаємо PNG, PDF, SVG або AI у високій якості.\n- Для друку бажаний прозорий фон і роздільна здатність від 300 dpi.\n- Перед запуском у виробництво менеджер перевіряє файл і погоджує макет.",
     guide_url: meta.guide_url ?? "/#contact",
     badges: meta.badges?.length ? meta.badges : ["Від 10 одиниць", "Доставка по Україні", "Контроль якості"],
     feature_groups: meta.feature_groups?.length ? meta.feature_groups : DEFAULT_FEATURE_GROUPS,
   };
+}
+
+type InfoTab = "description" | "delivery" | "files";
+
+const INFO_TABS: Array<{ id: InfoTab; label: string }> = [
+  { id: "description", label: "Опис" },
+  { id: "delivery", label: "Доставка" },
+  { id: "files", label: "Інструкції щодо файлів" },
+];
+
+function textLines(value: string) {
+  return value.split("\n").map((line) => line.trim()).filter(Boolean);
+}
+
+function RichTextBlock({ text }: { text: string }) {
+  const lines = textLines(text);
+  const bullets = lines.filter((line) => /^[-•]\s+/.test(line));
+  const paragraphs = lines.filter((line) => !/^[-•]\s+/.test(line));
+
+  return (
+    <div className="space-y-5 text-lg leading-8 text-foreground/90">
+      {paragraphs.map((line) => (
+        <p key={line}>{line}</p>
+      ))}
+      {bullets.length > 0 && (
+        <ul className="list-disc space-y-2 pl-7">
+          {bullets.map((line) => (
+            <li key={line}>{line.replace(/^[-•]\s+/, "")}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
 }
 
 export interface ProductDetailClientProps {
@@ -133,6 +170,7 @@ export function ProductDetailClient({
   const [activeImageKey, setActiveImageKey]       = useState<string>(initialKeys[0] ?? "front");
   const [imageKeys, setImageKeys]                 = useState<string[]>(initialKeys);
   const [added, setAdded]                         = useState(false);
+  const [activeInfoTab, setActiveInfoTab]          = useState<InfoTab>("description");
 
   const selectedVariant = variants.find((v) => v.id === selectedVariantId) ?? null;
 
@@ -161,6 +199,7 @@ export function ProductDetailClient({
     { icon: PackageCheck, label: `Від ${meta.min_order_qty} одиниць` },
     { icon: Shield, label: "Контроль якості" },
   ];
+  const maxDiscountPct = Math.max(0, ...(product.discount_grid ?? []).map((tier) => tier.discount_pct));
 
   // Similar products — same category, exclude current
   const similarProducts = allProducts
@@ -502,13 +541,6 @@ export function ProductDetailClient({
                 ))}
               </div>
 
-              {/* Description */}
-              {product.description && (
-                <div className="pt-1 border-t border-border">
-                  <p className="text-sm text-muted-foreground leading-relaxed">{product.description}</p>
-                </div>
-              )}
-
               {/* Back link */}
               <Link href="/#catalog"
                 className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors w-fit">
@@ -518,6 +550,93 @@ export function ProductDetailClient({
             </div>
           </div>
         </div>
+
+        {/* ── Ecommerce info tabs ──────────────────────────────────────── */}
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-14">
+          <div className="border-b border-border overflow-x-auto">
+            <div role="tablist" aria-label="Інформація про товар" className="flex min-w-max items-end gap-10 sm:gap-16">
+              {INFO_TABS.map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeInfoTab === tab.id}
+                  aria-controls={`product-info-${tab.id}`}
+                  onClick={() => setActiveInfoTab(tab.id)}
+                  className={`relative px-1 pb-4 text-xl sm:text-2xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                    activeInfoTab === tab.id ? "font-black text-foreground" : "font-medium text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {tab.label}
+                  {activeInfoTab === tab.id && (
+                    <motion.span layoutId="product-info-tab" className="absolute inset-x-0 -bottom-px h-1 rounded-full bg-foreground" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="pt-8">
+            <AnimatePresence mode="wait">
+              {activeInfoTab === "description" && (
+                <motion.div
+                  key="description"
+                  id="product-info-description"
+                  role="tabpanel"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.18 }}
+                  className="max-w-4xl"
+                >
+                  <RichTextBlock text={product.description || `${product.name} для корпоративного мерчу, брендованих подій і командного одягу.`} />
+                </motion.div>
+              )}
+
+              {activeInfoTab === "delivery" && (
+                <motion.div
+                  key="delivery"
+                  id="product-info-delivery"
+                  role="tabpanel"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.18 }}
+                  className="grid max-w-5xl gap-6 md:grid-cols-[1.2fr_0.8fr]"
+                >
+                  <RichTextBlock text={meta.delivery_note || ""} />
+                  <div className="grid gap-3 sm:grid-cols-3 md:grid-cols-1">
+                    {trustBadges.map(({ icon: Icon, label }) => (
+                      <div key={label} className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 p-4">
+                        <Icon className="size-5 text-primary" strokeWidth={1.7} />
+                        <span className="text-sm font-bold">{label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+
+              {activeInfoTab === "files" && (
+                <motion.div
+                  key="files"
+                  id="product-info-files"
+                  role="tabpanel"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.18 }}
+                  className="max-w-4xl"
+                >
+                  <RichTextBlock text={meta.file_guidelines || ""} />
+                  <Link href={meta.guide_url || "/#contact"} className="mt-6 inline-flex items-center gap-2 text-base font-bold text-primary hover:underline">
+                    Перейти до консультації
+                    <ArrowRight className="size-4" />
+                  </Link>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </section>
 
         {/* ── Product confidence details ───────────────────────────────── */}
         <section className="border-y border-border bg-muted/20">
@@ -558,7 +677,7 @@ export function ProductDetailClient({
           <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 flex flex-col sm:flex-row items-center justify-between gap-6">
             <div>
               <p className="text-white font-black text-xl sm:text-2xl">Потрібен корпоративний тираж?</p>
-              <p className="text-white/70 text-sm mt-1">Від {meta.min_order_qty} одиниць · Знижки до {Math.max(0, ...(product.discount_grid ?? []).map((tier) => tier.discount_pct))}% · {meta.delivery_min_days}–{meta.delivery_max_days} днів виробництво</p>
+              <p className="text-white/70 text-sm mt-1">Від {meta.min_order_qty} одиниць · Знижки до {maxDiscountPct}% · {meta.delivery_min_days}–{meta.delivery_max_days} днів виробництво</p>
             </div>
             <Link href="/#contact"
               className="shrink-0 inline-flex items-center gap-2 bg-white text-primary font-bold text-sm px-7 py-3.5 rounded-full hover:bg-white/90 active:scale-95 transition-all duration-200 shadow-lg">

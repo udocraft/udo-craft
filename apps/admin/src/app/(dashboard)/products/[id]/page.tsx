@@ -41,6 +41,8 @@ interface Product {
     delivery_max_days?: number;
     min_order_qty?: number;
     promo_note?: string;
+    delivery_note?: string;
+    file_guidelines?: string;
     guide_url?: string;
     badges?: string[];
     feature_groups?: Array<{

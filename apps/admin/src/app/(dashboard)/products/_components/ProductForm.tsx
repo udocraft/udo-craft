@@ -26,6 +26,8 @@ interface ProductMarketingMeta {
   delivery_max_days?: number;
   min_order_qty?: number;
   promo_note?: string;
+  delivery_note?: string;
+  file_guidelines?: string;
   guide_url?: string;
   badges?: string[];
   feature_groups?: Array<{
@@ -137,6 +139,8 @@ function normalizeMarketingMeta(meta?: ProductMarketingMeta): ProductMarketingMe
     delivery_max_days: meta?.delivery_max_days ?? 14,
     min_order_qty: meta?.min_order_qty ?? 10,
     promo_note: meta?.promo_note ?? "Більший тираж відкриває кращу ціну за одиницю.",
+    delivery_note: meta?.delivery_note ?? "Виробництво займає 7-14 робочих днів після погодження макета. Доставка по Україні виконується зручним для вас перевізником.",
+    file_guidelines: meta?.file_guidelines ?? "- Приймаємо PNG, PDF, SVG або AI у високій якості.\n- Для друку бажаний прозорий фон і роздільна здатність від 300 dpi.\n- Перед запуском у виробництво менеджер перевіряє файл і погоджує макет.",
     guide_url: meta?.guide_url ?? "/#contact",
     badges: meta?.badges?.length ? meta.badges : DEFAULT_BADGES,
     feature_groups: meta?.feature_groups?.length ? meta.feature_groups : DEFAULT_FEATURE_GROUPS,
@@ -195,6 +199,8 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
   const [deliveryMaxDays, setDeliveryMaxDays] = useState(String(initialMeta.delivery_max_days ?? ""));
   const [minOrderQty, setMinOrderQty] = useState(String(initialMeta.min_order_qty ?? ""));
   const [promoNote, setPromoNote] = useState(initialMeta.promo_note ?? "");
+  const [deliveryNote, setDeliveryNote] = useState(initialMeta.delivery_note ?? "");
+  const [fileGuidelines, setFileGuidelines] = useState(initialMeta.file_guidelines ?? "");
   const [guideUrl, setGuideUrl] = useState(initialMeta.guide_url ?? "");
   const [badgesText, setBadgesText] = useState((initialMeta.badges ?? []).join("\n"));
   const [featureGroupsText, setFeatureGroupsText] = useState(serializeFeatureGroups(initialMeta.feature_groups ?? []));
@@ -247,6 +253,8 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
         delivery_max_days: Math.max(0, Math.round(Number(deliveryMaxDays) || 0)),
         min_order_qty: Math.max(1, Math.round(Number(minOrderQty) || 1)),
         promo_note: promoNote.trim(),
+        delivery_note: deliveryNote.trim(),
+        file_guidelines: fileGuidelines.trim(),
         guide_url: guideUrl.trim(),
         badges: parseLines(badgesText),
         feature_groups: parseFeatureGroups(featureGroupsText),
@@ -419,6 +427,17 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
           <div className="space-y-1.5">
             <Label>Промо-підказка біля калькулятора</Label>
             <Textarea rows={2} value={promoNote} onChange={e => { setPromoNote(e.target.value); markDirty(); }} />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label>Текст вкладки "Доставка"</Label>
+              <Textarea rows={5} value={deliveryNote} onChange={e => { setDeliveryNote(e.target.value); markDirty(); }} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Текст вкладки "Інструкції щодо файлів"</Label>
+              <Textarea rows={5} value={fileGuidelines} onChange={e => { setFileGuidelines(e.target.value); markDirty(); }} />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
