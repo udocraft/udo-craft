@@ -6,7 +6,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Product, Material, ProductColorVariant, ProductMarketingMeta } from "@udo-craft/shared";
 import { DEFAULT_PRODUCT_FEATURE_GROUPS, getAllImages, getCustomizableImages, normalizeProductMarketingMeta, resolveProductImages } from "@udo-craft/shared";
-import { ArrowLeft, ArrowRight, Award, BadgeCheck, BadgePercent, Check, ChevronDown, ChevronLeft, ChevronRight, CircleSlash, Clock3, Layers3, Minus, PackageCheck, Ruler, Shield, ShieldCheck, Shirt, Star, Tags, ToolCase, Truck, Zap, Plus } from "lucide-react";
+import { ArrowLeft, ArrowRight, Award, BadgeCheck, BadgePercent, Check, ChevronDown, ChevronLeft, ChevronRight, CircleSlash, Clock3, Layers3, Minus, PackageCheck, Ruler, Shield, ShieldCheck, Shirt, Tags, ToolCase, Truck, Zap, Plus } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { FooterSection } from "@/app/_sections/FooterSection";
 import { ProductCardDetailed } from "@/components/ProductCardDetailed";
@@ -284,16 +284,6 @@ export function ProductDetailClient({
               <div>
                 <h1 className="text-3xl sm:text-4xl font-black tracking-tight leading-tight">{product.name}</h1>
                 <div className="flex flex-wrap items-center gap-3 mt-3">
-                  <div className="inline-flex items-center gap-1.5" aria-label={`Рейтинг ${meta.rating_avg} із 5`}>
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-4 h-4 ${i < Math.round(meta.rating_avg) ? "fill-amber-400 text-amber-400" : "text-amber-200"}`}
-                      />
-                    ))}
-                    <span className="text-sm font-semibold">{meta.rating_avg.toFixed(1)}</span>
-                  </div>
-                  <span className="text-sm text-primary font-medium">{meta.rating_count.toLocaleString("uk-UA")} відгуків</span>
                   {(meta.badges ?? []).slice(0, 2).map((badge) => {
                     const Icon = FEATURE_ICONS[badge.icon as keyof typeof FEATURE_ICONS] ?? BadgeCheck;
                     return (

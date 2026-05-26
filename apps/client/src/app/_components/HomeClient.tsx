@@ -28,7 +28,6 @@ const DesignerSection = dynamic(() => import("@/app/_sections/DesignerSection").
 const CustomizerPreviewSection = dynamic(() => import("@/app/_sections/CustomizerPreviewSection").then(m => m.CustomizerPreviewSection), { ssr: true });
 const TrustSection = dynamic(() => import("@/app/_sections/TrustSection").then(m => m.TrustSection), { ssr: true });
 const ComparisonSection = dynamic(() => import("@/app/_sections/ComparisonSection").then(m => m.ComparisonSection), { ssr: true });
-const TestimonialsSection = dynamic(() => import("@/app/_sections/TestimonialsSection").then(m => m.TestimonialsSection), { ssr: true });
 const FaqSection = dynamic(() => import("@/app/_sections/FaqSection").then(m => m.FaqSection), { ssr: true });
 const FinalCtaSection = dynamic(() => import("@/app/_sections/FinalCtaSection").then(m => m.FinalCtaSection), { ssr: true });
 const ContactSection = dynamic(() => import("@/app/_sections/ContactSection").then(m => m.ContactSection), { ssr: true });
@@ -114,7 +113,6 @@ export function HomeClient({
         <CustomizerPreviewSection />
         <TrustSection />
         <ComparisonSection />
-        <TestimonialsSection />
         <FaqSection />
         <FinalCtaSection />
         <ContactSection

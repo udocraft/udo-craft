@@ -60,7 +60,7 @@ export default function MobileSheet({ open, onClose, title, children }: MobileSh
             exit={{ y: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className="lg:hidden fixed bottom-14 left-0 right-0 z-[9996] flex flex-col bg-card border-t border-border"
-            style={{ maxHeight: "calc(100dvh - 56px - 44px)" }}
+            style={{ maxHeight: "calc(100dvh - 56px - 44px)" } as React.CSSProperties}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}

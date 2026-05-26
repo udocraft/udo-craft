@@ -453,7 +453,7 @@ export function Customizer({ product, printZones, sizeChart, materials, variants
           animate={{ width: activeTab ? 280 : 0, opacity: activeTab ? 1 : 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
           className="hidden lg:block overflow-hidden border-r border-border bg-card h-full"
-          style={{ minWidth: 0 }}
+          style={{ minWidth: 0 } as React.CSSProperties}
         >
           <div className="w-[280px] h-full overflow-y-auto">
             {panelContent(activeTab)}

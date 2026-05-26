@@ -78,11 +78,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
         unitCode: "DAY",
       },
     },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: marketing.rating_avg ?? 4.8,
-      reviewCount: marketing.rating_count ?? 128,
-    },
   };
 
   return (

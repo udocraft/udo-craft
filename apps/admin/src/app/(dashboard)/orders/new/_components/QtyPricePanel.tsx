@@ -257,7 +257,7 @@ export function QtyPricePanel({
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.22, ease: "easeInOut" }}
-              style={{ overflow: "hidden" }}
+              style={{ overflow: "hidden" } as React.CSSProperties}
             >
               <div className="px-3 pb-3">
                 <textarea

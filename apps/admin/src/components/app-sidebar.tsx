@@ -246,10 +246,10 @@ export function AppSidebar({ user }: AppSidebarProps) {
             const ok = handleNavClick(item.url, isActive);
             if (!ok) e.preventDefault();
           }}
-          className="h-8 gap-2 px-2.5 py-1.5 text-[13px] transition-colors"
+          className="h-8 gap-2 px-2.5 py-1.5 text-[13px] transition-colors group-data-[collapsible=icon]:mx-auto"
         >
           <item.icon className={`transition-colors ${isActive ? "text-primary" : "text-muted-foreground"}`} />
-          <span className={isActive ? "font-medium leading-none text-foreground" : "leading-none text-muted-foreground"}>{item.title}</span>
+          <span className={`${isActive ? "font-medium leading-none text-foreground" : "leading-none text-muted-foreground"} group-data-[collapsible=icon]:hidden`}>{item.title}</span>
         </SidebarMenuButton>
         {showBadge && (
           <SidebarMenuBadge className="bg-primary text-primary-foreground rounded-full text-[10px] font-bold px-1.5 min-w-[1.25rem] h-5 border-2 border-background">
@@ -278,11 +278,11 @@ export function AppSidebar({ user }: AppSidebarProps) {
             aria-current={isGroupActive ? "page" : undefined}
             aria-expanded={isOpen}
             onClick={() => setOpenGroups((prev) => ({ ...prev, [item.url]: !isOpen }))}
-          className="h-8 gap-2 px-2.5 py-1.5 text-[13px] transition-colors"
+            className="h-8 gap-2 px-2.5 py-1.5 text-[13px] transition-colors group-data-[collapsible=icon]:mx-auto"
         >
           <item.icon className={`transition-colors ${isGroupActive ? "text-primary" : "text-muted-foreground"}`} />
-            <span className={isGroupActive ? "font-medium leading-none text-foreground" : "leading-none text-muted-foreground"}>{item.title}</span>
-            <ChevronRight className="ml-auto size-3.5 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 text-muted-foreground" />
+            <span className={`${isGroupActive ? "font-medium leading-none text-foreground" : "leading-none text-muted-foreground"} group-data-[collapsible=icon]:hidden`}>{item.title}</span>
+            <ChevronRight className="ml-auto size-3.5 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 text-muted-foreground group-data-[collapsible=icon]:hidden" />
           </SidebarMenuButton>
           <CollapsibleContent className="data-[state=closed]:animate-none data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:slide-in-from-top-1">
             <SidebarMenuSub className="ml-4 mt-0.5 space-y-0 border-l border-border pl-2">
@@ -340,16 +340,16 @@ export function AppSidebar({ user }: AppSidebarProps) {
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="gap-2 px-3 py-2">
+      <SidebarContent className="gap-2 px-3 py-2 group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:px-2">
         {/* Search */}
         <SidebarGroup className="p-1">
           <SidebarMenu>
             <SidebarMenuItem>
               <CommandMenu
                 trigger={
-                  <SidebarMenuButton tooltip="Швидкий пошук (⌘K)" className="group h-9 gap-2 border border-border bg-white px-2.5 py-1.5 hover:bg-muted">
+                  <SidebarMenuButton tooltip="Швидкий пошук (⌘K)" className="group h-9 gap-2 border border-border bg-white px-2.5 py-1.5 hover:bg-muted group-data-[collapsible=icon]:mx-auto">
                     <Search className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                    <span className="text-xs font-medium text-muted-foreground">Швидкий пошук...</span>
+                    <span className="text-xs font-medium text-muted-foreground group-data-[collapsible=icon]:hidden">Швидкий пошук...</span>
                     {!isCollapsed && (
                       <kbd className="ml-auto pointer-events-none hidden h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[9px] font-bold opacity-70 md:flex">
                         <span className="text-[10px]">⌘</span>K

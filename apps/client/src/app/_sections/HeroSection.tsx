@@ -158,7 +158,7 @@ export function HeroSection({
       <motion.div
         animate={{ opacity: cinemaMode ? 0 : 1 }}
         transition={{ duration: 0.4 }}
-        style={{ pointerEvents: cinemaMode ? "none" : "auto" }}
+        style={{ pointerEvents: cinemaMode ? "none" : "auto" } as React.CSSProperties}
         className="relative flex-1 flex flex-col items-center justify-center px-5 sm:px-10 pt-24 pb-20 text-center"
         aria-hidden={cinemaMode}
       >

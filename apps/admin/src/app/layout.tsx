@@ -1,17 +1,9 @@
 import type { Metadata } from "next";
-import { Cousine } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { ClarityInit } from "@/components/clarity";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-
-const cousine = Cousine({
-  subsets: ["latin", "cyrillic"],
-  weight: ["400", "700"],
-  variable: "--font-sans",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "U:DO Craft — Адмін панель",
@@ -20,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="uk" className={cn(cousine.variable)}>
+    <html lang="uk" className={cn()}>
       <body className="min-h-screen bg-background">
         <ClarityInit clarityId="w6t8md9b3l" />
         {children}

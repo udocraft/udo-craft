@@ -112,8 +112,6 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
   const [discountRows, setDiscountRows] = useState(
     product?.discount_grid?.length ? product.discount_grid : [{ qty: 10, discount_pct: 5 }, { qty: 50, discount_pct: 10 }, { qty: 100, discount_pct: 15 }]
   );
-  const [ratingAvg, setRatingAvg] = useState(String(initialMeta.rating_avg ?? ""));
-  const [ratingCount, setRatingCount] = useState(String(initialMeta.rating_count ?? ""));
   const [deliveryMinDays, setDeliveryMinDays] = useState(String(initialMeta.delivery_min_days ?? ""));
   const [deliveryMaxDays, setDeliveryMaxDays] = useState(String(initialMeta.delivery_max_days ?? ""));
   const [minOrderQty, setMinOrderQty] = useState(String(initialMeta.min_order_qty ?? ""));
@@ -166,8 +164,6 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
         .filter((row) => row.qty > 0)
         .sort((a, b) => a.qty - b.qty),
       marketing_meta: {
-        rating_avg: Number(ratingAvg) || 0,
-        rating_count: Math.max(0, Math.round(Number(ratingCount) || 0)),
         delivery_min_days: Math.max(0, Math.round(Number(deliveryMinDays) || 0)),
         delivery_max_days: Math.max(0, Math.round(Number(deliveryMaxDays) || 0)),
         min_order_qty: Math.max(1, Math.round(Number(minOrderQty) || 1)),
@@ -303,18 +299,10 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
       <TabsContent value="sales" className="space-y-5">
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-sm font-semibold">Продажі, доставка та рейтинг</CardTitle>
+          <CardTitle className="text-sm font-semibold">Продажі та доставка</CardTitle>
         </CardHeader>
         <CardContent className="space-y-5">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-            <div className="space-y-1.5">
-              <Label>Рейтинг</Label>
-              <Input type="number" min="0" max="5" step="0.1" value={ratingAvg} onChange={e => { setRatingAvg(e.target.value); markDirty(); }} />
-            </div>
-            <div className="space-y-1.5">
-              <Label>К-сть відгуків</Label>
-              <Input type="number" min="0" value={ratingCount} onChange={e => { setRatingCount(e.target.value); markDirty(); }} />
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label>Доставка від</Label>
               <Input type="number" min="0" value={deliveryMinDays} onChange={e => { setDeliveryMinDays(e.target.value); markDirty(); }} />
