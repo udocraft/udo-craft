@@ -1,13 +1,21 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { X, Plus, Ruler, Star, Truck, Tags, Sparkles } from "lucide-react";
+import { X, Plus, Ruler } from "lucide-react";
+import {
+  normalizeProductMarketingMeta,
+  parseMarketingLines,
+  parseProductFeatureGroups,
+  serializeProductFeatureGroups,
+  type ProductMarketingMeta,
+} from "@udo-craft/shared";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProductColorVariantsList } from "@/components/product-color-variants";
 import { SizeChartModal } from "@/components/size-chart-modal";
 import { ProductErpRecipe } from "./ProductErpRecipe";
@@ -18,24 +26,6 @@ import { ProductVariantSkus } from "./ProductVariantSkus";
 interface Category { id: string; name: string; slug: string; is_active: boolean; sort_order: number; }
 interface SizeChart { id: string; name: string; rows: Record<string, string>[]; }
 interface PrintArea { id: string; name: string; label: string; }
-
-interface ProductMarketingMeta {
-  rating_avg?: number;
-  rating_count?: number;
-  delivery_min_days?: number;
-  delivery_max_days?: number;
-  min_order_qty?: number;
-  promo_note?: string;
-  delivery_note?: string;
-  file_guidelines?: string;
-  guide_url?: string;
-  badges?: string[];
-  feature_groups?: Array<{
-    title: string;
-    icon?: string;
-    items: Array<{ title: string; description?: string }>;
-  }>;
-}
 
 export interface ProductFormData {
   name: string;
@@ -101,78 +91,6 @@ function getDefaultSizes(): string[] {
   } catch { return ["S", "M", "L", "XL"]; }
 }
 
-const DEFAULT_FEATURE_GROUPS: NonNullable<ProductMarketingMeta["feature_groups"]> = [
-  {
-    title: "Кастомізація",
-    icon: "layers",
-    items: [
-      { title: "DTG-друк", description: "Перед, спина, рукави та внутрішня бірка" },
-      { title: "DTFlex", description: "Яскраве нанесення для малих і середніх тиражів" },
-      { title: "Вишивка", description: "Груди, центр, рукав та брендовані деталі" },
-    ],
-  },
-  {
-    title: "Матеріал",
-    icon: "shirt",
-    items: [
-      { title: "Приємна тканина", description: "Збалансована щільність для щоденного носіння" },
-      { title: "Стабільна посадка", description: "Тримає форму після виробництва і догляду" },
-    ],
-  },
-  {
-    title: "Сервіс",
-    icon: "award",
-    items: [
-      { title: "B2B-бестселер", description: "Добре підходить для корпоративних наборів" },
-      { title: "Контроль якості", description: "Перевірка макета й виробу перед відправкою" },
-    ],
-  },
-];
-
-const DEFAULT_BADGES = ["Від 10 одиниць", "Доставка по Україні", "Контроль якості"];
-
-function normalizeMarketingMeta(meta?: ProductMarketingMeta): ProductMarketingMeta {
-  return {
-    rating_avg: meta?.rating_avg ?? 4.8,
-    rating_count: meta?.rating_count ?? 128,
-    delivery_min_days: meta?.delivery_min_days ?? 7,
-    delivery_max_days: meta?.delivery_max_days ?? 14,
-    min_order_qty: meta?.min_order_qty ?? 10,
-    promo_note: meta?.promo_note ?? "Більший тираж відкриває кращу ціну за одиницю.",
-    delivery_note: meta?.delivery_note ?? "Виробництво займає 7-14 робочих днів після погодження макета. Доставка по Україні виконується зручним для вас перевізником.",
-    file_guidelines: meta?.file_guidelines ?? "- Приймаємо PNG, PDF, SVG або AI у високій якості.\n- Для друку бажаний прозорий фон і роздільна здатність від 300 dpi.\n- Перед запуском у виробництво менеджер перевіряє файл і погоджує макет.",
-    guide_url: meta?.guide_url ?? "/#contact",
-    badges: meta?.badges?.length ? meta.badges : DEFAULT_BADGES,
-    feature_groups: meta?.feature_groups?.length ? meta.feature_groups : DEFAULT_FEATURE_GROUPS,
-  };
-}
-
-function parseLines(value: string) {
-  return value.split("\n").map((line) => line.trim()).filter(Boolean);
-}
-
-function serializeFeatureGroups(groups: NonNullable<ProductMarketingMeta["feature_groups"]>) {
-  return groups
-    .map((group) => `${group.title}|${group.icon || "sparkles"}\n${group.items.map((item) => `- ${item.title}${item.description ? `: ${item.description}` : ""}`).join("\n")}`)
-    .join("\n\n");
-}
-
-function parseFeatureGroups(value: string): NonNullable<ProductMarketingMeta["feature_groups"]> {
-  return value
-    .split(/\n{2,}/)
-    .map((block) => {
-      const lines = parseLines(block);
-      const [titleRaw = "", iconRaw = "sparkles"] = (lines[0] || "").split("|");
-      const items = lines.slice(1).map((line) => {
-        const clean = line.replace(/^[-•]\s*/, "");
-        const [title = "", ...rest] = clean.split(":");
-        return { title: title.trim(), description: rest.join(":").trim() || undefined };
-      }).filter((item) => item.title);
-      return { title: titleRaw.trim(), icon: iconRaw.trim() || "sparkles", items };
-    })
-    .filter((group) => group.title && group.items.length);
-}
-
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function ProductForm({ product, categories, sizeCharts, printAreas, onSave, onChange, saving = false }: ProductFormProps) {
@@ -189,7 +107,7 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
   const [availableSizes, setAvailableSizes] = useState<string[]>(
     product?.available_sizes?.length ? product.available_sizes : getDefaultSizes()
   );
-  const initialMeta = normalizeMarketingMeta(product?.marketing_meta);
+  const initialMeta = normalizeProductMarketingMeta(product?.marketing_meta);
   const [discountRows, setDiscountRows] = useState(
     product?.discount_grid?.length ? product.discount_grid : [{ qty: 10, discount_pct: 5 }, { qty: 50, discount_pct: 10 }, { qty: 100, discount_pct: 15 }]
   );
@@ -203,7 +121,7 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
   const [fileGuidelines, setFileGuidelines] = useState(initialMeta.file_guidelines ?? "");
   const [guideUrl, setGuideUrl] = useState(initialMeta.guide_url ?? "");
   const [badgesText, setBadgesText] = useState((initialMeta.badges ?? []).join("\n"));
-  const [featureGroupsText, setFeatureGroupsText] = useState(serializeFeatureGroups(initialMeta.feature_groups ?? []));
+  const [featureGroupsText, setFeatureGroupsText] = useState(serializeProductFeatureGroups(initialMeta.feature_groups ?? []));
   const [customSizeInput, setCustomSizeInput] = useState("");
   const [nameError, setNameError] = useState("");
   const [dirty, setDirty] = useState(false);
@@ -256,8 +174,8 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
         delivery_note: deliveryNote.trim(),
         file_guidelines: fileGuidelines.trim(),
         guide_url: guideUrl.trim(),
-        badges: parseLines(badgesText),
-        feature_groups: parseFeatureGroups(featureGroupsText),
+        badges: parseMarketingLines(badgesText),
+        feature_groups: parseProductFeatureGroups(featureGroupsText),
       },
     });
   };
@@ -269,8 +187,19 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
 
   return (
     <div className="space-y-5">
+      <Tabs defaultValue="basic" className="gap-4">
+        <div className="overflow-x-auto">
+          <TabsList className="w-max justify-start rounded-lg">
+            <TabsTrigger value="basic">Основне</TabsTrigger>
+            <TabsTrigger value="sales">Продажі</TabsTrigger>
+            <TabsTrigger value="sizes">Розміри</TabsTrigger>
+            <TabsTrigger value="production">Виробництво</TabsTrigger>
+            <TabsTrigger value="colors">Кольори</TabsTrigger>
+          </TabsList>
+        </div>
 
       {/* ── Basic Info ─────────────────────────────────────────────────── */}
+      <TabsContent value="basic" className="space-y-5">
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-semibold">Основна інформація</CardTitle>
@@ -367,8 +296,10 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
           </div>
         </CardContent>
       </Card>
+      </TabsContent>
 
       {/* ── Sales details ─────────────────────────────────────────────── */}
+      <TabsContent value="sales" className="space-y-5">
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-semibold">Продажі, доставка та рейтинг</CardTitle>
@@ -376,7 +307,7 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
         <CardContent className="space-y-5">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
             <div className="space-y-1.5">
-              <Label className="flex items-center gap-1.5"><Star className="size-3.5" /> Рейтинг</Label>
+              <Label>Рейтинг</Label>
               <Input type="number" min="0" max="5" step="0.1" value={ratingAvg} onChange={e => { setRatingAvg(e.target.value); markDirty(); }} />
             </div>
             <div className="space-y-1.5">
@@ -384,7 +315,7 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
               <Input type="number" min="0" value={ratingCount} onChange={e => { setRatingCount(e.target.value); markDirty(); }} />
             </div>
             <div className="space-y-1.5">
-              <Label className="flex items-center gap-1.5"><Truck className="size-3.5" /> Доставка від</Label>
+              <Label>Доставка від</Label>
               <Input type="number" min="0" value={deliveryMinDays} onChange={e => { setDeliveryMinDays(e.target.value); markDirty(); }} />
             </div>
             <div className="space-y-1.5">
@@ -406,7 +337,7 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label className="flex items-center gap-1.5"><Tags className="size-3.5" /> Оптові знижки</Label>
+              <Label>Оптові знижки</Label>
               <button type="button" onClick={() => { setDiscountRows(prev => [...prev, { qty: 500, discount_pct: 20 }]); markDirty(); }} className="text-xs text-primary hover:underline">
                 + Додати рівень
               </button>
@@ -446,15 +377,17 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
               <Textarea rows={5} value={badgesText} onChange={e => { setBadgesText(e.target.value); markDirty(); }} />
             </div>
             <div className="space-y-1.5">
-              <Label className="flex items-center gap-1.5"><Sparkles className="size-3.5" /> Інформаційні блоки</Label>
+              <Label>Інформаційні блоки</Label>
               <Textarea rows={8} value={featureGroupsText} onChange={e => { setFeatureGroupsText(e.target.value); markDirty(); }} />
               <p className="text-xs text-muted-foreground">Формат: Заголовок|icon, нижче пункти "- Назва: опис". Порожній рядок розділяє колонки.</p>
             </div>
           </div>
         </CardContent>
       </Card>
+      </TabsContent>
 
       {/* ── Sizes ──────────────────────────────────────────────────────── */}
+      <TabsContent value="sizes" className="space-y-5">
       <Card>
         <CardHeader className="pb-3 flex flex-row items-center justify-between">
           <CardTitle className="text-sm font-semibold">Розміри</CardTitle>
@@ -472,7 +405,7 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
           <p className="text-xs text-muted-foreground">Оберіть доступні розміри для цього товару</p>
 
           {/* Catalog sizes as toggleable chips */}
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-6">
             {allCatalogSizes.map(size => {
               const active = availableSizes.includes(size);
               return (
@@ -480,7 +413,7 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
                   key={size}
                   type="button"
                   onClick={() => toggleSize(size)}
-                  className={`px-3 py-1.5 rounded-lg border text-sm font-medium transition-all ${
+                  className={`h-10 rounded-lg border px-3 text-sm font-medium transition-all ${
                     active
                       ? "bg-foreground text-background border-foreground"
                       : "bg-background text-muted-foreground border-border hover:border-foreground/40"
@@ -492,7 +425,7 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
             })}
             {/* Extra sizes not in catalog */}
             {extraSizes.map(size => (
-              <span key={size} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-primary/40 bg-primary/5 text-sm font-medium text-primary">
+              <span key={size} className="inline-flex h-10 items-center justify-center gap-1 rounded-lg border border-primary/40 bg-primary/5 px-3 text-sm font-medium text-primary">
                 {size}
                 <button type="button" onClick={() => toggleSize(size)} className="hover:text-destructive transition-colors">
                   <X className="w-3 h-3" />
@@ -549,8 +482,10 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
           </CardContent>
         </Card>
       )}
+      </TabsContent>
 
       {/* ── ERP Recipe ─────────────────────────────────────────────────── */}
+      <TabsContent value="production" className="space-y-5">
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-semibold">ERP: базова калькуляція продукту</CardTitle>
@@ -576,8 +511,10 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
           )}
         </CardContent>
       </Card>
+      </TabsContent>
 
       {/* ── Color Variants ─────────────────────────────────────────────── */}
+      <TabsContent value="colors" className="space-y-5">
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-semibold">Кольори та фото</CardTitle>
@@ -590,6 +527,8 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
           )}
         </CardContent>
       </Card>
+      </TabsContent>
+      </Tabs>
 
       {/* Hidden submit trigger */}
       <button id="product-form-submit" type="button" onClick={handleSubmit} disabled={saving} className="hidden" aria-hidden="true" />

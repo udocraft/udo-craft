@@ -19,6 +19,111 @@ export const ProductImageSchema = z.object({
 
 export type ProductImage = z.infer<typeof ProductImageSchema>;
 
+export interface ProductMarketingMeta {
+  rating_avg?: number;
+  rating_count?: number;
+  delivery_min_days?: number;
+  delivery_max_days?: number;
+  min_order_qty?: number;
+  promo_note?: string;
+  delivery_note?: string;
+  file_guidelines?: string;
+  guide_url?: string;
+  badges?: string[];
+  feature_groups?: Array<{
+    title: string;
+    icon?: string;
+    items: Array<{ title: string; description?: string }>;
+  }>;
+}
+
+export const DEFAULT_PRODUCT_FEATURE_GROUPS: NonNullable<ProductMarketingMeta["feature_groups"]> = [
+  {
+    title: "Кастомізація",
+    icon: "layers",
+    items: [
+      { title: "DTG та DTFlex", description: "Перед, спина, рукави та внутрішня бірка" },
+      { title: "Вишивка", description: "Груди, центр, рукав і брендовані деталі" },
+    ],
+  },
+  {
+    title: "Матеріал",
+    icon: "shirt",
+    items: [
+      { title: "Зручна посадка", description: "Підходить для щоденного носіння команди" },
+      { title: "Стабільна тканина", description: "Добре тримає форму після догляду" },
+    ],
+  },
+  {
+    title: "Сервіс",
+    icon: "award",
+    items: [
+      { title: "Контроль макета", description: "Перевіряємо файли перед запуском" },
+      { title: "Вироблено відповідально", description: "Планування тиражу, якості та відправки" },
+    ],
+  },
+];
+
+export const DEFAULT_PRODUCT_BADGES = ["Від 10 одиниць", "Доставка по Україні", "Контроль якості"];
+
+export const DEFAULT_PRODUCT_MARKETING_META: Required<
+  Pick<ProductMarketingMeta, "rating_avg" | "rating_count" | "delivery_min_days" | "delivery_max_days" | "min_order_qty" | "promo_note" | "delivery_note" | "file_guidelines" | "guide_url" | "badges" | "feature_groups">
+> = {
+  rating_avg: 4.8,
+  rating_count: 128,
+  delivery_min_days: 7,
+  delivery_max_days: 14,
+  min_order_qty: 10,
+  promo_note: "Більший тираж відкриває кращу ціну за одиницю.",
+  delivery_note: "Виробництво займає 7-14 робочих днів після погодження макета. Доставка по Україні виконується зручним для вас перевізником.",
+  file_guidelines: "- Приймаємо PNG, PDF, SVG або AI у високій якості.\n- Для друку бажаний прозорий фон і роздільна здатність від 300 dpi.\n- Перед запуском у виробництво менеджер перевіряє файл і погоджує макет.",
+  guide_url: "/#contact",
+  badges: DEFAULT_PRODUCT_BADGES,
+  feature_groups: DEFAULT_PRODUCT_FEATURE_GROUPS,
+};
+
+export function normalizeProductMarketingMeta(meta?: ProductMarketingMeta): typeof DEFAULT_PRODUCT_MARKETING_META {
+  return {
+    rating_avg: meta?.rating_avg ?? DEFAULT_PRODUCT_MARKETING_META.rating_avg,
+    rating_count: meta?.rating_count ?? DEFAULT_PRODUCT_MARKETING_META.rating_count,
+    delivery_min_days: meta?.delivery_min_days ?? DEFAULT_PRODUCT_MARKETING_META.delivery_min_days,
+    delivery_max_days: meta?.delivery_max_days ?? DEFAULT_PRODUCT_MARKETING_META.delivery_max_days,
+    min_order_qty: meta?.min_order_qty ?? DEFAULT_PRODUCT_MARKETING_META.min_order_qty,
+    promo_note: meta?.promo_note ?? DEFAULT_PRODUCT_MARKETING_META.promo_note,
+    delivery_note: meta?.delivery_note ?? DEFAULT_PRODUCT_MARKETING_META.delivery_note,
+    file_guidelines: meta?.file_guidelines ?? DEFAULT_PRODUCT_MARKETING_META.file_guidelines,
+    guide_url: meta?.guide_url ?? DEFAULT_PRODUCT_MARKETING_META.guide_url,
+    badges: meta?.badges?.length ? meta.badges : DEFAULT_PRODUCT_BADGES,
+    feature_groups: meta?.feature_groups?.length ? meta.feature_groups : DEFAULT_PRODUCT_FEATURE_GROUPS,
+  };
+}
+
+export function parseMarketingLines(value: string) {
+  return value.split("\n").map((line) => line.trim()).filter(Boolean);
+}
+
+export function serializeProductFeatureGroups(groups: NonNullable<ProductMarketingMeta["feature_groups"]>) {
+  return groups
+    .map((group) => `${group.title}|${group.icon || "sparkles"}\n${group.items.map((item) => `- ${item.title}${item.description ? `: ${item.description}` : ""}`).join("\n")}`)
+    .join("\n\n");
+}
+
+export function parseProductFeatureGroups(value: string): NonNullable<ProductMarketingMeta["feature_groups"]> {
+  return value
+    .split(/\n{2,}/)
+    .map((block) => {
+      const lines = parseMarketingLines(block);
+      const [titleRaw = "", iconRaw = "sparkles"] = (lines[0] || "").split("|");
+      const items = lines.slice(1).map((line) => {
+        const clean = line.replace(/^[-•]\s*/, "");
+        const [title = "", ...rest] = clean.split(":");
+        return { title: title.trim(), description: rest.join(":").trim() || undefined };
+      }).filter((item) => item.title);
+      return { title: titleRaw.trim(), icon: iconRaw.trim() || "sparkles", items };
+    })
+    .filter((group) => group.title && group.items.length);
+}
+
 /**
  * Returns only customizable images as a legacy { key: url } map.
  * Drop-in replacement for reading product.images in canvas code.

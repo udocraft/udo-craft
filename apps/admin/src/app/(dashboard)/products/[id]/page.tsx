@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { DashboardPage } from "@/components/dashboard-page";
 import { ProductForm, type ProductFormData } from "../_components/ProductForm";
-import type { ProductImage } from "@udo-craft/shared";
+import type { ProductImage, ProductMarketingMeta } from "@udo-craft/shared";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -34,23 +34,7 @@ interface Product {
   print_area_ids?: string[];
   product_images?: ProductImage[];
   discount_grid?: { qty: number; discount_pct: number }[];
-  marketing_meta?: {
-    rating_avg?: number;
-    rating_count?: number;
-    delivery_min_days?: number;
-    delivery_max_days?: number;
-    min_order_qty?: number;
-    promo_note?: string;
-    delivery_note?: string;
-    file_guidelines?: string;
-    guide_url?: string;
-    badges?: string[];
-    feature_groups?: Array<{
-      title: string;
-      icon?: string;
-      items: Array<{ title: string; description?: string }>;
-    }>;
-  };
+  marketing_meta?: ProductMarketingMeta;
 }
 
 interface Category { id: string; name: string; slug: string; is_active: boolean; sort_order: number; }
