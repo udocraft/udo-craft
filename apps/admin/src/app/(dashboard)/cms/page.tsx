@@ -174,10 +174,16 @@ export default function CmsPage() {
   const [selected, setSelected] = useState<TreeNode | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
+  const [previewKey, setPreviewKey] = useState(Date.now());
+
+  const handleSaved = () => {
+    setPreviewKey(Date.now());
+  };
+
   const editorContent = !selected || selected.type === "group" ? (
     <EmptyState onOpenMenu={() => setDrawerOpen(true)} />
   ) : selected.type === "section" && selected.section ? (
-    <LandingSectionEditor key={selected.id} section={selected.section} />
+    <LandingSectionEditor key={selected.id} section={selected.section} onSaved={handleSaved} />
   ) : selected.type === "richpage" && selected.slug ? (
     <BlockEditor
       key={selected.id}
@@ -201,14 +207,37 @@ export default function CmsPage() {
         onClose={() => setDrawerOpen(false)}
       />
 
-      {/* Right panel */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      {/* Right panel with split layout */}
+      <div className="flex-1 flex overflow-hidden">
         {/* Editor area */}
-        <main className="flex-1 overflow-y-auto bg-white" aria-label="Редактор контенту">
+        <main className="flex-1 overflow-y-auto bg-white border-r border-border" aria-label="Редактор контенту">
           <div className="max-w-3xl mx-auto pb-16 md:pb-0 bg-white min-h-full">
             {editorContent}
           </div>
         </main>
+
+        {/* Live Preview area - hidden on small screens */}
+        <div className="hidden lg:flex flex-1 flex-col bg-muted/30 relative">
+          <div className="flex items-center justify-between px-4 py-2 border-b border-border bg-white shrink-0">
+            <span className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              Live Preview
+            </span>
+          </div>
+          <div className="flex-1 overflow-hidden p-4 flex justify-center">
+            <div className="w-full max-w-[1440px] h-full bg-white rounded-xl shadow-sm border border-border overflow-hidden">
+              <iframe
+                key={previewKey}
+                src={process.env.NEXT_PUBLIC_CLIENT_URL || "http://localhost:3000"}
+                className="w-full h-full border-0"
+                title="Client Website Preview"
+              />
+            </div>
+          </div>
+        </div>
 
         {/* Mobile bottom bar — only visible on mobile */}
         <div className="md:hidden shrink-0 border-t border-border bg-background">

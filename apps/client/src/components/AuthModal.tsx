@@ -104,7 +104,7 @@ function PasswordStrength({ password }: { password: string }) {
 export function AuthModal({ open, onClose, onAuthSuccess, initialScreen = "login" }: AuthModalProps) {
   const supabase = createClient();
   const [mounted, setMounted] = useState(false);
-  const [screen, setScreen] = useState<"login" | "register" | "verify">(initialScreen);
+  const [screen, setScreen] = useState<"login" | "register" | "verify" | "forgot" | "forgot-verify" | "new-password">(initialScreen);
 
   // Login state
   const [loginEmail, setLoginEmail] = useState("");
@@ -130,6 +130,13 @@ export function AuthModal({ open, onClose, onAuthSuccess, initialScreen = "login
   const [verifying, setVerifying] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
 
+  // Forgot password state
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetPassword, setResetPassword] = useState("");
+  const [resetConfirmPassword, setResetConfirmPassword] = useState("");
+  const [resetLoading, setResetLoading] = useState(false);
+  const [resetError, setResetError] = useState<string | null>(null);
+
   // Mount guard for portal
   useEffect(() => { setMounted(true); }, []);
 
@@ -140,6 +147,7 @@ export function AuthModal({ open, onClose, onAuthSuccess, initialScreen = "login
       setLoginError(null);
       setRegError(null);
       setOtpError(null);
+      setResetError(null);
       setOtpInput("");
     }
   }, [open, initialScreen]);
@@ -178,6 +186,72 @@ export function AuthModal({ open, onClose, onAuthSuccess, initialScreen = "login
       sound.celebration();
       onAuthSuccess?.();
       onClose();
+    }
+  };
+
+  const handleForgotSend = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resetEmail) return;
+    setResetLoading(true);
+    setResetError(null);
+    sound.button();
+    try {
+      const res = await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: resetEmail, type: "reset" }),
+      });
+      if (!res.ok) throw new Error("Помилка надсилання коду");
+      setOtpInput("");
+      setResendCooldown(60);
+      setScreen("forgot-verify");
+    } catch {
+      setResetError("Не вдалося надіслати код. Перевірте email.");
+      sound.caution();
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
+  const handleForgotVerify = async () => {
+    if (otpInput.length !== 6) return;
+    sound.button();
+    setScreen("new-password");
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setResetError(null);
+    if (resetPassword !== resetConfirmPassword) { setResetError("Паролі не збігаються"); sound.caution(); return; }
+    if (resetPassword.length < 8) { setResetError("Мінімум 8 символів"); sound.caution(); return; }
+    
+    setResetLoading(true);
+    sound.button();
+    try {
+      const res = await fetch("/api/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: resetEmail, otp: otpInput, newPassword: resetPassword }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Помилка");
+      }
+      
+      // Auto login with new password
+      const { error } = await supabase.auth.signInWithPassword({ email: resetEmail, password: resetPassword });
+      if (!error) {
+        sound.celebration();
+        onAuthSuccess?.();
+        onClose();
+      } else {
+        setScreen("login");
+      }
+    } catch (e: any) {
+      setResetError(e.message);
+      sound.caution();
+    } finally {
+      setResetLoading(false);
     }
   };
 
@@ -328,7 +402,13 @@ export function AuthModal({ open, onClose, onAuthSuccess, initialScreen = "login
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="pw-login-password">Пароль</Label>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="pw-login-password">Пароль</Label>
+                    <button type="button" onClick={() => { sound.select(); setResetEmail(loginEmail); setScreen("forgot"); }}
+                      className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+                      Забули пароль?
+                    </button>
+                  </div>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                     <Input id="pw-login-password" type={showLoginPw ? "text" : "password"} placeholder="••••••••"
@@ -456,6 +536,117 @@ export function AuthModal({ open, onClose, onAuthSuccess, initialScreen = "login
                   )}
                 </p>
               </div>
+            </>
+          )}
+
+          {/* ── FORGOT PASSWORD ── */}
+          {screen === "forgot" && (
+            <>
+              <button onClick={() => { sound.close(); setScreen("login"); }} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <ArrowLeft className="size-3.5" /> Назад до входу
+              </button>
+              <div>
+                <h2 className="font-bold text-xl">Відновлення пароля</h2>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Вкажіть email — ми надішлемо 6-значний код для відновлення доступу.
+                </p>
+              </div>
+              <form onSubmit={handleForgotSend} className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="pw-reset-email">Email</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                    <Input id="pw-reset-email" type="email" placeholder="hr@company.com" value={resetEmail}
+                      onChange={(e) => setResetEmail(e.target.value)} required autoComplete="email" className="pl-9" />
+                  </div>
+                </div>
+                {resetError && <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm">{resetError}</div>}
+                <Button type="submit" className="w-full" disabled={resetLoading}>
+                  {resetLoading && <Loader2 className="size-4 animate-spin mr-2" />}
+                  {resetLoading ? "Надсилаємо..." : "Надіслати код"}
+                </Button>
+              </form>
+            </>
+          )}
+
+          {/* ── FORGOT OTP VERIFY ── */}
+          {screen === "forgot-verify" && (
+            <>
+              <button onClick={() => { sound.close(); setScreen("forgot"); }} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <ArrowLeft className="size-3.5" /> Змінити email
+              </button>
+              <div className="text-center space-y-1">
+                <div className="inline-flex items-center justify-center size-12 rounded-full bg-primary/10 mb-2">
+                  <Lock className="size-6 text-primary" />
+                </div>
+                <h2 className="font-bold text-xl">Введіть код</h2>
+                <p className="text-sm text-muted-foreground">
+                  Ми надіслали 6-значний код на{" "}
+                  <span className="font-medium text-foreground">{resetEmail}</span>
+                </p>
+              </div>
+              <div className="space-y-4">
+                <OTPInput value={otpInput} onChange={(v) => { setOtpInput(v); setOtpError(null); }} />
+                {otpError && (
+                  <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm text-center">{otpError}</div>
+                )}
+                <Button className="w-full" onClick={() => { sound.button(); handleForgotVerify(); }} disabled={otpInput.length !== 6}>
+                  <CheckCircle2 className="size-4 mr-2" />
+                  Підтвердити
+                </Button>
+                <p className="text-center text-sm text-muted-foreground">
+                  Не отримали код?{" "}
+                  {resendCooldown > 0 ? (
+                    <span>Повторно через {resendCooldown}с</span>
+                  ) : (
+                    <button onClick={handleForgotSend} className="text-primary font-medium hover:underline">
+                      Надіслати ще раз
+                    </button>
+                  )}
+                </p>
+              </div>
+            </>
+          )}
+
+          {/* ── NEW PASSWORD ── */}
+          {screen === "new-password" && (
+            <>
+              <div>
+                <h2 className="font-bold text-xl">Новий пароль</h2>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Придумайте новий надійний пароль для вашого акаунту.
+                </p>
+              </div>
+              <form onSubmit={handleResetPassword} className="space-y-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="pw-reset-new">Пароль</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                    <Input id="pw-reset-new" type={showLoginPw ? "text" : "password"} placeholder="Мінімум 8 символів"
+                      value={resetPassword} onChange={(e) => setResetPassword(e.target.value)}
+                      required autoComplete="new-password" className="pl-9 pr-10" />
+                    <button type="button" tabIndex={-1} onClick={() => setShowLoginPw(!showLoginPw)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                      {showLoginPw ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                    </button>
+                  </div>
+                  {resetPassword && <PasswordStrength password={resetPassword} />}
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="pw-reset-confirm">Підтвердьте пароль</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                    <Input id="pw-reset-confirm" type={showLoginPw ? "text" : "password"} placeholder="Мінімум 8 символів"
+                      value={resetConfirmPassword} onChange={(e) => setResetConfirmPassword(e.target.value)}
+                      required autoComplete="new-password" className="pl-9" />
+                  </div>
+                </div>
+                {resetError && <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm">{resetError}</div>}
+                <Button type="submit" className="w-full" disabled={resetLoading}>
+                  {resetLoading && <Loader2 className="size-4 animate-spin mr-2" />}
+                  {resetLoading ? "Зберігаємо..." : "Зберегти пароль"}
+                </Button>
+              </form>
             </>
           )}
 
