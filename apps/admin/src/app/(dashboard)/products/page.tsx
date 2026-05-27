@@ -53,9 +53,10 @@ export default function ProductsPage() {
 
   return (
     <DashboardPage
-      title="Товари"
-      tabs={<AdminTabs tabs={TABS} value={tab} onValueChange={setTab} />}
+      title="Каталог товарів"
+      titleAccessory={<AdminTabs tabs={TABS} value={tab} onValueChange={setTab} />}
       actions={
+
         createConfig?.onClick ? (
           <Button size="sm" onClick={createConfig.onClick}>
             {createConfig.label}

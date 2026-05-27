@@ -11,7 +11,7 @@ interface DashboardPageProps {
   eyebrow?: string;
   subtitle?: React.ReactNode;
   actions?: React.ReactNode;
-  tabs?: React.ReactNode;
+  titleAccessory?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
   contentClassName?: string;
@@ -25,7 +25,7 @@ export function DashboardPage({
   eyebrow,
   subtitle,
   actions,
-  tabs,
+  titleAccessory,
   children,
   className,
   contentClassName,
@@ -47,7 +47,7 @@ export function DashboardPage({
     <div className={cn("flex h-0 flex-1 flex-col overflow-hidden bg-background", className)}>
       <DashboardHeader 
         title={title} 
-        titleAccessory={tabs} 
+        titleAccessory={titleAccessory} 
         eyebrow={eyebrow} 
         subtitle={subtitle} 
         actions={actions}

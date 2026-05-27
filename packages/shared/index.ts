@@ -254,6 +254,8 @@ export const LeadSchema = z.object({
     comment: z.string().optional(),
   }),
   total_amount_cents: z.number().int(),
+  visitor_id: z.string().optional().nullable(),
+  session_id: z.string().optional().nullable(),
 });
 
 export const OrderItemSchema = z.object({
@@ -758,6 +760,8 @@ export const CreateLeadSchema = z.object({
     source: z.string().optional(),
   }),
   total_amount_cents: z.number().int().optional(),
+  visitor_id: z.string().optional().nullable(),
+  session_id: z.string().optional().nullable(),
 });
 
 export type CreateLead = z.infer<typeof CreateLeadSchema>;

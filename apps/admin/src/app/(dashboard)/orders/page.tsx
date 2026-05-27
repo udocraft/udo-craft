@@ -25,6 +25,7 @@ import {
   Plus,
   RefreshCw,
   Search,
+  Tag,
   Truck,
   UserRound,
 } from "lucide-react";

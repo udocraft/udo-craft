@@ -40,9 +40,10 @@ export default function PrintsPage() {
 
   return (
     <DashboardPage
-      title="Принти"
-      tabs={<AdminTabs tabs={TABS} value={tab} onValueChange={(next) => router.push(`/prints?tab=${next}`)} />}
+      title="Бібліотека принтів"
+      titleAccessory={<AdminTabs tabs={TABS} value={tab} onValueChange={(next) => router.push(`/prints?tab=${next}`)} />}
       actions={
+
         createConfig?.onClick ? (
           <Button size="sm" onClick={createConfig.onClick}>
             {createConfig.label}

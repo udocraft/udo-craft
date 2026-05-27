@@ -377,18 +377,24 @@ export function SystemTab() {
 
       <Collapsible open={isDangerZoneOpen} onOpenChange={setIsDangerZoneOpen}>
         <SectionCard title="Налаштування безпеки" className="p-0 overflow-hidden">
-          <CollapsibleTrigger asChild>
-            <Button
-              variant="ghost"
-              className="flex w-full items-center justify-between rounded-none px-4 py-6 hover:bg-muted/50"
-            >
-              <div className="flex items-center gap-2 text-destructive">
-                <AlertTriangle className="size-4" />
-                <span className="font-semibold">Небезпечна зона</span>
-              </div>
-              <ChevronDown className={`size-4 transition-transform duration-200 ${isDangerZoneOpen ? "rotate-180" : ""}`} />
-            </Button>
-          </CollapsibleTrigger>
+          <CollapsibleTrigger
+            render={
+              <Button
+                variant="ghost"
+                className="flex w-full items-center justify-between rounded-none px-4 py-6 hover:bg-muted/50"
+              >
+                <div className="flex items-center gap-2 text-destructive">
+                  <AlertTriangle className="size-4" />
+                  <span className="font-semibold">Небезпечна зона</span>
+                </div>
+                <ChevronDown
+                  className={`size-4 transition-transform duration-200 ${
+                    isDangerZoneOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </Button>
+            }
+          />
           <CollapsibleContent>
             <div className="border-t border-border p-4 space-y-4 bg-destructive/5">
               {isHardResetDisabled && (

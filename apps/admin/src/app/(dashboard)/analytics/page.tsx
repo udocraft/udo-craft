@@ -247,16 +247,14 @@ function DateRangePicker({ range, onChange }: { range: DateRange; onChange: (r: 
   const canApply = !!(tempFrom && tempTo);
 
   return (
-    <Popover open={open} onValueChange={(o) => { if (!o) handleClose(); else setOpen(true); }}>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          aria-label={`Обрати діапазон дат, зараз: ${fmtPresetLabel(range)}`}
-          className="outline-none focus:outline-none inline-flex h-7 items-center gap-1.5 rounded-md border border-dashed border-border bg-background px-2 text-[11px] font-medium text-foreground hover:bg-muted transition-colors"
-        >
-          <CalendarDays className="size-3 text-muted-foreground" />
-          <span>{fmtPresetLabel(range)}</span>
-        </button>
+    <Popover open={open} onOpenChange={(o) => { if (!o) handleClose(); else setOpen(true); }}>
+      <PopoverTrigger
+        type="button"
+        aria-label={`Обрати діапазон дат, зараз: ${fmtPresetLabel(range)}`}
+        className="outline-none focus:outline-none inline-flex h-7 items-center gap-1.5 rounded-md border border-dashed border-border bg-background px-2 text-[11px] font-medium text-foreground hover:bg-muted transition-colors"
+      >
+        <CalendarDays className="size-3 text-muted-foreground" />
+        <span>{fmtPresetLabel(range)}</span>
       </PopoverTrigger>
       <PopoverContent side="bottom" align="end" className="w-auto p-0 overflow-hidden">
         <div className="flex">

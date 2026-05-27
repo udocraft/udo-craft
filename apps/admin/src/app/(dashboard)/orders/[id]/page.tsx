@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PageHeader } from "@/components/page-header";
+import { DashboardPage } from "@/components/dashboard-page";
 import { EmptyState } from "@/components/empty-state";
 import { StatusBadge, STATUS_CONFIG } from "@/components/status-badge";
 import {
@@ -382,18 +382,8 @@ export default function OrderDetailPage() {
                   <Input
                     id="name"
                     value={contactData.name}
-                    onChange={(e) => setContactData({ ...contactData, name: e.target.value })}
-                    placeholder="Іван Петренко"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="phone">Телефон *</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    value={contactData.phone ?? ""}
-                    onChange={(e) => setContactData({ ...contactData, phone: e.target.value })}
-                    placeholder="+380 67 123 4567"
+                    onChange={(e) => setContactData((prev) => ({ ...prev, name: e.target.value }))}
+                    placeholder="ПІБ"
                   />
                 </div>
                 <div className="space-y-1.5">
@@ -401,451 +391,418 @@ export default function OrderDetailPage() {
                   <Input
                     id="email"
                     type="email"
-                    value={contactData.email ?? ""}
-                    onChange={(e) => setContactData({ ...contactData, email: e.target.value })}
-                    placeholder="ivan@example.com"
+                    value={contactData.email || ""}
+                    onChange={(e) => setContactData((prev) => ({ ...prev, email: e.target.value }))}
+                    placeholder="example@mail.com"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="company">Компанія</Label>
+                  <Label htmlFor="phone">Телефон *</Label>
+                  <Input
+                    id="phone"
+                    value={contactData.phone || ""}
+                    onChange={(e) => setContactData((prev) => ({ ...prev, phone: e.target.value }))}
+                    placeholder="+380..."
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="company">Компанія / Назва</Label>
                   <Input
                     id="company"
-                    value={contactData.company ?? ""}
-                    onChange={(e) => setContactData({ ...contactData, company: e.target.value })}
-                    placeholder="ТОВ Приклад"
+                    value={contactData.company || ""}
+                    onChange={(e) => setContactData((prev) => ({ ...prev, company: e.target.value }))}
                   />
                 </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="edrpou">ЄДРПОУ</Label>
-                  <Input
-                    id="edrpou"
-                    value={contactData.edrpou ?? ""}
-                    onChange={(e) => setContactData({ ...contactData, edrpou: e.target.value })}
-                    placeholder="12345678"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="social_channel">Соцмережа</Label>
-                  <Input
-                    id="social_channel"
-                    value={contactData.social_channel ?? ""}
-                    onChange={(e) => setContactData({ ...contactData, social_channel: e.target.value })}
-                    placeholder="@username"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="delivery">Доставка</Label>
+                  <Label>Джерело</Label>
                   <Select
-                    value={contactData.delivery ?? "nova_poshta"}
-                    onValueChange={(v) => setContactData({ ...contactData, delivery: v || undefined })}
+                    value={contactData.source || "other"}
+                    onValueChange={(v) => setContactData((prev) => ({ ...prev, source: v }))}
                   >
-                    <SelectTrigger id="delivery">
-                      <SelectValue />
+                    <SelectTrigger>
+                      <SelectValue placeholder="Оберіть джерело" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="nova_poshta">Нова Пошта</SelectItem>
-                      <SelectItem value="pickup">Самовивіз</SelectItem>
+                      <SelectItem value="site">Сайт</SelectItem>
+                      <SelectItem value="instagram">Instagram</SelectItem>
+                      <SelectItem value="telegram">Telegram</SelectItem>
+                      <SelectItem value="viber">Viber</SelectItem>
+                      <SelectItem value="phone">Телефон</SelectItem>
+                      <SelectItem value="recommendation">Рекомендація</SelectItem>
+                      <SelectItem value="other">Інше</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="deadline">Дедлайн</Label>
+                  <Label>Деталі джерела (нік, номер і т.д.)</Label>
                   <Input
-                    id="deadline"
-                    type="date"
-                    value={contactData.deadline ?? ""}
-                    onChange={(e) => setContactData({ ...contactData, deadline: e.target.value })}
+                    value={contactData.source_details || ""}
+                    onChange={(e) => setContactData((prev) => ({ ...prev, source_details: e.target.value }))}
                   />
                 </div>
               </div>
-	              <div className="space-y-1.5">
-	                <Label htmlFor="delivery_details">Адреса доставки</Label>
-                <Input
-                  id="delivery_details"
-                  value={contactData.delivery_details ?? ""}
-                  onChange={(e) => setContactData({ ...contactData, delivery_details: e.target.value })}
-                  placeholder="м. Київ, відділення №1"
+
+              <div className="space-y-1.5">
+                <Label>Доставка (метод, місто, відділення)</Label>
+                <Textarea
+                  value={contactData.delivery_details || ""}
+                  onChange={(e) => setContactData((prev) => ({ ...prev, delivery_details: e.target.value }))}
+                  rows={2}
                 />
-	              </div>
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="source">Як дізнались</Label>
+                  <Label>Дедлайн</Label>
                   <Input
-                    id="source"
-                    value={contactData.source ?? ""}
-                    onChange={(e) => setContactData({ ...contactData, source: e.target.value })}
-                    placeholder="Instagram, Google, рекомендація..."
+                    type="date"
+                    value={contactData.deadline || ""}
+                    onChange={(e) => setContactData((prev) => ({ ...prev, deadline: e.target.value }))}
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="source_details">Контекст</Label>
+                  <Label>Коментар менеджера (внутрішній)</Label>
                   <Input
-                    id="source_details"
-                    value={contactData.source_details ?? ""}
-                    onChange={(e) => setContactData({ ...contactData, source_details: e.target.value })}
-                    placeholder="Додаткові деталі"
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
                   />
                 </div>
               </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="comment">Коментар клієнта</Label>
-                <Textarea
-                  id="comment"
-                  value={contactData.comment ?? ""}
-                  onChange={(e) => setContactData({ ...contactData, comment: e.target.value })}
-                  placeholder="Побажання клієнта..."
-                  rows={2}
-                  className="resize-none"
-                />
-              </div>
             </CardContent>
-          </Card>
+            </Card>
 
-          {/* Order items */}
-          <Card>
-            <CardHeader>
+            {/* Order items */}
+            <Card className="shadow-none border-border/60">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">
               <CardTitle className="text-base">Товари</CardTitle>
+              <div className="text-sm font-medium">
+                Всього: {(lead.total_amount_cents / 100).toLocaleString()} грн
+              </div>
             </CardHeader>
             <CardContent>
-              {!lead.order_items?.length ? (
-                <EmptyState icon={Package} title="Немає позицій" className="py-8" />
+              {(!lead.order_items || lead.order_items.length === 0) ? (
+                <div className="text-sm text-muted-foreground py-8 text-center">
+                  У цьому замовленні ще немає товарів
+                </div>
               ) : (
-                <div className="space-y-3">
-                  {lead.total_amount_cents > 0 && (
-                    <div className="flex items-center justify-between pb-3 border-b border-border">
-                      <span className="text-sm text-muted-foreground">Загальна сума</span>
-                      <span className="font-semibold">{(lead.total_amount_cents / 100).toLocaleString("uk-UA")} ₴</span>
-                    </div>
-                  )}
-                  {lead.order_items.map((item) => {
-                    const unitPrice = item.unit_price_cents ?? item.technical_metadata?.unit_price_cents;
-                    return (
-                      <div key={item.id} className="flex items-start gap-3 py-2 border-b border-border/50 last:border-0">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-sm font-medium">{item.size}</span>
-                            {item.color && (
-                              <span className="text-xs text-muted-foreground">{item.color}</span>
-                            )}
-                            <span className="text-xs text-muted-foreground">× {item.quantity} шт.</span>
-                          </div>
-                          {item.technical_metadata?.item_note && (
-                            <p className="text-xs text-muted-foreground mt-0.5">{item.technical_metadata.item_note}</p>
-                          )}
-                        </div>
-                        {unitPrice && (
-                          <span className="text-sm font-medium shrink-0">
-                            {((unitPrice * item.quantity) / 100).toLocaleString("uk-UA")} ₴
-                          </span>
+                <div className="divide-y divide-border/40">
+                  {lead.order_items.map((item) => (
+                    <div key={item.id} className="py-4 first:pt-0 last:pb-0 flex gap-4">
+                      <div className="size-16 rounded-md bg-muted border border-border/50 flex-shrink-0 flex items-center justify-center overflow-hidden">
+                        {item.mockup_url ? (
+                          <img src={item.mockup_url} alt="" className="size-full object-contain" />
+                        ) : (
+                          <Package className="size-6 text-muted-foreground/50" />
                         )}
                       </div>
-                    );
-                  })}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* ── Right column: status, tags, notes ── */}
-        <div className="space-y-6">
-
-          {/* Status */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Статус</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full">
-                    <StatusBadge status={status} />
-                    <ChevronsUpDown className="size-3.5 text-muted-foreground" />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start">
-                  {STATUSES.map((s) => (
-                    <DropdownMenuItem key={s} onClick={() => handleStatusChange(s)} className="gap-2">
-                      <span className={`w-2 h-2 rounded-full ${STATUS_CONFIG[s]?.className ?? ""}`} />
-                      {STATUS_LABELS[s]}
-                    </DropdownMenuItem>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <h4 className="text-sm font-medium leading-none mb-1">
+                              ID товару: {item.product_id}
+                            </h4>
+                            <p className="text-xs text-muted-foreground uppercase">
+                              Розмір: {item.size} • Колір: {item.color}
+                            </p>
+                          </div>
+                          <div className="text-sm font-medium text-right">
+                            {item.quantity} шт × {(item.unit_price_cents || 0) / 100} грн
+                          </div>
+                        </div>
+                        {item.custom_print_url && (
+                          <div className="mt-2">
+                            <a
+                              href={item.custom_print_url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center text-xs text-primary hover:underline gap-1"
+                            >
+                              <Paperclip className="size-3" />
+                              Макет друку
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              <div className="mt-4 space-y-1.5 text-xs text-muted-foreground">
-                <div className="flex items-center gap-1.5">
-                  <Calendar className="size-3.5" />
-                  <span>Створено: {new Date(lead.created_at).toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" })}</span>
-                </div>
-                {lead.updated_at !== lead.created_at && (
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="size-3.5" />
-                    <span>Оновлено: {new Date(lead.updated_at).toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" })}</span>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* ERP order data */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Оплата, доставка, документи</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="space-y-1.5">
-                <Label>Оплата покупця</Label>
-                <Select
-                  value={lead.payment_status ?? "unpaid"}
-                  onValueChange={(v) => setLead((l) => l ? { ...l, payment_status: v as Lead["payment_status"] } : l)}
-                >
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="unpaid">Не оплачено</SelectItem>
-                    <SelectItem value="partial">Частково</SelectItem>
-                    <SelectItem value="paid">Оплачено</SelectItem>
-                    <SelectItem value="refunded">Повернення</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-1.5">
-                <Label>Сума оплати, ₴</Label>
-                <Input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={(lead.payment_amount_cents ?? 0) / 100}
-                  onChange={(e) => setLead((l) => l ? { ...l, payment_amount_cents: Math.round(Number(e.target.value) * 100) } : l)}
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label>Реквізити оптовика</Label>
-                <Textarea
-                  rows={3}
-                  value={String((lead.buyer_requisites?.text as string | undefined) ?? "")}
-                  onChange={(e) => setLead((l) => l ? { ...l, buyer_requisites: { ...(l.buyer_requisites ?? {}), text: e.target.value } } : l)}
-                  placeholder="ТОВ, ЄДРПОУ, ІПН, адреса, договір..."
-                  className="resize-none"
-                />
-              </div>
-              <div className="grid grid-cols-1 gap-2">
-                <Button variant="outline" size="sm" onClick={() => saveErpOrderData()} disabled={erpSaving}>
-                  {erpSaving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
-                  Зберегти оплату і реквізити
-                </Button>
-                <Button variant="outline" size="sm" onClick={() => runOrderAction("nova-poshta-waybill")} disabled={erpSaving}>
-                  Створити ТТН Нової Пошти
-                </Button>
-                <Button variant="outline" size="sm" onClick={() => runOrderAction("fiscal-check")} disabled={erpSaving}>
-                  Фіскалізувати Checkbox
-                </Button>
-              </div>
-              {(Boolean(lead.nova_poshta_data?.waybill) || Boolean(lead.fiscal_data?.status)) && (
-                <div className="rounded-lg border bg-muted/30 p-3 text-xs text-muted-foreground">
-                  {lead.nova_poshta_data?.waybill ? <p>НП: {String((lead.nova_poshta_data.waybill as Record<string, unknown>).status ?? "підготовлено")}</p> : null}
-                  {lead.fiscal_data?.status ? <p>Checkbox: {String(lead.fiscal_data.status)}</p> : null}
                 </div>
               )}
             </CardContent>
-          </Card>
+            </Card>
+          </div>
 
-          {/* Tags */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Теги</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex flex-wrap gap-2">
-                {PREDEFINED_TAGS.map((tag) => {
-                  const active = tags.includes(tag.id);
-                  return (
-                    <button
-                      key={tag.id}
-                      type="button"
-                      onClick={() => handleToggleTag(tag.id)}
-                      disabled={savingTags}
-                      className="inline-flex items-center gap-1.5 h-7 px-3 rounded-full text-xs font-medium border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-60"
-                      style={active
-                        ? { color: tag.color, backgroundColor: tag.bg, borderColor: `${tag.color}50` }
-                        : { color: "var(--color-muted-foreground)", backgroundColor: "transparent", borderColor: "var(--color-border)" }
-                      }
+          {/* ── Right column: status, tags, ERP ── */}
+          <div className="space-y-6">
+
+            {/* Status & Actions */}
+            <Card className="shadow-none border-border/60 overflow-hidden">
+              <CardHeader className="bg-muted/30 pb-4">
+                <CardTitle className="text-sm font-medium flex items-center justify-between">
+                  Статус та дії
+                  <StatusBadge status={status} />
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-xs text-muted-foreground uppercase tracking-wider">Змінити статус</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {STATUSES.map((s) => (
+                      <Button
+                        key={s}
+                        variant={status === s ? "default" : "outline"}
+                        size="sm"
+                        className="h-8 text-xs justify-start px-3"
+                        onClick={() => handleStatusChange(s)}
+                      >
+                        {STATUS_LABELS[s]}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-2 space-y-2">
+                  <Label className="text-xs text-muted-foreground uppercase tracking-wider">ERP Дії</Label>
+                  <div className="space-y-2">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="w-full justify-start h-9"
+                      disabled={erpSaving}
+                      onClick={() => runOrderAction("nova-poshta-waybill")}
                     >
-                      <span className="size-1.5 rounded-full shrink-0" style={{ backgroundColor: tag.color, opacity: active ? 1 : 0.35 }} />
-                      {tag.label}
-                    </button>
-                  );
-                })}
-                {tags.filter((t) => !PREDEFINED_TAGS.find((p) => p.id === t)).map((tag) => (
-                  <span key={tag} className="inline-flex items-center gap-1.5 h-7 px-3 rounded-full text-xs font-medium border border-border bg-muted/40 text-foreground">
-                    {tag}
-                    <button type="button" onClick={() => handleToggleTag(tag)} disabled={savingTags} className="opacity-40 hover:opacity-80 transition-opacity">
-                      <X className="size-2.5" />
-                    </button>
-                  </span>
-                ))}
-              </div>
-              <form
-                onSubmit={(e) => { e.preventDefault(); void handleAddCustomTag(customTagInput); }}
-                className="flex items-center gap-2"
-              >
-                <Input
-                  value={customTagInput}
-                  onChange={(e) => setCustomTagInput(e.target.value)}
-                  placeholder="Свій тег..."
-                  className="h-7 text-xs"
-                />
-                {customTagInput.trim() && (
-                  <Button type="submit" size="icon" className="h-7 w-7 shrink-0" disabled={savingTags}>
-                    <Plus className="size-3" />
-                  </Button>
-                )}
-              </form>
-            </CardContent>
-          </Card>
+                      <Package className="size-4 mr-2" />
+                      Створити ТТН
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="w-full justify-start h-9"
+                      disabled={erpSaving}
+                      onClick={() => runOrderAction("fiscal-check")}
+                    >
+                      <FileText className="size-4 mr-2" />
+                      Фіскальний чек
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-          {/* Notes */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Нотатки</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Внутрішні нотатки..."
-                rows={4}
-                className="resize-none"
-              />
-            </CardContent>
-          </Card>
+            {/* Tags */}
+            <Card className="shadow-none border-border/60">
+              <CardHeader>
+                <CardTitle className="text-sm font-medium">Теги</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex flex-wrap gap-1.5">
+                  {tags.map((tag) => (
+                    <div
+                      key={tag}
+                      className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/10 text-primary text-xs rounded-full border border-primary/20"
+                    >
+                      {tag}
+                      <button onClick={() => handleToggleTag(tag)} className="hover:text-primary/70">
+                        <X className="size-3" />
+                      </button>
+                    </div>
+                  ))}
+                  {tags.length === 0 && <span className="text-xs text-muted-foreground">Немає тегів</span>}
+                </div>
 
-          {/* Quick links */}
-          <div className="flex flex-col gap-2">
-            <Button variant="outline" size="sm" className="w-full gap-2" onClick={() => router.push(`/messages?leadId=${id}`)}>
-              <MessageCircle className="size-4" />
-              Відкрити чат
-            </Button>
+                <div className="pt-2 space-y-3">
+                   <div className="flex flex-wrap gap-1">
+                    {PREDEFINED_TAGS.map((pt) => (
+                      <button
+                        key={pt.id}
+                        onClick={() => handleToggleTag(pt.id)}
+                        className={`text-[10px] px-2 py-0.5 rounded border transition-colors ${
+                          tags.includes(pt.id)
+                            ? "bg-primary text-primary-foreground border-primary"
+                            : "bg-background text-muted-foreground border-border hover:border-primary/50"
+                        }`}
+                      >
+                        {pt.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <Input
+                      placeholder="Свій тег..."
+                      className="h-8 text-xs"
+                      value={customTagInput}
+                      onChange={(e) => setCustomTagInput(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && handleAddCustomTag(customTagInput)}
+                    />
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0"
+                      onClick={() => handleAddCustomTag(customTagInput)}
+                    >
+                      <Plus className="size-4" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* ERP Order Data (Finance) */}
+            <Card className="shadow-none border-border/60">
+              <CardHeader>
+                <CardTitle className="text-sm font-medium flex items-center gap-2">
+                  <Building2 className="size-4 text-muted-foreground" />
+                  Фінанси та ERP
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="space-y-1.5">
+                    <Label className="text-[10px] uppercase text-muted-foreground">Статус оплати</Label>
+                    <Select
+                      value={lead.payment_status || "unpaid"}
+                      onValueChange={(v) => saveErpOrderData({ payment_status: v as any })}
+                    >
+                      <SelectTrigger className="h-8 text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="unpaid">Неоплачено</SelectItem>
+                        <SelectItem value="partial">Частково</SelectItem>
+                        <SelectItem value="paid">Оплачено</SelectItem>
+                        <SelectItem value="refunded">Повернено</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label className="text-[10px] uppercase text-muted-foreground">Сума оплати (грн)</Label>
+                    <Input
+                      type="number"
+                      className="h-8 text-xs"
+                      defaultValue={(lead.payment_amount_cents || 0) / 100}
+                      onBlur={(e) => {
+                        const cents = Math.round(parseFloat(e.target.value || "0") * 100);
+                        if (cents !== lead.payment_amount_cents) saveErpOrderData({ payment_amount_cents: cents });
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-border/40">
+                   <div className="flex items-center justify-between text-xs py-1">
+                    <span className="text-muted-foreground">Створено:</span>
+                    <span>{new Date(lead.created_at).toLocaleDateString("uk-UA")}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs py-1">
+                    <span className="text-muted-foreground">Оновлено:</span>
+                    <span>{new Date(lead.updated_at).toLocaleDateString("uk-UA")}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
-      </div>
 
-      {/* ── Messages thread ── */}
-      <Card>
+        {/* ── Messages thread ── */}
+        <Card className="shadow-none border-border/60">
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
             <MessageCircle className="size-4" />
-            Повідомлення
+            Історія листування
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-0">
-          {/* Thread */}
-          <div className="px-4 py-4 space-y-3 max-h-96 overflow-y-auto border-b border-border">
-            {loadingMessages ? (
-              <div className="flex justify-center py-8">
-                <Loader2 className="size-5 animate-spin text-muted-foreground" />
+        <CardContent>
+          <div className="space-y-4 max-h-[500px] overflow-y-auto mb-6 pr-2">
+            {messages.length === 0 && (
+              <div className="text-center py-12 text-muted-foreground text-sm">
+                Повідомлень ще немає
               </div>
-            ) : messages.length === 0 ? (
-              <EmptyState icon={MessageCircle} title="Повідомлень ще немає" className="py-8" />
-            ) : (
-              <>
-                {messages.map((msg) => {
-                  const isMgr = msg.sender === "manager";
-                  const isSystem = isMgr && msg.body?.startsWith("Статус змінено:");
-
-                  if (isSystem) {
-                    return (
-                      <div key={msg.id} className="flex items-center gap-3 py-1">
-                        <div className="flex-1 h-px bg-border" />
-                        <span className="text-[11px] text-muted-foreground whitespace-nowrap">
-                          {msg.body} · {fmtTime(msg.created_at)}
-                        </span>
-                        <div className="flex-1 h-px bg-border" />
-                      </div>
-                    );
-                  }
-
-                  return (
-                    <div key={msg.id} className={`flex flex-col gap-0.5 ${isMgr ? "items-end" : "items-start"}`}>
-                      <div className={`flex items-end gap-1.5 ${isMgr ? "flex-row-reverse" : "flex-row"}`}>
-                        <div className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 ${isMgr ? "bg-primary text-primary-foreground rounded-br-sm" : "bg-muted text-foreground rounded-bl-sm"}`}>
-                          {msg.body && <p className="text-sm leading-relaxed">{msg.body}</p>}
-                          {msg.attachments?.length ? (
-                            <div className="flex flex-wrap gap-1.5 mt-1.5">
-                              {msg.attachments.map((url, i) => (
-                                <a key={i} href={url} target="_blank" rel="noopener noreferrer"
-                                  className={`flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg border ${isMgr ? "border-primary-foreground/20 text-primary-foreground/80 hover:bg-primary-foreground/10" : "border-border text-foreground hover:bg-background"} transition-colors`}>
-                                  <FileText className="size-3.5 shrink-0" />
-                                  <span className="truncate max-w-[120px]">{decodeURIComponent(url.split("/").pop()?.split("?")[0] || "Файл")}</span>
-                                </a>
-                              ))}
-                            </div>
-                          ) : null}
-                        </div>
-                        <span className="text-[10px] text-muted-foreground shrink-0 pb-0.5">
-                          {fmtTime(msg.created_at)}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-                <div ref={messagesEndRef} />
-              </>
             )}
+            {messages.map((m) => (
+              <div
+                key={m.id}
+                className={`flex ${m.sender === "manager" ? "justify-end" : "justify-start"}`}
+              >
+                <div
+                  className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${
+                    m.sender === "manager"
+                      ? "bg-primary text-primary-foreground rounded-tr-none"
+                      : "bg-muted rounded-tl-none"
+                  }`}
+                >
+                  <div className="whitespace-pre-wrap">{m.body}</div>
+                  {m.attachments && m.attachments.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {m.attachments.map((a, i) => (
+                        <a
+                          key={i}
+                          href={a}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="size-12 rounded bg-background/20 flex items-center justify-center hover:bg-background/30 transition-colors"
+                        >
+                          <Paperclip className="size-4" />
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                  <div
+                    className={`text-[10px] mt-1 opacity-70 ${
+                      m.sender === "manager" ? "text-right" : "text-left"
+                    }`}
+                  >
+                    {fmtTime(m.created_at)}
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
           </div>
 
-          {/* Reply input */}
-          <div className="px-4 py-3 space-y-2">
-            {pendingFiles.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {pendingFiles.map((f, i) => (
-                  <div key={i} className="relative group">
-                    {f.type.startsWith("image/") ? (
-                      <img src={URL.createObjectURL(f)} alt={f.name} className="h-12 w-12 object-cover rounded-lg border border-border" />
-                    ) : (
-                      <div className="h-12 w-24 flex items-center gap-1.5 px-2 rounded-lg border border-border bg-muted">
-                        <FileText className="size-4 shrink-0 text-muted-foreground" />
-                        <span className="text-xs truncate">{f.name}</span>
-                      </div>
-                    )}
-                    <button
-                      onClick={() => setPendingFiles((p) => p.filter((_, j) => j !== i))}
-                      className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-background border border-border flex items-center justify-center hover:bg-destructive hover:text-white transition-colors"
-                    >
-                      <X className="size-2.5" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-            <div className="flex gap-2 items-center">
-              <label className="h-9 w-9 shrink-0 flex items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors">
+          <div className="space-y-3">
+            <Textarea
+              placeholder="Введіть повідомлення клієнту..."
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+              className="min-h-[100px] resize-none"
+            />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
                 <input
                   type="file"
+                  id="msg-files"
                   multiple
-                  accept="image/*,video/*,.pdf,.doc,.docx,.svg,.zip"
                   className="hidden"
                   onChange={(e) => {
-                    const files = e.target.files ? Array.from(e.target.files) : [];
-                    setPendingFiles((p) => [...p, ...files]);
-                    e.target.value = "";
+                    const files = Array.from(e.target.files || []);
+                    setPendingFiles((prev) => [...prev, ...files]);
                   }}
                 />
-                <Paperclip className="size-4" aria-label="Прикріпити файл" />
-              </label>
-              <Input
-                placeholder="Написати повідомлення..."
-                value={replyText}
-                onChange={(e) => setReplyText(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); void handleSend(); } }}
-                disabled={sending}
-                className="flex-1"
-              />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => document.getElementById("msg-files")?.click()}
+                  disabled={sending || uploading}
+                >
+                  <Paperclip className="size-4 mr-2" />
+                  Прикріпити
+                </Button>
+                {pendingFiles.length > 0 && (
+                  <span className="text-xs text-muted-foreground">
+                    Обрано: {pendingFiles.length}
+                  </span>
+                )}
+              </div>
               <Button
-                onClick={() => void handleSend()}
+                size="sm"
+                onClick={handleSend}
                 disabled={sending || uploading || (!replyText.trim() && !pendingFiles.length)}
-                size="icon"
-                aria-label="Надіслати"
+                className="px-6"
               >
                 {sending || uploading ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
               </Button>
@@ -853,6 +810,7 @@ export default function OrderDetailPage() {
           </div>
         </CardContent>
       </Card>
+    </div>
     </DashboardPage>
   );
 }

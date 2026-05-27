@@ -11,6 +11,7 @@ import {
   PackagePlus,
   Repeat2,
   Search,
+  Tag,
   Trash2,
   Truck,
 } from "lucide-react";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
@@ -88,6 +88,7 @@ function ClientStat({
 }
 
 export default function ClientsPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [clients, setClients] = useState<ClientRecord[]>([]);
   const [loading, setLoading] = useState(true);
