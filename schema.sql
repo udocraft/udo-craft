@@ -78,6 +78,8 @@ CREATE TABLE IF NOT EXISTS order_items (
   custom_print_url TEXT,
   mockup_url TEXT,
   technical_metadata JSONB DEFAULT '{}',
+  unit_price_cents INTEGER,
+  print_cost_cents INTEGER,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );

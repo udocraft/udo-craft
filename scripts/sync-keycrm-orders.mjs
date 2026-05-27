@@ -148,6 +148,7 @@ function itemRows(order, leadId) {
       size,
       color,
       mockup_url: product.picture?.thumbnail || product.picture?.url || "",
+      unit_price_cents: unitPriceCents,
       technical_metadata: {
         unit_price_cents: unitPriceCents,
         keycrm_order_product_id: product.id,

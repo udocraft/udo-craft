@@ -188,6 +188,8 @@ export default function NewOrderPage() {
             product_id: item.productId, size: item.size, color: item.color, quantity: item.quantity,
             custom_print_url: item.layers?.[0]?.uploadedUrl ?? undefined,
             mockup_url: item.mockupUploadedUrl ?? undefined,
+            unit_price_cents: item.unitPriceCents,
+            print_cost_cents: item.printCostCents,
             technical_metadata: {
               offset_top_mm: item.offsetTopMm ?? 0, layers: item.layers ?? [],
               mockups_map: item.mockupsMap ?? {}, item_note: item.itemNote ?? "",

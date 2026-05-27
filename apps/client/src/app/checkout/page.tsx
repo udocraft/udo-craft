@@ -162,6 +162,7 @@ export default function CheckoutPage() {
           color: item.color,
           quantity: item.quantity,
           mockup_url: mockupUrl,
+          unit_price_cents: item.product.base_price_cents,
           technical_metadata: item.offsetTopMm !== undefined
             ? { offset_top_mm: item.offsetTopMm, print_size_mm: [200, 150] }
             : undefined,

@@ -143,6 +143,7 @@ async function syncKeyCrmOrders() {
               size: sizeProp,
               color: colorProp,
               mockup_url: p.picture?.thumbnail || "",
+              unit_price_cents: Math.round((p.price || 0) * 100),
               technical_metadata: {
                 unit_price_cents: Math.round((p.price || 0) * 100),
                 keycrm_product_id: p.id,
