@@ -317,7 +317,7 @@ function OrdersBoard() {
     <DashboardPage
       title="Замовлення"
       titleAccessory={
-        <div className="flex h-16 items-center gap-1">
+        <div className="flex h-16 items-center gap-1.5 border-l border-border/60 pl-4 ml-1">
           <ViewModeButton
             active={viewMode === "kanban"}
             icon={Columns3}
@@ -333,26 +333,26 @@ function OrdersBoard() {
         </div>
       }
       actions={
-        <>
+        <div className="flex items-center gap-2">
           <Button
             variant="outline"
             size="sm"
-            className="h-8 gap-2"
+            className="h-9 gap-2 rounded-xl"
             onClick={handleKeycrmSync}
             disabled={syncingKeycrm}
           >
             {syncingKeycrm ? <Loader2 className="size-3.5 animate-spin" /> : <RefreshCw className="size-3.5" />}
-            Sync KeyCRM
+            <span className="hidden sm:inline">Sync KeyCRM</span>
           </Button>
           <Button
             size="sm"
-            className="h-8 gap-2"
+            className="h-9 gap-2 rounded-xl px-4 shadow-sm shadow-primary/20"
             onClick={() => router.push("/orders/new")}
           >
-            <Plus className="size-3.5" />
-            Нове замовлення
+            <Plus className="size-4" />
+            <span>Нове замовлення</span>
           </Button>
-        </>
+        </div>
       }
     >
         <AdminToolbar>
@@ -372,18 +372,21 @@ function OrdersBoard() {
               active={statusFilter !== "all"}
               value={statusFilter === "all" ? undefined : STATUS_LABELS[statusFilter]}
               onClear={() => setStatusFilter("all")}
+              icon={RefreshCw}
             />
             <AdminFilter
               label="Тег"
               active={tagFilter !== "all"}
               value={tagFilter === "all" ? undefined : getTagFilterLabel(tagFilter)}
               onClear={() => setTagFilter("all")}
+              icon={Tag}
             />
             <AdminFilter
               label="Період"
               active={dateFilter !== "all"}
               value={dateFilter === "all" ? undefined : DATE_FILTER_LABELS[dateFilter]}
               onClear={() => setDateFilter("all")}
+              icon={CalendarClock}
             />
           </div>
 

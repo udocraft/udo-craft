@@ -348,9 +348,11 @@ export default function WarehousePage() {
                   active={typeFilter !== "all"}
                   value={typeFilter === "all" ? undefined : typeFilter === "none" ? "Без типу" : types.find((t) => t.id === typeFilter)?.name}
                   onClear={() => setTypeFilter("all")}
+                  icon={Tag}
+                  onClick={() => document.getElementById("type-filter-trigger")?.click()}
                 />
                 <Select value={typeFilter} onValueChange={(value) => value && setTypeFilter(value)}>
-                  <SelectTrigger className="sr-only" id="type-filter-trigger">
+                  <SelectTrigger className="sr-only h-0 w-0 p-0" id="type-filter-trigger">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -359,7 +361,6 @@ export default function WarehousePage() {
                     {types.map((type) => <SelectItem key={type.id} value={type.id}>{type.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
-                {/* Clicking AdminFilter should ideally trigger the Select, but for simplicity here we just use it as a display + clear */}
               </div>
 
               <span className="ml-auto text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">{itemCountLabel}</span>

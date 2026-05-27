@@ -362,7 +362,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
   return (
     <>
     <Sidebar collapsible="icon" className="border-r border-border bg-sidebar">
-      <SidebarHeader className="h-14 flex items-center px-3 border-b border-border bg-white">
+      <SidebarHeader className="h-16 flex items-center px-3 border-b border-border bg-white">
         <div className={`flex items-center w-full ${isCollapsed ? "justify-center" : "justify-between"}`}>
           {!isCollapsed && (
             <Link

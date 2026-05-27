@@ -61,34 +61,48 @@ export function AdminFilter({
   active,
   onClick,
   onClear,
+  icon: Icon,
 }: {
   label: string;
   value?: string;
   active?: boolean;
   onClick?: () => void;
   onClear?: () => void;
+  icon?: React.ComponentType<{ className?: string }>;
 }) {
   return (
-    <div className="flex items-center">
+    <div className="group relative flex items-center">
       <button
         type="button"
         onClick={onClick}
+        aria-pressed={active}
         className={cn(
-          "flex h-7 items-center gap-1.5 rounded-md border border-dashed border-border px-2 text-[11px] font-medium transition-colors hover:bg-muted",
-          active && "border-solid border-primary bg-primary/5 text-primary"
+          "flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          active
+            ? "border-primary/30 bg-primary/5 text-primary shadow-sm"
+            : "border-border/60 bg-background text-muted-foreground hover:border-border hover:bg-muted/30 hover:text-foreground"
         )}
       >
-        {label}
-        {value && <span className="text-muted-foreground">/</span>}
-        {value && <span className="max-w-[80px] truncate">{value}</span>}
+        {Icon && <Icon className={cn("size-3.5", active ? "text-primary" : "text-muted-foreground/70")} />}
+        <span>{label}</span>
+        {value && (
+          <>
+            <span className="mx-0.5 opacity-30">/</span>
+            <span className="max-w-[100px] truncate font-semibold text-foreground">{value}</span>
+          </>
+        )}
       </button>
       {active && onClear && (
         <button
           type="button"
-          onClick={(e) => { e.stopPropagation(); onClear(); }}
-          className="ml-1 flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClear();
+          }}
+          aria-label={`Clear ${label} filter`}
+          className="ml-1 flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive"
         >
-          <X className="h-3 w-3" />
+          <X className="h-3.5 w-3.5" />
         </button>
       )}
     </div>

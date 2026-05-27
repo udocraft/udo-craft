@@ -46,6 +46,16 @@ supabase migration list
 | `20260417_cms_content.sql` | CMS content table |
 | `20260417_cms_published.sql` | CMS published state |
 | `20260418_product_images_v2.sql` | Product images v2 schema |
+| `20260427000000_user_ai_quota.sql` | User AI quota tracking |
+| `20260520000000_erp_core.sql` | ERP core (materials, recipes, production orders) |
+| `20260520002000_erp_material_types.sql` | ERP material types and attributes |
+| `20260520004000_erp_goods_flow.sql` | ERP goods flow (warehouses, receipts, transfers) |
+| `20260523000000_customizer_shares.sql` | Customizer configuration sharing |
+| `20260526000000_product_marketing_meta.sql` | Product marketing metadata |
+| `20260527000000_admin_authz.sql` | Admin authorization foundation |
+| `20260527001000_size_chart_image_url.sql` | Size chart image URLs |
+| `20260527002000_order_items_price_fields.sql` | Order items price fields |
+| `20260527003000_leads_visitor_tracking.sql` | Lead visitor tracking (visitor_id, session_id) |
 
 ## RLS Policy Summary
 
