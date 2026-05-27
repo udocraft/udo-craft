@@ -16,9 +16,10 @@ import {
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { DashboardPage } from "@/components/dashboard-page";
-import { UserPlus, Pencil, Trash2, RefreshCw, Loader2, Users, ShieldCheck } from "lucide-react";
+import { AdminToolbar, AdminFilter, AdminTablePanel, AdminTabs } from "@/components/admin-layout";
+import { UserPlus, Pencil, Trash2, RefreshCw, Loader2, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Role = "admin" | "manager" | "viewer" | "sewer" | "seamstress";
@@ -44,38 +45,19 @@ const ROLES: { value: Exclude<Role, "seamstress">; label: string }[] = [
   { value: "admin",   label: "Адмін" },
   { value: "manager", label: "Менеджер" },
   { value: "sewer", label: "Швея" },
+  { value: "viewer", label: "Перегляд" },
 ];
 
-const ROLE_PERMISSIONS: Record<Role, { title: string; description: string }> = {
-  admin: {
-    title: "Повний доступ",
-    description: "Керує замовленнями, складом CRM-ERP, каталогом, користувачами, ролями та системними налаштуваннями.",
-  },
-  manager: {
-    title: "Продажі та операції",
-    description: "Бачить клієнтів, замовлення, повідомлення, складські процеси, виробництво і пов'язані документи.",
-  },
-  viewer: {
-    title: "Перегляд",
-    description: "Має лише базовий доступ до перегляду без операційних дій.",
-  },
-  sewer: {
-    title: "Виробництво і пов'язані роботи",
-    description: "Бачить склад CRM-ERP, виробничі замовлення, дефіцити, акти пошиття та замовлення, де потрібна її участь.",
-  },
-  seamstress: {
-    title: "Виробництво і пов'язані роботи",
-    description: "Бачить склад CRM-ERP, виробничі замовлення, дефіцити, акти пошиття та замовлення, де потрібна її участь.",
-  },
-};
+const TABS = [
+  { key: "all", label: "Всі" },
+  { key: "admin", label: "Адміни" },
+  { key: "manager", label: "Менеджери" },
+  { key: "sewer", label: "Швеї" },
+  { key: "viewer", label: "Перегляд" },
+] as const;
 
 function normalizeRole(role: Role) {
   return role === "seamstress" ? "sewer" : role;
-}
-
-function roleLabel(role: Role) {
-  const normalized = normalizeRole(role);
-  return ROLES.find((r) => r.value === normalized)?.label ?? normalized;
 }
 
 const STAGE_LABELS: Record<LifecycleStage, string> = {
@@ -85,12 +67,13 @@ const STAGE_LABELS: Record<LifecycleStage, string> = {
 };
 
 function stageLabel(user: AdminUser) {
-  return user.access_role ? roleLabel(user.access_role) : STAGE_LABELS[user.lifecycle_stage];
+  const role = user.access_role ? ROLES.find(r => r.value === normalizeRole(user.access_role as Role))?.label : null;
+  return role || STAGE_LABELS[user.lifecycle_stage];
 }
 
 function fmtDate(iso: string | null) {
   if (!iso) return "—";
-  return new Date(iso).toLocaleDateString("uk-UA", { day: "2-digit", month: "short", year: "numeric" });
+  return new Date(iso).toLocaleDateString("uk-UA", { day: "2-digit", month: "short" });
 }
 
 function initials(name: string, email: string) {
@@ -98,18 +81,16 @@ function initials(name: string, email: string) {
   return email.charAt(0).toUpperCase();
 }
 
-// ── Role picker used in both dialogs ─────────────────────────────────────────
-
 function RolePicker({ value, onChange }: { value: Role; onChange: (r: Role) => void }) {
   return (
-    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+    <div className="grid grid-cols-2 gap-2">
       {ROLES.map((r) => (
         <button
           key={r.value}
           type="button"
           onClick={() => onChange(r.value)}
           className={cn(
-            "rounded-lg border py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
+            "rounded-lg border py-2 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
             value === r.value
               ? "border-primary bg-primary/10 text-primary"
               : "border-border bg-muted/40 text-muted-foreground hover:bg-muted"
@@ -122,11 +103,10 @@ function RolePicker({ value, onChange }: { value: Role; onChange: (r: Role) => v
   );
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
-
 const EMPTY_FORM = { email: "", full_name: "", role: "viewer" as Role };
 
 export default function UsersPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const rawFilter = (searchParams.get("role") || "all") as Role | "all";
   const filter = rawFilter === "seamstress" ? "sewer" : rawFilter;
@@ -137,6 +117,7 @@ export default function UsersPage() {
   const [deleteUser, setDeleteUser] = useState<AdminUser | null>(null);
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
+  const [search, setSearch] = useState("");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -154,13 +135,11 @@ export default function UsersPage() {
 
   useEffect(() => { load(); }, [load]);
 
-  const visible = filter === "all"
-    ? users
-    : users.filter((u) => normalizeRole((u.access_role || "") as Role) === filter);
-  const staffUsers = users.filter((u) => u.lifecycle_stage === "internal_staff");
-  const registeredLeads = users.filter((u) => u.lifecycle_stage === "registered_lead");
-  const clientUsers = users.filter((u) => u.lifecycle_stage === "client");
-  const clientRevenue = clientUsers.reduce((sum, user) => sum + user.lifetime_value_cents, 0);
+  const filtered = users.filter((u) => {
+    const matchesRole = filter === "all" || normalizeRole((u.access_role || "") as Role) === filter;
+    const matchesSearch = !search || [u.full_name, u.email].some(v => String(v || "").toLowerCase().includes(search.toLowerCase()));
+    return matchesRole && matchesSearch;
+  });
 
   const handleInvite = async () => {
     if (!form.email) { toast.error("Введіть email"); return; }
@@ -171,19 +150,8 @@ export default function UsersPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-
-      let data: any = {};
-      const text = await res.text();
-      if (text) {
-        try {
-          data = JSON.parse(text);
-        } catch (e) {
-          console.error("[invite] JSON parse failed:", e, text);
-        }
-      }
-
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || `Помилка ${res.status}`);
-
       toast.success(`Запрошення надіслано на ${form.email}`);
       setInviteOpen(false);
       setForm(EMPTY_FORM);
@@ -230,69 +198,48 @@ export default function UsersPage() {
     }
   };
 
-  const subtitleElem = (
-    <span className="flex items-center gap-1">
-      <Users className="size-3.5" /> {users.length} користувачів
-    </span>
-  );
-
-  const actionsElem = (
-    <div className="flex items-center gap-2">
-      <Button variant="outline" size="icon" onClick={load} disabled={loading} aria-label="Оновити">
-        <RefreshCw className={cn("size-4", loading && "animate-spin")} />
-      </Button>
-      <Button onClick={() => { setForm(EMPTY_FORM); setInviteOpen(true); }}>
-        <UserPlus className="size-4 mr-2" />
-        Запросити
-      </Button>
-    </div>
-  );
-
   return (
     <DashboardPage
       title="Користувачі"
-      subtitle={subtitleElem}
-      actions={actionsElem}
-      contentClassName="p-4 md:p-6 space-y-5"
+      titleAccessory={<AdminTabs tabs={TABS} value={filter} onValueChange={(next) => router.push(`/users?role=${next}`)} />}
+      actions={
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" className="h-8 w-8 p-0" onClick={load} disabled={loading}>
+            <RefreshCw className={cn("size-3.5", loading && "animate-spin")} />
+          </Button>
+          <Button size="sm" className="h-8 gap-2" onClick={() => { setForm(EMPTY_FORM); setInviteOpen(true); }}>
+            <UserPlus className="size-3.5" />
+            Запросити
+          </Button>
+        </div>
+      }
     >
-      <div className="grid gap-3 md:grid-cols-4">
-        <div className="rounded-xl border border-border bg-card p-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Registered leads</p>
-          <p className="mt-2 text-2xl font-bold">{registeredLeads.length}</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">Акаунт створено, але ще немає чату з менеджером або замовлення.</p>
+      <AdminToolbar>
+        <div className="relative">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            className="h-7 w-48 pl-8 text-[11px] bg-muted/40 border-none shadow-none focus-visible:ring-1 focus-visible:ring-primary/20"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Швидкий пошук..."
+          />
         </div>
-        <div className="rounded-xl border border-border bg-card p-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Clients</p>
-          <p className="mt-2 text-2xl font-bold">{clientUsers.length}</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">Є замовлення або діалог з менеджером.</p>
-        </div>
-        <div className="rounded-xl border border-border bg-card p-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Internal team</p>
-          <p className="mt-2 text-2xl font-bold">{staffUsers.length}</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">Адміни, менеджери, виробництво і перегляд.</p>
-        </div>
-        <div className="rounded-xl border border-border bg-card p-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Client LTV</p>
-          <p className="mt-2 text-2xl font-bold">{Math.round(clientRevenue / 100).toLocaleString("uk-UA")} ₴</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">Сума замовлень прив&apos;язаних до акаунтів.</p>
-        </div>
-      </div>
 
-      <div className="grid gap-3 md:grid-cols-4">
-        {ROLES.map((role) => (
-          <div key={role.value} className="rounded-xl border border-border bg-card p-4">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="size-4 text-primary" />
-              <p className="text-sm font-semibold">{role.label}</p>
-            </div>
-            <p className="mt-2 text-xs font-medium text-muted-foreground">{ROLE_PERMISSIONS[role.value].title}</p>
-            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{ROLE_PERMISSIONS[role.value].description}</p>
-          </div>
-        ))}
-      </div>
+        <div className="flex items-center gap-2">
+           <AdminFilter
+            label="Роль"
+            active={filter !== "all"}
+            value={filter === "all" ? undefined : TABS.find(t => t.key === filter)?.label}
+            onClear={() => router.push("/users?role=all")}
+          />
+        </div>
 
-      {/* Table */}
-      <div className="rounded-xl border border-border bg-card overflow-hidden">
+        <span className="ml-auto text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
+          {filtered.length} користувачів
+        </span>
+      </AdminToolbar>
+
+      <AdminTablePanel>
         {loading ? (
           <div className="flex items-center justify-center py-16">
             <Loader2 className="size-6 animate-spin text-muted-foreground" />
@@ -300,25 +247,25 @@ export default function UsersPage() {
         ) : (
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="hover:bg-transparent">
                 <TableHead>Користувач</TableHead>
                 <TableHead>Сегмент</TableHead>
                 <TableHead className="hidden lg:table-cell">Замовлення</TableHead>
                 <TableHead className="hidden md:table-cell">Зареєстрований</TableHead>
-                <TableHead className="hidden md:table-cell">Остання активність</TableHead>
+                <TableHead className="hidden md:table-cell">Активність</TableHead>
                 <TableHead className="hidden sm:table-cell">Статус</TableHead>
                 <TableHead className="w-16"><span className="sr-only">Дії</span></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {visible.length === 0 && (
+              {filtered.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center text-muted-foreground py-10">
                     Немає користувачів
                   </TableCell>
                 </TableRow>
               )}
-              {visible.map((u) => (
+              {filtered.map((u) => (
                 <TableRow key={u.id}>
                   <TableCell>
                     <div className="flex items-center gap-3">
@@ -330,13 +277,13 @@ export default function UsersPage() {
                       </Avatar>
                       <div className="min-w-0">
                         <p className="text-sm font-medium leading-tight truncate">{u.full_name || "—"}</p>
-                        <p className="text-xs text-muted-foreground truncate">{u.email}</p>
+                        <p className="text-[10px] text-muted-foreground truncate">{u.email}</p>
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
+                  <TableCell className="text-xs text-muted-foreground">
                     <span className={cn(
-                      "inline-flex items-center rounded-md border px-2 py-1 text-xs font-medium",
+                      "inline-flex items-center rounded-md border px-2 py-0.5 text-[10px] font-medium",
                       u.lifecycle_stage === "client" && "border-emerald-200 bg-emerald-50 text-emerald-700",
                       u.lifecycle_stage === "registered_lead" && "border-sky-200 bg-sky-50 text-sky-700",
                       u.lifecycle_stage === "internal_staff" && "border-violet-200 bg-violet-50 text-violet-700"
@@ -344,12 +291,12 @@ export default function UsersPage() {
                       {stageLabel(u)}
                     </span>
                   </TableCell>
-                  <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">
+                  <TableCell className="hidden lg:table-cell text-xs text-muted-foreground">
                     {u.order_count ? `${u.order_count} · ${Math.round(u.lifetime_value_cents / 100).toLocaleString("uk-UA")} ₴` : "—"}
                   </TableCell>
-                  <TableCell className="hidden md:table-cell text-sm text-muted-foreground">{fmtDate(u.created_at)}</TableCell>
-                  <TableCell className="hidden md:table-cell text-sm text-muted-foreground">{fmtDate(u.last_customer_activity_at || u.last_sign_in_at)}</TableCell>
-                  <TableCell className="hidden sm:table-cell text-sm text-muted-foreground">
+                  <TableCell className="hidden md:table-cell text-xs text-muted-foreground">{fmtDate(u.created_at)}</TableCell>
+                  <TableCell className="hidden md:table-cell text-xs text-muted-foreground">{fmtDate(u.last_customer_activity_at || u.last_sign_in_at)}</TableCell>
+                  <TableCell className="hidden sm:table-cell text-xs text-muted-foreground">
                     {u.confirmed ? "Активний" : "Запрошений"}
                   </TableCell>
                   <TableCell>
@@ -357,13 +304,12 @@ export default function UsersPage() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="size-8"
+                        className="size-7"
                         onClick={() => setEditUser({ ...u, role: normalizeRole((u.access_role || "viewer") as Role) })}
-                        aria-label="Редагувати"
                       >
                         <Pencil className="size-3.5" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="size-8 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => setDeleteUser(u)} aria-label="Видалити">
+                      <Button variant="ghost" size="icon" className="size-7 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => setDeleteUser(u)}>
                         <Trash2 className="size-3.5" />
                       </Button>
                     </div>
@@ -373,9 +319,8 @@ export default function UsersPage() {
             </TableBody>
           </Table>
         )}
-      </div>
+      </AdminTablePanel>
 
-      {/* Invite Dialog */}
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
@@ -383,7 +328,7 @@ export default function UsersPage() {
           </DialogHeader>
           <div className="space-y-4 py-1">
             <div className="space-y-1.5">
-              <Label>Email</Label>
+              <Label className="text-xs">Email</Label>
               <Input
                 type="email"
                 placeholder="user@example.com"
@@ -392,7 +337,7 @@ export default function UsersPage() {
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Ім&apos;я</Label>
+              <Label className="text-xs">Ім&apos;я</Label>
               <Input
                 placeholder="Ім'я Прізвище"
                 value={form.full_name}
@@ -400,13 +345,13 @@ export default function UsersPage() {
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Роль</Label>
+              <Label className="text-xs">Роль</Label>
               <RolePicker value={form.role} onChange={(r) => setForm((f) => ({ ...f, role: r }))} />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setInviteOpen(false)}>Скасувати</Button>
-            <Button onClick={handleInvite} disabled={saving}>
+            <Button variant="outline" size="sm" onClick={() => setInviteOpen(false)}>Скасувати</Button>
+            <Button size="sm" onClick={handleInvite} disabled={saving}>
               {saving && <Loader2 className="size-4 mr-2 animate-spin" />}
               Надіслати
             </Button>
@@ -414,7 +359,6 @@ export default function UsersPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Edit Dialog */}
       <Dialog open={!!editUser} onOpenChange={(o) => { if (!o) setEditUser(null); }}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
@@ -423,14 +367,14 @@ export default function UsersPage() {
           {editUser && (
             <div className="space-y-4 py-1">
               <div className="space-y-1.5">
-                <Label>Ім&apos;я</Label>
+                <Label className="text-xs">Ім&apos;я</Label>
                 <Input
                   value={editUser.full_name}
                   onChange={(e) => setEditUser((u) => u ? { ...u, full_name: e.target.value } : u)}
                 />
               </div>
               <div className="space-y-1.5">
-                <Label>Роль</Label>
+                <Label className="text-xs">Роль</Label>
                 <RolePicker
                   value={editUser.role || "viewer"}
                   onChange={(r) => setEditUser((u) => u ? { ...u, role: r } : u)}
@@ -439,8 +383,8 @@ export default function UsersPage() {
             </div>
           )}
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditUser(null)}>Скасувати</Button>
-            <Button onClick={handleEdit} disabled={saving}>
+            <Button variant="outline" size="sm" onClick={() => setEditUser(null)}>Скасувати</Button>
+            <Button size="sm" onClick={handleEdit} disabled={saving}>
               {saving && <Loader2 className="size-4 mr-2 animate-spin" />}
               Зберегти
             </Button>
@@ -448,7 +392,6 @@ export default function UsersPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirm */}
       <AlertDialog open={!!deleteUser} onOpenChange={(o) => { if (!o) setDeleteUser(null); }}>
         <AlertDialogContent>
           <AlertDialogHeader>

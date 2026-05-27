@@ -9,14 +9,28 @@ import { playNotificationTone } from "@/lib/notifications";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { StatusBadge } from "@/components/status-badge";
 import { Badge } from "@/components/ui/badge";
-import { CalendarClock, Columns3, CreditCard, Filter, Hash, List, Loader2, Package, Plus, RefreshCw, Search, Truck, UserRound, X } from "lucide-react";
+import {
+  CalendarClock,
+  Columns3,
+  CreditCard,
+  Filter,
+  Hash,
+  List,
+  Loader2,
+  Package,
+  Plus,
+  RefreshCw,
+  Search,
+  Truck,
+  UserRound,
+} from "lucide-react";
 import { toast } from "sonner";
-import { DashboardHeader } from "@/components/dashboard-header";
+import { DashboardPage } from "@/components/dashboard-page";
+import { AdminToolbar, AdminFilter } from "@/components/admin-layout";
 import { KanbanColumn } from "./_components/KanbanColumn";
 import { OrderQuickSheet } from "./_components/OrderQuickSheet";
 import { useKanbanDrag, type Lead } from "./_components/useKanbanDrag";
@@ -36,18 +50,6 @@ const DATE_FILTER_LABELS: Record<DateFilter, string> = {
   today: "Сьогодні",
   week: "7 днів",
   month: "30 днів",
-};
-const AMOUNT_FILTER_LABELS: Record<AmountFilter, string> = {
-  all: "Будь-яка сума",
-  with_amount: "Є сума",
-  without_amount: "Без суми",
-};
-const SORT_FILTER_LABELS: Record<SortFilter, string> = {
-  newest: "Нові спочатку",
-  oldest: "Старі спочатку",
-  updated: "Оновлені",
-  amount_desc: "Сума ↓",
-  amount_asc: "Сума ↑",
 };
 const UNASSIGNED_TAG_VALUE = "__untagged__";
 const CUSTOM_TAG_VALUE = "__custom__";
@@ -312,52 +314,85 @@ function OrdersBoard() {
   }, []);
 
   return (
-    <div className="flex flex-1 min-h-0 overflow-hidden selection:bg-primary/10 selection:text-primary">
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <DashboardHeader
-          title="Замовлення"
-          titleAccessory={
-            <div className="flex h-9 items-center rounded-full border border-border bg-muted/30 p-1">
-              <ViewModeButton
-                active={viewMode === "kanban"}
-                icon={Columns3}
-                label="Канбан"
-                onClick={() => setViewMode("kanban")}
-              />
-              <ViewModeButton
-                active={viewMode === "list"}
-                icon={List}
-                label="Список"
-                onClick={() => setViewMode("list")}
-              />
-            </div>
-          }
-          actions={
-            <>
-              <Button
-                variant="outline"
-                size="lg"
-                className="h-10 rounded-full gap-2 px-4 text-xs font-semibold uppercase tracking-widest"
-                onClick={handleKeycrmSync}
-                disabled={syncingKeycrm}
-              >
-                {syncingKeycrm ? <Loader2 className="size-4 animate-spin" /> : <RefreshCw className="size-4" />}
-                <span>Sync KeyCRM</span>
-              </Button>
-              <Button
-                size="lg"
-                className="h-10 gap-2 px-4 text-xs font-semibold uppercase tracking-widest"
-                onClick={() => router.push("/orders/new")}
-              >
-                <Plus className="size-4" />
-                <span>Нове замовлення</span>
-              </Button>
-            </>
-          }
-        />
+    <DashboardPage
+      title="Замовлення"
+      titleAccessory={
+        <div className="flex h-16 items-center gap-1">
+          <ViewModeButton
+            active={viewMode === "kanban"}
+            icon={Columns3}
+            label="Канбан"
+            onClick={() => setViewMode("kanban")}
+          />
+          <ViewModeButton
+            active={viewMode === "list"}
+            icon={List}
+            label="Список"
+            onClick={() => setViewMode("list")}
+          />
+        </div>
+      }
+      actions={
+        <>
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-8 gap-2"
+            onClick={handleKeycrmSync}
+            disabled={syncingKeycrm}
+          >
+            {syncingKeycrm ? <Loader2 className="size-3.5 animate-spin" /> : <RefreshCw className="size-3.5" />}
+            Sync KeyCRM
+          </Button>
+          <Button
+            size="sm"
+            className="h-8 gap-2"
+            onClick={() => router.push("/orders/new")}
+          >
+            <Plus className="size-3.5" />
+            Нове замовлення
+          </Button>
+        </>
+      }
+    >
+        <AdminToolbar>
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              className="h-7 w-48 pl-8 text-[11px] bg-background border-none shadow-none focus-visible:ring-1 focus-visible:ring-primary/20"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Швидкий пошук..."
+            />
+          </div>
 
+          <div className="flex items-center gap-2">
+            <AdminFilter
+              label="Статус"
+              active={statusFilter !== "all"}
+              value={statusFilter === "all" ? undefined : STATUS_LABELS[statusFilter]}
+              onClear={() => setStatusFilter("all")}
+            />
+            <AdminFilter
+              label="Тег"
+              active={tagFilter !== "all"}
+              value={tagFilter === "all" ? undefined : getTagFilterLabel(tagFilter)}
+              onClear={() => setTagFilter("all")}
+            />
+            <AdminFilter
+              label="Період"
+              active={dateFilter !== "all"}
+              value={dateFilter === "all" ? undefined : DATE_FILTER_LABELS[dateFilter]}
+              onClear={() => setDateFilter("all")}
+            />
+          </div>
 
-        <div className={cn("flex-1", viewMode === "kanban" ? "overflow-x-auto overflow-y-hidden" : "overflow-auto")}>
+          <span className="ml-auto text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
+            {filteredLeads.length} замовлень
+          </span>
+        </AdminToolbar>
+
+        <div className={cn("flex-1 flex flex-col", viewMode === "kanban" ? "overflow-x-auto overflow-y-hidden" : "overflow-auto")}>
           {loading ? (
             <div className="flex items-center justify-center h-full">
               <Loader2 className="size-10 animate-spin text-primary/40" />
@@ -410,7 +445,6 @@ function OrdersBoard() {
             </div>
           )}
         </div>
-      </div>
 
       <OrderQuickSheet
         lead={selectedLead}
@@ -421,7 +455,7 @@ function OrdersBoard() {
           if (lead) handleStatusChange(lead, status);
         }}
       />
-    </div>
+    </DashboardPage>
   );
 }
 
@@ -486,14 +520,14 @@ function ViewModeButton({
       aria-pressed={active}
       onClick={onClick}
       className={cn(
-        "inline-flex h-7 items-center gap-1.5 rounded-full px-2.5 text-xs font-semibold transition-colors",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "relative inline-flex h-16 items-center justify-center whitespace-nowrap px-3 text-sm font-medium transition-all",
+        "focus-visible:outline-none",
         active
-          ? "bg-background text-foreground shadow-sm"
+          ? "text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary"
           : "text-muted-foreground hover:text-foreground"
       )}
     >
-      <Icon className="size-3.5" />
+      <Icon className="size-3.5 mr-2" />
       {label}
     </button>
   );

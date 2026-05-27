@@ -2,9 +2,20 @@
   "name": "@udo-craft/authz",
   "version": "1.0.0",
   "private": true,
-  "main": "index.js",
-  "types": "index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "test": "node --test index.test.js"
+    "build": "tsup index.ts --format cjs,esm --dts",
+    "dev": "tsup index.ts --format cjs,esm --dts --watch",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
   }
 }

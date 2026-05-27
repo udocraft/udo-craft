@@ -61,14 +61,6 @@ export default function LoginPage() {
       return;
     }
 
-    const role: string | undefined = data.user?.user_metadata?.role;
-    if (!role || !ALLOWED_ROLES.includes(role)) {
-      await supabase.auth.signOut();
-      setError("Доступ заборонено. Цей обліковий запис не має прав адміністратора.");
-      setLoading(false);
-      return;
-    }
-
     // First-login: must change password
     if (data.user?.user_metadata?.must_change_password) {
       router.push("/reset-password?first=1");

@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { AdminTabs } from "@/components/admin-layout";
 import { DashboardPage } from "@/components/dashboard-page";
@@ -23,6 +24,9 @@ export default function CatalogPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const tab = (searchParams.get("tab") || "products") as CatalogTab;
+  const [categoryCreate, setCategoryCreate] = useState<(() => void) | null>(null);
+  const [colorCreate, setColorCreate] = useState<(() => void) | null>(null);
+  const [sizeCreate, setSizeCreate] = useState<(() => void) | null>(null);
 
   const { products, categories, loading, refresh, refreshProducts } = useProductsData();
 
@@ -35,18 +39,33 @@ export default function CatalogPage() {
     refreshProducts();
   };
 
+  const setCategoryCreateHandler = useCallback((handler: () => void) => {
+    setCategoryCreate(() => handler);
+  }, []);
+
+  const setColorCreateHandler = useCallback((handler: () => void) => {
+    setColorCreate(() => handler);
+  }, []);
+
+  const setSizeCreateHandler = useCallback((handler: () => void) => {
+    setSizeCreate(() => handler);
+  }, []);
+
+  const createConfig = {
+    products: { label: "Додати товар", onClick: () => router.push("/products/new") },
+    categories: { label: "Нова категорія", onClick: categoryCreate },
+    colors: { label: "Додати колір", onClick: colorCreate },
+    sizes: { label: "Нова таблиця", onClick: sizeCreate },
+  }[tab];
+
   return (
     <DashboardPage
         title="Каталог"
-        subtitle={`${products.length} товарів · ${categories.length} категорій`}
-        tabs={<AdminTabs tabs={TABS} value={tab} onValueChange={(next) => router.push(`/catalog?tab=${next}`)} />}
+        titleAccessory={<AdminTabs tabs={TABS} value={tab} onValueChange={(next) => router.push(`/catalog?tab=${next}`)} />}
         actions={
-          tab === "products" ? (
-            <Button
-              size="sm"
-              onClick={() => router.push("/products/new")}
-            >
-              Додати товар
+          createConfig?.onClick ? (
+            <Button size="sm" onClick={createConfig.onClick}>
+              {createConfig.label}
             </Button>
           ) : undefined
         }
@@ -61,10 +80,16 @@ export default function CatalogPage() {
             />
           )}
           {tab === "categories" && (
-            <CategoriesTab categories={categories} onRefresh={refresh} loading={loading} />
+            <CategoriesTab
+              categories={categories}
+              onRefresh={refresh}
+              loading={loading}
+              onCreateActionReady={setCategoryCreateHandler}
+              showSectionAction={false}
+            />
           )}
-          {tab === "colors" && <ColorsTab />}
-          {tab === "sizes" && <SizesTab />}
+          {tab === "colors" && <ColorsTab onCreateActionReady={setColorCreateHandler} showSectionAction={false} />}
+          {tab === "sizes" && <SizesTab onCreateActionReady={setSizeCreateHandler} showSectionAction={false} />}
     </DashboardPage>
   );
 }

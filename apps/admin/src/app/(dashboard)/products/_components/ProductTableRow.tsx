@@ -137,7 +137,7 @@ export function ProductTableRow({
           <Button
             variant="ghost"
             size="icon"
-            className="h-7 w-7"
+            className="h-10 w-10"
             aria-label="Редагувати"
             onClick={() => router.push(`/products/${product.id}`)}
           >
@@ -149,7 +149,7 @@ export function ProductTableRow({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 text-destructive hover:text-destructive"
+                className="h-10 w-10 text-destructive hover:text-destructive"
                 aria-label="Видалити"
               >
                 <Trash2 className="w-3.5 h-3.5" />

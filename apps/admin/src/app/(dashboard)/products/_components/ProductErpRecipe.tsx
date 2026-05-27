@@ -180,7 +180,7 @@ export function ProductErpRecipe({ productId, onChange }: { productId: string; o
                           updateLine(index, { erp_material_id: value, material: materialById.get(value) });
                         }}
                       >
-                        <SelectTrigger className="h-8">
+                        <SelectTrigger>
                           <span className="truncate">{material?.name ?? "Оберіть матеріал"}</span>
                         </SelectTrigger>
                         <SelectContent>
@@ -194,7 +194,7 @@ export function ProductErpRecipe({ productId, onChange }: { productId: string; o
                     </td>
                     <td className="px-3 py-2">
                       <Select value={line.role || undefined} onValueChange={(value) => value && updateLine(index, { role: value })}>
-                        <SelectTrigger className="h-8">
+                        <SelectTrigger>
                           <span>{ROLE_OPTIONS.find((role) => role.value === line.role)?.label ?? line.role}</span>
                         </SelectTrigger>
                         <SelectContent>
@@ -204,7 +204,7 @@ export function ProductErpRecipe({ productId, onChange }: { productId: string; o
                     </td>
                     <td className="px-3 py-2">
                       <Input
-                        className="h-8 text-right"
+                        className="text-right"
                         type="number"
                         min="0"
                         step="0.001"
@@ -214,7 +214,7 @@ export function ProductErpRecipe({ productId, onChange }: { productId: string; o
                     </td>
                     <td className="px-3 py-2">
                       <Input
-                        className="h-8 text-right"
+                        className="text-right"
                         type="number"
                         min="0"
                         step="0.1"
@@ -224,7 +224,6 @@ export function ProductErpRecipe({ productId, onChange }: { productId: string; o
                     </td>
                     <td className="px-3 py-2">
                       <Input
-                        className="h-8"
                         value={line.production_step ?? ""}
                         onChange={(e) => updateLine(index, { production_step: e.target.value })}
                         placeholder="Крій, друк, пошиття..."
@@ -232,7 +231,7 @@ export function ProductErpRecipe({ productId, onChange }: { productId: string; o
                     </td>
                     <td className="px-3 py-2 text-right font-medium">{money(lineCost)}</td>
                     <td className="px-2 py-2">
-                      <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => removeLine(index)}>
+                      <Button type="button" variant="ghost" size="icon" className="text-destructive" onClick={() => removeLine(index)}>
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </td>

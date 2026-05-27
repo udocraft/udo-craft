@@ -155,7 +155,13 @@ function QtyTiersEditor({
   );
 }
 
-export default function PrintSizesTab() {
+export default function PrintSizesTab({
+  onCreateActionReady,
+  showSectionAction = true,
+}: {
+  onCreateActionReady?: (handler: () => void) => void;
+  showSectionAction?: boolean;
+}) {
   const [activeType, setActiveType] = useState<(typeof PRINT_TYPES)[number]["id"]>("dtf");
   const [rows, setRows] = useState<PricingRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -169,6 +175,14 @@ export default function PrintSizesTab() {
     () => PRINT_TYPES.find((type) => type.id === activeType) ?? PRINT_TYPES[0],
     [activeType]
   );
+
+  const openCreate = useCallback(() => {
+    setDraft(createDraft(activeType, rows.length));
+  }, [activeType, rows.length]);
+
+  useEffect(() => {
+    onCreateActionReady?.(openCreate);
+  }, [onCreateActionReady, openCreate]);
 
   const fetchRows = useCallback(async (type: string) => {
     setLoading(true);
@@ -287,11 +301,11 @@ export default function PrintSizesTab() {
       <AdminSection
         title="Розміри друку"
         description={`Сітка цін для ${currentType.label}`}
-        actions={
-          <Button type="button" size="sm" onClick={() => setDraft(createDraft(activeType, rows.length))}>
+        actions={showSectionAction ? (
+          <Button type="button" size="sm" onClick={openCreate}>
             Додати розмір
           </Button>
-        }
+        ) : undefined}
       >
         <div className="mb-4 flex flex-wrap gap-1.5">
           {PRINT_TYPES.map((type) => (

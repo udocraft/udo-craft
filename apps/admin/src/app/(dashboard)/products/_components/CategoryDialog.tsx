@@ -197,7 +197,7 @@ export function CategoryDialog({ category, open, onClose, onSaved }: CategoryDia
                 value={form.image_url}
                 onChange={e => setForm(f => ({ ...f, image_url: e.target.value }))}
                 placeholder="URL зображення..."
-                className="flex-1 text-xs h-8"
+                className="flex-1 text-xs"
               />
             </div>
           </div>

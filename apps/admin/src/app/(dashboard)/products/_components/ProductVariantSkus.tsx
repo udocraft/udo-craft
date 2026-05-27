@@ -167,8 +167,8 @@ export function ProductVariantSkus({ productId, sizes, onChange }: { productId: 
                   <span className="font-medium">{sku.sku}</span>
                   <span className="text-xs text-muted-foreground">розмір {sku.size}</span>
                   <span className="ml-auto text-sm font-medium">{money(Math.round(recipeCost + sku.sewing_cost_cents))}</span>
-                  <Button type="button" variant="ghost" size="icon" className="h-8 w-8" onClick={() => saveRecipe(sku)}><Save className="h-4 w-4" /></Button>
-                  <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => remove(sku)}><Trash2 className="h-4 w-4" /></Button>
+                  <Button type="button" variant="ghost" size="icon" onClick={() => saveRecipe(sku)}><Save className="h-4 w-4" /></Button>
+                  <Button type="button" variant="ghost" size="icon" className="text-destructive" onClick={() => remove(sku)}><Trash2 className="h-4 w-4" /></Button>
                 </div>
                 <div className="mt-3 grid gap-2">
                   {recipe.map((line, lineIndex) => {

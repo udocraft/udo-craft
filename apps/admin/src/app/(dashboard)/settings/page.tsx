@@ -107,7 +107,7 @@ export default function SettingsPage() {
   return (
     <DashboardPage
       title="Налаштування"
-      tabs={<AdminTabs tabs={TABS} value={tab} onValueChange={(next) => router.push(`/settings?tab=${next}`)} />}
+      titleAccessory={<AdminTabs tabs={TABS} value={tab} onValueChange={(next) => router.push(`/settings?tab=${next}`)} />}
       contentClassName="flex-1 overflow-y-auto p-4 md:p-6 flex justify-center"
     >
         <div className="w-full max-w-2xl space-y-4">
@@ -127,19 +127,19 @@ export default function SettingsPage() {
               <Separator />
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="fullName">Повне ім&apos;я</Label>
-                  <Input id="fullName" value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Ваше ім'я" />
+                  <Label htmlFor="fullName" className="text-xs">Повне ім&apos;я</Label>
+                  <Input id="fullName" className="h-9 text-sm" value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Ваше ім'я" />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" value={email} disabled autoComplete="email" className="opacity-60" />
+                  <Label htmlFor="email" className="text-xs">Email</Label>
+                  <Input id="email" className="h-9 text-sm opacity-60" value={email} disabled autoComplete="email" />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="avatarUrl">URL аватара</Label>
-                <Input id="avatarUrl" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} placeholder="https://..." />
+                <Label htmlFor="avatarUrl" className="text-xs">URL аватара</Label>
+                <Input id="avatarUrl" className="h-9 text-sm" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} placeholder="https://..." />
               </div>
-              <Button onClick={handleSaveProfile} disabled={saving}>
+              <Button size="sm" onClick={handleSaveProfile} disabled={saving}>
                 {saving ? <Loader2 className="size-4 animate-spin" /> : null}
                 Зберегти зміни
               </Button>
@@ -151,15 +151,15 @@ export default function SettingsPage() {
               <p className="text-sm text-muted-foreground">Змініть пароль облікового запису.</p>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="newPassword">Новий пароль</Label>
-                  <Input id="newPassword" type="password" autoComplete="new-password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="••••••••" />
+                  <Label htmlFor="newPassword" className="text-xs">Новий пароль</Label>
+                  <Input id="newPassword" type="password" autoComplete="new-password" className="h-9 text-sm" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="••••••••" />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Підтвердити пароль</Label>
-                  <Input id="confirmPassword" type="password" autoComplete="new-password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="••••••••" />
+                  <Label htmlFor="confirmPassword" hidden className="text-xs">Підтвердити пароль</Label>
+                  <Input id="confirmPassword" type="password" autoComplete="new-password" className="h-9 text-sm" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="••••••••" />
                 </div>
               </div>
-              <Button onClick={handlePasswordChange} disabled={changingPassword || !newPassword} variant="outline">
+              <Button size="sm" onClick={handlePasswordChange} disabled={changingPassword || !newPassword} variant="outline">
                 {changingPassword ? <Loader2 className="size-4 animate-spin" /> : null}
                 Змінити пароль
               </Button>

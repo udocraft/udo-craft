@@ -18,17 +18,17 @@ export function AdminTabs<T extends string>({
   className,
 }: AdminTabsProps<T>) {
   return (
-    <nav className={cn("flex h-full min-w-0 items-center gap-1", className)}>
+    <nav className={cn("flex items-center gap-6 overflow-x-auto border-b border-transparent px-1", className)}>
       {tabs.map((tab) => (
         <button
           key={tab.key}
           type="button"
           onClick={() => onValueChange(tab.key)}
           className={cn(
-            "flex h-full min-w-0 items-center gap-2 border-b-2 px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
+            "relative flex h-16 min-w-0 items-center gap-2 px-1 text-sm font-medium transition-colors focus-visible:outline-none",
             value === tab.key
-              ? "border-primary text-foreground"
-              : "border-transparent text-muted-foreground hover:text-foreground"
+              ? "text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary"
+              : "text-muted-foreground hover:text-foreground"
           )}
         >
           <span className="truncate">{tab.label}</span>
@@ -46,7 +46,7 @@ export function AdminToolbar({
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center gap-2 border-b border-border bg-background px-4 py-2 md:px-6",
+        "flex h-10 items-center gap-2 border-b border-border bg-background px-4 md:px-6",
         className
       )}
     >
@@ -55,42 +55,54 @@ export function AdminToolbar({
   );
 }
 
-export function AdminSection({
-  title,
-  description,
-  actions,
-  children,
-  className,
-  contentClassName,
-}: React.PropsWithChildren<{
-  title?: React.ReactNode;
-  description?: React.ReactNode;
-  actions?: React.ReactNode;
-  className?: string;
-  contentClassName?: string;
-}>) {
+export function AdminFilter({
+  label,
+  value,
+  active,
+  onClick,
+  onClear,
+}: {
+  label: string;
+  value?: string;
+  active?: boolean;
+  onClick?: () => void;
+  onClear?: () => void;
+}) {
   return (
-    <section className={cn("space-y-4", className)}>
-      {(title || description || actions) && (
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div className="min-w-0">
-            {title && <h2 className="text-sm font-semibold text-foreground">{title}</h2>}
-            {description && <p className="mt-1 text-xs text-muted-foreground">{description}</p>}
-          </div>
-          {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
-        </div>
+    <div className="flex items-center">
+      <button
+        type="button"
+        onClick={onClick}
+        className={cn(
+          "flex h-7 items-center gap-1.5 rounded-md border border-dashed border-border px-2 text-[11px] font-medium transition-colors hover:bg-muted",
+          active && "border-solid border-primary bg-primary/5 text-primary"
+        )}
+      >
+        {label}
+        {value && <span className="text-muted-foreground">/</span>}
+        {value && <span className="max-w-[80px] truncate">{value}</span>}
+      </button>
+      {active && onClear && (
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onClear(); }}
+          className="ml-1 flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+        >
+          <X className="h-3 w-3" />
+        </button>
       )}
-      <div className={contentClassName}>{children}</div>
-    </section>
+    </div>
   );
 }
+
+import { X } from "lucide-react";
 
 export function AdminTablePanel({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
   return (
-    <div className={cn("overflow-hidden rounded-lg border border-border bg-card", className)}>
+    <div className={cn("overflow-hidden border-b border-border bg-card", className)}>
       {children}
     </div>
   );

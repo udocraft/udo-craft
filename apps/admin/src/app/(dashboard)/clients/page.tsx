@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
@@ -18,7 +17,8 @@ import { Search, Mail, ExternalLink, Loader2, X, MessageCircle, Phone, Calendar,
 import { EmptyState } from "@/components/empty-state";
 import { StatusBadge, type LeadStatus } from "@/components/status-badge";
 import { fmtMoney, fmtDate } from "@/lib/utils";
-import { PageHeader } from "@/components/page-header";
+import { DashboardPage } from "@/components/dashboard-page";
+import { AdminToolbar, AdminFilter, AdminTablePanel } from "@/components/admin-layout";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -77,18 +77,17 @@ function ClientStat({
   value: string;
 }) {
   return (
-    <div className="rounded-lg bg-muted/60 px-3 py-2">
+    <div className="rounded-lg bg-muted/60 px-3 py-2 text-center">
       <div className="mb-1 flex items-center justify-center gap-1 text-[10px] text-muted-foreground">
         <Icon className="size-3" />
         {label}
       </div>
-      <p className="truncate text-center text-sm font-bold">{value}</p>
+      <p className="truncate text-xs font-bold">{value}</p>
     </div>
   );
 }
 
 export default function ClientsPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [clients, setClients] = useState<ClientRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -119,7 +118,6 @@ export default function ClientsPage() {
 
     const map = new Map<string, ClientRecord>();
     for (const lead of (data || []) as Lead[]) {
-      // Use lead id as fallback key so orders without email aren't merged
       const email = lead.customer_data?.email?.trim() || "";
       const keycrmClientId = lead.customer_data?.keycrm_client_id;
       const key = keycrmClientId ? `keycrm:${keycrmClientId}` : email || `__noemail__${lead.id}`;
@@ -151,7 +149,7 @@ export default function ClientsPage() {
     }
     setClients(Array.from(map.values()));
     setLoading(false);
-  }, []);
+  }, [supabase]);
 
   useEffect(() => { fetchClients(); }, [fetchClients]);
 
@@ -328,74 +326,66 @@ export default function ClientsPage() {
   };
 
   return (
-    <>
-    <div className={`flex flex-1 h-0 overflow-hidden${isDragging ? " select-none" : ""}`}>
-
-      {/* ── Table area ── */}
+    <DashboardPage
+      title="Клієнти"
+      actions={
+        <>
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-8 gap-2"
+            onClick={handleKeycrmSync}
+            disabled={syncingKeycrm}
+          >
+            {syncingKeycrm ? <Loader2 className="size-3.5 animate-spin" /> : <RefreshCw className="size-3.5" />}
+            Sync KeyCRM
+          </Button>
+          <Button size="sm" className="h-8 gap-2" onClick={() => setAddOpen(true)}>
+            <UserPlus className="size-3.5" /> Додати клієнта
+          </Button>
+        </>
+      }
+    >
+    <div className={`flex flex-1 h-full overflow-hidden${isDragging ? " select-none" : ""}`}>
       <div className="flex-1 flex flex-col overflow-hidden transition-[margin] duration-200" style={{ marginRight: selected ? drawerWidth : 0 }}>
+        <AdminToolbar>
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              className="h-7 w-48 pl-8 text-[11px] bg-muted/40 border-none shadow-none focus-visible:ring-1 focus-visible:ring-primary/20"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Швидкий пошук..."
+            />
+          </div>
 
-        <PageHeader
-          title={`Клієнти${clients.length > 0 ? ` (${filtered.length})` : ""}`}
-          actions={
-            <>
-              <div className="relative max-w-xs w-full">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
-                <Input
-                  placeholder="Пошук..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="pl-8 h-8 text-sm"
-                />
-              </div>
-              <Select value={sourceFilter} onValueChange={(value) => setSourceFilter(value as SourceFilter)}>
-                <SelectTrigger className="h-8 w-[130px] rounded-md text-xs">
-                  <SelectValue>
-                    {sourceFilter === "all" ? "Всі джерела" : sourceFilter === "keycrm" ? "KeyCRM" : "Вручну"}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Всі джерела</SelectItem>
-                  <SelectItem value="keycrm">KeyCRM</SelectItem>
-                  <SelectItem value="manual">Вручну</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select value={sortFilter} onValueChange={(value) => setSortFilter(value as SortFilter)}>
-                <SelectTrigger className="h-8 w-[142px] rounded-md text-xs">
-                  <SelectValue>
-                    {sortFilter === "spent" ? "За сумою" : sortFilter === "recent" ? "Останні" : "За кількістю"}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="spent">За сумою</SelectItem>
-                  <SelectItem value="recent">Останні</SelectItem>
-                  <SelectItem value="orders">За кількістю</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-1.5 shrink-0"
-                onClick={handleKeycrmSync}
-                disabled={syncingKeycrm}
-              >
-                {syncingKeycrm ? <Loader2 className="size-3.5 animate-spin" /> : <RefreshCw className="size-3.5" />}
-                Sync KeyCRM
-              </Button>
-              <Button size="sm" className="gap-1.5 shrink-0" onClick={() => setAddOpen(true)}>
-                <UserPlus className="size-3.5" /> Додати клієнта
-              </Button>
-            </>
-          }
-        />
+          <div className="flex items-center gap-2">
+            <AdminFilter
+              label="Джерело"
+              active={sourceFilter !== "all"}
+              value={sourceFilter === "all" ? undefined : sourceFilter === "keycrm" ? "KeyCRM" : "Вручну"}
+              onClear={() => setSourceFilter("all")}
+            />
+            <AdminFilter
+              label="Сортування"
+              active={sortFilter !== "spent"}
+              value={sortFilter === "spent" ? "За сумою" : sortFilter === "recent" ? "Останні" : "За кількістю"}
+              onClear={() => setSortFilter("spent")}
+            />
+          </div>
 
-        {/* Table */}
+          <span className="ml-auto text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
+            {filtered.length} клієнтів
+          </span>
+        </AdminToolbar>
+
         <div className="flex-1 overflow-y-auto">
           {loading ? (
             <div className="flex items-center justify-center h-full">
               <Loader2 className="size-5 animate-spin text-muted-foreground" />
             </div>
           ) : filtered.length === 0 ? (
-            <div className="flex items-center justify-center h-full">
+            <div className="flex items-center justify-center h-full px-6">
               {search ? (
                 <EmptyState
                   icon={Search}
@@ -413,177 +403,166 @@ export default function ClientsPage() {
               )}
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow className="hover:bg-transparent">
-                  <TableHead>Клієнт</TableHead>
-                  <TableHead>Джерело</TableHead>
-                  <TableHead>Замовлень</TableHead>
-                  <TableHead>Загальна сума</TableHead>
-                  <TableHead>Оплачено</TableHead>
-                  <TableHead>Останнє замовлення</TableHead>
-                  <TableHead className="w-10"><span className="sr-only">Дії</span></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.map((client) => (
-                  <TableRow
-                    key={client.key}
-                    className={`cursor-pointer transition-colors group ${selected?.key === client.key ? "bg-muted/60" : "hover:bg-muted/40"}`}
-                    onClick={() => setSelected((p) => p?.key === client.key ? null : client)}
-                  >
-                    <TableCell>
-                      <p className="font-medium text-sm">{client.name}</p>
-                      <p className="text-xs text-muted-foreground">{client.email || client.phone || "Без контактів"}</p>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={client.keycrmOrders > 0 ? "info" : "outline"} className="normal-case tracking-normal">
-                        {client.keycrmOrders > 0 ? "KeyCRM" : "Вручну"}
-                      </Badge>
-                    </TableCell>
-                    <TableCell><span className="text-sm">{client.ordersCount}</span></TableCell>
-                    <TableCell><span className="text-sm font-medium">{fmtMoney(client.totalSpent)}</span></TableCell>
-                    <TableCell><span className="text-sm text-muted-foreground">{fmtMoney(client.paidTotal)}</span></TableCell>
-                    <TableCell><span className="text-sm text-muted-foreground">{fmtDate(client.lastOrderAt)}</span></TableCell>
-                    <TableCell>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleDeleteClient(client); }}
-                        className="opacity-0 group-hover:opacity-100 w-7 h-7 flex items-center justify-center rounded hover:text-destructive transition-all">
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </TableCell>
+            <AdminTablePanel>
+              <Table>
+                <TableHeader>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead>Клієнт</TableHead>
+                    <TableHead>Джерело</TableHead>
+                    <TableHead>Замовлень</TableHead>
+                    <TableHead>Загальна сума</TableHead>
+                    <TableHead>Оплачено</TableHead>
+                    <TableHead>Останнє замовлення</TableHead>
+                    <TableHead className="w-10"><span className="sr-only">Дії</span></TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filtered.map((client) => (
+                    <TableRow
+                      key={client.key}
+                      className={`cursor-pointer transition-colors group ${selected?.key === client.key ? "bg-muted/60" : "hover:bg-muted/40"}`}
+                      onClick={() => setSelected((p) => p?.key === client.key ? null : client)}
+                    >
+                      <TableCell>
+                        <p className="font-medium text-sm">{client.name}</p>
+                        <p className="text-[10px] text-muted-foreground">{client.email || client.phone || "Без контактів"}</p>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={client.keycrmOrders > 0 ? "info" : "outline"} className="text-[10px] h-5 normal-case tracking-normal">
+                          {client.keycrmOrders > 0 ? "KeyCRM" : "Вручну"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell><span className="text-xs">{client.ordersCount}</span></TableCell>
+                      <TableCell><span className="text-xs font-medium">{fmtMoney(client.totalSpent)}</span></TableCell>
+                      <TableCell><span className="text-xs text-muted-foreground">{fmtMoney(client.paidTotal)}</span></TableCell>
+                      <TableCell><span className="text-xs text-muted-foreground">{fmtDate(client.lastOrderAt)}</span></TableCell>
+                      <TableCell>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleDeleteClient(client); }}
+                          className="opacity-0 group-hover:opacity-100 w-7 h-7 flex items-center justify-center rounded hover:text-destructive transition-all">
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </AdminTablePanel>
           )}
         </div>
       </div>
 
-      {/* ── Detail panel ── */}
       {selected && (
         <div
           data-drawer
           className="fixed top-0 right-0 h-full border-l border-border bg-card flex flex-col overflow-hidden z-20"
           style={{ width: drawerWidth }}
         >
-          {/* Drag handle */}
           <div onMouseDown={onDrawerDragStart} className="absolute left-0 top-0 h-full w-1 cursor-col-resize hover:bg-primary/40 transition-colors z-10" />
 
-          {/* Header */}
-          <div className="border-b border-border px-4 py-3 shrink-0">
-            <div className="flex items-start justify-between gap-3">
+          <div className="h-14 border-b border-border px-4 flex items-center shrink-0">
+            <div className="flex items-center justify-between gap-3 w-full">
               <div className="min-w-0">
-                <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Клієнт</p>
-                <h2 className="truncate text-base font-semibold">{selected.name}</h2>
+                <h2 className="truncate text-sm font-semibold">{selected.name}</h2>
               </div>
               <div className="flex items-center gap-1">
                 {editMode ? (
                   <>
-                    <Button variant="outline" size="sm" className="h-8" onClick={() => setEditMode(false)} disabled={savingClient}>
+                    <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => setEditMode(false)} disabled={savingClient}>
                       Скасувати
                     </Button>
-                    <Button size="sm" className="h-8 gap-1.5" onClick={handleSaveClient} disabled={savingClient}>
-                      {savingClient ? <Loader2 className="size-3.5 animate-spin" /> : <Save className="size-3.5" />}
+                    <Button size="sm" className="h-7 text-xs gap-1.5" onClick={handleSaveClient} disabled={savingClient}>
+                      {savingClient ? <Loader2 className="size-3 animate-spin" /> : <Save className="size-3" />}
                       Зберегти
                     </Button>
                   </>
                 ) : (
-                  <Button size="sm" className="h-8 gap-1.5" onClick={() => setEditMode(true)}>
-                    <Edit3 className="size-3.5" />
+                  <Button size="sm" className="h-7 text-xs gap-1.5" onClick={() => setEditMode(true)}>
+                    <Edit3 className="size-3" />
                     Редагувати
                   </Button>
                 )}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
-                      <MoreHorizontal className="size-4" />
+                    <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground">
+                      <MoreHorizontal className="size-3.5" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-44">
                     <DropdownMenuItem onClick={() => copyClientContact(selected)}>
-                      <Copy className="size-4" /> Скопіювати контакт
+                      <Copy className="size-3.5 mr-2" /> Скопіювати контакт
                     </DropdownMenuItem>
                     {selected.leads[0] && (
                       <DropdownMenuItem onClick={() => router.push(`/messages?leadId=${selected.leads[0].id}`)}>
-                        <MessageCircle className="size-4" /> Відкрити чат
+                        <MessageCircle className="size-3.5 mr-2" /> Відкрити чат
                       </DropdownMenuItem>
                     )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem variant="destructive" onClick={() => handleDeleteClient(selected)}>
-                      <Trash2 className="size-4" /> Видалити
+                      <Trash2 className="size-3.5 mr-2" /> Видалити
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setSelected(null)}>
-                  <X className="w-4 h-4" />
+                <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setSelected(null)}>
+                  <X className="w-3.5 h-3.5" />
                 </Button>
               </div>
             </div>
           </div>
 
-          {/* Body */}
           <div className="flex-1 overflow-y-auto">
             <Tabs value={clientTab} onValueChange={(value) => setClientTab(value as ClientTab)} className="gap-0">
-              <div className="sticky top-0 z-10 border-b border-border bg-card px-4 py-2">
-                <TabsList className="h-9 w-full justify-start rounded-none border-b-0 bg-transparent p-0">
-                  <TabsTrigger value="overview" className="rounded-none border-b-2 border-transparent px-3 data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none">
-                    Профіль
-                  </TabsTrigger>
-                  <TabsTrigger value="orders" className="rounded-none border-b-2 border-transparent px-3 data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none">
-                    Замовлення
-                  </TabsTrigger>
-                  <TabsTrigger value="activity" className="rounded-none border-b-2 border-transparent px-3 data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none">
-                    Активність
-                  </TabsTrigger>
-                </TabsList>
-              </div>
+              <TabsList className="px-4">
+                <TabsTrigger value="overview">Профіль</TabsTrigger>
+                <TabsTrigger value="orders">Замовлення</TabsTrigger>
+                <TabsTrigger value="activity">Активність</TabsTrigger>
+              </TabsList>
 
               <TabsContent value="overview" className="m-0">
                 <div className="flex flex-col items-center px-4 py-5 border-b border-border">
-                  <div className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center mb-2.5">
-                    <span className="text-xl font-bold text-primary">{selected.name[0]?.toUpperCase()}</span>
+                  <div className="w-12 h-12 rounded-full bg-primary/15 flex items-center justify-center mb-2.5">
+                    <span className="text-lg font-bold text-primary">{selected.name[0]?.toUpperCase()}</span>
                   </div>
                   {editMode ? (
                     <div className="w-full space-y-3">
-                      <div className="space-y-1.5">
-                        <Label htmlFor="edit-client-name">Ім&apos;я *</Label>
-                        <Input id="edit-client-name" value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} />
+                      <div className="space-y-1">
+                        <Label htmlFor="edit-client-name" className="text-[10px]">Ім&apos;я *</Label>
+                        <Input id="edit-client-name" className="h-8 text-sm" value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} />
                       </div>
-                      <div className="space-y-1.5">
-                        <Label htmlFor="edit-client-email">Email *</Label>
-                        <Input id="edit-client-email" type="email" value={editForm.email} onChange={(e) => setEditForm({ ...editForm, email: e.target.value })} />
+                      <div className="space-y-1">
+                        <Label htmlFor="edit-client-email" className="text-[10px]">Email *</Label>
+                        <Input id="edit-client-email" type="email" className="h-8 text-sm" value={editForm.email} onChange={(e) => setEditForm({ ...editForm, email: e.target.value })} />
                       </div>
                       <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-1.5">
-                          <Label htmlFor="edit-client-phone">Телефон</Label>
-                          <Input id="edit-client-phone" value={editForm.phone} onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })} />
+                        <div className="space-y-1">
+                          <Label htmlFor="edit-client-phone" className="text-[10px]">Телефон</Label>
+                          <Input id="edit-client-phone" className="h-8 text-sm" value={editForm.phone} onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })} />
                         </div>
-                        <div className="space-y-1.5">
-                          <Label htmlFor="edit-client-company">Компанія</Label>
-                          <Input id="edit-client-company" value={editForm.company} onChange={(e) => setEditForm({ ...editForm, company: e.target.value })} />
+                        <div className="space-y-1">
+                          <Label htmlFor="edit-client-company" className="text-[10px]">Компанія</Label>
+                          <Input id="edit-client-company" className="h-8 text-sm" value={editForm.company} onChange={(e) => setEditForm({ ...editForm, company: e.target.value })} />
                         </div>
                       </div>
-                      <div className="space-y-1.5">
-                        <Label htmlFor="edit-client-social">Telegram / Instagram</Label>
-                        <Input id="edit-client-social" value={editForm.social_channel} onChange={(e) => setEditForm({ ...editForm, social_channel: e.target.value })} />
+                      <div className="space-y-1">
+                        <Label htmlFor="edit-client-social" className="text-[10px]">Telegram / Instagram</Label>
+                        <Input id="edit-client-social" className="h-8 text-sm" value={editForm.social_channel} onChange={(e) => setEditForm({ ...editForm, social_channel: e.target.value })} />
                       </div>
                     </div>
                   ) : (
                     <>
-                      <p className="font-semibold text-base text-center">{selected.name}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">{selected.email || selected.phone || "Без контактів"}</p>
-                      {selected.company && <p className="text-xs text-muted-foreground">{selected.company}</p>}
+                      <p className="font-semibold text-sm text-center">{selected.name}</p>
+                      <p className="text-[10px] text-muted-foreground mt-0.5">{selected.email || selected.phone || "Без контактів"}</p>
+                      {selected.company && <p className="text-[10px] text-muted-foreground">{selected.company}</p>}
                     </>
                   )}
-                  <div className="flex gap-3 mt-3 w-full">
-                    <div className="flex-1 rounded-lg bg-muted/60 px-3 py-2 text-center">
-                      <p className="text-lg font-bold">{selected.ordersCount}</p>
-                      <p className="text-[10px] text-muted-foreground">замовлень</p>
+                  <div className="flex gap-2 mt-3 w-full">
+                    <div className="flex-1 rounded-lg bg-muted/60 px-2 py-2 text-center">
+                      <p className="text-base font-bold">{selected.ordersCount}</p>
+                      <p className="text-[9px] text-muted-foreground uppercase">замовлень</p>
                     </div>
-                    <div className="flex-1 rounded-lg bg-muted/60 px-3 py-2 text-center">
-                      <p className="text-base font-bold">{fmtMoney(selected.totalSpent)}</p>
-                      <p className="text-[10px] text-muted-foreground">витрачено</p>
+                    <div className="flex-1 rounded-lg bg-muted/60 px-2 py-2 text-center">
+                      <p className="text-sm font-bold">{fmtMoney(selected.totalSpent)}</p>
+                      <p className="text-[9px] text-muted-foreground uppercase">витрачено</p>
                     </div>
                   </div>
                   <div className="mt-2 grid w-full grid-cols-2 gap-2">
@@ -594,68 +573,68 @@ export default function ClientsPage() {
 
                 {selected.leads[0] && (
                   <div className="px-4 pt-4">
-                    <Button variant="outline" className="w-full gap-2" onClick={() => router.push(`/messages?leadId=${selected.leads[0].id}`)}>
-                      <MessageCircle className="w-4 h-4" /> Чат
+                    <Button variant="outline" size="sm" className="w-full gap-2 text-xs h-8" onClick={() => router.push(`/messages?leadId=${selected.leads[0].id}`)}>
+                      <MessageCircle className="w-3.5 h-3.5" /> Чат
                     </Button>
                   </div>
                 )}
 
                 <div className="px-4 py-4 space-y-3">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Контакти</p>
+                  <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Контакти</p>
                   {selected.phone && (
                     <div className="flex items-start gap-3">
-                      <Phone className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
-                      <div><p className="text-sm">{selected.phone}</p><p className="text-xs text-muted-foreground">Телефон</p></div>
+                      <Phone className="w-3.5 h-3.5 text-muted-foreground mt-0.5 shrink-0" />
+                      <div><p className="text-xs">{selected.phone}</p><p className="text-[10px] text-muted-foreground">Телефон</p></div>
                     </div>
                   )}
                   {selected.company && (
                     <div className="flex items-start gap-3">
-                      <Building2 className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
-                      <div><p className="text-sm">{selected.company}</p><p className="text-xs text-muted-foreground">Компанія</p></div>
+                      <Building2 className="w-3.5 h-3.5 text-muted-foreground mt-0.5 shrink-0" />
+                      <div><p className="text-xs">{selected.company}</p><p className="text-[10px] text-muted-foreground">Компанія</p></div>
                     </div>
                   )}
                   {selected.lastManager && (
                     <div className="flex items-start gap-3">
-                      <Users className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
-                      <div><p className="text-sm">{selected.lastManager}</p><p className="text-xs text-muted-foreground">Менеджер KeyCRM</p></div>
+                      <Users className="w-3.5 h-3.5 text-muted-foreground mt-0.5 shrink-0" />
+                      <div><p className="text-xs">{selected.lastManager}</p><p className="text-[10px] text-muted-foreground">Менеджер KeyCRM</p></div>
                     </div>
                   )}
                   <div className="flex items-start gap-3">
-                    <Mail className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
+                    <Mail className="w-3.5 h-3.5 text-muted-foreground mt-0.5 shrink-0" />
                     <div>
-                      {selected.email ? <a href={`mailto:${selected.email}`} className="text-sm hover:underline break-all">{selected.email}</a> : <p className="text-sm text-muted-foreground">Не вказано</p>}
-                      <p className="text-xs text-muted-foreground">Email</p>
+                      {selected.email ? <a href={`mailto:${selected.email}`} className="text-xs hover:underline break-all">{selected.email}</a> : <p className="text-xs text-muted-foreground">Не вказано</p>}
+                      <p className="text-[10px] text-muted-foreground">Email</p>
                     </div>
                   </div>
                   {selected.social_channel && (
                     <div className="flex items-start gap-3">
-                      <ExternalLink className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
-                      <div><a href={selected.social_channel} target="_blank" rel="noopener noreferrer" className="text-sm hover:underline truncate block">{selected.social_channel}</a><p className="text-xs text-muted-foreground">Соцмережа</p></div>
+                      <ExternalLink className="w-3.5 h-3.5 text-muted-foreground mt-0.5 shrink-0" />
+                      <div><a href={selected.social_channel} target="_blank" rel="noopener noreferrer" className="text-xs hover:underline truncate block">{selected.social_channel}</a><p className="text-[10px] text-muted-foreground">Соцмережа</p></div>
                     </div>
                   )}
                   <div className="flex items-start gap-3">
-                    <Calendar className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
-                    <div><p className="text-sm">{fmtDate(selected.lastOrderAt)}</p><p className="text-xs text-muted-foreground">Останнє замовлення</p></div>
+                    <Calendar className="w-3.5 h-3.5 text-muted-foreground mt-0.5 shrink-0" />
+                    <div><p className="text-xs">{fmtDate(selected.lastOrderAt)}</p><p className="text-[10px] text-muted-foreground">Останнє замовлення</p></div>
                   </div>
                 </div>
               </TabsContent>
 
               <TabsContent value="orders" className="m-0 px-4 py-4 space-y-2">
                 <div className="mb-3 flex items-center justify-between">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Історія замовлень</p>
-                  <Button variant="outline" size="sm" className="h-8" onClick={() => router.push("/orders/new")}>
+                  <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">Історія замовлень</p>
+                  <Button variant="outline" size="sm" className="h-7 text-[10px]" onClick={() => router.push("/orders/new")}>
                     Нове замовлення
                   </Button>
                 </div>
                 {selected.leads.map((lead) => (
                   <div
                     key={lead.id}
-                    className="flex items-center justify-between rounded-lg border border-border p-3 hover:bg-muted/50 transition-colors cursor-pointer"
+                    className="flex items-center justify-between rounded-lg border border-border p-2 hover:bg-muted/50 transition-colors cursor-pointer"
                     onClick={() => router.push(`/orders?leadId=${lead.id}`)}
                   >
                     <div>
-                      <p className="text-sm font-medium">{fmtMoney(lead.total_amount_cents)}</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs font-medium">{fmtMoney(lead.total_amount_cents)}</p>
+                      <p className="text-[10px] text-muted-foreground">
                         {fmtDate(lead.created_at)}
                         {lead.customer_data?.keycrm_id ? ` · KeyCRM #${lead.customer_data.keycrm_id}` : ""}
                       </p>
@@ -666,25 +645,22 @@ export default function ClientsPage() {
               </TabsContent>
 
               <TabsContent value="activity" className="m-0 px-4 py-4 space-y-3">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Останні події</p>
+                <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">Останні події</p>
                 {selected.leads.slice(0, 8).map((lead) => (
                   <div key={lead.id} className="flex gap-3 border-b border-border/60 pb-3 last:border-b-0">
-                    <div className="mt-1 size-2 rounded-full bg-primary" />
+                    <div className="mt-1 size-1.5 rounded-full bg-primary" />
                     <div>
-                      <p className="text-sm font-medium">Замовлення {fmtMoney(lead.total_amount_cents)}</p>
-                      <p className="text-xs text-muted-foreground">{fmtDate(lead.created_at)} · {lead.status}</p>
+                      <p className="text-xs font-medium">Замовлення {fmtMoney(lead.total_amount_cents)}</p>
+                      <p className="text-[10px] text-muted-foreground">{fmtDate(lead.created_at)} · {lead.status}</p>
                     </div>
                   </div>
                 ))}
               </TabsContent>
             </Tabs>
-
           </div>
         </div>
       )}
-    </div>
 
-      {/* ── Add Client Dialog ── */}
       <Dialog open={addOpen} onOpenChange={setAddOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
@@ -693,41 +669,42 @@ export default function ClientsPage() {
           <form onSubmit={handleAddClient} className="space-y-3 pt-1">
             <div className="grid grid-cols-2 gap-3">
               <div className="col-span-2 space-y-1.5">
-                <Label htmlFor="c-name">Ім&apos;я та прізвище *</Label>
-                <Input id="c-name" placeholder="Іван Петренко" value={addForm.name}
+                <Label htmlFor="c-name" className="text-xs">Ім&apos;я та прізвище *</Label>
+                <Input id="c-name" className="h-9 text-sm" placeholder="Іван Петренко" value={addForm.name}
                   onChange={(e) => setAddForm({ ...addForm, name: e.target.value })} required />
               </div>
               <div className="col-span-2 space-y-1.5">
-                <Label htmlFor="c-email">Email *</Label>
-                <Input id="c-email" type="email" placeholder="hr@company.com" value={addForm.email}
+                <Label htmlFor="c-email" className="text-xs">Email *</Label>
+                <Input id="c-email" type="email" className="h-9 text-sm" placeholder="hr@company.com" value={addForm.email}
                   onChange={(e) => setAddForm({ ...addForm, email: e.target.value })} required />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="c-phone">Телефон *</Label>
-                <Input id="c-phone" type="tel" placeholder="+380 XX XXX XX XX" value={addForm.phone}
+                <Label htmlFor="c-phone" className="text-xs">Телефон *</Label>
+                <Input id="c-phone" type="tel" className="h-9 text-sm" placeholder="+380 XX XXX XX XX" value={addForm.phone}
                   onChange={(e) => setAddForm({ ...addForm, phone: e.target.value })} required />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="c-company">Компанія</Label>
-                <Input id="c-company" placeholder="ТОВ «Назва»" value={addForm.company}
+                <Label htmlFor="c-company" className="text-xs">Компанія</Label>
+                <Input id="c-company" className="h-9 text-sm" placeholder="ТОВ «Назва»" value={addForm.company}
                   onChange={(e) => setAddForm({ ...addForm, company: e.target.value })} />
               </div>
               <div className="col-span-2 space-y-1.5">
-                <Label htmlFor="c-social">Telegram / Instagram</Label>
-                <Input id="c-social" placeholder="@username" value={addForm.social_channel}
+                <Label htmlFor="c-social" className="text-xs">Telegram / Instagram</Label>
+                <Input id="c-social" className="h-9 text-sm" placeholder="@username" value={addForm.social_channel}
                   onChange={(e) => setAddForm({ ...addForm, social_channel: e.target.value })} />
               </div>
             </div>
             <DialogFooter className="pt-2">
-              <Button type="button" variant="outline" onClick={() => setAddOpen(false)}>Скасувати</Button>
-              <Button type="submit" disabled={addLoading}>
-                {addLoading && <Loader2 className="size-3.5 animate-spin mr-1.5" />}
+              <Button type="button" variant="outline" size="sm" onClick={() => setAddOpen(false)}>Скасувати</Button>
+              <Button type="submit" size="sm" disabled={addLoading}>
+                {addLoading && <Loader2 className="size-3 animate-spin mr-1.5" />}
                 Додати
               </Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
+    </DashboardPage>
   );
 }

@@ -10,6 +10,7 @@ interface DashboardHeaderProps {
   subtitle?: React.ReactNode;
   description?: React.ReactNode;
   actions?: React.ReactNode;
+  beforeTitle?: React.ReactNode;
   className?: string;
   sticky?: boolean;
 }
@@ -21,37 +22,36 @@ export function DashboardHeader({
   subtitle,
   description,
   actions,
+  beforeTitle,
   className,
   sticky = true,
 }: DashboardHeaderProps) {
-  const supportingText = subtitle ?? description;
+  // Description/subtitle is removed from the primary header to maintain consistency as per user request
+  // but kept as a prop for compatibility if needed for a different layout in the future.
+  // The user explicitly asked for "header(no description)".
 
   return (
     <header
       className={cn(
-        "z-30 flex min-h-16 shrink-0 flex-col gap-3 border-b border-border bg-background px-4 py-3 sm:flex-row sm:items-center sm:justify-between md:px-6",
+        "z-30 flex h-16 shrink-0 items-center justify-between border-b border-border bg-background px-4 md:px-6",
         sticky && "sticky top-0",
         className
       )}
     >
-      <div className="min-w-0">
+      <div className="flex min-w-0 items-center gap-2">
+        {beforeTitle}
         {eyebrow && (
-          <p className="mb-0.5 truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          <p className="mr-2 truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
             {eyebrow}
           </p>
         )}
         <div className="flex min-w-0 items-center gap-3">
-          <h1 className="truncate text-lg font-semibold leading-tight tracking-tight text-foreground md:text-xl">{title}</h1>
-          {titleAccessory && <div className="shrink-0">{titleAccessory}</div>}
+          <h1 className="truncate text-base font-semibold leading-none tracking-tight text-foreground md:text-lg">{title}</h1>
+          {titleAccessory && <div className="min-w-0 shrink">{titleAccessory}</div>}
         </div>
-        {supportingText && (
-          <div className="mt-0.5 flex min-h-4 items-center gap-2 text-xs text-muted-foreground md:text-sm">
-            {supportingText}
-          </div>
-        )}
       </div>
       {actions && (
-        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:shrink-0 sm:justify-end">
+        <div className="flex items-center gap-2 shrink-0">
           {actions}
         </div>
       )}

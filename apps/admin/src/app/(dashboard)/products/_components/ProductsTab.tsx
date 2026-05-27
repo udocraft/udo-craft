@@ -131,7 +131,7 @@ export function ProductsTab({ products, categories, loading, onRefresh, variantC
           placeholder="Пошук..."
           value={searchInput}
           onChange={(e) => handleSearchChange(e.target.value)}
-          className="h-8 w-48 text-sm"
+          className="w-48 text-sm"
         />
 
         <span className="text-xs text-muted-foreground">{productCountLabel}</span>
@@ -141,7 +141,7 @@ export function ProductsTab({ products, categories, loading, onRefresh, variantC
             value={statusFilter}
             onValueChange={(v) => setStatusFilter(v as StatusFilter)}
           >
-            <SelectTrigger className="h-8 w-36 text-xs">
+            <SelectTrigger className="w-36 text-xs">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

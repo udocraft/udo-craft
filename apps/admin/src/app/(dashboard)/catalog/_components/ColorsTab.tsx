@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
-import { Plus, Pencil, Trash2, GripVertical } from "lucide-react";
+import { Pencil, Trash2, GripVertical } from "lucide-react";
 import { AdminSection, AdminTablePanel } from "@/components/admin-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,13 @@ import { toast } from "sonner";
 
 interface Material { id: string; name: string; hex_code: string; is_active: boolean; }
 
-export default function ColorsTab() {
+export default function ColorsTab({
+  onCreateActionReady,
+  showSectionAction = true,
+}: {
+  onCreateActionReady?: (handler: () => void) => void;
+  showSectionAction?: boolean;
+}) {
   const [materials, setMaterials] = useState<Material[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -41,6 +47,10 @@ export default function ColorsTab() {
     setForm({ name: "", hex_code: "#000000", is_active: true });
     setModalOpen(true);
   };
+
+  useEffect(() => {
+    onCreateActionReady?.(openCreate);
+  }, [onCreateActionReady]);
 
   const openEdit = (m: Material) => {
     setEditingMaterial(m);
@@ -112,7 +122,7 @@ export default function ColorsTab() {
       <AdminSection
         title="Кольори матеріалів"
         description="Словник кольорів для варіантів товарів"
-        actions={<Button size="sm" onClick={openCreate}>Додати колір</Button>}
+        actions={showSectionAction ? <Button size="sm" onClick={openCreate}>Додати колір</Button> : undefined}
       >
 
       <AdminTablePanel>
@@ -178,10 +188,10 @@ export default function ColorsTab() {
               <TableCell className="text-xs text-muted-foreground font-mono">{m.hex_code}</TableCell>
               <TableCell>
                 <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(m)}>
+                  <Button variant="ghost" size="icon" onClick={() => openEdit(m)}>
                     <Pencil className="w-3.5 h-3.5" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive" onClick={() => setDeleteTarget(m)}>
+                  <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => setDeleteTarget(m)}>
                     <Trash2 className="w-3.5 h-3.5" />
                   </Button>
                 </div>
@@ -207,7 +217,7 @@ export default function ColorsTab() {
               <Label>Колір</Label>
               <div className="flex items-center gap-2">
                 <input type="color" value={form.hex_code} onChange={e => setForm(f => ({ ...f, hex_code: e.target.value }))}
-                  className="w-10 h-9 rounded border border-border cursor-pointer p-0.5" />
+                  className="h-10 w-10 rounded border border-border cursor-pointer p-0.5" />
                 <Input value={form.hex_code} onChange={e => setForm(f => ({ ...f, hex_code: e.target.value }))} className="font-mono" />
               </div>
             </div>

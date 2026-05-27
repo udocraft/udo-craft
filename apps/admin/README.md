@@ -94,6 +94,18 @@ Bidirectional chat with customers via Telegram bot integration. Messages stored 
 | Monitoring | Sentry 10 |
 | Analytics | Microsoft Clarity |
 
+---
+
+## Admin UI Memory
+
+We think in atomic consistency: every repeated admin surface should share the same parent-page anatomy unless a workflow has a strong reason to diverge.
+
+- Parent admin pages with sections or tabs use the catalog pattern: title first, tabs immediately after the title in the header row, and page-level actions on the right.
+- Tabbed parent pages expose one context-aware primary CTA in the header, such as `Додати товар`, `Нова категорія`, `Додати колір`, or `Нова таблиця`. Avoid repeating the same create action inside the active tab unless it is an empty-state recovery action.
+- Keep vertical space tight. Do not add a separate full-width tab row under the title for parent admin pages.
+- Use the shared Shadcn/Base UI primitives for selects, dropdown menus, inputs, buttons, tabs, and dialogs. Avoid native selects or one-off dropdown implementations for admin controls.
+- Default admin control height is 40px. Buttons, inputs, and select triggers should align at 40-48px; use icon-only buttons at the same floor unless the control is inside a dense table row and has a specific reason to be smaller.
+
 ### Key dependencies
 
 ```json

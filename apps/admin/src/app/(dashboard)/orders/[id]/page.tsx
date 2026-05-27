@@ -351,33 +351,27 @@ export default function OrderDetailPage() {
   const shortId = lead.id.slice(0, 8).toUpperCase();
 
   return (
-    <div className="p-4 md:p-6 space-y-6 max-w-6xl mx-auto">
-      {/* ── Page Header ── */}
-      <PageHeader
-        eyebrow="Замовлення"
-        title={`#${shortId}`}
-        actions={
-          <>
-            <Button variant="outline" size="sm" onClick={() => router.push("/orders")}>
-              <ArrowLeft className="size-4 mr-1.5" />
-              Назад
-            </Button>
-            <Button size="sm" onClick={handleSave} disabled={saving}>
-              {saving ? <Loader2 className="size-4 mr-1.5 animate-spin" /> : <Save className="size-4 mr-1.5" />}
-              Зберегти
-            </Button>
-          </>
-        }
-      />
+    <DashboardPage
+      title={`#${shortId}`}
+      eyebrow="Замовлення"
+      backHref="/orders"
+      maxWidth="7xl"
+      actions={
+        <Button size="sm" onClick={handleSave} disabled={saving}>
+          {saving ? <Loader2 className="size-4 mr-1.5 animate-spin" /> : <Save className="size-4 mr-1.5" />}
+          Зберегти
+        </Button>
+      }
+    >
+      <div className="p-4 md:p-6 space-y-6">
+        {/* ── Two-column layout ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-      {/* ── Two-column layout ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* ── Left column: contact data + order items ── */}
+          <div className="lg:col-span-2 space-y-6">
 
-        {/* ── Left column: contact data + order items ── */}
-        <div className="lg:col-span-2 space-y-6">
-
-          {/* Contact data */}
-          <Card>
+            {/* Contact data */}
+            <Card className="shadow-none border-border/60">
             <CardHeader>
               <CardTitle className="text-base">Контактні дані</CardTitle>
             </CardHeader>
@@ -859,6 +853,6 @@ export default function OrderDetailPage() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </DashboardPage>
   );
 }

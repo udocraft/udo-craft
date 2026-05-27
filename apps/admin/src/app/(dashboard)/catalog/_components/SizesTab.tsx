@@ -16,7 +16,13 @@ interface SizeChart { id: string; name: string; rows: Record<string, string>[]; 
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export default function SizesTab() {
+export default function SizesTab({
+  onCreateActionReady,
+  showSectionAction = true,
+}: {
+  onCreateActionReady?: (handler: () => void) => void;
+  showSectionAction?: boolean;
+}) {
   // Size charts
   const [charts, setCharts] = useState<SizeChart[]>([]);
   const [chartsLoading, setChartsLoading] = useState(true);
@@ -52,6 +58,12 @@ export default function SizesTab() {
     fetchCharts();
   };
 
+  const openCreate = () => setCreateDialogOpen(true);
+
+  useEffect(() => {
+    onCreateActionReady?.(openCreate);
+  }, [onCreateActionReady]);
+
   const handleDeleteChart = async () => {
     if (!deleteTarget) return;
     const r = await fetch(`/api/size-charts/${deleteTarget.id}`, { method: "DELETE" });
@@ -67,9 +79,11 @@ export default function SizesTab() {
       <Card>
         <CardHeader className="pb-3 flex flex-row items-center justify-between">
           <CardTitle className="text-sm font-semibold">Таблиці розмірів</CardTitle>
-          <Button size="sm" className="h-7 text-xs" onClick={() => setCreateDialogOpen(true)}>
-            <Plus className="w-3.5 h-3.5 mr-1" /> Нова таблиця
-          </Button>
+          {showSectionAction && (
+            <Button size="sm" onClick={openCreate}>
+              <Plus className="w-3.5 h-3.5 mr-1" /> Нова таблиця
+            </Button>
+          )}
         </CardHeader>
         <CardContent>
           {chartsLoading ? (
@@ -95,11 +109,11 @@ export default function SizesTab() {
                     </div>
                   </div>
                   <div className="flex gap-1 shrink-0">
-                    <Button variant="ghost" size="icon" className="h-7 w-7"
+                    <Button variant="ghost" size="icon"
                       onClick={() => { setEditChartId(chart.id); setEditModalOpen(true); }}>
                       <Pencil className="w-3.5 h-3.5" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive"
+                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive"
                       onClick={() => setDeleteTarget(chart)}>
                       <Trash2 className="w-3.5 h-3.5" />
                     </Button>

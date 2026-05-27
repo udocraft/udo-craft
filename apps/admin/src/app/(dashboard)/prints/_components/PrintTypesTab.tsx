@@ -56,10 +56,10 @@ export default function PrintTypesTab() {
                     <p className="text-xs text-muted-foreground mt-1">{type.desc}</p>
                   </div>
                   <div className="flex gap-1 shrink-0">
-                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleToggle(type.id)}>
+                    <Button variant="ghost" size="icon" onClick={() => handleToggle(type.id)}>
                       {type.is_active ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5 text-muted-foreground" />}
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { setEditingType(type); setEditDialogOpen(true); }}>
+                    <Button variant="ghost" size="icon" onClick={() => { setEditingType(type); setEditDialogOpen(true); }}>
                       <Pencil className="w-3.5 h-3.5" />
                     </Button>
                   </div>
@@ -111,18 +111,18 @@ export default function PrintTypesTab() {
             <div className="space-y-3 py-2">
               <div className="space-y-1">
                 <Label className="text-xs">Назва</Label>
-                <Input value={editingType.label} onChange={e => setEditingType({ ...editingType, label: e.target.value })} className="h-8 text-xs" />
+                <Input value={editingType.label} onChange={e => setEditingType({ ...editingType, label: e.target.value })} className="text-xs" />
               </div>
               <div className="space-y-1">
                 <Label className="text-xs">Опис</Label>
-                <Input value={editingType.desc} onChange={e => setEditingType({ ...editingType, desc: e.target.value })} className="h-8 text-xs" />
+                <Input value={editingType.desc} onChange={e => setEditingType({ ...editingType, desc: e.target.value })} className="text-xs" />
               </div>
               <div className="space-y-1">
                 <Label className="text-xs">Колір</Label>
                 <div className="flex items-center gap-2">
                   <input type="color" value={editingType.color} onChange={e => setEditingType({ ...editingType, color: e.target.value })}
-                    className="w-10 h-8 rounded border border-border cursor-pointer p-0.5" />
-                  <Input value={editingType.color} onChange={e => setEditingType({ ...editingType, color: e.target.value })} className="h-8 text-xs font-mono" />
+                    className="h-10 w-10 rounded border border-border cursor-pointer p-0.5" />
+                  <Input value={editingType.color} onChange={e => setEditingType({ ...editingType, color: e.target.value })} className="text-xs font-mono" />
                 </div>
               </div>
             </div>

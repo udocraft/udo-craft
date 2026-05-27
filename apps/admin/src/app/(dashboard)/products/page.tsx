@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { AdminTabs } from "@/components/admin-layout";
@@ -23,6 +23,7 @@ const TABS = [
 export default function ProductsPage() {
   const router = useRouter();
   const [tab, setTab] = useState<Tab>("products");
+  const [categoryCreate, setCategoryCreate] = useState<(() => void) | null>(null);
 
   const {
     products,
@@ -41,14 +42,23 @@ export default function ProductsPage() {
     refreshProducts();
   };
 
+  const setCategoryCreateHandler = useCallback((handler: () => void) => {
+    setCategoryCreate(() => handler);
+  }, []);
+
+  const createConfig = {
+    products: { label: "Додати товар", onClick: () => router.push("/products/new") },
+    categories: { label: "Нова категорія", onClick: categoryCreate },
+  }[tab];
+
   return (
     <DashboardPage
       title="Товари"
       tabs={<AdminTabs tabs={TABS} value={tab} onValueChange={setTab} />}
       actions={
-        tab === "products" ? (
-          <Button size="sm" onClick={() => router.push("/products/new")}>
-            Додати товар
+        createConfig?.onClick ? (
+          <Button size="sm" onClick={createConfig.onClick}>
+            {createConfig.label}
           </Button>
         ) : undefined
       }
@@ -67,6 +77,8 @@ export default function ProductsPage() {
           <CategoriesTab
             categories={categories}
             onRefresh={refresh}
+            onCreateActionReady={setCategoryCreateHandler}
+            showSectionAction={false}
           />
         )}
     </DashboardPage>

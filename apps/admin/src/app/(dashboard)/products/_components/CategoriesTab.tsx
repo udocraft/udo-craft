@@ -17,11 +17,19 @@ export interface CategoriesTabProps {
   categories: Category[];
   onRefresh: () => void;
   loading?: boolean;
+  onCreateActionReady?: (handler: () => void) => void;
+  showSectionAction?: boolean;
 }
 
 interface EditDraft { name: string; slug: string; }
 
-export function CategoriesTab({ categories: propCategories, onRefresh, loading = false }: CategoriesTabProps) {
+export function CategoriesTab({
+  categories: propCategories,
+  onRefresh,
+  loading = false,
+  onCreateActionReady,
+  showSectionAction = true,
+}: CategoriesTabProps) {
   const [categories, setCategories] = useState<Category[]>(propCategories);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | undefined>(undefined);
@@ -35,6 +43,15 @@ export function CategoriesTab({ categories: propCategories, onRefresh, loading =
   const [dragOverId, setDragOverId] = useState<string | null>(null);
 
   useEffect(() => { setCategories(propCategories); }, [propCategories]);
+
+  const openCreate = () => {
+    setEditingCategory(undefined);
+    setDialogOpen(true);
+  };
+
+  useEffect(() => {
+    onCreateActionReady?.(openCreate);
+  }, [onCreateActionReady]);
 
   // ── Inline edit ────────────────────────────────────────────────────────────
 
@@ -118,11 +135,7 @@ export function CategoriesTab({ categories: propCategories, onRefresh, loading =
       <AdminSection
         title="Категорії"
         description="Групи товарів для навігації та фільтрації"
-        actions={
-          <Button size="sm" onClick={() => { setEditingCategory(undefined); setDialogOpen(true); }}>
-            Нова категорія
-          </Button>
-        }
+        actions={showSectionAction ? <Button size="sm" onClick={openCreate}>Нова категорія</Button> : undefined}
       >
 
       {loading ? (
@@ -150,7 +163,7 @@ export function CategoriesTab({ categories: propCategories, onRefresh, loading =
           icon={Plus}
           title="Категорій ще немає"
           description="Створіть першу категорію для організації товарів"
-          action={<Button size="sm" onClick={() => { setEditingCategory(undefined); setDialogOpen(true); }}><Plus className="w-3.5 h-3.5 mr-1" /> Нова категорія</Button>}
+          action={<Button size="sm" onClick={openCreate}><Plus className="w-3.5 h-3.5 mr-1" /> Нова категорія</Button>}
         />
       ) : (
         <AdminTablePanel>
@@ -214,7 +227,7 @@ export function CategoriesTab({ categories: propCategories, onRefresh, loading =
                         value={draft.name}
                         onChange={e => setDraft(d => ({ ...d, name: e.target.value }))}
                         onKeyDown={e => { if (e.key === "Enter") saveInlineEdit(cat); if (e.key === "Escape") cancelInlineEdit(); }}
-                        className="h-7 text-sm w-full max-w-[200px]"
+                        className="text-sm w-full max-w-[200px]"
                         autoFocus
                         onClick={e => e.stopPropagation()}
                       />
@@ -230,7 +243,7 @@ export function CategoriesTab({ categories: propCategories, onRefresh, loading =
                         value={draft.slug}
                         onChange={e => setDraft(d => ({ ...d, slug: e.target.value }))}
                         onKeyDown={e => { if (e.key === "Enter") saveInlineEdit(cat); if (e.key === "Escape") cancelInlineEdit(); }}
-                        className="h-7 text-xs font-mono w-full max-w-[160px]"
+                        className="text-xs font-mono w-full max-w-[160px]"
                         onClick={e => e.stopPropagation()}
                       />
                     ) : (
@@ -242,22 +255,22 @@ export function CategoriesTab({ categories: propCategories, onRefresh, loading =
                   <TableCell onClick={e => e.stopPropagation()}>
                     {isEditing ? (
                       <div className="flex gap-1">
-                        <Button variant="ghost" size="icon" className="h-7 w-7 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                        <Button variant="ghost" size="icon" className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
                           onClick={() => saveInlineEdit(cat)} disabled={savingInline}>
                           <Check className="w-3.5 h-3.5" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground"
+                        <Button variant="ghost" size="icon" className="text-muted-foreground"
                           onClick={cancelInlineEdit}>
                           <XIcon className="w-3.5 h-3.5" />
                         </Button>
                       </div>
                     ) : (
                       <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button variant="ghost" size="icon" className="h-7 w-7"
+                        <Button variant="ghost" size="icon"
                           onClick={e => startInlineEdit(cat, e)} title="Редагувати">
                           <Pencil className="w-3.5 h-3.5" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive"
+                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive"
                           onClick={() => setDeleteTarget(cat)}>
                           <Trash2 className="w-3.5 h-3.5" />
                         </Button>

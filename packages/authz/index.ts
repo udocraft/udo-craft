@@ -1,4 +1,4 @@
-const ADMIN_PERMISSIONS = [
+export const ADMIN_PERMISSIONS = [
   "admin.access",
   "users.manage",
   "system.hard_reset",
@@ -14,9 +14,11 @@ const ADMIN_PERMISSIONS = [
   "cms.read",
   "cms.manage",
   "ai.generate",
-];
+] as const;
 
-const ROLE_PERMISSIONS = {
+export type AdminPermission = (typeof ADMIN_PERMISSIONS)[number];
+
+export const ROLE_PERMISSIONS: Record<string, AdminPermission[]> = {
   admin: [...ADMIN_PERMISSIONS],
   manager: [
     "admin.access",
@@ -37,12 +39,12 @@ const ROLE_PERMISSIONS = {
   seamstress: ["admin.access", "erp.read", "erp.manage", "messages.read"],
 };
 
-function isAdminPermission(value) {
-  return ADMIN_PERMISSIONS.includes(value);
+export function isAdminPermission(value: string): value is AdminPermission {
+  return (ADMIN_PERMISSIONS as readonly string[]).includes(value);
 }
 
-function permissionsForRoles(roles) {
-  const permissions = new Set();
+export function permissionsForRoles(roles: Iterable<string>): Set<AdminPermission> {
+  const permissions = new Set<AdminPermission>();
 
   for (const role of roles) {
     for (const permission of ROLE_PERMISSIONS[role] ?? []) {
@@ -53,15 +55,10 @@ function permissionsForRoles(roles) {
   return permissions;
 }
 
-function hasPermission(permissions, required) {
+export function hasPermission(
+  permissions: Set<AdminPermission> | AdminPermission[],
+  required: AdminPermission,
+): boolean {
   const permissionSet = permissions instanceof Set ? permissions : new Set(permissions);
   return permissionSet.has(required);
 }
-
-module.exports = {
-  ADMIN_PERMISSIONS,
-  ROLE_PERMISSIONS,
-  isAdminPermission,
-  permissionsForRoles,
-  hasPermission,
-};

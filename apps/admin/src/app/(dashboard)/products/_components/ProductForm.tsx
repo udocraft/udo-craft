@@ -223,7 +223,7 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
               </p>
               {slugManual && (
                 <Input value={slug} onChange={e => { setSlug(e.target.value); setSlugManual(true); markDirty(); }}
-                  placeholder="product-slug" className="font-mono text-sm h-8" />
+                  placeholder="product-slug" className="font-mono text-sm" />
               )}
             </div>
             <div className="space-y-1.5">
@@ -444,7 +444,7 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
               onChange={e => setCustomSizeInput(e.target.value)}
               onKeyDown={e => e.key === "Enter" && addCustomSize()}
               placeholder="Додати розмір (напр. 4XL)"
-              className="h-8 text-sm max-w-[200px]"
+              className="text-sm max-w-[200px]"
             />
             <button
               type="button"

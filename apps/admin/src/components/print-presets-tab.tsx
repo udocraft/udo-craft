@@ -34,7 +34,13 @@ const EMPTY_FORM = {
 
 // ── Component ─────────────────────────────────────────────────────────────
 
-export default function PrintPresetsTab() {
+export default function PrintPresetsTab({
+  onCreateActionReady,
+  showHeaderAction = true,
+}: {
+  onCreateActionReady?: (handler: () => void) => void;
+  showHeaderAction?: boolean;
+}) {
   const [presets, setPresets] = useState<PrintPreset[]>([]);
   const [loading, setLoading] = useState(true);
   const [tableExists, setTableExists] = useState(true);
@@ -114,6 +120,10 @@ export default function PrintPresetsTab() {
     setUploadedFileUrl(""); setUploadedThumbUrl("");
     setModalOpen(true);
   };
+
+  useEffect(() => {
+    onCreateActionReady?.(openCreate);
+  }, [onCreateActionReady]);
 
   const openEdit = (p: PrintPreset) => {
     setEditing(p);
@@ -243,9 +253,11 @@ create policy "Admins manage" on public.print_presets
           <p className="font-semibold text-sm">Готові принти</p>
           <p className="text-xs text-muted-foreground mt-0.5">Ілюстрації, доступні клієнтам у редакторі</p>
         </div>
-        <Button size="sm" onClick={openCreate} className="h-8 text-xs">
-          <Plus className="size-3.5 mr-1.5" /> Додати принт
-        </Button>
+        {showHeaderAction && (
+          <Button size="sm" onClick={openCreate}>
+            <Plus className="size-3.5 mr-1.5" /> Додати принт
+          </Button>
+        )}
       </div>
 
       {/* Grid */}

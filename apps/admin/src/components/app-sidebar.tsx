@@ -64,25 +64,39 @@ interface NavItem {
 
 type AdminRole = "admin" | "manager" | "viewer" | "seamstress" | "sewer";
 
-const SALES_NAV: NavItem[] = [
-  { title: "Замовлення",   url: "/orders",    icon: ShoppingBag,    badgeKey: "orders" },
+const CORE_NAV: NavItem[] = [
+  { title: "Аналітика",    url: "/analytics", icon: BarChart2 },
+  { title: "Відвідувачі",  url: "/visitors",  icon: Globe },
+];
+
+const CRM_NAV: NavItem[] = [
+  {
+    title: "Замовлення",
+    url: "/orders",
+    icon: ShoppingBag,
+    badgeKey: "orders",
+    children: [
+      { title: "Всі замовлення", url: "/orders" },
+      { title: "Нове замовлення", url: "/orders/new" },
+    ],
+  },
   { title: "Клієнти",      url: "/clients",   icon: Users },
   { title: "Повідомлення", url: "/messages",  icon: MessageCircleHeart, badgeKey: "messages" },
 ];
 
-const INVENTORY_NAV: NavItem[] = [
-  { title: "Склад CRM-ERP", url: "/warehouse", icon: ShelvingUnit },
+const CATALOG_NAV: NavItem[] = [
   {
     title: "Каталог",
     url: "/catalog",
     icon: Tag,
     children: [
-      { title: "Всі товари",          url: "/catalog?tab=products" },
+      { title: "Товари",              url: "/catalog?tab=products" },
       { title: "Категорії",           url: "/catalog?tab=categories" },
       { title: "Кольори та матеріали", url: "/catalog?tab=colors" },
       { title: "Розмірна сітка",      url: "/catalog?tab=sizes" },
     ],
   },
+  { title: "SKU Matrix", url: "/products", icon: FileEdit },
   {
     title: "Принти",
     url: "/prints",
@@ -93,11 +107,18 @@ const INVENTORY_NAV: NavItem[] = [
       { title: "Формати друку",      url: "/prints?tab=sizes" },
     ],
   },
-];
-
-const INSIGHTS_NAV: NavItem[] = [
-  { title: "Аналітика",    url: "/analytics", icon: BarChart2 },
-  { title: "Відвідувачі",  url: "/visitors",  icon: Globe },
+  {
+    title: "Склад",
+    url: "/warehouse",
+    icon: ShelvingUnit,
+    children: [
+      { title: "Залишки",    url: "/warehouse?tab=stock" },
+      { title: "Постачання",  url: "/warehouse?tab=receipts" },
+      { title: "Виробництво", url: "/warehouse?tab=production" },
+      { title: "Акти пошиття", url: "/warehouse?tab=acts" },
+      { title: "Переміщення", url: "/warehouse?tab=transfers" },
+    ],
+  },
 ];
 
 const SYSTEM_NAV: NavItem[] = [
@@ -157,8 +178,10 @@ export function AppSidebar({ user }: AppSidebarProps) {
 
   // Track which collapsibles are open
   const [openGroups, setOpenGroups] = React.useState<Record<string, boolean>>({
+    "/orders": pathname.startsWith("/orders"),
     "/catalog": pathname.startsWith("/catalog"),
     "/prints": pathname.startsWith("/prints"),
+    "/warehouse": pathname.startsWith("/warehouse"),
     "/cms": pathname.startsWith("/cms"),
     "/settings": pathname.startsWith("/settings"),
     "/users": pathname.startsWith("/users"),
@@ -280,6 +303,10 @@ export function AppSidebar({ user }: AppSidebarProps) {
             aria-current={isGroupActive ? "page" : undefined}
             aria-expanded={isOpen}
             onClick={(e) => {
+              if (isGroupActive) {
+                setOpenGroups((prev) => ({ ...prev, [item.url]: !prev[item.url] }));
+                return;
+              }
               const ok = handleNavClick(firstChildUrl, isGroupActive);
               if (!ok) {
                 e.preventDefault();
@@ -372,35 +399,35 @@ export function AppSidebar({ user }: AppSidebarProps) {
           </SidebarMenu>
         </SidebarGroup>
 
-        {/* Sales */}
+        {/* Group 1: Core & Analytics */}
         <SidebarGroup className="p-1">
-          <SidebarGroupLabel className="mb-1 h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/60">Продажі та CRM</SidebarGroupLabel>
+          <SidebarGroupLabel className="mb-1 h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/60">Core & Analytics</SidebarGroupLabel>
           <SidebarMenu className="gap-0.5">
-            {(isSeamstress ? SALES_NAV.filter((item) => item.url !== "/clients") : SALES_NAV).map(renderSimpleItem)}
+            {!isSeamstress && CORE_NAV.map(renderSimpleItem)}
           </SidebarMenu>
         </SidebarGroup>
 
-        {/* Inventory */}
+        {/* Group 2: CRM & Sales */}
         <SidebarGroup className="p-1">
-          <SidebarGroupLabel className="mb-1 h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/60">Інвентар</SidebarGroupLabel>
+          <SidebarGroupLabel className="mb-1 h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/60">CRM & Sales</SidebarGroupLabel>
           <SidebarMenu className="gap-0.5">
-            {(isSeamstress ? INVENTORY_NAV.filter((item) => item.url === "/warehouse") : INVENTORY_NAV).map((item) =>
+            {(isSeamstress ? CRM_NAV.filter((item) => item.url !== "/clients") : CRM_NAV).map(renderSimpleItem)}
+          </SidebarMenu>
+        </SidebarGroup>
+
+        {/* Group 3: Catalog & Production */}
+        <SidebarGroup className="p-1">
+          <SidebarGroupLabel className="mb-1 h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/60">Catalog & Production</SidebarGroupLabel>
+          <SidebarMenu className="gap-0.5">
+            {(isSeamstress ? CATALOG_NAV.filter((item) => item.url === "/warehouse") : CATALOG_NAV).map((item) =>
               item.children ? renderCollapsibleItem(item) : renderSimpleItem(item)
             )}
           </SidebarMenu>
         </SidebarGroup>
 
-        {/* Insights */}
+        {/* Group 4: System & CMS */}
         <SidebarGroup className="p-1">
-          <SidebarGroupLabel className="mb-1 h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/60">Аналітика</SidebarGroupLabel>
-          <SidebarMenu className="gap-0.5">
-            {!isSeamstress && INSIGHTS_NAV.map(renderSimpleItem)}
-          </SidebarMenu>
-        </SidebarGroup>
-
-        {/* System */}
-        <SidebarGroup className="p-1">
-          <SidebarGroupLabel className="mb-1 h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/60">Керування</SidebarGroupLabel>
+          <SidebarGroupLabel className="mb-1 h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/60">System & CMS</SidebarGroupLabel>
           <SidebarMenu className="gap-0.5">
             {!isSeamstress && SYSTEM_NAV.map((item) =>
               item.children ? renderCollapsibleItem(item) : renderSimpleItem(item)
