@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createServiceClient } from "@/lib/supabase/service";
 import { ProductDetailClient, type ProductWithMeta } from "./_client";
-import type { Material, ProductColorVariant } from "@udo-craft/shared";
+import { getAllImages, resolveProductImages, type Material, type ProductColorVariant } from "@udo-craft/shared";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -19,7 +19,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: "Товар не знайдено | U:DO Craft" };
   }
 
-  const imageUrl = prod.images?.front || Object.values(prod.images || {})[0] || "";
+  const imgs = resolveProductImages((prod as any).product_images, prod.images as Record<string, string>);
+  const imageMap = getAllImages(imgs);
+  const imageUrl = imageMap.front || Object.values(imageMap)[0] || "";
 
   return {
     title: `${prod.name} | Брендування та пошив | U:DO Craft`,
@@ -54,7 +56,9 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const allVariants = (vars ?? []) as ProductColorVariant[];
   const materialsList = (mats ?? []) as Material[];
 
-  const imageUrl = prod.images?.front || Object.values(prod.images || {})[0] || "";
+  const imgs = resolveProductImages((prod as any).product_images, prod.images as Record<string, string>);
+  const imageMap = getAllImages(imgs);
+  const imageUrl = imageMap.front || Object.values(imageMap)[0] || "";
   const marketing = prod.marketing_meta ?? {};
 
   // JSON-LD Microdata for Google Rich Snippets

@@ -21,7 +21,7 @@ import { DashboardPage } from "@/components/dashboard-page";
 import { UserPlus, Pencil, Trash2, RefreshCw, Loader2, Users, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type Role = "admin" | "manager" | "viewer" | "seamstress";
+type Role = "admin" | "manager" | "viewer" | "sewer" | "seamstress";
 type LifecycleStage = "registered_lead" | "client" | "internal_staff";
 
 interface AdminUser {
@@ -40,10 +40,10 @@ interface AdminUser {
   confirmed: boolean;
 }
 
-const ROLES: { value: Role; label: string }[] = [
+const ROLES: { value: Exclude<Role, "seamstress">; label: string }[] = [
   { value: "admin",   label: "Адмін" },
   { value: "manager", label: "Менеджер" },
-  { value: "seamstress", label: "Швея" },
+  { value: "sewer", label: "Швея" },
   { value: "viewer",  label: "Перегляд" },
 ];
 
@@ -56,6 +56,10 @@ const ROLE_PERMISSIONS: Record<Role, { title: string; description: string }> = {
     title: "Продажі та операції",
     description: "Бачить клієнтів, замовлення, повідомлення, складські процеси, виробництво і пов'язані документи.",
   },
+  sewer: {
+    title: "Виробництво і пов'язані роботи",
+    description: "Бачить склад CRM-ERP, виробничі замовлення, дефіцити, акти пошиття та замовлення, де потрібна її участь.",
+  },
   seamstress: {
     title: "Виробництво і пов'язані роботи",
     description: "Бачить склад CRM-ERP, виробничі замовлення, дефіцити, акти пошиття та замовлення, де потрібна її участь.",
@@ -66,8 +70,13 @@ const ROLE_PERMISSIONS: Record<Role, { title: string; description: string }> = {
   },
 };
 
+function normalizeRole(role: Role) {
+  return role === "seamstress" ? "sewer" : role;
+}
+
 function roleLabel(role: Role) {
-  return ROLES.find((r) => r.value === role)?.label ?? role;
+  const normalized = normalizeRole(role);
+  return ROLES.find((r) => r.value === normalized)?.label ?? normalized;
 }
 
 const STAGE_LABELS: Record<LifecycleStage, string> = {
@@ -120,7 +129,8 @@ const EMPTY_FORM = { email: "", full_name: "", role: "viewer" as Role };
 
 export default function UsersPage() {
   const searchParams = useSearchParams();
-  const filter = (searchParams.get("role") || "all") as Role | "all";
+  const rawFilter = (searchParams.get("role") || "all") as Role | "all";
+  const filter = rawFilter === "seamstress" ? "sewer" : rawFilter;
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [inviteOpen, setInviteOpen] = useState(false);
@@ -145,7 +155,9 @@ export default function UsersPage() {
 
   useEffect(() => { load(); }, [load]);
 
-  const visible = filter === "all" ? users : users.filter((u) => u.access_role === filter);
+  const visible = filter === "all"
+    ? users
+    : users.filter((u) => normalizeRole((u.access_role || "") as Role) === filter);
   const staffUsers = users.filter((u) => u.lifecycle_stage === "internal_staff");
   const registeredLeads = users.filter((u) => u.lifecycle_stage === "registered_lead");
   const clientUsers = users.filter((u) => u.lifecycle_stage === "client");
@@ -332,7 +344,13 @@ export default function UsersPage() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1 justify-end">
-                      <Button variant="ghost" size="icon" className="size-8" onClick={() => setEditUser({ ...u, role: u.access_role || "viewer" })} aria-label="Редагувати">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="size-8"
+                        onClick={() => setEditUser({ ...u, role: normalizeRole((u.access_role || "viewer") as Role) })}
+                        aria-label="Редагувати"
+                      >
                         <Pencil className="size-3.5" />
                       </Button>
                       <Button variant="ghost" size="icon" className="size-8 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => setDeleteUser(u)} aria-label="Видалити">

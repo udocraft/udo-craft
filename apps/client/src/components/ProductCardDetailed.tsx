@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight, CircleSlash, ToolCase } from "lucide-react";
-import { Product, ProductColorVariant, Material, resolveProductImages, getCustomizableImages } from "@udo-craft/shared";
+import { Product, ProductColorVariant, Material, resolveProductImages, getAllImages } from "@udo-craft/shared";
 
 interface ProductCardDetailedProps {
   product: Product;
@@ -51,7 +51,7 @@ export function ProductCardDetailed({
   // Resolve images using new model with legacy fallback
   const productImgs = resolveProductImages((product as any).product_images, product.images);
   const variantImgs = activeVariant ? resolveProductImages((activeVariant as any).variant_images, activeVariant.images) : null;
-  const currentImages = getCustomizableImages(variantImgs?.length ? variantImgs : productImgs);
+  const currentImages = getAllImages(variantImgs?.length ? variantImgs : productImgs);
   const availableImages = Object.values(currentImages).filter(Boolean);
   const imageUrl = availableImages[imgIndex % availableImages.length] ?? "";
 

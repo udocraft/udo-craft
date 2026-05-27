@@ -179,7 +179,11 @@ export function getAllImages(imgs: ProductImage[]): Record<string, string> {
   return Object.fromEntries(
     imgs
       .filter((i) => i.url)
-      .sort((a, b) => a.sort_order - b.sort_order)
+      .sort((a, b) => {
+        // Non-customizable first, then by sort_order
+        if (a.is_customizable !== b.is_customizable) return a.is_customizable ? 1 : -1;
+        return a.sort_order - b.sort_order;
+      })
       .map((i) => [i.key, i.url])
   );
 }

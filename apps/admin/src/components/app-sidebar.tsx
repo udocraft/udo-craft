@@ -62,7 +62,7 @@ interface NavItem {
   children?: NavSubItem[];
 }
 
-type AdminRole = "admin" | "manager" | "viewer" | "seamstress";
+type AdminRole = "admin" | "manager" | "viewer" | "seamstress" | "sewer";
 
 const SALES_NAV: NavItem[] = [
   { title: "Замовлення",   url: "/orders",    icon: ShoppingBag,    badgeKey: "orders" },
@@ -118,7 +118,7 @@ const SYSTEM_NAV: NavItem[] = [
       { title: "Всі",        url: "/users?role=all" },
       { title: "Адміни",     url: "/users?role=admin" },
       { title: "Менеджери",  url: "/users?role=manager" },
-      { title: "Швеї",       url: "/users?role=seamstress" },
+      { title: "Швеї",       url: "/users?role=sewer" },
       { title: "Перегляд",   url: "/users?role=viewer" },
     ],
   },
@@ -152,7 +152,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
   const [unreadMessages, setUnreadMessages] = React.useState(0);
   const [pendingUrl, setPendingUrl] = React.useState<string | null>(null);
   const role = (user.role || "viewer") as AdminRole;
-  const isSeamstress = role === "seamstress";
+  const isSeamstress = role === "seamstress" || role === "sewer";
 
   // Track which collapsibles are open
   const [openGroups, setOpenGroups] = React.useState<Record<string, boolean>>({

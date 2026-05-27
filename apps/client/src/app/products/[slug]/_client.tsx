@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Product, Material, ProductColorVariant, ProductMarketingMeta } from "@udo-craft/shared";
-import { DEFAULT_PRODUCT_FEATURE_GROUPS, getAllImages, getCustomizableImages, normalizeProductMarketingMeta, resolveProductImages } from "@udo-craft/shared";
+import { DEFAULT_PRODUCT_FEATURE_GROUPS, getAllImages, normalizeProductMarketingMeta, resolveProductImages } from "@udo-craft/shared";
 import { ArrowLeft, ArrowRight, Award, BadgeCheck, BadgePercent, Check, ChevronDown, ChevronLeft, ChevronRight, CircleSlash, Clock3, Layers3, Minus, PackageCheck, Ruler, Shield, ShieldCheck, Shirt, Tags, ToolCase, Truck, Zap, Plus } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { FooterSection } from "@/app/_sections/FooterSection";
@@ -107,8 +107,13 @@ export function ProductDetailClient({
   const [selectedSize, setSelectedSize]           = useState<string | null>(null);
   const [quantity, setQuantity]                   = useState(1);
 
-  const initialAllImgs = resolveProductImages((product as any).product_images, product.images as Record<string, string>);
-  const initialKeys = initialAllImgs.sort((a, b) => a.sort_order - b.sort_order).map((i) => i.key);
+  const initialVariant = variants[0] ?? null;
+  const initialVariantImgs = initialVariant
+    ? resolveProductImages((initialVariant as any).variant_images, initialVariant.images as Record<string, string>)
+    : null;
+  const initialProductImgs = resolveProductImages((product as any).product_images, product.images as Record<string, string>);
+  const initialImages = getAllImages(initialVariantImgs?.length ? initialVariantImgs : initialProductImgs);
+  const initialKeys = Object.keys(initialImages);
 
   const [activeImageKey, setActiveImageKey]       = useState<string>(initialKeys[0] ?? "front");
   const [imageKeys, setImageKeys]                 = useState<string[]>(initialKeys);
@@ -167,7 +172,7 @@ export function ProductDetailClient({
     const color = materials.find((m) => m.id === selectedVariant?.material_id)?.name ?? "Стандарт";
     const vImgs = selectedVariant ? resolveProductImages((selectedVariant as any).variant_images, selectedVariant.images as Record<string, string>) : null;
     const pImgs = resolveProductImages((product as any).product_images, product.images as Record<string, string>);
-    const resolvedImgs = getCustomizableImages(vImgs?.length ? vImgs : pImgs);
+    const resolvedImgs = getAllImages(vImgs?.length ? vImgs : pImgs);
     const productImage = resolvedImgs.front ?? Object.values(resolvedImgs)[0] ?? "";
 
     const cartItem = {

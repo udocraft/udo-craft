@@ -19,6 +19,19 @@ import { RefreshCw, CheckCircle2, AlertTriangle, XCircle, Clock, Loader2, Trash2
 import type { AdminHealthResponse, CheckStatus, HealthCheck } from "@/app/api/health/types";
 import { toast } from "sonner";
 
+// ── Table Groups for Hard Reset ───────────────────────────────────────────────
+
+const TABLE_GROUPS = [
+  { key: "orders",    label: "Замовлення та ліди",  tables: ["messages", "order_items", "leads", "customizer_share_comments", "customizer_shares"] },
+  { key: "catalog",   label: "Каталог",              tables: ["product_color_variants", "print_zones", "print_type_pricing", "print_areas", "size_charts", "products", "categories", "materials", "print_presets"] },
+  { key: "erp",       label: "ERP / Склад",           tables: ["erp_stock_movements", "erp_stock_transfer_lines", "erp_stock_transfers", "erp_finished_goods", "erp_processing_acts", "erp_production_order_lines", "erp_production_orders", "product_variant_recipe_lines", "product_variant_skus", "product_recipe_lines", "erp_goods_receipt_lines", "erp_goods_receipts", "erp_materials", "erp_material_types", "erp_suppliers", "erp_warehouses"] },
+  { key: "cms",       label: "CMS контент",           tables: ["cms_content"] },
+  { key: "analytics", label: "Аналітика",             tables: ["site_events"] },
+  { key: "ai",        label: "AI квоти",              tables: ["user_ai_quota"] },
+] as const;
+
+const ALL_TABLES = Array.from(new Set(TABLE_GROUPS.flatMap((g) => g.tables)));
+
 // ── Status Badge ──────────────────────────────────────────────────────────────
 
 function StatusBadge({ status }: { status: CheckStatus }) {
@@ -136,6 +149,32 @@ function LoadingSkeleton() {
   );
 }
 
+function IndeterminateCheckbox({
+  checked,
+  indeterminate,
+  disabled,
+  onChange,
+}: {
+  checked: boolean;
+  indeterminate: boolean;
+  disabled?: boolean;
+  onChange: (checked: boolean) => void;
+}) {
+  return (
+    <input
+      type="checkbox"
+      checked={checked}
+      disabled={disabled}
+      ref={(el) => {
+        if (!el) return;
+        el.indeterminate = indeterminate;
+      }}
+      onChange={(event) => onChange(event.target.checked)}
+      className="mt-0.5"
+    />
+  );
+}
+
 // ── Main Component ────────────────────────────────────────────────────────────
 
 export function SystemTab() {
@@ -146,6 +185,7 @@ export function SystemTab() {
   const [resetArmed, setResetArmed] = useState(false);
   const [resetPhrase, setResetPhrase] = useState("");
   const [resetting, setResetting] = useState(false);
+  const [selectedTables, setSelectedTables] = useState<Set<string>>(() => new Set(ALL_TABLES));
 
   const fetch_ = useCallback(async () => {
     setLoading(true);
@@ -171,7 +211,8 @@ export function SystemTab() {
   const clientChecks = data?.client && !clientIsError ? (data.client as { checks: HealthCheck[] }).checks : [];
   const clientEnv = data?.client && !clientIsError ? (data.client as { env: Record<string, boolean> }).env : null;
   const clientDeployment = data?.client && !clientIsError ? (data.client as { deployment: AdminHealthResponse["admin"]["deployment"] }).deployment : null;
-  const canHardReset = resetArmed && resetPhrase === "HARD RESET ALL DATA";
+  const tablesToReset = Array.from(selectedTables);
+  const canHardReset = resetArmed && resetPhrase === "HARD RESET ALL DATA" && selectedTables.size > 0;
 
   const hardReset = async () => {
     if (!canHardReset) return;
@@ -180,7 +221,7 @@ export function SystemTab() {
       const res = await fetch("/api/admin/hard-reset", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ confirmation: resetPhrase }),
+        body: JSON.stringify({ confirmation: resetPhrase, tables: tablesToReset }),
       });
       const body = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(body?.error ?? "Не вдалося виконати hard reset");
@@ -191,6 +232,7 @@ export function SystemTab() {
       setResetOpen(false);
       setResetArmed(false);
       setResetPhrase("");
+      setSelectedTables(new Set(ALL_TABLES));
       fetch_();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Не вдалося виконати hard reset");
@@ -303,6 +345,7 @@ export function SystemTab() {
         if (!open) {
           setResetArmed(false);
           setResetPhrase("");
+          setSelectedTables(new Set(ALL_TABLES));
         }
       }}>
         <AlertDialogContent className="max-w-md">
@@ -312,7 +355,7 @@ export function SystemTab() {
             </AlertDialogMedia>
             <AlertDialogTitle>Hard reset all data?</AlertDialogTitle>
             <AlertDialogDescription>
-              This permanently removes operational data from Supabase. This action cannot be undone.
+              This permanently removes selected data from Supabase. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="space-y-3">
@@ -324,8 +367,77 @@ export function SystemTab() {
                 className="mt-0.5"
                 disabled={resetting}
               />
-              <span>I understand this will delete all admin data except admin users.</span>
+              <span>I understand this will delete selected data except admin users.</span>
             </label>
+            <div className="rounded-lg border border-border bg-muted/40 p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold text-muted-foreground">Дані для видалення</p>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto py-0.5 px-1.5 text-xs text-muted-foreground"
+                  disabled={resetting}
+                  onClick={() =>
+                    setSelectedTables((prev) => (prev.size === ALL_TABLES.length ? new Set<string>() : new Set(ALL_TABLES)))
+                  }
+                >
+                  {selectedTables.size === ALL_TABLES.length ? "Зняти всі" : "Вибрати всі"}
+                </Button>
+              </div>
+              <div className="space-y-2">
+                {TABLE_GROUPS.map((group) => {
+                  const selectedCount = group.tables.filter((t) => selectedTables.has(t)).length;
+                  const allChecked = selectedCount === group.tables.length;
+                  const indeterminate = selectedCount > 0 && !allChecked;
+
+                  return (
+                    <div key={group.key} className="rounded-md border border-border bg-background/50">
+                      <div className="flex items-center gap-2 px-2 py-2">
+                        <IndeterminateCheckbox
+                          checked={allChecked}
+                          indeterminate={indeterminate}
+                          disabled={resetting}
+                          onChange={(checked) =>
+                            setSelectedTables((prev) => {
+                              const next = new Set(prev);
+                              if (checked) group.tables.forEach((t) => next.add(t));
+                              else group.tables.forEach((t) => next.delete(t));
+                              return next;
+                            })
+                          }
+                        />
+                        <span className="flex-1 text-sm font-medium">{group.label}</span>
+                        <span className="text-xs text-muted-foreground tabular-nums">
+                          {selectedCount}/{group.tables.length}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-1 gap-1 px-2 pb-2">
+                        {group.tables.map((table) => (
+                          <label key={table} className="flex items-center gap-2 rounded-md px-2 py-1 text-xs hover:bg-background/60 transition-colors cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={selectedTables.has(table)}
+                              onChange={(event) =>
+                                setSelectedTables((prev) => {
+                                  const next = new Set(prev);
+                                  if (event.target.checked) next.add(table);
+                                  else next.delete(table);
+                                  return next;
+                                })
+                              }
+                              disabled={resetting}
+                              className="mt-0.5"
+                            />
+                            <span className="font-mono text-muted-foreground">{table}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
             <div className="space-y-1.5">
               <p className="text-xs font-semibold text-muted-foreground">
                 Type <span className="font-mono text-foreground">HARD RESET ALL DATA</span> to confirm.
@@ -348,7 +460,7 @@ export function SystemTab() {
               onClick={hardReset}
             >
               {resetting ? <Loader2 className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
-              Delete everything
+               Видалити вибране
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
