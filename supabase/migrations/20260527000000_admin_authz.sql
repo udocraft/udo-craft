@@ -10,6 +10,13 @@ create table if not exists public.app_users (
   updated_at timestamptz not null default now()
 );
 
+alter table public.app_users add column if not exists id uuid references auth.users(id) on delete cascade;
+alter table public.app_users add column if not exists email text;
+alter table public.app_users add column if not exists full_name text;
+alter table public.app_users add column if not exists created_at timestamptz not null default now();
+alter table public.app_users add column if not exists updated_at timestamptz not null default now();
+create unique index if not exists app_users_id_key on public.app_users (id);
+
 create table if not exists public.roles (
   id uuid primary key default gen_random_uuid(),
   name text not null unique,
@@ -17,12 +24,28 @@ create table if not exists public.roles (
   created_at timestamptz not null default now()
 );
 
+alter table public.roles add column if not exists id uuid default gen_random_uuid();
+alter table public.roles add column if not exists name text;
+alter table public.roles add column if not exists description text;
+alter table public.roles add column if not exists created_at timestamptz not null default now();
+update public.roles set id = gen_random_uuid() where id is null;
+create unique index if not exists roles_id_key on public.roles (id);
+create unique index if not exists roles_name_key on public.roles (name);
+
 create table if not exists public.permissions (
   id uuid primary key default gen_random_uuid(),
   key text not null unique,
   description text,
   created_at timestamptz not null default now()
 );
+
+alter table public.permissions add column if not exists id uuid default gen_random_uuid();
+alter table public.permissions add column if not exists key text;
+alter table public.permissions add column if not exists description text;
+alter table public.permissions add column if not exists created_at timestamptz not null default now();
+update public.permissions set id = gen_random_uuid() where id is null;
+create unique index if not exists permissions_id_key on public.permissions (id);
+create unique index if not exists permissions_key_key on public.permissions (key);
 
 create table if not exists public.memberships (
   id uuid primary key default gen_random_uuid(),
@@ -34,12 +57,27 @@ create table if not exists public.memberships (
   unique (user_id, role_id)
 );
 
+alter table public.memberships add column if not exists id uuid default gen_random_uuid();
+alter table public.memberships add column if not exists user_id uuid references public.app_users(id) on delete cascade;
+alter table public.memberships add column if not exists role_id uuid references public.roles(id) on delete cascade;
+alter table public.memberships add column if not exists status text not null default 'active';
+alter table public.memberships add column if not exists created_at timestamptz not null default now();
+alter table public.memberships add column if not exists updated_at timestamptz not null default now();
+update public.memberships set id = gen_random_uuid() where id is null;
+create unique index if not exists memberships_id_key on public.memberships (id);
+create unique index if not exists memberships_user_id_role_id_key on public.memberships (user_id, role_id);
+
 create table if not exists public.role_permissions (
   role_id uuid not null references public.roles(id) on delete cascade,
   permission_id uuid not null references public.permissions(id) on delete cascade,
   created_at timestamptz not null default now(),
   primary key (role_id, permission_id)
 );
+
+alter table public.role_permissions add column if not exists role_id uuid references public.roles(id) on delete cascade;
+alter table public.role_permissions add column if not exists permission_id uuid references public.permissions(id) on delete cascade;
+alter table public.role_permissions add column if not exists created_at timestamptz not null default now();
+create unique index if not exists role_permissions_role_id_permission_id_key on public.role_permissions (role_id, permission_id);
 
 create table if not exists public.admin_audit_events (
   id uuid primary key default gen_random_uuid(),
@@ -50,6 +88,16 @@ create table if not exists public.admin_audit_events (
   metadata jsonb not null default '{}'::jsonb,
   created_at timestamptz not null default now()
 );
+
+alter table public.admin_audit_events add column if not exists id uuid default gen_random_uuid();
+alter table public.admin_audit_events add column if not exists actor_user_id uuid references auth.users(id) on delete set null;
+alter table public.admin_audit_events add column if not exists action text;
+alter table public.admin_audit_events add column if not exists resource_type text;
+alter table public.admin_audit_events add column if not exists resource_id text;
+alter table public.admin_audit_events add column if not exists metadata jsonb not null default '{}'::jsonb;
+alter table public.admin_audit_events add column if not exists created_at timestamptz not null default now();
+update public.admin_audit_events set id = gen_random_uuid() where id is null;
+create unique index if not exists admin_audit_events_id_key on public.admin_audit_events (id);
 
 alter table public.app_users enable row level security;
 alter table public.roles enable row level security;
