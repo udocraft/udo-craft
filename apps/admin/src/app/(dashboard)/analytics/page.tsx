@@ -361,7 +361,7 @@ interface AnalyticsData {
   visitorToAccountRate: number;
   accountToClientRate: number;
   staffTotal: number;
-  staffByRole: { admins: number; managers: number; production: number; viewers: number };
+  staffByRole: { admins: number; managers: number; production: number };
   completedOrders: number; completedOrdersPrev: number;
   warehouseItems: number;
   warehouseStockValue: number;

@@ -33,15 +33,6 @@ const ROLE_PERMISSIONS = {
     "ai.generate",
     "system.health",
   ],
-  viewer: [
-    "admin.access",
-    "catalog.read",
-    "erp.read",
-    "messages.read",
-    "analytics.read",
-    "cms.read",
-    "system.health",
-  ],
   sewer: ["admin.access", "erp.read", "erp.manage", "messages.read"],
   seamstress: ["admin.access", "erp.read", "erp.manage", "messages.read"],
 };

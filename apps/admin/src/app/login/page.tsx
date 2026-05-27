@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 
 type View = "login" | "forgot" | "otp" | "new-password" | "done";
 
-const ALLOWED_ROLES = ["admin", "manager", "viewer", "seamstress", "sewer"];
+const ALLOWED_ROLES = ["admin", "manager", "seamstress", "sewer"];
 
 export default function LoginPage() {
   const [view, setView] = useState<View>("login");

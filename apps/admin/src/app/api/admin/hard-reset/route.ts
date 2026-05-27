@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 import { requireAdminPermission } from "@/lib/authz/guard";
 import { logAdminAuditEvent } from "@/lib/authz/audit";
 import { createServiceClient } from "@/lib/supabase/service";
+import { getSupabasePublicEnv } from "@/lib/supabase/env";
 
-const CONFIRMATION_PHRASE = "HARD RESET ALL DATA";
+const CONFIRMATION_PHRASE = "hard reset";
 
 const RESET_TABLES = [
   "customizer_share_comments",
@@ -56,6 +58,26 @@ export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => ({}));
   if (body?.confirmation !== CONFIRMATION_PHRASE) {
     return NextResponse.json({ error: "Confirmation phrase mismatch" }, { status: 400 });
+  }
+
+  if (!authz.user.email || typeof body?.password !== "string" || body.password.length === 0) {
+    return NextResponse.json({ error: "Admin password is required" }, { status: 400 });
+  }
+
+  const { url, anonKey } = getSupabasePublicEnv();
+  const verifier = createClient(url, anonKey, {
+    auth: {
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+      persistSession: false,
+    },
+  });
+  const { error: passwordError } = await verifier.auth.signInWithPassword({
+    email: authz.user.email,
+    password: body.password,
+  });
+  if (passwordError) {
+    return NextResponse.json({ error: "Invalid admin password" }, { status: 401 });
   }
 
   const allowedSet = new Set<string>(RESET_TABLES);

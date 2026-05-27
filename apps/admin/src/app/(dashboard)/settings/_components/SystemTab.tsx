@@ -184,6 +184,7 @@ export function SystemTab() {
   const [resetOpen, setResetOpen] = useState(false);
   const [resetArmed, setResetArmed] = useState(false);
   const [resetPhrase, setResetPhrase] = useState("");
+  const [resetPassword, setResetPassword] = useState("");
   const [resetting, setResetting] = useState(false);
   const [selectedTables, setSelectedTables] = useState<Set<string>>(() => new Set(ALL_TABLES));
 
@@ -212,7 +213,7 @@ export function SystemTab() {
   const clientEnv = data?.client && !clientIsError ? (data.client as { env: Record<string, boolean> }).env : null;
   const clientDeployment = data?.client && !clientIsError ? (data.client as { deployment: AdminHealthResponse["admin"]["deployment"] }).deployment : null;
   const tablesToReset = Array.from(selectedTables);
-  const canHardReset = resetArmed && resetPhrase === "HARD RESET ALL DATA" && selectedTables.size > 0;
+  const canHardReset = resetArmed && resetPhrase === "hard reset" && resetPassword.length > 0 && selectedTables.size > 0;
 
   const hardReset = async () => {
     if (!canHardReset) return;
@@ -221,7 +222,7 @@ export function SystemTab() {
       const res = await fetch("/api/admin/hard-reset", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ confirmation: resetPhrase, tables: tablesToReset }),
+        body: JSON.stringify({ confirmation: resetPhrase, password: resetPassword, tables: tablesToReset }),
       });
       const body = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(body?.error ?? "Не вдалося виконати hard reset");
@@ -232,6 +233,7 @@ export function SystemTab() {
       setResetOpen(false);
       setResetArmed(false);
       setResetPhrase("");
+      setResetPassword("");
       setSelectedTables(new Set(ALL_TABLES));
       fetch_();
     } catch (err) {
@@ -345,11 +347,12 @@ export function SystemTab() {
         if (!open) {
           setResetArmed(false);
           setResetPhrase("");
+          setResetPassword("");
           setSelectedTables(new Set(ALL_TABLES));
         }
       }}>
-        <AlertDialogContent className="max-w-md">
-          <AlertDialogHeader>
+        <AlertDialogContent className="max-h-[calc(100vh-2rem)] max-w-[calc(100vw-2rem)] gap-0 overflow-hidden p-0 sm:max-w-2xl">
+          <AlertDialogHeader className="p-4 pb-3 sm:p-5 sm:pb-3">
             <AlertDialogMedia className="bg-destructive/10 text-destructive">
               <Trash2 className="size-5" />
             </AlertDialogMedia>
@@ -358,7 +361,7 @@ export function SystemTab() {
               This permanently removes selected data from Supabase. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <div className="space-y-3">
+          <div className="max-h-[calc(100vh-15rem)] space-y-3 overflow-y-auto px-4 pb-4 sm:px-5">
             <label className="flex items-start gap-2 rounded-lg border border-destructive/20 bg-destructive/5 p-3 text-sm">
               <input
                 type="checkbox"
@@ -385,7 +388,7 @@ export function SystemTab() {
                   {selectedTables.size === ALL_TABLES.length ? "Зняти всі" : "Вибрати всі"}
                 </Button>
               </div>
-              <div className="space-y-2">
+              <div className="max-h-[34vh] space-y-2 overflow-y-auto pr-1">
                 {TABLE_GROUPS.map((group) => {
                   const selectedCount = group.tables.filter((t) => selectedTables.has(t)).length;
                   const allChecked = selectedCount === group.tables.length;
@@ -393,7 +396,7 @@ export function SystemTab() {
 
                   return (
                     <div key={group.key} className="rounded-md border border-border bg-background/50">
-                      <div className="flex items-center gap-2 px-2 py-2">
+                      <div className="flex items-center gap-2 px-3 py-2">
                         <IndeterminateCheckbox
                           checked={allChecked}
                           indeterminate={indeterminate}
@@ -412,7 +415,7 @@ export function SystemTab() {
                           {selectedCount}/{group.tables.length}
                         </span>
                       </div>
-                      <div className="grid grid-cols-1 gap-1 px-2 pb-2">
+                      <div className="grid max-h-40 grid-cols-1 gap-1 overflow-y-auto px-3 pb-3 sm:grid-cols-2">
                         {group.tables.map((table) => (
                           <label key={table} className="flex items-center gap-2 rounded-md px-2 py-1 text-xs hover:bg-background/60 transition-colors cursor-pointer">
                             <input
@@ -440,7 +443,7 @@ export function SystemTab() {
             </div>
             <div className="space-y-1.5">
               <p className="text-xs font-semibold text-muted-foreground">
-                Type <span className="font-mono text-foreground">HARD RESET ALL DATA</span> to confirm.
+                Type <span className="font-mono text-foreground">hard reset</span> to confirm.
               </p>
               <Input
                 value={resetPhrase}
@@ -450,8 +453,20 @@ export function SystemTab() {
                 className="font-mono"
               />
             </div>
+            <div className="space-y-1.5">
+              <p className="text-xs font-semibold text-muted-foreground">
+                Enter your admin password.
+              </p>
+              <Input
+                type="password"
+                value={resetPassword}
+                onChange={(event) => setResetPassword(event.target.value)}
+                disabled={resetting}
+                autoComplete="current-password"
+              />
+            </div>
           </div>
-          <AlertDialogFooter>
+          <AlertDialogFooter className="m-0 rounded-none">
             <AlertDialogCancel disabled={resetting}>Cancel</AlertDialogCancel>
             <AlertDialogAction
               type="button"
@@ -460,7 +475,7 @@ export function SystemTab() {
               onClick={hardReset}
             >
               {resetting ? <Loader2 className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
-               Видалити вибране
+              Видалити вибране
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

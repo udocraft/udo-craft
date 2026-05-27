@@ -163,7 +163,6 @@ export async function GET(request: NextRequest) {
         admins: staffByRole.admin || 0,
         managers: staffByRole.manager || 0,
         production: (staffByRole.seamstress || 0) + (staffByRole.sewer || 0),
-        viewers: staffByRole.viewer || 0,
       },
       completedOrders: completed.length, completedOrdersPrev: completedPrev.length,
       warehouseItems,

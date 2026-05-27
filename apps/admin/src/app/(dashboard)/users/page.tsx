@@ -44,7 +44,6 @@ const ROLES: { value: Exclude<Role, "seamstress">; label: string }[] = [
   { value: "admin",   label: "Адмін" },
   { value: "manager", label: "Менеджер" },
   { value: "sewer", label: "Швея" },
-  { value: "viewer",  label: "Перегляд" },
 ];
 
 const ROLE_PERMISSIONS: Record<Role, { title: string; description: string }> = {
@@ -63,10 +62,6 @@ const ROLE_PERMISSIONS: Record<Role, { title: string; description: string }> = {
   seamstress: {
     title: "Виробництво і пов'язані роботи",
     description: "Бачить склад CRM-ERP, виробничі замовлення, дефіцити, акти пошиття та замовлення, де потрібна її участь.",
-  },
-  viewer: {
-    title: "Лише перегляд",
-    description: "Має огляд даних без операційної відповідальності за CRUD-процеси та керування користувачами.",
   },
 };
 
@@ -172,8 +167,19 @@ export default function UsersPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+
+      let data: any = {};
+      const text = await res.text();
+      if (text) {
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          console.error("[invite] JSON parse failed:", e, text);
+        }
+      }
+
+      if (!res.ok) throw new Error(data.error || `Помилка ${res.status}`);
+
       toast.success(`Запрошення надіслано на ${form.email}`);
       setInviteOpen(false);
       setForm(EMPTY_FORM);
@@ -455,6 +461,10 @@ export default function UsersPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+    </DashboardPage>
+  );
+}
+lertDialog>
     </DashboardPage>
   );
 }

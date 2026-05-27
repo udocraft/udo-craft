@@ -170,6 +170,8 @@ export function CartSummary({
           },
           total_amount_cents: Math.round(totalCents),
           order_items: orderItems,
+          visitor_id: getVisitorId(),
+          session_id: getSessionId(),
           initial_message: [
             contact.comment ? `Коментар: ${contact.comment}` : null,
             contact.source ? `Як дізнались: ${contact.source}${contact.sourceDetails ? ` — ${contact.sourceDetails}` : ""}` : null,

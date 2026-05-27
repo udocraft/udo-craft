@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ id: "bot-rejected" }, { status: 200 });
     }
 
-    const { order_items, initial_message } = body;
+    const { order_items, initial_message, visitor_id, session_id } = body;
     // attachments is an extra field not covered by CreateLeadSchema — read from raw body
     const attachments: string[] = body.customer_data?.attachments ?? [];
 
@@ -56,6 +56,8 @@ export async function POST(request: NextRequest) {
       status,
       customer_data,
       total_amount_cents: total_amount_cents || 0,
+      visitor_id,
+      session_id,
     };
 
     const { data: lead, error: leadError } = hasServiceRoleKey

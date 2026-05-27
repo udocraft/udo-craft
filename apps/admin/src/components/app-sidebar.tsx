@@ -97,6 +97,7 @@ const INVENTORY_NAV: NavItem[] = [
 
 const INSIGHTS_NAV: NavItem[] = [
   { title: "Аналітика",    url: "/analytics", icon: BarChart2 },
+  { title: "Відвідувачі",  url: "/visitors",  icon: Globe },
 ];
 
 const SYSTEM_NAV: NavItem[] = [
@@ -151,7 +152,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
   const [badges, setBadges] = React.useState({ orders: 0, messages: 0 });
   const [unreadMessages, setUnreadMessages] = React.useState(0);
   const [pendingUrl, setPendingUrl] = React.useState<string | null>(null);
-  const role = (user.role || "viewer") as AdminRole;
+  const role = (user.role || "manager") as AdminRole;
   const isSeamstress = role === "seamstress" || role === "sewer";
 
   // Track which collapsibles are open

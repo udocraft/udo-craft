@@ -24,6 +24,14 @@ function getOrCreateSession(): string {
   return sessionStorage.getItem(key) || crypto.randomUUID();
 }
 
+export function getVisitorId(): string {
+  return getOrCreateId("udo_visitor");
+}
+
+export function getSessionId(): string {
+  return getOrCreateSession();
+}
+
 type EventType =
   | "pageview"
   | "session_start"
