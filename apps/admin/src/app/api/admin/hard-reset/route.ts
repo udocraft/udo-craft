@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { requireAdminPermission } from "@/lib/authz/guard";
+import { logAdminAuditEvent } from "@/lib/authz/audit";
 import { createServiceClient } from "@/lib/supabase/service";
 
 const CONFIRMATION_PHRASE = "HARD RESET ALL DATA";
@@ -45,10 +46,11 @@ function isMissingTableError(message: string) {
 }
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (authError || !user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const authz = await requireAdminPermission("system.hard_reset");
+  if (!authz.ok) return authz.response;
+
+  if (process.env.NODE_ENV === "production" && process.env.HARD_RESET_ENABLED !== "true") {
+    return NextResponse.json({ error: "Hard reset is disabled" }, { status: 403 });
   }
 
   const body = await request.json().catch(() => ({}));
@@ -56,10 +58,24 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Confirmation phrase mismatch" }, { status: 400 });
   }
 
+  const allowedSet = new Set<string>(RESET_TABLES);
+  let tablesToReset: readonly string[] = RESET_TABLES;
+
+  if (Array.isArray(body.tables) && body.tables.length > 0) {
+    const invalid = body.tables.filter((t: unknown) => typeof t !== "string" || !allowedSet.has(t));
+    if (invalid.length > 0) {
+      return NextResponse.json(
+        { error: `Invalid tables: ${invalid.join(", ")}` },
+        { status: 400 },
+      );
+    }
+    tablesToReset = body.tables as string[];
+  }
+
   const service = createServiceClient();
   const results: Array<{ table: string; deleted: number | null; skipped?: boolean }> = [];
 
-  for (const table of RESET_TABLES) {
+  for (const table of tablesToReset) {
     const { count, error } = await service
       .from(table)
       .delete({ count: "exact" })
@@ -80,9 +96,16 @@ export async function POST(request: NextRequest) {
     results.push({ table, deleted: count ?? null });
   }
 
+  await logAdminAuditEvent({
+    actorUserId: authz.user.id,
+    action: "system.hard_reset",
+    resourceType: "database",
+    metadata: { tables: tablesToReset, results },
+  });
+
   return NextResponse.json({
     ok: true,
-    reset_by: user.email ?? user.id,
+    reset_by: authz.user.email ?? authz.user.id,
     results,
   });
 }

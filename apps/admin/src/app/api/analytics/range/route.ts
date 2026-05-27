@@ -62,13 +62,21 @@ export async function GET(request: NextRequest) {
     const its = items || [];
     const mats = materials || [];
     const users = authUsers?.users || [];
-    const internalRoles = new Set(["admin", "manager", "viewer", "seamstress"]);
-    const staffByRole = users.reduce<Record<string, number>>((acc, user) => {
-      const role = String(user.user_metadata?.role || "");
-      if (internalRoles.has(role)) acc[role] = (acc[role] || 0) + 1;
+    const { data: memberships } = await supabase
+      .from("memberships")
+      .select("user_id, roles(name)")
+      .eq("status", "active")
+      .in("user_id", users.map((user) => user.id));
+    const rolesByUser = new Map(
+      ((memberships || []) as Array<{ user_id: string; roles?: { name?: string } | null }>)
+        .filter((membership) => membership.roles?.name)
+        .map((membership) => [membership.user_id, membership.roles!.name!]),
+    );
+    const staffByRole = Array.from(rolesByUser.values()).reduce<Record<string, number>>((acc, role) => {
+      acc[role] = (acc[role] || 0) + 1;
       return acc;
     }, {});
-    const externalAccounts = users.filter((user) => !internalRoles.has(String(user.user_metadata?.role || "")));
+    const externalAccounts = users.filter((user) => !rolesByUser.has(user.id));
 
     const sessions = new Set(ev.filter((e) => e.event_type === "session_start").map((e) => e.session_id)).size;
     const sessionsPrev = new Set(pev.filter((e) => e.event_type === "session_start").map((e) => e.session_id)).size;
@@ -154,7 +162,7 @@ export async function GET(request: NextRequest) {
       staffByRole: {
         admins: staffByRole.admin || 0,
         managers: staffByRole.manager || 0,
-        production: staffByRole.seamstress || 0,
+        production: (staffByRole.seamstress || 0) + (staffByRole.sewer || 0),
         viewers: staffByRole.viewer || 0,
       },
       completedOrders: completed.length, completedOrdersPrev: completedPrev.length,

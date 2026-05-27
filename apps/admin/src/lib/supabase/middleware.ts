@@ -1,6 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { getSupabasePublicEnv } from "@/lib/supabase/env";
+import { requireAdminPermissionForRequest } from "@/lib/authz/guard";
+import { permissionForAdminApi } from "@/lib/authz/permissions";
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -44,31 +46,28 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const apiPermission = permissionForAdminApi(request);
+  if (request.nextUrl.pathname.startsWith("/api/")) {
+    if (!apiPermission) return supabaseResponse;
+
+    const authz = await requireAdminPermissionForRequest(request, apiPermission);
+    return authz.ok ? supabaseResponse : authz.response;
+  }
+
   const isPublicPath =
     request.nextUrl.pathname.startsWith("/login") ||
     request.nextUrl.pathname.startsWith("/auth") ||
     request.nextUrl.pathname.startsWith("/reset-password");
 
-  // Only users explicitly granted an internal role may access the dashboard.
-  // Regular client-side signups have no role set — they are rejected.
-  const ALLOWED_ROLES = ["admin", "manager", "viewer", "seamstress"];
-  const role: string | undefined = user?.user_metadata?.role;
-  const isAdminUser = !!role && ALLOWED_ROLES.includes(role);
+  const authz = user
+    ? await requireAdminPermissionForRequest(request, "admin.access")
+    : null;
+  const isAdminUser = !!authz?.ok;
 
   if (!isPublicPath && (!user || !isAdminUser)) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/login";
     return NextResponse.redirect(redirectUrl);
-  }
-
-  if (role === "seamstress" && !request.nextUrl.pathname.startsWith("/api")) {
-    const allowedForSeamstress = ["/warehouse", "/erp", "/orders", "/messages"];
-    const canView = allowedForSeamstress.some((path) => request.nextUrl.pathname.startsWith(path));
-    if (!isPublicPath && !canView) {
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = "/warehouse";
-      return NextResponse.redirect(redirectUrl);
-    }
   }
 
   if (user && isAdminUser && request.nextUrl.pathname.startsWith("/login")) {

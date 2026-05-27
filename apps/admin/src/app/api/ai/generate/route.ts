@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { requireAdminPermission } from "@/lib/authz/guard";
+import { createServiceClient } from "@/lib/supabase/service";
 
 export const maxDuration = 60;
 
@@ -42,9 +44,38 @@ Rules:
 - If the request is unrelated to merch visualization, generate the closest valid merch visualization you can.`;
 
 export async function POST(request: Request) {
+  const authz = await requireAdminPermission("ai.generate");
+  if (!authz.ok) return authz.response;
+
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return NextResponse.json({ error: "AI generation is not configured" }, { status: 500 });
+  }
+
+  const service = createServiceClient();
+  const quotaLimit = Number(process.env.AI_GENERATION_LIMIT ?? "3");
+  const { data: quota, error: quotaError } = await service
+    .from("user_ai_quota")
+    .select("attempts_used")
+    .eq("user_id", authz.user.id)
+    .maybeSingle();
+
+  if (quotaError) {
+    console.error("[ai/generate] quota check failed", quotaError);
+    return NextResponse.json({ error: "Unable to verify AI quota" }, { status: 503 });
+  }
+
+  if ((quota?.attempts_used ?? 0) >= quotaLimit) {
+    return NextResponse.json({ error: "AI quota exceeded" }, { status: 429 });
+  }
+
+  const { error: incrementError } = await service.rpc("increment_ai_quota", {
+    p_user_id: authz.user.id,
+  });
+
+  if (incrementError) {
+    console.error("[ai/generate] quota increment failed", incrementError);
+    return NextResponse.json({ error: "Unable to reserve AI quota" }, { status: 503 });
   }
 
   const { prompt, contextDescription, imageDataUrl, canvasDataUrl, hasSelfie, systemPrompt, mode } = await request.json() as {

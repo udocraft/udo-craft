@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build --no-lint",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
@@ -23,6 +23,7 @@
     "@tiptap/core": "^2.11.5",
     "@tiptap/pm": "^2.11.5",
     "@types/fabric": "^5.3.11",
+    "@udo-craft/authz": "^1.0.0",
     "@udo-craft/shared": "^1.0.0",
     "@udo-craft/ui": "^1.0.0",
     "@vercel/analytics": "^2.0.1",

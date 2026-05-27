@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service";
+import { listUserRoles, setUserRole } from "@/lib/authz/memberships";
 
 // POST /api/users/set-role
-// Bootstrap endpoint — sets role on the calling user's own account.
-// Only works if the user has NO role yet (prevents privilege escalation).
-// Remove or disable this route after initial setup.
+// Bootstrap endpoint — grants the first admin role through server-owned
+// memberships. It is gated by BOOTSTRAP_SECRET and should be removed after setup.
 export async function POST(req: NextRequest) {
   const { email, secret } = await req.json();
 
@@ -25,15 +25,17 @@ export async function POST(req: NextRequest) {
   const user = list.users.find((u) => u.email === email);
   if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
-  // Only bootstrap if no role is set yet
-  if (user.user_metadata?.role) {
-    return NextResponse.json({ error: "User already has a role: " + user.user_metadata.role }, { status: 400 });
+  const rolesByUser = await listUserRoles([user.id]);
+  if (rolesByUser.has(user.id)) {
+    return NextResponse.json({ error: "User already has an app role" }, { status: 400 });
   }
 
-  const { data, error } = await service.auth.admin.updateUserById(user.id, {
-    user_metadata: { ...user.user_metadata, role: "admin" },
+  await setUserRole({
+    userId: user.id,
+    email: user.email,
+    fullName: user.user_metadata?.full_name ?? "",
+    role: "admin",
   });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ ok: true, user: data.user });
+  return NextResponse.json({ ok: true, user });
 }

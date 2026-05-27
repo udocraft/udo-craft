@@ -1,0 +1,10 @@
+{
+  "name": "@udo-craft/authz",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "node --test index.test.js"
+  }
+}

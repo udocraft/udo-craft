@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
+import { listUserRoles } from "@/lib/authz/memberships";
 
 type SearchResult = {
   id: string;
@@ -60,6 +61,7 @@ export async function GET(request: NextRequest) {
   if (productsRes.error) return NextResponse.json({ error: productsRes.error.message }, { status: 500 });
   if (categoriesRes.error) return NextResponse.json({ error: categoriesRes.error.message }, { status: 500 });
   if (usersRes.error) return NextResponse.json({ error: usersRes.error.message }, { status: 500 });
+  const rolesByUser = await listUserRoles(usersRes.data.users.map((adminUser) => adminUser.id));
 
   const leads = leadsRes.data || [];
   const orderResults: SearchResult[] = leads
@@ -122,13 +124,13 @@ export async function GET(request: NextRequest) {
     }));
 
   const userResults: SearchResult[] = usersRes.data.users
-    .filter((adminUser) => matches(query, adminUser.email, adminUser.user_metadata?.full_name, adminUser.user_metadata?.role))
+    .filter((adminUser) => matches(query, adminUser.email, adminUser.user_metadata?.full_name, rolesByUser.get(adminUser.id)))
     .slice(0, 6)
     .map((adminUser) => ({
       id: `user:${adminUser.id}`,
       type: "user",
       title: adminUser.user_metadata?.full_name || adminUser.email || "Користувач",
-      subtitle: [adminUser.email, adminUser.user_metadata?.role || "viewer"].filter(Boolean).join(" · "),
+      subtitle: [adminUser.email, rolesByUser.get(adminUser.id) || "client"].filter(Boolean).join(" · "),
       url: "/users",
       actionLabel: "Керувати",
     }));
