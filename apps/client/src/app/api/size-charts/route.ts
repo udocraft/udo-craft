@@ -8,7 +8,7 @@ export async function GET() {
     const supabase = createServiceClient();
     const { data, error } = await supabase
       .from("size_charts")
-      .select("id, name, rows")
+      .select("id, name, rows, image_url")
       .order("created_at", { ascending: false });
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });

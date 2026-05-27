@@ -25,7 +25,7 @@ import { ProductVariantSkus } from "./ProductVariantSkus";
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 interface Category { id: string; name: string; slug: string; is_active: boolean; sort_order: number; }
-interface SizeChart { id: string; name: string; rows: Record<string, string>[]; }
+interface SizeChart { id: string; name: string; rows: Record<string, string>[]; image_url?: string | null; }
 interface PrintArea { id: string; name: string; label: string; }
 
 export interface ProductFormData {
@@ -83,14 +83,14 @@ export function slugify(s: string) {
     .replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "").replace(/-+/g, "-").replace(/^-|-$/g, "");
 }
 
-// Default sizes from catalog settings (localStorage)
-function getDefaultSizes(): string[] {
-  if (typeof window === "undefined") return ["S", "M", "L", "XL"];
-  try {
-    const stored = localStorage.getItem("catalog_available_sizes");
-    return stored ? JSON.parse(stored) : ["S", "M", "L", "XL"];
-  } catch { return ["S", "M", "L", "XL"]; }
-}
+const SIZE_PRESETS = [
+  { label: "Одяг", sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL"] },
+  { label: "Взуття", sizes: ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46"] },
+  { label: "Дитячі", sizes: ["92", "104", "116", "128", "140", "152", "164"] },
+  { label: "Один розмір", sizes: ["One Size"] },
+];
+
+const DEFAULT_ITEM_SIZES = SIZE_PRESETS[0].sizes;
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
@@ -106,7 +106,7 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
   const [sizeChartId, setSizeChartId] = useState<string>(product?.size_chart_id ?? "");
   const [printAreaIds, setPrintAreaIds] = useState<string[]>(product?.print_area_ids ?? []);
   const [availableSizes, setAvailableSizes] = useState<string[]>(
-    product?.available_sizes?.length ? product.available_sizes : getDefaultSizes()
+    product?.available_sizes?.length ? product.available_sizes : DEFAULT_ITEM_SIZES
   );
   const initialMeta = normalizeProductMarketingMeta(product?.marketing_meta);
   const [discountRows, setDiscountRows] = useState(
@@ -136,10 +136,17 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
   };
 
   const addCustomSize = () => {
-    const v = customSizeInput.trim().toUpperCase();
+    const raw = customSizeInput.trim();
+    const v = raw.toLowerCase() === "one size" ? "One Size" : raw.toUpperCase();
     if (!v || availableSizes.includes(v)) return;
     setAvailableSizes(prev => [...prev, v]);
     setCustomSizeInput("");
+    markDirty();
+  };
+
+  const applySizePreset = (preset: string[], replace = false) => {
+    const next = replace ? [...preset] : [...availableSizes, ...preset.filter((size) => !availableSizes.includes(size))];
+    setAvailableSizes(next);
     markDirty();
   };
 
@@ -177,10 +184,7 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
     });
   };
 
-  // All catalog sizes for the size picker
-  const allCatalogSizes = getDefaultSizes();
-  // Sizes not in catalog but added to this product
-  const extraSizes = availableSizes.filter(s => !allCatalogSizes.includes(s));
+  const suggestedSizes = Array.from(new Set([...DEFAULT_ITEM_SIZES, ...availableSizes]));
 
   return (
     <div className="space-y-5">
@@ -392,11 +396,29 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
           )}
         </CardHeader>
         <CardContent className="space-y-3">
-          <p className="text-xs text-muted-foreground">Оберіть доступні розміри для цього товару</p>
+          <p className="text-xs text-muted-foreground">Налаштуйте доступні розміри саме для цього товару. Картки та сторінка товару беруть значення звідси.</p>
 
-          {/* Catalog sizes as toggleable chips */}
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {SIZE_PRESETS.map((preset) => (
+              <div key={preset.label} className="flex items-center justify-between gap-3 rounded-lg border border-border p-2.5">
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold">{preset.label}</p>
+                  <p className="truncate font-mono text-[10px] text-muted-foreground">{preset.sizes.join(", ")}</p>
+                </div>
+                <div className="flex shrink-0 gap-1">
+                  <button type="button" onClick={() => applySizePreset(preset.sizes)} className="rounded-md border border-border px-2 py-1 text-[10px] font-semibold text-muted-foreground hover:text-foreground">
+                    Додати
+                  </button>
+                  <button type="button" onClick={() => applySizePreset(preset.sizes, true)} className="rounded-md border border-border px-2 py-1 text-[10px] font-semibold text-muted-foreground hover:text-foreground">
+                    Замінити
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-6">
-            {allCatalogSizes.map(size => {
+            {suggestedSizes.map(size => {
               const active = availableSizes.includes(size);
               return (
                 <button
@@ -413,15 +435,6 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
                 </button>
               );
             })}
-            {/* Extra sizes not in catalog */}
-            {extraSizes.map(size => (
-              <span key={size} className="inline-flex h-10 items-center justify-center gap-1 rounded-lg border border-primary/40 bg-primary/5 px-3 text-sm font-medium text-primary">
-                {size}
-                <button type="button" onClick={() => toggleSize(size)} className="hover:text-destructive transition-colors">
-                  <X className="w-3 h-3" />
-                </button>
-              </span>
-            ))}
           </div>
 
           {/* Add custom size */}

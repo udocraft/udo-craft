@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
 
   const { data, error: dbErr } = await svc()
     .from("size_charts")
-    .insert({ name: body.name, rows: body.rows || [] })
+    .insert({ name: body.name, rows: body.rows || [], image_url: body.image_url || null })
     .select()
     .single();
 

@@ -263,6 +263,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
   const renderCollapsibleItem = (item: NavItem) => {
     const isGroupActive = pathname.startsWith(item.url);
     const isOpen = openGroups[item.url] ?? isGroupActive;
+    const firstChildUrl = item.children?.[0]?.url ?? item.url;
 
     return (
       <Collapsible
@@ -277,7 +278,15 @@ export function AppSidebar({ user }: AppSidebarProps) {
             isActive={isGroupActive}
             aria-current={isGroupActive ? "page" : undefined}
             aria-expanded={isOpen}
-            onClick={() => setOpenGroups((prev) => ({ ...prev, [item.url]: !isOpen }))}
+            onClick={(e) => {
+              const ok = handleNavClick(firstChildUrl, isGroupActive);
+              if (!ok) {
+                e.preventDefault();
+                return;
+              }
+              setOpenGroups((prev) => ({ ...prev, [item.url]: true }));
+              router.push(firstChildUrl);
+            }}
             className="h-8 gap-2 px-2.5 py-1.5 text-[13px] transition-colors group-data-[collapsible=icon]:mx-auto"
         >
           <item.icon className={`transition-colors ${isGroupActive ? "text-primary" : "text-muted-foreground"}`} />

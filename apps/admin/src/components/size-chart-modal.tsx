@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Trash2, X } from "lucide-react";
+import { ImagePlus, Loader2, Plus, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface SizeChartRow { [col: string]: string; }
-interface SizeChart { id: string; name: string; rows: SizeChartRow[]; }
+interface SizeChart { id: string; name: string; rows: SizeChartRow[]; image_url?: string | null; }
 
 interface Props {
   chartId: string | null;
@@ -26,6 +26,8 @@ export function SizeChartModal({ chartId, open, onOpenChange, editable = false, 
   const [rows, setRows] = useState<SizeChartRow[]>([]);
   const [columns, setColumns] = useState<string[]>(["Розмір", "Груди (см)", "Талія (см)", "Стегна (см)"]);
   const [newCol, setNewCol] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
     if (!open || !chartId) return;
@@ -37,6 +39,7 @@ export function SizeChartModal({ chartId, open, onOpenChange, editable = false, 
         if (found) {
           setChart(found);
           setName(found.name);
+          setImageUrl(found.image_url ?? "");
           const r = found.rows ?? [];
           setRows(r);
           if (r.length > 0) setColumns(Object.keys(r[0]));
@@ -76,11 +79,27 @@ export function SizeChartModal({ chartId, open, onOpenChange, editable = false, 
     await fetch(`/api/size-charts/${chartId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, rows }),
+      body: JSON.stringify({ name, rows, image_url: imageUrl.trim() || null }),
     });
     setSaving(false);
     onSaved?.();
     onOpenChange(false);
+  };
+
+  const uploadChartImage = async (file: File) => {
+    setUploadingImage(true);
+    try {
+      const fd = new FormData();
+      fd.append("files", file);
+      fd.append("tags", "size-chart");
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      if (!res.ok) return;
+      const data = await res.json();
+      const url = data?.results?.[0]?.url ?? data?.urls?.[0] ?? "";
+      if (url) setImageUrl(url);
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   return (
@@ -102,6 +121,45 @@ export function SizeChartModal({ chartId, open, onOpenChange, editable = false, 
           </div>
         ) : (
           <div className="flex-1 overflow-auto space-y-4">
+            <div className="grid gap-4 md:grid-cols-[220px_1fr]">
+              <div className="space-y-2">
+                <p className="text-xs font-semibold text-muted-foreground">Візуалізація</p>
+                <div className="overflow-hidden rounded-lg border border-border bg-muted/30">
+                  {imageUrl ? (
+                    <img src={imageUrl} alt="Візуалізація розмірів" className="h-44 w-full object-contain bg-white" />
+                  ) : (
+                    <div className="flex h-44 flex-col items-center justify-center gap-2 text-muted-foreground">
+                      <ImagePlus className="size-7 opacity-50" />
+                      <span className="text-xs">Зображення не додано</span>
+                    </div>
+                  )}
+                </div>
+                {editable && (
+                  <div className="space-y-2">
+                    <label className="inline-flex h-8 w-full cursor-pointer items-center justify-center gap-2 rounded-md border border-border bg-background px-3 text-xs font-semibold hover:bg-muted">
+                      {uploadingImage ? <Loader2 className="size-3.5 animate-spin" /> : <ImagePlus className="size-3.5" />}
+                      Завантажити схему
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="sr-only"
+                        disabled={uploadingImage}
+                        onChange={(event) => {
+                          const file = event.target.files?.[0];
+                          if (file) uploadChartImage(file);
+                          event.currentTarget.value = "";
+                        }}
+                      />
+                    </label>
+                    {imageUrl && (
+                      <Button type="button" variant="outline" size="sm" className="h-8 w-full text-xs" onClick={() => setImageUrl("")}>
+                        Прибрати зображення
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div className="space-y-4">
             {/* Column manager (edit mode only) */}
             {editable && (
               <div className="flex items-center gap-2 flex-wrap">
@@ -177,6 +235,8 @@ export function SizeChartModal({ chartId, open, onOpenChange, editable = false, 
                 <Plus className="w-3 h-3 mr-1" /> Додати рядок
               </Button>
             )}
+              </div>
+            </div>
           </div>
         )}
 

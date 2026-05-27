@@ -5,7 +5,7 @@ import { X, Ruler } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 interface SizeChartRow { [col: string]: string; }
-interface SizeChart { id: string; name: string; rows: SizeChartRow[]; }
+interface SizeChart { id: string; name: string; rows: SizeChartRow[]; image_url?: string | null; }
 
 interface Props {
   chartId: string;
@@ -21,7 +21,7 @@ export function SizeChartModal({ chartId, trigger }: Props) {
     if (!open || !chartId || chart) return;
     setLoading(true);
     const supabase = createClient();
-    supabase.from("size_charts").select("*").eq("id", chartId).single()
+    supabase.from("size_charts").select("id, name, rows, image_url").eq("id", chartId).single()
       .then(({ data }: { data: SizeChart | null }) => { if (data) setChart(data as SizeChart); })
       .finally(() => setLoading(false));
   }, [open, chartId, chart]);
@@ -69,32 +69,41 @@ export function SizeChartModal({ chartId, trigger }: Props) {
                 <div className="flex items-center justify-center py-12">
                   <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                 </div>
-              ) : !chart || chart.rows.length === 0 ? (
+              ) : !chart || (chart.rows.length === 0 && !chart.image_url) ? (
                 <p className="text-center text-sm text-muted-foreground py-8">Таблиця порожня</p>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b-2 border-border">
-                        {columns.map(col => (
-                          <th key={col} className="px-4 py-2.5 text-left text-xs font-bold text-muted-foreground uppercase tracking-wide whitespace-nowrap">
-                            {col}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {chart.rows.map((row, i) => (
-                        <tr key={i} className={`border-b border-border last:border-0 ${i % 2 === 0 ? "" : "bg-muted/30"}`}>
-                          {columns.map((col, j) => (
-                            <td key={col} className={`px-4 py-2.5 ${j === 0 ? "font-bold text-foreground" : "text-muted-foreground"}`}>
-                              {row[col] ?? "—"}
-                            </td>
+                <div className="space-y-5">
+                  {chart.image_url && (
+                    <div className="overflow-hidden rounded-xl border border-border bg-white">
+                      <img src={chart.image_url} alt={`${chart.name} схема розмірів`} className="max-h-[360px] w-full object-contain" />
+                    </div>
+                  )}
+                  {chart.rows.length > 0 && (
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b-2 border-border">
+                            {columns.map(col => (
+                              <th key={col} className="px-4 py-2.5 text-left text-xs font-bold text-muted-foreground uppercase tracking-wide whitespace-nowrap">
+                                {col}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {chart.rows.map((row, i) => (
+                            <tr key={i} className={`border-b border-border last:border-0 ${i % 2 === 0 ? "" : "bg-muted/30"}`}>
+                              {columns.map((col, j) => (
+                                <td key={col} className={`px-4 py-2.5 ${j === 0 ? "font-bold text-foreground" : "text-muted-foreground"}`}>
+                                  {row[col] ?? "—"}
+                                </td>
+                              ))}
+                            </tr>
                           ))}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

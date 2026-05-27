@@ -625,27 +625,18 @@ export function ProductDetailClient({
         {/* ── Product confidence details ───────────────────────────────── */}
         <section className="border-y border-border bg-muted/20">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-            <div className="grid md:grid-cols-3 gap-8">
-              {(meta.feature_groups ?? DEFAULT_PRODUCT_FEATURE_GROUPS).slice(0, 4).map((group) => {
-                const Icon = FEATURE_ICONS[group.icon as keyof typeof FEATURE_ICONS] ?? Zap;
+            <div className="grid gap-px overflow-hidden rounded-xl border border-border bg-border md:grid-cols-3">
+              {(meta.feature_groups ?? DEFAULT_PRODUCT_FEATURE_GROUPS).slice(0, 3).map((group) => {
                 return (
-                  <div key={group.title} className="space-y-4">
-                    <div className="flex items-center gap-3 border-b border-border pb-3">
-                      <div className="size-10 rounded-xl bg-background border border-border flex items-center justify-center shadow-sm">
-                        <Icon className="w-5 h-5 text-primary" strokeWidth={1.8} />
-                      </div>
-                      <h2 className="text-lg font-black tracking-tight">{group.title}</h2>
-                    </div>
-                    <div className="space-y-3">
+                  <div key={group.title} className="bg-background p-5">
+                    <h2 className="border-b border-border pb-3 text-sm font-black uppercase tracking-wide">{group.title}</h2>
+                    <div className="mt-4 space-y-3">
                       {group.items.map((item) => (
-                        <div key={`${group.title}-${item.title}`} className="flex gap-2.5">
-                          <Check className="mt-1 w-4 h-4 shrink-0 text-primary" />
-                          <div>
-                            <p className="text-sm font-bold">{item.title}</p>
+                        <div key={`${group.title}-${item.title}`} className="border-b border-border/70 pb-3 last:border-0 last:pb-0">
+                            <p className="text-sm font-bold leading-snug">{item.title}</p>
                             {item.description && (
                               <p className="text-sm text-muted-foreground leading-relaxed mt-0.5">{item.description}</p>
                             )}
-                          </div>
                         </div>
                       ))}
                     </div>

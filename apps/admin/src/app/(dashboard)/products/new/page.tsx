@@ -11,7 +11,7 @@ import { ProductForm, type ProductFormData } from "../_components/ProductForm";
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 interface Category { id: string; name: string; slug: string; is_active: boolean; sort_order: number; }
-interface SizeChart { id: string; name: string; rows: Record<string, string>[]; }
+interface SizeChart { id: string; name: string; rows: Record<string, string>[]; image_url?: string | null; }
 interface PrintArea { id: string; name: string; label: string; }
 
 // ── Page ──────────────────────────────────────────────────────────────────────

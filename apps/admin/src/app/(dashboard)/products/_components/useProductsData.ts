@@ -9,6 +9,7 @@ export interface SizeChart {
   id: string;
   name: string;
   rows: Record<string, string>[];
+  image_url?: string | null;
 }
 
 export interface PrintArea {

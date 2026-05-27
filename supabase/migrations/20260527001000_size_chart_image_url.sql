@@ -1,0 +1,2 @@
+ALTER TABLE size_charts
+  ADD COLUMN IF NOT EXISTS image_url TEXT;

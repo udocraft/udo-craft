@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight, CircleSlash, ToolCase } from "lucide-react";
@@ -51,9 +51,14 @@ export function ProductCardDetailed({
   // Resolve images using new model with legacy fallback
   const productImgs = resolveProductImages((product as any).product_images, product.images);
   const variantImgs = activeVariant ? resolveProductImages((activeVariant as any).variant_images, activeVariant.images) : null;
-  const currentImages = getAllImages(variantImgs?.length ? variantImgs : productImgs);
-  const availableImages = Object.values(currentImages).filter(Boolean);
+  const currentImageSet = variantImgs?.length ? variantImgs : productImgs;
+  const currentImages = getAllImages(currentImageSet);
+  const availableImages = useMemo(() => Object.values(currentImages).filter(Boolean), [currentImages]);
   const imageUrl = availableImages[imgIndex % availableImages.length] ?? "";
+
+  useEffect(() => {
+    setImgIndex(0);
+  }, [displayVariantId, product.id]);
 
   const colorDots =
     hasVariants && materials
@@ -65,6 +70,8 @@ export function ProductCardDetailed({
       : FALLBACK_COLORS.map((c) => ({ id: c.name, name: c.name, hex: c.hex, border: c.border }));
 
   const sizes = product.available_sizes || [];
+  const visibleSizes = sizes.slice(0, 8);
+  const hiddenSizeCount = Math.max(0, sizes.length - visibleSizes.length);
   const actionsVisible = sizes.length === 0 || selectedSize !== null;
 
   const getActiveColor = () => {
@@ -180,25 +187,30 @@ export function ProductCardDetailed({
         </div>
 
         {/* Sizes + Colors */}
-        <div className="flex flex-col gap-3 min-h-[40px]">
+        <div className="flex flex-col gap-3">
           {sizes.length > 0 && (
-            <div className="flex items-center gap-1.5 flex-wrap">
-              {sizes.map((size) => (
+            <div className="grid grid-cols-4 gap-1.5">
+              {visibleSizes.map((size) => (
                 <button
                   key={size}
                   type="button"
                   aria-pressed={selectedSize === size}
                   aria-label={`Розмір ${size}`}
                   onClick={(e) => { e.stopPropagation(); setSelectedSize(selectedSize === size ? null : size); }}
-                  className={`min-w-[44px] h-10 text-[11px] font-semibold px-3 py-2 rounded-lg border transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${
+                  className={`h-8 min-w-0 rounded-md border px-1 text-[11px] font-semibold transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${
                     selectedSize === size
                       ? "bg-foreground text-background border-foreground"
                       : "bg-background text-muted-foreground border-border hover:border-foreground/40 hover:text-foreground"
                   }`}
                 >
-                  {size}
+                  <span className="block truncate">{size}</span>
                 </button>
               ))}
+              {hiddenSizeCount > 0 && (
+                <span className="flex h-8 items-center justify-center rounded-md border border-border bg-background px-1 text-[11px] font-semibold text-muted-foreground">
+                  +{hiddenSizeCount}
+                </span>
+              )}
             </div>
           )}
           <div className="flex items-center gap-2 flex-wrap">
