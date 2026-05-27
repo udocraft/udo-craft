@@ -41,8 +41,19 @@ export default function LoginPage() {
       return;
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password }).catch((err: unknown) => {
+      console.error("[admin-login] signInWithPassword failed", err);
+      return {
+        data: { user: null },
+        error: err instanceof Error ? err : new Error("Login failed"),
+      };
+    });
     if (error) {
+      console.error("[admin-login] Supabase auth error", {
+        name: error.name,
+        message: error.message,
+        status: "status" in error ? error.status : undefined,
+      });
       if (error.message.includes("Invalid login credentials")) setError("Невірний email або пароль.");
       else if (error.message.includes("Email not confirmed")) setError("Email ще не підтверджено.");
       else setError("Щось пішло не так. Спробуйте пізніше.");

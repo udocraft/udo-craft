@@ -13,6 +13,7 @@ import { getSupabasePublicEnv } from "@/lib/supabase/env";
 type AuthzUser = {
   id: string;
   email?: string | null;
+  userMetadata?: Record<string, unknown>;
 };
 
 type AuthzResult =
@@ -35,12 +36,26 @@ function bootstrapPermissionsFor(email?: string | null): Set<AdminPermission> {
 async function loadMembershipPermissions(
   user: AuthzUser,
 ): Promise<Set<AdminPermission>> {
-  const service = createServiceClient();
-  const { data, error } = await service
-    .from("memberships")
-    .select("roles(name, role_permissions(permissions(key)))")
-    .eq("user_id", user.id)
-    .eq("status", "active");
+  let data: unknown[] | null = null;
+  let error: { code?: string; message?: string } | null = null;
+
+  try {
+    const service = createServiceClient();
+    const result = await service
+      .from("memberships")
+      .select("roles(name, role_permissions(permissions(key)))")
+      .eq("user_id", user.id)
+      .eq("status", "active");
+
+    data = result.data;
+    error = result.error;
+  } catch (err) {
+    console.error("[authz] failed to initialize memberships client", {
+      userId: user.id,
+      message: err instanceof Error ? err.message : "Unknown error",
+    });
+    return new Set();
+  }
 
   if (error) {
     console.error("[authz] failed to load memberships", {
@@ -82,6 +97,13 @@ async function resolvePermissions(user: AuthzUser): Promise<Set<AdminPermission>
     permissions.add(permission);
   }
 
+  const metadataRole = user.userMetadata?.role;
+  if (typeof metadataRole === "string") {
+    for (const permission of permissionsForRoles([metadataRole])) {
+      permissions.add(permission);
+    }
+  }
+
   return permissions;
 }
 
@@ -100,14 +122,15 @@ export async function requireAdminPermission(
 
   if (error || !user) return { ok: false, response: authzError(401) };
 
-  const permissions = await resolvePermissions(user);
+  const authzUser = { id: user.id, email: user.email, userMetadata: user.user_metadata };
+  const permissions = await resolvePermissions(authzUser);
   if (!hasPermission(permissions, permission)) {
     return { ok: false, response: authzError(403) };
   }
 
   return {
     ok: true,
-    user: { id: user.id, email: user.email },
+    user: authzUser,
     permissions,
   };
 }
@@ -138,14 +161,15 @@ export async function requireAdminPermissionForRequest(
   const { data: { user }, error } = await supabase.auth.getUser();
   if (error || !user) return { ok: false, response: authzError(401) };
 
-  const permissions = await resolvePermissions(user);
+  const authzUser = { id: user.id, email: user.email, userMetadata: user.user_metadata };
+  const permissions = await resolvePermissions(authzUser);
   if (!hasPermission(permissions, permission)) {
     return { ok: false, response: authzError(403) };
   }
 
   return {
     ok: true,
-    user: { id: user.id, email: user.email },
+    user: authzUser,
     permissions,
   };
 }

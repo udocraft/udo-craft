@@ -1,15 +1,17 @@
 import { CreateLeadSchema } from "@udo-craft/shared";
 import { createServiceClient } from "@/lib/supabase/service";
+import { getSupabasePublicEnv, getSupabaseServiceEnv } from "@/lib/supabase/env";
 import { sendOrderConfirmation, sendContactNotification } from "@/lib/email";
 import { rateLimit } from "@/lib/rate-limit";
+import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 
 // SERVICE ROLE JUSTIFICATION:
 // This is a public endpoint — customers submit orders without being authenticated.
 // There is no user session to derive a Supabase client from, so the session-based
-// createClient() cannot be used here. The service role key is required to insert
-// leads, order_items, and messages on behalf of unauthenticated visitors.
-// The honeypot check and rate limiting above mitigate abuse of this open endpoint.
+// createClient() cannot be used here. Prefer the service role key when configured;
+// if it is missing in a deploy target, fall back to the anon insert policies.
+// The honeypot check and rate limiting below mitigate abuse of this open endpoint.
 
 export async function POST(request: NextRequest) {
   const { success } = await rateLimit(request, { limit: 5, window: 60 });
@@ -18,7 +20,12 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const supabase = createServiceClient();
+    const serviceEnv = getSupabaseServiceEnv();
+    const publicEnv = getSupabasePublicEnv();
+    const hasServiceRoleKey = Boolean(serviceEnv.serviceRoleKey);
+    const supabase = hasServiceRoleKey
+      ? createServiceClient()
+      : createClient(publicEnv.url, publicEnv.anonKey);
 
     const body = await request.json();
     const parsed = CreateLeadSchema.safeParse(body);
@@ -43,11 +50,20 @@ export async function POST(request: NextRequest) {
     // attachments is an extra field not covered by CreateLeadSchema — read from raw body
     const attachments: string[] = body.customer_data?.attachments ?? [];
 
-    const { data: lead, error: leadError } = await supabase
-      .from("leads")
-      .insert({ status, customer_data, total_amount_cents: total_amount_cents || 0 })
-      .select()
-      .single();
+    const leadId = crypto.randomUUID();
+    const leadPayload = {
+      id: leadId,
+      status,
+      customer_data,
+      total_amount_cents: total_amount_cents || 0,
+    };
+
+    const { data: lead, error: leadError } = hasServiceRoleKey
+      ? await supabase.from("leads").insert(leadPayload).select().single()
+      : {
+          data: leadPayload,
+          error: (await supabase.from("leads").insert(leadPayload)).error,
+        };
 
     if (leadError || !lead) {
       console.error("Lead insert error:", leadError);
