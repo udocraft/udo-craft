@@ -49,6 +49,9 @@ export default function VisitorsPage() {
 
   return (
     <DashboardPage title="Відвідувачі веб-сайту">
+      <div className="mb-6 text-sm text-muted-foreground">
+        Ця сторінка дозволяє відстежувати активність відвідувачів на сайті. Ви можете бачити кількість їхніх сесій, переглядів сторінок, час останньої активності, а також статус конверсії (чи стали вони клієнтами, залишивши замовлення або контактні дані).
+      </div>
       <div className="grid gap-4 md:grid-cols-4 mb-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">

@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     const supabaseAuth = await createClient();
     const { data: { user }, error: authError } = await supabaseAuth.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Неавторизовано' }, { status: 401 });
     }
 
     const supabase = createServiceClient(

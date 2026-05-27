@@ -55,6 +55,10 @@ const ROLE_PERMISSIONS: Record<Role, { title: string; description: string }> = {
     title: "Продажі та операції",
     description: "Бачить клієнтів, замовлення, повідомлення, складські процеси, виробництво і пов'язані документи.",
   },
+  viewer: {
+    title: "Перегляд",
+    description: "Має лише базовий доступ до перегляду без операційних дій.",
+  },
   sewer: {
     title: "Виробництво і пов'язані роботи",
     description: "Бачить склад CRM-ERP, виробничі замовлення, дефіцити, акти пошиття та замовлення, де потрібна її участь.",
@@ -461,10 +465,6 @@ export default function UsersPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </DashboardPage>
-  );
-}
-lertDialog>
     </DashboardPage>
   );
 }

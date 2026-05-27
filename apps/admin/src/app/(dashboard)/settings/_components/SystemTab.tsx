@@ -42,12 +42,12 @@ function StatusBadge({ status }: { status: CheckStatus }) {
   );
   if (status === "degraded") return (
     <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-600">
-      <AlertTriangle className="size-3.5" /> Degraded
+      <AlertTriangle className="size-3.5" /> Потребує уваги
     </span>
   );
   return (
     <span className="inline-flex items-center gap-1 text-xs font-medium text-red-600">
-      <XCircle className="size-3.5" /> Error
+      <XCircle className="size-3.5" /> Помилка
     </span>
   );
 }
@@ -105,16 +105,16 @@ function DeploymentCard({ deployment }: { deployment: AdminHealthResponse["admin
   return (
     <div className="grid grid-cols-2 gap-3 text-sm">
       <div>
-        <p className="text-xs text-muted-foreground">Environment</p>
+        <p className="text-xs text-muted-foreground">Середовище</p>
         <p className="font-medium capitalize">{deployment.env}</p>
       </div>
       <div>
-        <p className="text-xs text-muted-foreground">Commit</p>
+        <p className="text-xs text-muted-foreground">Коміт</p>
         <p className="font-mono font-medium">{deployment.sha ?? "—"}</p>
       </div>
       {deployment.message && (
         <div className="col-span-2">
-          <p className="text-xs text-muted-foreground">Message</p>
+          <p className="text-xs text-muted-foreground">Повідомлення</p>
           <p className="font-medium truncate">{deployment.message}</p>
         </div>
       )}
@@ -193,10 +193,10 @@ export function SystemTab() {
     setError(null);
     try {
       const res = await fetch("/api/health");
-      if (!res.ok) throw new Error(`API returned ${res.status}`);
+      if (!res.ok) throw new Error(`API повернув статус ${res.status}`);
       setData(await res.json());
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load health data");
+      setError(err instanceof Error ? err.message : "Не вдалося завантажити стан системи");
     } finally {
       setLoading(false);
     }
@@ -213,7 +213,7 @@ export function SystemTab() {
   const clientEnv = data?.client && !clientIsError ? (data.client as { env: Record<string, boolean> }).env : null;
   const clientDeployment = data?.client && !clientIsError ? (data.client as { deployment: AdminHealthResponse["admin"]["deployment"] }).deployment : null;
   const tablesToReset = Array.from(selectedTables);
-  const canHardReset = resetArmed && resetPhrase === "hard reset" && resetPassword.length > 0 && selectedTables.size > 0;
+  const canHardReset = resetArmed && resetPhrase.trim() === "hard reset" && resetPassword.length > 0 && selectedTables.size > 0;
 
   const hardReset = async () => {
     if (!canHardReset) return;
@@ -225,11 +225,11 @@ export function SystemTab() {
         body: JSON.stringify({ confirmation: resetPhrase, password: resetPassword, tables: tablesToReset }),
       });
       const body = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(body?.error ?? "Не вдалося виконати hard reset");
+      if (!res.ok) throw new Error(body?.error ?? "Не вдалося виконати повне очищення");
       const deleted = Array.isArray(body.results)
         ? body.results.reduce((sum: number, row: { deleted?: number | null }) => sum + (row.deleted ?? 0), 0)
         : 0;
-      toast.success(`Hard reset завершено. Видалено рядків: ${deleted}`);
+      toast.success(`Повне очищення завершено. Видалено рядків: ${deleted}`);
       setResetOpen(false);
       setResetArmed(false);
       setResetPhrase("");
@@ -237,7 +237,7 @@ export function SystemTab() {
       setSelectedTables(new Set(ALL_TABLES));
       fetch_();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Не вдалося виконати hard reset");
+      toast.error(err instanceof Error ? err.message : "Не вдалося виконати повне очищення");
     } finally {
       setResetting(false);
     }
@@ -276,7 +276,7 @@ export function SystemTab() {
         <div className="space-y-6">
           {/* Admin section */}
           <div className="space-y-3">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Admin App</p>
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Адмін-панель</p>
 
             <SectionCard title="Supabase">
               {supabaseChecks.map((c) => <CheckRow key={c.service} check={c} />)}
@@ -297,7 +297,7 @@ export function SystemTab() {
 
           {/* Client section */}
           <div className="space-y-3">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Client App</p>
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Клієнтський сайт</p>
 
             {clientIsError ? (
               <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
@@ -326,17 +326,17 @@ export function SystemTab() {
         </div>
       )}
 
-      <SectionCard title="Danger zone">
+      <SectionCard title="Небезпечна зона">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
-            <p className="text-sm font-semibold text-destructive">Hard reset all data</p>
+            <p className="text-sm font-semibold text-destructive">Повне очищення даних</p>
             <p className="text-xs text-muted-foreground">
-              Deletes orders, catalog, print settings, CMS, analytics, shares and ERP records. Admin users are not deleted.
+              Видаляє вибрані замовлення, каталог, налаштування друку, CMS, аналітику, спільні макети та ERP-записи. Адміністратори й доступи до панелі не видаляються.
             </p>
           </div>
           <Button type="button" variant="destructive" onClick={() => setResetOpen(true)} className="shrink-0">
             <Trash2 className="size-4" />
-            Hard reset
+            Очистити дані
           </Button>
         </div>
       </SectionCard>
@@ -356,9 +356,9 @@ export function SystemTab() {
             <AlertDialogMedia className="bg-destructive/10 text-destructive">
               <Trash2 className="size-5" />
             </AlertDialogMedia>
-            <AlertDialogTitle>Hard reset all data?</AlertDialogTitle>
+            <AlertDialogTitle>Повністю очистити вибрані дані?</AlertDialogTitle>
             <AlertDialogDescription>
-              This permanently removes selected data from Supabase. This action cannot be undone.
+              Ця дія назавжди видалить вибрані записи з Supabase. Відновити їх після очищення неможливо.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="max-h-[calc(100vh-15rem)] space-y-3 overflow-y-auto px-4 pb-4 sm:px-5">
@@ -370,7 +370,7 @@ export function SystemTab() {
                 className="mt-0.5"
                 disabled={resetting}
               />
-              <span>I understand this will delete selected data except admin users.</span>
+              <span>Я розумію, що вибрані дані буде видалено назавжди, а адмін-користувачі залишаться.</span>
             </label>
             <div className="rounded-lg border border-border bg-muted/40 p-3 space-y-2">
               <div className="flex items-center justify-between">
@@ -443,7 +443,7 @@ export function SystemTab() {
             </div>
             <div className="space-y-1.5">
               <p className="text-xs font-semibold text-muted-foreground">
-                Type <span className="font-mono text-foreground">hard reset</span> to confirm.
+                Введіть <span className="font-mono text-foreground">hard reset</span>, щоб підтвердити очищення.
               </p>
               <Input
                 value={resetPhrase}
@@ -455,7 +455,7 @@ export function SystemTab() {
             </div>
             <div className="space-y-1.5">
               <p className="text-xs font-semibold text-muted-foreground">
-                Enter your admin password.
+                Введіть пароль свого адмін-акаунта.
               </p>
               <Input
                 type="password"
@@ -467,7 +467,7 @@ export function SystemTab() {
             </div>
           </div>
           <AlertDialogFooter className="m-0 rounded-none">
-            <AlertDialogCancel disabled={resetting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={resetting}>Скасувати</AlertDialogCancel>
             <AlertDialogAction
               type="button"
               variant="destructive"

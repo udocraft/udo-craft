@@ -179,7 +179,7 @@ export function CartSummary({
         }),
       });
 
-      if (!leadRes.ok) throw new Error((await leadRes.json().catch(() => ({}))).error || "Lead submit failed");
+      if (!leadRes.ok) throw new Error((await leadRes.json().catch(() => ({}))).error || "Помилка відправки замовлення");
       const lead = await leadRes.json();
 
       track("form_submit", { form: "order", lead_id: lead.id });

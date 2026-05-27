@@ -4,9 +4,9 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
-  BarChart2, Users, MessagesSquare, ShoppingBag, Box,
-  Settings, ChevronRight, UserCog, Factory,
-  FileEdit, Palette, Search,
+  BarChart2, Users, MessageCircleHeart, ShoppingBag, ImagePlus,
+  Settings, ChevronRight, UserCog, ShelvingUnit,
+  FileEdit, Globe, Search, Tag,
 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { NavUser } from "@/components/nav-user";
@@ -67,15 +67,15 @@ type AdminRole = "admin" | "manager" | "viewer" | "seamstress" | "sewer";
 const SALES_NAV: NavItem[] = [
   { title: "Замовлення",   url: "/orders",    icon: ShoppingBag,    badgeKey: "orders" },
   { title: "Клієнти",      url: "/clients",   icon: Users },
-  { title: "Повідомлення", url: "/messages",  icon: MessagesSquare, badgeKey: "messages" },
+  { title: "Повідомлення", url: "/messages",  icon: MessageCircleHeart, badgeKey: "messages" },
 ];
 
 const INVENTORY_NAV: NavItem[] = [
-  { title: "Склад CRM-ERP", url: "/warehouse", icon: Factory },
+  { title: "Склад CRM-ERP", url: "/warehouse", icon: ShelvingUnit },
   {
     title: "Каталог",
     url: "/catalog",
-    icon: Palette,
+    icon: Tag,
     children: [
       { title: "Всі товари",          url: "/catalog?tab=products" },
       { title: "Категорії",           url: "/catalog?tab=categories" },
@@ -86,7 +86,7 @@ const INVENTORY_NAV: NavItem[] = [
   {
     title: "Принти",
     url: "/prints",
-    icon: Box,
+    icon: ImagePlus,
     children: [
       { title: "Бібліотека принтів", url: "/prints?tab=prints" },
       { title: "Технології друку",    url: "/prints?tab=types" },

@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
 
     if (leadError || !lead) {
       console.error("Lead insert error:", leadError);
-      return NextResponse.json({ error: leadError?.message ?? "Insert failed" }, { status: 500 });
+      return NextResponse.json({ error: leadError?.message ?? "Помилка створення" }, { status: 500 });
     }
 
     if (Array.isArray(order_items) && order_items.length > 0) {
@@ -138,6 +138,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(lead, { status: 201 });
   } catch (err) {
     console.error("API error:", err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ error: "Внутрішня помилка сервера" }, { status: 500 });
   }
 }

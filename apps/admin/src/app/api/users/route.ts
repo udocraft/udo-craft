@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const { email, full_name, role = "manager" } = body;
-    if (!email) return NextResponse.json({ error: "Email required" }, { status: 400 });
+    if (!email) return NextResponse.json({ error: "Електронна пошта обов'язкова" }, { status: 400 });
     const normalizedRole = role === "seamstress" ? "sewer" : role;
 
     // Generate a secure temp password
@@ -138,7 +138,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ user: data.user }, { status: 201 });
   } catch (err) {
     console.error("[users] POST error:", err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ error: "Внутрішня помилка сервера" }, { status: 500 });
   }
 }
 

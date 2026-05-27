@@ -52,16 +52,16 @@ export async function POST(request: NextRequest) {
   if (!authz.ok) return authz.response;
 
   if (process.env.NODE_ENV === "production" && process.env.HARD_RESET_ENABLED !== "true") {
-    return NextResponse.json({ error: "Hard reset is disabled" }, { status: 403 });
+    return NextResponse.json({ error: "Повне очищення даних вимкнено" }, { status: 403 });
   }
 
   const body = await request.json().catch(() => ({}));
-  if (body?.confirmation !== CONFIRMATION_PHRASE) {
-    return NextResponse.json({ error: "Confirmation phrase mismatch" }, { status: 400 });
+  if (typeof body?.confirmation !== "string" || body.confirmation.trim() !== CONFIRMATION_PHRASE) {
+    return NextResponse.json({ error: "Невірна фраза підтвердження" }, { status: 400 });
   }
 
   if (!authz.user.email || typeof body?.password !== "string" || body.password.length === 0) {
-    return NextResponse.json({ error: "Admin password is required" }, { status: 400 });
+    return NextResponse.json({ error: "Введіть пароль адмін-акаунта" }, { status: 400 });
   }
 
   const { url, anonKey } = getSupabasePublicEnv();
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
     password: body.password,
   });
   if (passwordError) {
-    return NextResponse.json({ error: "Invalid admin password" }, { status: 401 });
+    return NextResponse.json({ error: "Невірний пароль адмін-акаунта" }, { status: 401 });
   }
 
   const allowedSet = new Set<string>(RESET_TABLES);
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
     const invalid = body.tables.filter((t: unknown) => typeof t !== "string" || !allowedSet.has(t));
     if (invalid.length > 0) {
       return NextResponse.json(
-        { error: `Invalid tables: ${invalid.join(", ")}` },
+        { error: `Невідомі таблиці: ${invalid.join(", ")}` },
         { status: 400 },
       );
     }
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
       }
 
       return NextResponse.json(
-        { error: `Failed to reset ${table}: ${error.message}`, results },
+        { error: `Не вдалося очистити таблицю ${table}: ${error.message}`, results },
         { status: 500 },
       );
     }
