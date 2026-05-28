@@ -8,17 +8,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DashboardPage } from "@/components/dashboard-page";
-import { EmptyState } from "@/components/empty-state";
-import { StatusBadge, STATUS_CONFIG } from "@/components/status-badge";
+import { StatusBadge } from "@/components/status-badge";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  ArrowLeft, Loader2, Save, Package, MessageCircle, Send,
-  Phone, Mail, Building2, Calendar, ChevronsUpDown, X, Plus,
+  Loader2, Save, Package, MessageCircle, Send,
+  Building2, X, Plus,
   FileText, Paperclip,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -115,7 +111,6 @@ export default function OrderDetailPage() {
 
   // Messages
   const [messages, setMessages] = useState<Message[]>([]);
-  const [loadingMessages, setLoadingMessages] = useState(false);
   const [replyText, setReplyText] = useState("");
   const [sending, setSending] = useState(false);
   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
@@ -150,7 +145,6 @@ export default function OrderDetailPage() {
   // ── Fetch messages ──────────────────────────────────────────────────────────
 
   const fetchMessages = useCallback(async () => {
-    setLoadingMessages(true);
     try {
       const r = await fetch(`/api/messages?lead_id=${id}`);
       if (r.ok) {
@@ -159,7 +153,6 @@ export default function OrderDetailPage() {
         setMessages(msgs);
       }
     } catch { /* non-critical */ }
-    setLoadingMessages(false);
   }, [id]);
 
   useEffect(() => { fetchMessages(); }, [fetchMessages]);
