@@ -46,7 +46,7 @@ export function AdminToolbar({
   return (
     <div
       className={cn(
-        "flex h-10 items-center gap-2 border-b border-border bg-background px-4 md:px-6",
+        "flex h-14 items-center gap-2 border-b border-border bg-background px-4 md:px-6",
         className
       )}
     >
@@ -77,18 +77,18 @@ export function AdminFilter({
         onClick={onClick}
         aria-pressed={active}
         className={cn(
-          "flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          "flex h-11 items-center gap-2 rounded-full border px-4 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           active
             ? "border-primary/30 bg-primary/5 text-primary shadow-sm"
             : "border-border/60 bg-background text-muted-foreground hover:border-border hover:bg-muted/30 hover:text-foreground"
         )}
       >
-        {Icon && <Icon className={cn("size-3.5", active ? "text-primary" : "text-muted-foreground/70")} />}
+        {Icon && <Icon className={cn("size-4", active ? "text-primary" : "text-muted-foreground/70")} />}
         <span>{label}</span>
         {value && (
           <>
-            <span className="mx-0.5 opacity-30">/</span>
-            <span className="max-w-[100px] truncate font-semibold text-foreground">{value}</span>
+            <span className="mx-1 opacity-30">/</span>
+            <span className="max-w-[120px] truncate font-semibold text-foreground">{value}</span>
           </>
         )}
       </button>
@@ -100,9 +100,9 @@ export function AdminFilter({
             onClear();
           }}
           aria-label={`Clear ${label} filter`}
-          className="ml-1 flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive"
+          className="ml-1 flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive"
         >
-          <X className="h-3.5 w-3.5" />
+          <X className="h-4 w-4" />
         </button>
       )}
     </div>

@@ -77,6 +77,24 @@
   100% { background-position: 200% 0; }
 }
 
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--base-ui-accordion-panel-height); }
+}
+
+@keyframes accordion-up {
+  from { height: var(--base-ui-accordion-panel-height); }
+  to { height: 0; }
+}
+
+.animate-accordion-down {
+  animation: accordion-down 0.2s ease-out;
+}
+
+.animate-accordion-up {
+  animation: accordion-up 0.2s ease-out;
+}
+
 /* Safari specific: hide native video controls and play overlays */
 video::-webkit-media-controls {
   display: none !important;

@@ -382,7 +382,7 @@ export default function MessagesPage() {
         <div className="px-3 py-2 border-b border-border bg-card shrink-0">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
-            <Input placeholder="Пошук..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-8 h-8 text-sm" />
+            <Input placeholder="Пошук..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-8 text-sm" />
           </div>
           <div className="flex gap-1 mt-2">
             {(["all", "web", "telegram", "instagram"] as const).map((s) => (

@@ -334,14 +334,14 @@ export default function ClientsPage() {
           <Button
             variant="outline"
             size="sm"
-            className="h-8 gap-2"
+            className="h-9 gap-2"
             onClick={handleKeycrmSync}
             disabled={syncingKeycrm}
           >
             {syncingKeycrm ? <Loader2 className="size-3.5 animate-spin" /> : <RefreshCw className="size-3.5" />}
             Sync KeyCRM
           </Button>
-          <Button size="sm" className="h-8 gap-2" onClick={() => setAddOpen(true)}>
+          <Button size="sm" className="h-9 gap-2" onClick={() => setAddOpen(true)}>
             <UserPlus className="size-3.5" /> Додати клієнта
           </Button>
         </>
@@ -353,7 +353,7 @@ export default function ClientsPage() {
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             <Input
-              className="h-7 w-48 pl-8 text-[11px] bg-muted/40 border-none shadow-none focus-visible:ring-1 focus-visible:ring-primary/20"
+              className="pl-8 bg-muted/40 border-none shadow-none focus-visible:ring-1 focus-visible:ring-primary/20"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Швидкий пошук..."
@@ -528,25 +528,25 @@ export default function ClientsPage() {
                     <div className="w-full space-y-3">
                       <div className="space-y-1">
                         <Label htmlFor="edit-client-name" className="text-[10px]">Ім&apos;я *</Label>
-                        <Input id="edit-client-name" className="h-8 text-sm" value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} />
+                        <Input id="edit-client-name" className="text-sm" value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} />
                       </div>
                       <div className="space-y-1">
                         <Label htmlFor="edit-client-email" className="text-[10px]">Email *</Label>
-                        <Input id="edit-client-email" type="email" className="h-8 text-sm" value={editForm.email} onChange={(e) => setEditForm({ ...editForm, email: e.target.value })} />
+                        <Input id="edit-client-email" type="email" className="text-sm" value={editForm.email} onChange={(e) => setEditForm({ ...editForm, email: e.target.value })} />
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-1">
                           <Label htmlFor="edit-client-phone" className="text-[10px]">Телефон</Label>
-                          <Input id="edit-client-phone" className="h-8 text-sm" value={editForm.phone} onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })} />
+                          <Input id="edit-client-phone" className="text-sm" value={editForm.phone} onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })} />
                         </div>
                         <div className="space-y-1">
                           <Label htmlFor="edit-client-company" className="text-[10px]">Компанія</Label>
-                          <Input id="edit-client-company" className="h-8 text-sm" value={editForm.company} onChange={(e) => setEditForm({ ...editForm, company: e.target.value })} />
+                          <Input id="edit-client-company" className="text-sm" value={editForm.company} onChange={(e) => setEditForm({ ...editForm, company: e.target.value })} />
                         </div>
                       </div>
                       <div className="space-y-1">
                         <Label htmlFor="edit-client-social" className="text-[10px]">Telegram / Instagram</Label>
-                        <Input id="edit-client-social" className="h-8 text-sm" value={editForm.social_channel} onChange={(e) => setEditForm({ ...editForm, social_channel: e.target.value })} />
+                        <Input id="edit-client-social" className="text-sm" value={editForm.social_channel} onChange={(e) => setEditForm({ ...editForm, social_channel: e.target.value })} />
                       </div>
                     </div>
                   ) : (

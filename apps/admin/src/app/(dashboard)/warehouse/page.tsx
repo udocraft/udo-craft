@@ -31,8 +31,16 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { AdminTablePanel, AdminToolbar, AdminFilter } from "@/components/admin-layout";
+import { AdminTablePanel, AdminToolbar, AdminFilter, AdminTabs } from "@/components/admin-layout";
 import { DashboardPage } from "@/components/dashboard-page";
+
+const TABS = [
+  { key: "stock", label: "Залишки" },
+  { key: "receipts", label: "Постачання" },
+  { key: "production", label: "Виробництво" },
+  { key: "acts", label: "Акти пошиття" },
+  { key: "transfers", label: "Переміщення" },
+] as const;
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { SelectValue } from "@/components/ui/select";
 import type { ErpMaterial, ErpMaterialKind, ErpMaterialType, ErpSupplier, ErpWarehouse, ProductVariantSku } from "@udo-craft/shared";
@@ -311,6 +319,13 @@ export default function WarehousePage() {
     <DashboardPage
       title="Склад"
       maxWidth="7xl"
+      titleAccessory={
+        <AdminTabs
+          tabs={TABS}
+          value={currentTab as any}
+          onValueChange={(next) => router.push(`/warehouse?tab=${next}`)}
+        />
+      }
       actions={
         <>
           <Button variant="outline" size="sm" onClick={() => setTypesOpen(true)}>
@@ -322,21 +337,14 @@ export default function WarehousePage() {
         </>
       }
     >
-        <Tabs value={currentTab} onValueChange={(next) => router.push(`/warehouse?tab=${next}`)} className="flex flex-col">
-          <TabsList className="px-4 md:px-6">
-            <TabsTrigger value="stock">Залишки</TabsTrigger>
-            <TabsTrigger value="receipts">Постачання</TabsTrigger>
-            <TabsTrigger value="production">Виробництво</TabsTrigger>
-            <TabsTrigger value="acts">Акти пошиття</TabsTrigger>
-            <TabsTrigger value="transfers">Переміщення</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="stock" className="mt-0">
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {currentTab === "stock" && (
+          <div className="flex-1 flex flex-col overflow-hidden">
             <AdminToolbar>
               <div className="relative">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  className="h-7 w-48 pl-8 text-[11px] bg-background border-none shadow-none focus-visible:ring-1 focus-visible:ring-primary/20"
+                  className="pl-8 bg-background border-none shadow-none focus-visible:ring-1 focus-visible:ring-primary/20"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Швидкий пошук..."
@@ -367,80 +375,84 @@ export default function WarehousePage() {
               <span className="ml-auto text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">{itemCountLabel}</span>
             </AdminToolbar>
 
-            {loading ? (
-              <div className="flex h-64 items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
-            ) : (
-              <AdminTablePanel>
-                <Table className="min-w-[1040px]">
-                  <TableHeader>
-                  <TableRow className="hover:bg-transparent">
-                    <TableHead>Номенклатура</TableHead>
-                    <TableHead>Тип</TableHead>
-                    <TableHead className="text-right">Собівартість</TableHead>
-                    <TableHead className="text-right">Залишок</TableHead>
-                    <TableHead className="text-right">Резерв</TableHead>
-                    <TableHead className="text-right">Доступно</TableHead>
-                    <TableHead className="text-right">Мін.</TableHead>
-                    <TableHead>Постачальник</TableHead>
-                    <TableHead className="w-32 text-right">Дії</TableHead>
-                  </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                  {filtered.length === 0 && (
-                    <TableRow>
-                      <TableCell colSpan={9} className="py-14 text-center text-sm text-muted-foreground">
-                        Немає позицій. Створіть тканину, фурнітуру, нитки, матеріали друку або роботу.
-                      </TableCell>
+            <div className="flex-1 overflow-auto">
+              {loading ? (
+                <div className="flex h-64 items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+              ) : (
+                <AdminTablePanel>
+                  <Table className="min-w-[1040px]">
+                    <TableHeader>
+                    <TableRow className="hover:bg-transparent border-b">
+                      <TableHead className="h-11">Номенклатура</TableHead>
+                      <TableHead className="h-11">Тип</TableHead>
+                      <TableHead className="h-11 text-right">Собівартість</TableHead>
+                      <TableHead className="h-11 text-right">Залишок</TableHead>
+                      <TableHead className="h-11 text-right">Резерв</TableHead>
+                      <TableHead className="h-11 text-right">Доступно</TableHead>
+                      <TableHead className="h-11 text-right">Мін.</TableHead>
+                      <TableHead className="h-11">Постачальник</TableHead>
+                      <TableHead className="h-11 w-32 text-right">Дії</TableHead>
                     </TableRow>
-                  )}
-                  {filtered.map((m) => {
-                    const available = Number(m.stock_quantity || 0) - Number(m.reserved_quantity || 0);
-                    const isLow = Number(m.reorder_point || 0) > 0 && Number(m.stock_quantity || 0) <= Number(m.reorder_point || 0);
-                    return (
-                      <TableRow key={m.id}>
-                        <TableCell>
-                          <button className="text-left font-medium hover:text-primary" onClick={() => edit(m)}>{m.name}</button>
-                          <div className="text-[10px] text-muted-foreground">{m.sku || "Без SKU"} · {m.unit}</div>
-                        </TableCell>
-                        <TableCell>
-                          {m.type ? (
-                            <span className="inline-flex items-center gap-2 rounded-full border px-2 py-0.5 text-[10px]">
-                              <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: m.type.color }} />
-                              {m.type.name}
-                            </span>
-                          ) : (
-                            <span className="text-muted-foreground text-xs">—</span>
-                          )}
-                        </TableCell>
-                        <TableCell className="text-right font-medium text-xs tabular-nums">{money(m.unit_cost_cents)} / {m.unit}</TableCell>
-                        <TableCell className="text-right text-xs tabular-nums">
-                          <span className={isLow ? "font-semibold text-amber-700" : ""}>{Number(m.stock_quantity).toLocaleString("uk-UA")} {m.unit}</span>
-                        </TableCell>
-                        <TableCell className="text-right text-xs tabular-nums">{Number(m.reserved_quantity).toLocaleString("uk-UA")} {m.unit}</TableCell>
-                        <TableCell className="text-right text-xs tabular-nums">{available.toLocaleString("uk-UA")} {m.unit}</TableCell>
-                        <TableCell className="text-right text-xs text-muted-foreground tabular-nums">{Number(m.reorder_point).toLocaleString("uk-UA")} {m.unit}</TableCell>
-                        <TableCell className="text-muted-foreground text-xs">{m.supplier || "—"}</TableCell>
-                        <TableCell>
-                          <div className="flex justify-end gap-1">
-                          <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => edit(m)}>
-                            Редагувати
-                          </Button>
-                          <Button variant="ghost" size="sm" className="h-7 text-xs text-destructive hover:text-destructive" onClick={() => remove(m)}>
-                            Видалити
-                          </Button>
-                          </div>
+                    </TableHeader>
+                    <TableBody>
+                    {filtered.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={9} className="py-14 text-center text-sm text-muted-foreground">
+                          Немає позицій. Створіть тканину, фурнітуру, нитки, матеріали друку або роботу.
                         </TableCell>
                       </TableRow>
-                    );
-                  })}
-                  </TableBody>
-                </Table>
-              </AdminTablePanel>
-            )}
-          </TabsContent>
+                    )}
+                    {filtered.map((m) => {
+                      const available = Number(m.stock_quantity || 0) - Number(m.reserved_quantity || 0);
+                      const isLow = Number(m.reorder_point || 0) > 0 && Number(m.stock_quantity || 0) <= Number(m.reorder_point || 0);
+                      return (
+                        <TableRow key={m.id}>
+                          <TableCell>
+                            <button className="text-left font-medium hover:text-primary" onClick={() => edit(m)}>{m.name}</button>
+                            <div className="text-[10px] text-muted-foreground">{m.sku || "Без SKU"} · {m.unit}</div>
+                          </TableCell>
+                          <TableCell>
+                            {m.type ? (
+                              <span className="inline-flex items-center gap-2 rounded-full border px-2 py-0.5 text-[10px]">
+                                <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: m.type.color }} />
+                                {m.type.name}
+                              </span>
+                            ) : (
+                              <span className="text-muted-foreground text-xs">—</span>
+                            )}
+                          </TableCell>
+                          <TableCell className="text-right font-medium text-xs tabular-nums">{money(m.unit_cost_cents)} / {m.unit}</TableCell>
+                          <TableCell className="text-right text-xs tabular-nums">
+                            <span className={isLow ? "font-semibold text-amber-700" : ""}>{Number(m.stock_quantity).toLocaleString("uk-UA")} {m.unit}</span>
+                          </TableCell>
+                          <TableCell className="text-right text-xs tabular-nums">{Number(m.reserved_quantity).toLocaleString("uk-UA")} {m.unit}</TableCell>
+                          <TableCell className="text-right text-xs tabular-nums">{available.toLocaleString("uk-UA")} {m.unit}</TableCell>
+                          <TableCell className="text-right text-xs text-muted-foreground tabular-nums">{Number(m.reorder_point).toLocaleString("uk-UA")} {m.unit}</TableCell>
+                          <TableCell className="text-muted-foreground text-xs">{m.supplier || "—"}</TableCell>
+                          <TableCell>
+                            <div className="flex justify-end gap-1">
+                            <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => edit(m)}>
+                              Редагувати
+                            </Button>
+                            <Button variant="ghost" size="sm" className="h-7 text-xs text-destructive hover:text-destructive" onClick={() => remove(m)}>
+                              Видалити
+                            </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                    </TableBody>
+                  </Table>
+                </AdminTablePanel>
+              )}
+            </div>
+          </div>
+        )}
 
-          <TabsContent value="receipts">
-            <div className="grid gap-6 p-4 md:p-6 lg:grid-cols-[400px_1fr]">
+        {currentTab === "receipts" && (
+          <div className="flex-1 overflow-auto p-4 md:p-6">
+            <div className="grid gap-6 lg:grid-cols-[400px_1fr]">
               <ProcessPanel icon={PackagePlus} title="Постачання на склад">
                 <div className="grid gap-3">
                   <Field label="Товар / матеріал"><Select value={receipt.material_id} onValueChange={(v) => setReceipt({ ...receipt, material_id: v ?? "" })}><SelectTrigger><span>{selectedMaterial?.name ?? "Матеріал"}</span></SelectTrigger><SelectContent>{materials.map((m) => <SelectItem key={m.id} value={m.id}>{m.name} · {m.unit}</SelectItem>)}</SelectContent></Select></Field>
@@ -461,11 +473,11 @@ export default function WarehousePage() {
               <AdminTablePanel>
                 <Table>
                   <TableHeader>
-                    <TableRow>
-                      <TableHead>Дата</TableHead>
-                      <TableHead>Постачальник</TableHead>
-                      <TableHead>Матеріали</TableHead>
-                      <TableHead className="text-right">Сума</TableHead>
+                    <TableRow className="border-b bg-muted/30">
+                      <TableHead className="h-11">Дата</TableHead>
+                      <TableHead className="h-11">Постачальник</TableHead>
+                      <TableHead className="h-11">Матеріали</TableHead>
+                      <TableHead className="h-11 text-right">Сума</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -488,10 +500,12 @@ export default function WarehousePage() {
                 </Table>
               </AdminTablePanel>
             </div>
-          </TabsContent>
+          </div>
+        )}
 
-          <TabsContent value="production">
-            <div className="grid gap-6 p-4 md:p-6 lg:grid-cols-[400px_1fr]">
+        {currentTab === "production" && (
+          <div className="flex-1 overflow-auto p-4 md:p-6">
+            <div className="grid gap-6 lg:grid-cols-[400px_1fr]">
               <ProcessPanel icon={ClipboardCheck} title="Виробництво по замовленню">
                 <div className="grid gap-3">
                   <Field label="Замовлення / клієнт"><LeadSelect value={production.lead_id} leads={leads} onChange={(v) => setProduction({ ...production, lead_id: v })} /></Field>
@@ -511,13 +525,13 @@ export default function WarehousePage() {
               <AdminTablePanel>
                 <Table className="min-w-[920px]">
                   <TableHeader>
-                    <TableRow className="hover:bg-transparent">
-                      <TableHead>Документ</TableHead>
-                      <TableHead>Замовлення / клієнт</TableHead>
-                      <TableHead>Виріб</TableHead>
-                      <TableHead className="text-right">К-сть</TableHead>
-                      <TableHead>Статус</TableHead>
-                      <TableHead>Коментар</TableHead>
+                    <TableRow className="border-b bg-muted/30">
+                      <TableHead className="h-11">Документ</TableHead>
+                      <TableHead className="h-11">Замовлення / клієнт</TableHead>
+                      <TableHead className="h-11">Виріб</TableHead>
+                      <TableHead className="h-11 text-right">К-сть</TableHead>
+                      <TableHead className="h-11">Статус</TableHead>
+                      <TableHead className="h-11">Коментар</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -547,10 +561,12 @@ export default function WarehousePage() {
                 </Table>
               </AdminTablePanel>
             </div>
-          </TabsContent>
+          </div>
+        )}
 
-          <TabsContent value="acts">
-            <div className="grid gap-6 p-4 md:p-6 lg:grid-cols-[400px_1fr]">
+        {currentTab === "acts" && (
+          <div className="flex-1 overflow-auto p-4 md:p-6">
+            <div className="grid gap-6 lg:grid-cols-[400px_1fr]">
               <ProcessPanel icon={Factory} title="Акт пошиття / переробки">
                 <div className="grid gap-3">
                   <Field label="Виробничий документ"><Select value={act.production_order_id} onValueChange={(v) => setAct({ ...act, production_order_id: v ?? "" })}><SelectTrigger><span>{orders.find((o) => o.id === act.production_order_id)?.id.slice(0, 8).toUpperCase() ?? "Документ"}</span></SelectTrigger><SelectContent>{orders.filter(o => o.status !== 'done').map((o) => <SelectItem key={o.id} value={o.id}>#{o.id.slice(0, 8).toUpperCase()} · {o.quantity} шт. · {leadById.get(o.lead_id || "")?.customer_data?.name ?? "без клієнта"}</SelectItem>)}</SelectContent></Select></Field>
@@ -565,11 +581,11 @@ export default function WarehousePage() {
               <AdminTablePanel>
                 <Table>
                   <TableHeader>
-                    <TableRow>
-                      <TableHead>Дата</TableHead>
-                      <TableHead>Документ</TableHead>
-                      <TableHead>Склад</TableHead>
-                      <TableHead>Коментар</TableHead>
+                    <TableRow className="border-b bg-muted/30">
+                      <TableHead className="h-11">Дата</TableHead>
+                      <TableHead className="h-11">Документ</TableHead>
+                      <TableHead className="h-11">Склад</TableHead>
+                      <TableHead className="h-11">Коментар</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -586,10 +602,12 @@ export default function WarehousePage() {
                 </Table>
               </AdminTablePanel>
             </div>
-          </TabsContent>
+          </div>
+        )}
 
-          <TabsContent value="transfers">
-            <div className="grid gap-6 p-4 md:p-6 lg:grid-cols-[400px_1fr]">
+        {currentTab === "transfers" && (
+          <div className="flex-1 overflow-auto p-4 md:p-6">
+            <div className="grid gap-6 lg:grid-cols-[400px_1fr]">
               <ProcessPanel icon={Repeat2} title="Переміщення між складами">
                 <div className="grid gap-3">
                   <Field label="Матеріал"><Select value={transfer.material_id} onValueChange={(v) => setTransfer({ ...transfer, material_id: v ?? "" })}><SelectTrigger><span>{materials.find((m) => m.id === transfer.material_id)?.name ?? "Матеріал"}</span></SelectTrigger><SelectContent>{materials.map((m) => <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>)}</SelectContent></Select></Field>
@@ -608,11 +626,11 @@ export default function WarehousePage() {
               <AdminTablePanel>
                 <Table>
                   <TableHeader>
-                    <TableRow>
-                      <TableHead>Дата</TableHead>
-                      <TableHead>Звідки -&gt; Куди</TableHead>
-                      <TableHead>Матеріали</TableHead>
-                      <TableHead>Коментар</TableHead>
+                    <TableRow className="border-b bg-muted/30">
+                      <TableHead className="h-11">Дата</TableHead>
+                      <TableHead className="h-11">Звідки -&gt; Куди</TableHead>
+                      <TableHead className="h-11">Матеріали</TableHead>
+                      <TableHead className="h-11">Коментар</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -635,8 +653,9 @@ export default function WarehousePage() {
                 </Table>
               </AdminTablePanel>
             </div>
-          </TabsContent>
-        </Tabs>
+          </div>
+        )}
+      </div>
 
       <MaterialDialog
         open={dialogOpen}

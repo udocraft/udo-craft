@@ -96,15 +96,16 @@ Bidirectional chat with customers via Telegram bot integration. Messages stored 
 
 ---
 
-## Admin UI Memory
+## Admin UI Consistency
 
-We think in atomic consistency: every repeated admin surface should share the same parent-page anatomy unless a workflow has a strong reason to diverge.
+We maintain strict UI consistency to ensure a professional, "no-glitch" experience. Every page must adhere to the standards defined in [GEMINI.md](./GEMINI.md).
 
-- Parent admin pages with sections or tabs use the catalog pattern: title first, tabs immediately after the title in the header row, and page-level actions on the right.
-- Tabbed parent pages expose one context-aware primary CTA in the header, such as `Додати товар`, `Нова категорія`, `Додати колір`, or `Нова таблиця`. Avoid repeating the same create action inside the active tab unless it is an empty-state recovery action.
-- Keep vertical space tight. Do not add a separate full-width tab row under the title for parent admin pages.
-- Use the shared Shadcn/Base UI primitives for selects, dropdown menus, inputs, buttons, tabs, and dialogs. Avoid native selects or one-off dropdown implementations for admin controls.
-- Default admin control height is 40px. Buttons, inputs, and select triggers should align at 40-48px; use icon-only buttons at the same floor unless the control is inside a dense table row and has a specific reason to be smaller.
+### Core Layout Anatomy
+- **Header:** `DashboardHeader` with Title, Tabs (`AdminTabs`), and Actions.
+- **Toolbar:** `AdminToolbar` for search and filters (`AdminFilter`).
+- **Content:** Standardized padding (`p-4 md:p-6`) and table panels (`AdminTablePanel`).
+
+Refer to [GEMINI.md](./GEMINI.md) for detailed implementation rules.
 
 ### Key dependencies
 

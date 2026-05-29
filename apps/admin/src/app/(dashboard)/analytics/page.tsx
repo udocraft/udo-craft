@@ -409,47 +409,16 @@ export default function AnalyticsPage() {
 
   return (
     <DashboardPage
-      title="Аналітика"
+      title={`Аналітика (${fmtPresetLabel(range)})`}
       actions={
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="h-8 w-8 p-0" onClick={fetchAnalytics} disabled={loading}>
-            <RefreshCw className={cn("size-3.5", loading && "animate-spin")} />
+          <DateRangePicker range={range} onChange={r => setRange(r)} />
+          <Button variant="outline" size="sm" className="h-11 w-11 p-0 rounded-full" onClick={fetchAnalytics} disabled={loading}>
+            <RefreshCw className={cn("size-4", loading && "animate-spin")} />
           </Button>
         </div>
       }
     >
-      <AdminToolbar>
-        <div className="flex items-center gap-2">
-           <AdminFilter
-            label="Період"
-            active={range.preset !== "30d"}
-            value={fmtPresetLabel(range)}
-            onClear={() => applyQuickChip("30d")}
-          />
-          <DateRangePicker range={range} onChange={r => setRange(r)} />
-        </div>
-
-        <div className="ml-4 flex items-center gap-1 border-l border-border pl-4">
-          {QUICK_CHIPS.map(chip => (
-            <button
-              key={chip.key}
-              onClick={() => applyQuickChip(chip.key)}
-              className={cn(
-                "px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider transition-all",
-                range.preset === chip.key
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              )}
-            >
-              {chip.label}
-            </button>
-          ))}
-        </div>
-
-        <span className="ml-auto text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
-          Звіт за обраний період
-        </span>
-      </AdminToolbar>
 
       <div className="p-4 md:p-6 space-y-10">
         {loading && !d ? skeletonRows : d ? (

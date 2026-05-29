@@ -360,7 +360,7 @@ function OrdersBoard() {
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             <Input
-              className="h-7 w-48 pl-8 text-[11px] bg-background border-none shadow-none focus-visible:ring-1 focus-visible:ring-primary/20"
+              className="pl-8 bg-background border-none shadow-none focus-visible:ring-1 focus-visible:ring-primary/20"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Швидкий пошук..."

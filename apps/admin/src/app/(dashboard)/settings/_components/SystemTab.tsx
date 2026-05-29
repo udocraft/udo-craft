@@ -15,13 +15,16 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { RefreshCw, CheckCircle2, AlertTriangle, XCircle, Clock, Loader2, Trash2, ChevronDown } from "lucide-react";
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RefreshCw, CheckCircle2, AlertTriangle, XCircle, Clock, Loader2, Trash2 } from "lucide-react";
 import type { AdminHealthResponse, CheckStatus, HealthCheck } from "@/app/api/health/types";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 // ── Table Groups for Hard Reset ───────────────────────────────────────────────
 
@@ -195,32 +198,6 @@ function LoadingSkeleton() {
   );
 }
 
-function IndeterminateCheckbox({
-  checked,
-  indeterminate,
-  disabled,
-  onChange,
-}: {
-  checked: boolean;
-  indeterminate: boolean;
-  disabled?: boolean;
-  onChange: (checked: boolean) => void;
-}) {
-  return (
-    <input
-      type="checkbox"
-      checked={checked}
-      disabled={disabled}
-      ref={(el) => {
-        if (!el) return;
-        el.indeterminate = indeterminate;
-      }}
-      onChange={(event) => onChange(event.target.checked)}
-      className="mt-0.5"
-    />
-  );
-}
-
 // ── Main Component ────────────────────────────────────────────────────────────
 
 export function SystemTab() {
@@ -233,7 +210,6 @@ export function SystemTab() {
   const [resetPassword, setResetPassword] = useState("");
   const [resetting, setResetting] = useState(false);
   const [selectedTables, setSelectedTables] = useState<Set<string>>(() => new Set(ALL_TABLES));
-  const [isDangerZoneOpen, setIsDangerZoneOpen] = useState(false);
 
   const fetch_ = useCallback(async () => {
     setLoading(true);
@@ -297,14 +273,14 @@ export function SystemTab() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium">Стан системи</p>
+          <p className="text-sm font-medium text-foreground/80">Стан системи</p>
           {data?.checked_at && (
-            <p className="text-xs text-muted-foreground">
+            <p className="text-[11px] text-muted-foreground">
               Оновлено: {new Date(data.checked_at).toLocaleString("uk-UA")}
             </p>
           )}
         </div>
-        <Button variant="outline" size="sm" onClick={fetch_} disabled={loading} className="gap-1.5">
+        <Button variant="outline" size="sm" onClick={fetch_} disabled={loading} className="gap-2">
           <RefreshCw className={`size-3.5 ${loading ? "animate-spin" : ""}`} />
           Оновити
         </Button>
@@ -375,50 +351,41 @@ export function SystemTab() {
         </div>
       )}
 
-      <Collapsible open={isDangerZoneOpen} onOpenChange={setIsDangerZoneOpen}>
-        <SectionCard title="Налаштування безпеки" className="p-0 overflow-hidden">
-          <CollapsibleTrigger
-            render={
-              <Button
-                variant="ghost"
-                className="flex w-full items-center justify-between rounded-none px-4 py-6 hover:bg-muted/50"
-              >
-                <div className="flex items-center gap-2 text-destructive">
-                  <AlertTriangle className="size-4" />
-                  <span className="font-semibold">Небезпечна зона</span>
-                </div>
-                <ChevronDown
-                  className={`size-4 transition-transform duration-200 ${
-                    isDangerZoneOpen ? "rotate-180" : ""
-                  }`}
-                />
-              </Button>
-            }
-          />
-          <CollapsibleContent>
-            <div className="border-t border-border p-4 space-y-4 bg-destructive/5">
+      <Accordion type="single" collapsible className="w-full">
+        <AccordionItem value="danger-zone" className="border rounded-2xl bg-card overflow-hidden border-destructive/20">
+          <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-destructive/5 group">
+            <div className="flex items-center gap-3 text-destructive">
+              <div className="size-8 rounded-full bg-destructive/10 flex items-center justify-center group-hover:bg-destructive/20 transition-colors">
+                <AlertTriangle className="size-4" />
+              </div>
+              <span className="font-semibold">Небезпечна зона</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6 pt-0">
+            <div className="space-y-6">
               {isHardResetDisabled && (
-                <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
-                  <AlertTriangle className="size-4 shrink-0" />
-                  <p>
+                <div className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50/50 p-4 text-sm text-amber-800">
+                  <AlertTriangle className="size-5 shrink-0" />
+                  <p className="leading-relaxed">
                     <strong>Повне очищення даних вимкнено.</strong> Для активації встановіть <code>HARD_RESET_ENABLED=true</code> у змінних середовища.
                   </p>
                 </div>
               )}
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div className="space-y-1">
-                  <p className="text-sm font-semibold text-destructive">Повне очищення даних проекту</p>
-                  <p className="text-xs text-muted-foreground leading-relaxed max-w-2xl">
+              
+              <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+                <div className="space-y-1.5 flex-1">
+                  <p className="text-sm font-bold text-foreground">Повне очищення даних проекту</p>
+                  <p className="text-[13px] text-muted-foreground leading-relaxed max-w-2xl">
                     Ця функція дозволяє швидко очистити базу даних від тестових або застарілих даних.
-                    Видаляються замовлення, товари, записи складу (ERP), контент CMS та аналітика.
-                    <span className="block mt-1 font-medium text-destructive/80">Важливо: Адмін-акаунти та налаштування доступу залишаються без змін.</span>
+                    Видаляються замовлення, товари, записи складу, CMS та аналітика.
+                    <span className="block mt-2 font-medium text-destructive/90 bg-destructive/5 rounded-lg px-2 py-1 -ml-2 w-fit">Адмін-акаунти та налаштування доступу залишаються без змін.</span>
                   </p>
                 </div>
                 <Button 
                   type="button" 
                   variant="destructive" 
                   onClick={() => setResetOpen(true)} 
-                  className="shrink-0 gap-2"
+                  className="shrink-0 gap-2 shadow-lg shadow-destructive/10"
                   disabled={isHardResetDisabled}
                 >
                   <Trash2 className="size-4" />
@@ -426,9 +393,9 @@ export function SystemTab() {
                 </Button>
               </div>
             </div>
-          </CollapsibleContent>
-        </SectionCard>
-      </Collapsible>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
 
       <AlertDialog open={resetOpen} onOpenChange={(open) => {
         if (resetting) return;
@@ -440,93 +407,101 @@ export function SystemTab() {
           setSelectedTables(new Set(ALL_TABLES));
         }
       }}>
-        <AlertDialogContent className="max-h-[calc(100vh-2rem)] max-w-[calc(100vw-2rem)] gap-0 overflow-hidden p-0 sm:max-w-3xl">
-          <AlertDialogHeader className="p-4 pb-3 sm:p-6 sm:pb-4 border-b border-border">
-            <AlertDialogTitle className="text-xl">Повне очищення вибраних категорій даних</AlertDialogTitle>
-            <AlertDialogDescription className="text-sm">
-              Ви збираєтеся назавжди видалити вибрані записи. Цю дію <strong>неможливо скасувати</strong>.
-              Дані будуть стерті безпосередньо з Supabase.
-            </AlertDialogDescription>
+        <AlertDialogContent className="sm:max-w-3xl max-h-[90vh] flex flex-col p-0 overflow-hidden border-none shadow-2xl rounded-[32px]">
+          <AlertDialogHeader className="px-8 pt-8 pb-6 bg-background">
+            <div className="flex items-center gap-4 mb-2">
+              <div className="size-12 rounded-full bg-destructive/10 flex items-center justify-center text-destructive shrink-0">
+                <Trash2 className="size-6" />
+              </div>
+              <div className="space-y-1 text-left">
+                <AlertDialogTitle className="text-2xl font-bold tracking-tight text-foreground">Повне очищення даних</AlertDialogTitle>
+                <AlertDialogDescription className="text-[15px] text-muted-foreground font-medium">
+                  Цю дію <strong className="text-destructive">неможливо скасувати</strong>. Всі вибрані дані будуть видалені назавжди.
+                </AlertDialogDescription>
+              </div>
+            </div>
           </AlertDialogHeader>
 
-          <div className="max-h-[calc(100vh-18rem)] space-y-4 overflow-y-auto px-4 py-4 sm:px-6">
-            <label className="flex items-start gap-3 rounded-lg border border-destructive/20 bg-destructive/5 p-4 text-sm cursor-pointer transition-colors hover:bg-destructive/10">
-              <input
-                type="checkbox"
-                checked={resetArmed}
-                onChange={(event) => setResetArmed(event.target.checked)}
-                className="mt-1 size-4 rounded border-destructive/30 text-destructive focus:ring-destructive"
-                disabled={resetting}
+          <div className="flex-1 overflow-y-auto px-8 pb-8 space-y-6">
+            <div 
+              className={cn(
+                "group flex items-start gap-4 rounded-[24px] border-2 p-5 cursor-pointer transition-all",
+                resetArmed ? "border-destructive bg-destructive/5" : "border-border hover:border-destructive/40 bg-muted/30"
+              )}
+              onClick={() => setResetArmed(!resetArmed)}
+            >
+              <Checkbox 
+                id="reset-armed" 
+                checked={resetArmed} 
+                onCheckedChange={(v) => setResetArmed(!!v)}
+                className="mt-1 size-5 rounded-full border-2 data-[state=checked]:bg-destructive data-[state=checked]:border-destructive"
               />
-              <span className="font-medium text-destructive">Я повністю усвідомлюю ризики і підтверджую, що вибрані дані будуть видалені назавжди.</span>
-            </label>
+              <div className="space-y-1 select-none">
+                <label htmlFor="reset-armed" className="text-sm font-bold text-foreground leading-none cursor-pointer">
+                  Я усвідомлюю ризики
+                </label>
+                <p className="text-[13px] text-muted-foreground leading-snug">
+                  Підтверджую, що вибрані категорії даних будуть видалені безпосередньо з Supabase без можливості відновлення.
+                </p>
+              </div>
+            </div>
 
-            <div className="rounded-xl border border-border bg-muted/30 overflow-hidden">
-              <div className="flex items-center justify-between px-4 py-2 bg-muted/50 border-b border-border">
-                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Вибір даних для стирання</p>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h4 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Категорії для стирання</h4>
                 <Button
-                  type="button"
                   variant="ghost"
                   size="sm"
-                  className="h-7 px-2 text-xs hover:bg-background"
-                  disabled={resetting}
-                  onClick={() =>
-                    setSelectedTables((prev) => (prev.size === ALL_TABLES.length ? new Set<string>() : new Set(ALL_TABLES)))
-                  }
+                  className="h-8 rounded-full px-3 text-xs font-bold"
+                  onClick={() => setSelectedTables(prev => prev.size === ALL_TABLES.length ? new Set() : new Set(ALL_TABLES))}
                 >
                   {selectedTables.size === ALL_TABLES.length ? "Зняти всі" : "Вибрати всі"}
                 </Button>
               </div>
 
-              <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {TABLE_GROUPS.map((group) => {
                   const selectedCount = group.items.filter((i) => selectedTables.has(i.id)).length;
                   const allChecked = selectedCount === group.items.length;
-                  const indeterminate = selectedCount > 0 && !allChecked;
-
+                  
                   return (
-                    <div key={group.key} className="flex flex-col rounded-lg border border-border/60 bg-background/50 overflow-hidden">
-                      <div className="flex items-center gap-2 px-3 py-2 bg-muted/20 border-b border-border/40">
-                        <IndeterminateCheckbox
-                          checked={allChecked}
-                          indeterminate={indeterminate}
-                          disabled={resetting}
-                          onChange={(checked) =>
-                            setSelectedTables((prev) => {
-                              const next = new Set(prev);
-                              if (checked) group.items.forEach((i) => next.add(i.id));
-                              else group.items.forEach((i) => next.delete(i.id));
-                              return next;
-                            })
-                          }
+                    <div key={group.key} className="flex flex-col rounded-[20px] border border-border bg-muted/20 overflow-hidden transition-colors hover:border-border">
+                      <div 
+                        className="flex items-center gap-3 px-4 py-3 border-b border-border bg-background/50 cursor-pointer"
+                        onClick={() => {
+                          const next = new Set(selectedTables);
+                          if (allChecked) group.items.forEach(i => next.delete(i.id));
+                          else group.items.forEach(i => next.add(i.id));
+                          setSelectedTables(next);
+                        }}
+                      >
+                        <Checkbox 
+                          checked={allChecked ? true : selectedCount > 0 ? "indeterminate" : false}
+                          className="size-4 rounded-md border-2"
                         />
-                        <span className="flex-1 text-sm font-semibold">{group.label}</span>
-                        <span className="text-[10px] font-mono bg-muted px-1.5 py-0.5 rounded text-muted-foreground">
+                        <span className="flex-1 text-sm font-bold text-foreground">{group.label}</span>
+                        <span className="text-[10px] font-black bg-muted px-2 py-0.5 rounded-full text-muted-foreground uppercase">
                           {selectedCount}/{group.items.length}
                         </span>
                       </div>
-                      <div className="p-2 space-y-1">
+                      <div className="p-3 space-y-1.5">
                         {group.items.map((item) => (
-                          <label key={item.id} className="flex items-center gap-2 rounded px-2 py-1.5 text-xs hover:bg-muted/40 transition-colors cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={selectedTables.has(item.id)}
-                              onChange={(event) =>
-                                setSelectedTables((prev) => {
-                                  const next = new Set(prev);
-                                  if (event.target.checked) next.add(item.id);
-                                  else next.delete(item.id);
-                                  return next;
-                                })
-                              }
-                              disabled={resetting}
-                              className="size-3.5 rounded border-border text-primary"
-                            />
-                            <div className="flex flex-col">
-                              <span className="font-medium">{item.label}</span>
-                              <span className="text-[10px] text-muted-foreground font-mono">{item.id}</span>
+                          <div 
+                            key={item.id} 
+                            className="flex items-center gap-2.5 px-2 py-2 rounded-xl hover:bg-muted/40 transition-colors cursor-pointer"
+                            onClick={() => {
+                              const next = new Set(selectedTables);
+                              if (next.has(item.id)) next.delete(item.id);
+                              else next.add(item.id);
+                              setSelectedTables(next);
+                            }}
+                          >
+                            <Checkbox checked={selectedTables.has(item.id)} className="size-4 rounded border-2" />
+                            <div className="flex flex-col min-w-0">
+                              <span className="text-xs font-semibold text-foreground truncate">{item.label}</span>
+                              <span className="text-[9px] text-muted-foreground font-mono uppercase opacity-60 truncate">{item.id}</span>
                             </div>
-                          </label>
+                          </div>
                         ))}
                       </div>
                     </div>
@@ -535,49 +510,48 @@ export function SystemTab() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 border-t border-border">
               <div className="space-y-2">
-                <label className="text-xs font-bold text-muted-foreground uppercase">Фраза підтвердження</label>
-                <div className="relative">
-                  <Input
-                    value={resetPhrase}
-                    onChange={(event) => setResetPhrase(event.target.value)}
-                    disabled={resetting}
-                    placeholder="Введіть 'hard reset'"
-                    autoComplete="off"
-                    className="font-mono bg-background"
-                  />
-                </div>
-                <p className="text-[10px] text-muted-foreground">Напишіть <span className="font-bold text-foreground">hard reset</span> для розблокування кнопки.</p>
+                <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">Фраза підтвердження</label>
+                <Input
+                  value={resetPhrase}
+                  onChange={(e) => setResetPhrase(e.target.value)}
+                  placeholder="Введіть 'hard reset'"
+                  className="font-mono text-sm bg-muted/20 border-2 focus-visible:border-primary/50"
+                  autoComplete="off"
+                />
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold text-muted-foreground uppercase">Ваш пароль адміністратора</label>
+                <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">Пароль адміністратора</label>
                 <Input
                   type="password"
                   value={resetPassword}
-                  onChange={(event) => setResetPassword(event.target.value)}
-                  disabled={resetting}
+                  onChange={(e) => setResetPassword(e.target.value)}
                   placeholder="••••••••"
+                  className="text-sm bg-muted/20 border-2 focus-visible:border-primary/50"
                   autoComplete="current-password"
-                  className="bg-background"
                 />
-                <p className="text-[10px] text-muted-foreground">Для підтвердження ваших прав доступу.</p>
               </div>
             </div>
           </div>
 
-          <AlertDialogFooter className="flex items-center justify-between border-t border-border bg-muted/20 p-4 sm:px-6">
-            <AlertDialogCancel className="mt-0" disabled={resetting}>Скасувати</AlertDialogCancel>
+          <AlertDialogFooter className="px-8 py-6 bg-muted/30 border-t border-border gap-3 sm:gap-0">
+            <AlertDialogCancel asChild>
+              <Button variant="outline" className="h-11 rounded-full px-6 font-bold border-2 hover:bg-background transition-all">Скасувати</Button>
+            </AlertDialogCancel>
             <AlertDialogAction
-              type="button"
-              variant="destructive"
-              disabled={!canHardReset || resetting}
-              onClick={hardReset}
-              className="min-w-[160px]"
+              asChild
             >
-              {resetting ? <Loader2 className="size-4 animate-spin mr-2" /> : null}
-              {resetting ? "Очищення..." : "Видалити вибрані дані"}
+              <Button
+                variant="destructive"
+                disabled={!canHardReset || resetting}
+                onClick={hardReset}
+                className="h-11 rounded-full px-8 font-black shadow-xl shadow-destructive/20 min-w-[200px]"
+              >
+                {resetting ? <Loader2 className="size-4 animate-spin mr-2" /> : <Trash2 className="size-4 mr-2" />}
+                {resetting ? "Очищення..." : "Видалити дані"}
+              </Button>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -898,6 +898,7 @@ CREATE INDEX IF NOT EXISTS idx_erp_materials_type ON erp_materials(type_id);
 CREATE INDEX IF NOT EXISTS idx_erp_material_types_sort ON erp_material_types(sort_order, name);
 CREATE INDEX IF NOT EXISTS idx_product_recipe_lines_product ON product_recipe_lines(product_id, sort_order);
 CREATE INDEX IF NOT EXISTS idx_erp_production_orders_status ON erp_production_orders(status);
+CREATE INDEX IF NOT EXISTS idx_erp_production_orders_lead_id ON erp_production_orders(lead_id);
 CREATE INDEX IF NOT EXISTS idx_erp_stock_movements_material ON erp_stock_movements(erp_material_id, created_at DESC);
 
 ALTER TABLE IF EXISTS erp_materials ENABLE ROW LEVEL SECURITY;
