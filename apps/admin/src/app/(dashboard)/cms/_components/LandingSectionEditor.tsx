@@ -8,14 +8,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, Save, RefreshCw } from "lucide-react";
 import { SeoPreview } from "./SeoPreview";
+import { RepeaterField } from "./RepeaterField";
 
 const RichField = dynamic(() => import("./RichField"), { ssr: false });
 
 export interface SectionField {
   key: string;
   label: string;
-  type: "input" | "textarea" | "rich";
+  type: "input" | "textarea" | "rich" | "repeater";
   placeholder?: string;
+  fields?: any[];
+  itemLabelKey?: string;
 }
 
 export interface SectionConfig {
@@ -53,8 +56,22 @@ export function LandingSectionEditor({
 
   useEffect(() => { load(); }, [load]);
 
-  const set = (key: string, val: unknown) =>
-    setData((prev) => ({ ...prev, [key]: val }));
+  const set = (key: string, val: unknown) => {
+    setData((prev) => {
+      const next = { ...prev, [key]: val };
+      
+      // Notify preview iframe
+      const iframes = document.querySelectorAll("iframe");
+      iframes.forEach((iframe) => {
+        iframe.contentWindow?.postMessage(
+          { type: "CMS_UPDATE", slug: section.slug, body: next },
+          "*"
+        );
+      });
+      
+      return next;
+    });
+  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -102,6 +119,19 @@ export function LandingSectionEditor({
       ) : (
         <div className="px-4 md:px-6 py-5 space-y-5">
           {section.fields.map((f) => {
+            if (f.type === "repeater") {
+              return (
+                <div key={f.key} className="pt-2">
+                  <RepeaterField
+                    label={f.label}
+                    items={(data[f.key] as any[]) ?? []}
+                    fields={f.fields ?? []}
+                    itemLabelKey={f.itemLabelKey}
+                    onChange={(val) => set(f.key, val)}
+                  />
+                </div>
+              );
+            }
             if (f.type === "rich") {
               return (
                 <RichField

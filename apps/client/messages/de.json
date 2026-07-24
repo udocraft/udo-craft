@@ -1,0 +1,787 @@
+{
+  "nav": {
+    "catalog": "Katalog",
+    "popup": "Popup",
+    "about": "Über uns",
+    "how": "So funktioniert's",
+    "contacts": "Kontakt",
+    "startProject": "Projekt starten",
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schließen",
+    "goToAccount": "Zum Konto",
+    "signIn": "Anmelden",
+    "cartItems": "Warenkorb — {count} Artikel",
+    "mainNav": "Hauptnavigation",
+    "logoLink": "U:DO CRAFT — zur Startseite"
+  },
+  "hero": {
+    "skipToCatalog": "Zum Katalog",
+    "watchVideo": "Video ansehen",
+    "closeVideo": "Video schließen",
+    "mainSection": "Hero-Bereich",
+    "fullscreenVideo": "Video im Vollbildmodus"
+  },
+  "socialProof": {
+    "trustedBy": "Das Vertrauen von Teams weltweit"
+  },
+  "about": {
+    "label": "Über uns",
+    "heading": "Plattform für",
+    "headingHighlight": "Corporate Merchandise",
+    "desc1": "Von Startups bis zu Großunternehmen — wir helfen Teams, Merch zu erstellen, auf den sie stolz sind.",
+    "desc2": "Ab 10 Stück, keine versteckten Gebühren, eigene Produktion, persönlicher Ansprechpartner, Qualitätsgarantie.",
+    "features": {
+      "editor": {
+        "title": "Online-Editor",
+        "desc": "Logo hochladen, auf dem Produkt platzieren und sofort das Ergebnis sehen. Kein Hin und Her."
+      },
+      "minOrder": {
+        "title": "Ab 10 Stück",
+        "desc": "Ideal für Startups und kleine Teams. Kein Aufschlag für Kleinmengen."
+      },
+      "pricing": {
+        "title": "Transparente Preise",
+        "desc": "Sofortige Rechnung. Keine versteckten Gebühren."
+      },
+      "timeline": {
+        "title": "7–14 Tage",
+        "desc": "Von der Bestätigung bis zur Lieferung. Deadline? Kein Problem."
+      },
+      "quality": {
+        "title": "Qualitätskontrolle",
+        "desc": "Jede Charge wird vor dem Versand geprüft."
+      },
+      "manager": {
+        "title": "Persönlicher Ansprechpartner",
+        "desc": "Von der ersten Anfrage bis zur Lieferung erreichbar."
+      }
+    }
+  },
+  "problemSolution": {
+    "problemHeading": "Der Markt ist überschwemmt mit billigem Merch, den niemand trägt",
+    "problemsLabel": "Häufige Probleme",
+    "problems": {
+      "minOrder": "Mindestbestellmenge 500+ Stück",
+      "approvals": "Wochenlange Design-Freigaben",
+      "quality": "Qualität entspricht nicht den Erwartungen",
+      "hidden": "Versteckte Kosten nach der Bestellung"
+    },
+    "solutionHeading": "Merch, der Teil Ihrer Marke wird",
+    "solutionsLabel": "U:DO Vorteile",
+    "solutions": {
+      "minOrder": "Ab 10 Stück ohne Aufschlag",
+      "editor": "Online-Editor — Ergebnis sofort sichtbar",
+      "samples": "Muster vor der Produktion (Box of Touch)",
+      "price": "Festpreis in der Rechnung"
+    },
+    "ctaLabel": "Katalog ansehen"
+  },
+  "collections": {
+    "heading": "Katalog",
+    "allProducts": "Alle Produkte",
+    "all": "Alle",
+    "empty": "Keine Produkte in dieser Kategorie",
+    "prevPage": "Zurück",
+    "nextPage": "Weiter",
+    "page": "Seite {n}"
+  },
+  "process": {
+    "heading": "Von der Idee zum Merch — in 4 Schritten",
+    "subtext": "Der gesamte Prozess dauert weniger als 15 Minuten. Preise sind sofort sichtbar — keine Anrufe, keine Verhandlungen.",
+    "estimatedTime": "Geschätzte Zeit",
+    "stepLabel": "Schritt {n}: {title}",
+    "stepsLabel": "Prozessschritte",
+    "steps": {
+      "1": {
+        "title": "Produkt wählen",
+        "body": "Katalog mit echten Preisen durchsuchen. Preis aktualisiert sich sofort bei Mengen-/Drucktyp-Änderung.",
+        "cta": "Katalog öffnen",
+        "time": "~5 Min"
+      },
+      "2": {
+        "title": "Online anpassen",
+        "body": "Logo hochladen, auf dem Produkt platzieren, Druckzone wählen. Editor zeigt genaue Kosten in Echtzeit.",
+        "cta": "Editor testen",
+        "time": "~10 Min"
+      },
+      "3": {
+        "title": "Angebot erhalten",
+        "body": "Formular ausfüllen — ein Ansprechpartner meldet sich innerhalb von 2 Stunden. Festpreis ohne versteckte Gebühren.",
+        "cta": "Kontakt aufnehmen",
+        "time": "~2 Std"
+      },
+      "4": {
+        "title": "Merch empfangen",
+        "body": "Produktion 7–14 Werktage. Versand deutschlandweit. Falls etwas nicht stimmt — kostenlose Nachbesserung.",
+        "cta": "FAQ lesen",
+        "time": "7–14 Tage"
+      }
+    }
+  },
+  "boxOfTouch": {
+    "label": "Box of Touch",
+    "heading": "Qualität erleben",
+    "headingHighlight": "bevor Sie bestellen",
+    "desc": "Die meisten Unternehmen bestellen blind — und erhalten etwas anderes als erwartet. Box of Touch löst das: ein physisches Set aus Stoff-, Farb- und Produktmustern.",
+    "contentsLabel": "Inhalt der Box of Touch",
+    "contents": {
+      "products": {
+        "label": "Produktmuster",
+        "desc": "T-Shirts, Hoodies, Longsleeves — Schnitt und Passform fühlen"
+      },
+      "fabrics": {
+        "label": "Stoffmuster",
+        "desc": "Verschiedene Zusammensetzungen und Gewichte — 180 bis 320 g/m²"
+      },
+      "palette": {
+        "label": "Farbpalette",
+        "desc": "Alle verfügbaren Farben mit echten Mustern"
+      },
+      "printing": {
+        "label": "Druckarten",
+        "desc": "Siebdruck, Stickerei, DTF — zum Vergleich anfassen"
+      }
+    },
+    "cta": "Box of Touch bestellen",
+    "freeDelivery": "Kostenloser Versand · Keine Verpflichtungen"
+  },
+  "popupStand": {
+    "label": "U:DO Popup",
+    "heading": "Pop-up stand — merch right at the event",
+    "slides": {
+      "0": {
+        "title": "Choose a package",
+        "desc": "Sticker packs or print packages — find the right format for your event"
+      },
+      "1": {
+        "title": "Choose a product",
+        "desc": "T-shirts, hoodies, accessories — guests choose on-site"
+      },
+      "2": {
+        "title": "We come to you",
+        "desc": "We bring equipment and apply prints right at the event"
+      }
+    },
+    "cta": "Learn more",
+    "slideLabel": "Slide {n}",
+    "photosLabel": "Pop-up stand photos"
+  },
+  "subscription": {
+    "label": "Merch subscription",
+    "heading": "Merch by subscription.",
+    "headingMuted": "No boxes in the office.",
+    "desc": "We store your items, assemble kits and ship them on a schedule: new employee, seasonal replacement, event or regular team need.",
+    "steps": {
+      "warehouse": "Warehouse",
+      "packing": "Packing",
+      "shipping": "Shipping"
+    },
+    "plans": {
+      "welcome": {
+        "title": "Welcome kits",
+        "desc": "For onboarding, HR processes and growing teams.",
+        "features": [
+          "storage",
+          "personalization",
+          "delivery to employee"
+        ]
+      },
+      "uniform": {
+        "title": "Regular uniforms",
+        "desc": "For HoReCa, retail and teams with regular uniform replacement.",
+        "features": [
+          "size tracking",
+          "repeat shipments",
+          "stock management"
+        ]
+      }
+    },
+    "cta": "Discuss subscription"
+  },
+  "designer": {
+    "label": "Design service",
+    "heading": "No logo? We'll help",
+    "desc": "Our designer will adapt your logo for printing or create a brand identity from scratch. Result — in 2 days.",
+    "steps": {
+      "0": {
+        "emoji": "💬",
+        "title": "Tell us about your brand",
+        "body": "Send your logo, brand colors and style description. If you have nothing — just tell us about the company. The brief takes 10–15 minutes online or by phone."
+      },
+      "1": {
+        "emoji": "✨",
+        "title": "Get a concept",
+        "body": "The designer will prepare 2–3 adaptation options for printing on clothing. Deadline — 2 business days. Includes adaptation for silk-screen, embroidery and DTF."
+      },
+      "2": {
+        "emoji": "✅",
+        "title": "Approve and order",
+        "body": "Choose an option, make edits (up to 2 rounds included), receive final files. All files stay with you — for any future orders."
+      }
+    },
+    "cta": "Discuss project"
+  },
+  "customizer": {
+    "label": "Online constructor",
+    "heading": "Build your merch right in the interface",
+    "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
+    "openEditor": "Open constructor",
+    "productLabel": "Product",
+    "colorLabel": "Color",
+    "printsLabel": "Prints",
+    "textLabel": "Text",
+    "fileLabel": "File",
+    "volumeLabel": "Volume & price",
+    "totalLabel": "Total",
+    "saved": "Draft saved",
+    "layersReady": "Layers ready",
+    "priceUpdated": "Price updated",
+    "sizeLabel": "Size"
+  },
+  "trust": {
+    "heading": "Why they trust us",
+    "subtext": "Not just words — specific guarantees we uphold every day.",
+    "guarantees": {
+      "0": {
+        "title": "Quality guarantee",
+        "body": "If the product doesn't match the approved design — we redo it for free. No arguments, no bureaucracy."
+      },
+      "1": {
+        "title": "Own production",
+        "body": "We control every stage — from material selection to printing. No intermediaries, no surprises."
+      },
+      "2": {
+        "title": "Fixed price",
+        "body": "Invoice immediately after confirmation. Price doesn't change after production starts."
+      },
+      "3": {
+        "title": "Personal manager",
+        "body": "One contact from first request to order delivery. We respond within 2 hours during business hours."
+      }
+    }
+  },
+  "comparison": {
+    "heading": "U:DO vs the rest of the market",
+    "subtext": "Compare the conditions — and understand why 500+ teams choose us.",
+    "featureLabel": "Feature",
+    "yourChoice": "Your choice",
+    "yes": "Yes",
+    "no": "No",
+    "partial": "Partial",
+    "selectProvider": "Select provider",
+    "goTo": "Go to: {name}",
+    "features": {
+      "minOrder": {
+        "name": "Minimum run",
+        "desc": "Minimum quantity for an order"
+      },
+      "editor": {
+        "name": "Online editor",
+        "desc": "Ability to create a design 24/7 independently"
+      },
+      "samples": {
+        "name": "Samples before run",
+        "desc": "Getting a test sample before launching the batch"
+      },
+      "manager": {
+        "name": "Personal manager",
+        "desc": "Direct contact for quick problem solving"
+      },
+      "fixedPrice": {
+        "name": "Fixed price",
+        "desc": "No hidden fees after approval"
+      },
+      "timeline": {
+        "name": "Production time",
+        "desc": "Time from design approval to shipping"
+      },
+      "quality": {
+        "name": "Quality guarantee",
+        "desc": "Free replacement if defects are found"
+      },
+      "popup": {
+        "name": "Mobile pop-up stand",
+        "desc": "Organizing an offline point at your event"
+      },
+      "design": {
+        "name": "Designer help",
+        "desc": "Logo adaptation and design for printing"
+      },
+      "logistics": {
+        "name": "Logistics",
+        "desc": "Packing and delivery to each employee separately"
+      }
+    },
+    "columns": {
+      "typical": "Typical supplier",
+      "udo": "U:DO Craft",
+      "printer": "Print shop"
+    }
+  },
+  "faq": {
+    "heading": "Häufig gestellte Fragen",
+    "noAnswer": "Keine Antwort gefunden?",
+    "contactUs": "Kontaktieren Sie uns",
+    "replyTime": "— wir antworten innerhalb einer Stunde.",
+    "questionsLabel": "Fragen und Antworten",
+    "items": {
+      "0": {
+        "question": "Was ist die Mindestbestellmenge?",
+        "answer": "Ab 10 Stück. Kein Aufschlag für kleine Auflagen — ideal zum Ausprobieren."
+      },
+      "1": {
+        "question": "Was kostet der Druck?",
+        "answer": "Der Preis hängt von der Druckart (Siebdruck, Stickerei, DTF) und der Menge ab. Je mehr, desto günstiger pro Stück. Im Online-Editor sofort sichtbar."
+      },
+      "2": {
+        "question": "Wie lange dauert eine Bestellung?",
+        "answer": "Standardlieferzeit — 7–14 Werktage nach Bestätigung. Für Eilbestellungen gibt es Expressproduktion."
+      },
+      "3": {
+        "question": "Kann ich die Qualität vor einer großen Bestellung prüfen?",
+        "answer": "Ja. Box of Touch enthält physische Muster von Stoffen, Farben und Produkten."
+      },
+      "4": {
+        "question": "Was, wenn mir das Ergebnis nicht gefällt?",
+        "answer": "Wir genehmigen das Design vor der Produktion. Entspricht das Produkt nicht dem genehmigten Design — machen wir es kostenlos neu."
+      },
+      "5": {
+        "question": "Gibt es Rabatte bei Großbestellungen?",
+        "answer": "Ja. 10–49 Stück — Basispreis. 50–99 — 12% Rabatt. 100+ — 15% Rabatt. Rabatte werden im Editor automatisch berechnet."
+      }
+    }
+  },
+  "finalCta": {
+    "ready": "Bereit anzufangen?",
+    "heading": "Ihr Merch — in 14 Tagen",
+    "desc": "Von der Idee zum fertigen Produkt. Online-Editor, persönlicher Ansprechpartner, Qualitätsgarantie.",
+    "cta": "Projekt starten",
+    "footer": "Ab 10 Stück · Keine versteckten Gebühren · Lieferung inklusive"
+  },
+  "contact": {
+    "phone": "Phone",
+    "address": "Address"
+  },
+  "footer": {
+    "readyToStart": "Bereit anzufangen?",
+    "readyDesc": "Ab 10 Stück · 7–14 Tage · Lieferung",
+    "startProject": "Projekt starten",
+    "ariaLabel": "Fußzeile",
+    "homeLink": "U:DO CRAFT — zur Startseite",
+    "columns": {
+      "products": {
+        "title": "Produkte",
+        "links": {
+          "constructor": "Merch-Konfigurator",
+          "catalog": "Katalog",
+          "popup": "Popup-Stand",
+          "box": "Box of Touch",
+          "designer": "Designer beauftragen"
+        }
+      },
+      "company": {
+        "title": "Unternehmen",
+        "links": {
+          "about": "Über uns",
+          "how": "So funktioniert's",
+          "career": "Karriere",
+          "blog": "Blog"
+        }
+      },
+      "support": {
+        "title": "Support",
+        "links": {
+          "faq": "FAQ",
+          "contact": "Kontakt",
+          "cabinet": "Konto",
+          "delivery": "Versand & Zahlung"
+        }
+      }
+    },
+    "privacy": "Datenschutz",
+    "terms": "AGB",
+    "cookies": "Cookies"
+  },
+  "cart": {
+    "title": "Warenkorb",
+    "titleWithCount": "Warenkorb ({count})",
+    "empty": "Der Warenkorb ist leer",
+    "emptyDesc": "Produkt wählen und Druck konfigurieren",
+    "toCatalog": "Zum Katalog",
+    "ariaLabel": "Warenkorb",
+    "quantity": "{qty} Stk · {size}",
+    "total": "Gesamt:",
+    "cartItem": "Warenkorb-Artikel"
+  },
+  "services": {
+    "heading": "Three ways to get",
+    "headingAccent": "perfect merch",
+    "desc": "From physical samples to a pop-up stand — choose the format that suits you.",
+    "popup": {
+      "title": "U:DO Popup",
+      "desc": "Mobile stand with live customization. Guests create unique merch and take it away immediately.",
+      "stats": {
+        "events": "events",
+        "product": "per product"
+      },
+      "learnMore": "Learn more",
+      "discuss": "Discuss →"
+    },
+    "ctaStrip": {
+      "title": "Mobile pop-up stand for your event",
+      "desc": "500+ events · 50k+ guests · 5 min per product",
+      "learnMore": "Learn more",
+      "discuss": "Discuss →"
+    },
+    "stepLabel": "Step {n}",
+    "prevStep": "Previous",
+    "nextStep": "Next"
+  },
+  "checkout": {
+    "title": "Warenkorb",
+    "orderTitle": "Bestellung aufgeben",
+    "stepCart": "Warenkorb",
+    "stepForm": "Unternehmensdaten",
+    "emptyCart": "Warenkorb ist leer",
+    "toCatalog": "Zum Katalog",
+    "total": "Gesamt",
+    "finalPriceNote": "Endpreis wird mit dem Ansprechpartner vereinbart",
+    "placeOrder": "Bestellung aufgeben",
+    "edit": "Bearbeiten",
+    "discount": "-{pct}% Rabatt",
+    "company": {
+      "title": "Unternehmensdaten",
+      "name": "Firmenname *",
+      "namePlaceholder": "GmbH «Name»",
+      "taxId": "Steuernummer / USt-IdNr.",
+      "taxIdPlaceholder": "DE123456789"
+    },
+    "contact": {
+      "title": "Ansprechpartner",
+      "fullName": "Vor- und Nachname *",
+      "fullNamePlaceholder": "Hans Müller",
+      "email": "E-Mail *",
+      "emailPlaceholder": "hr@firma.de",
+      "phone": "Telefon",
+      "phonePlaceholder": "+49 XXX XXXXXXX",
+      "social": "Telegram / Instagram",
+      "socialPlaceholder": "@benutzername oder Link"
+    },
+    "delivery": {
+      "title": "Lieferung & Fristen",
+      "options": {
+        "nova_poshta": {
+          "label": "DHL",
+          "desc": "2–3 Werktage"
+        },
+        "ukrposhta": {
+          "label": "DPD",
+          "desc": "4–6 Werktage"
+        },
+        "pickup": {
+          "label": "Abholung",
+          "desc": "Nach Vereinbarung"
+        }
+      },
+      "deadline": "Gewünschter Termin",
+      "comment": "Anmerkung zur Bestellung",
+      "commentPlaceholder": "Besondere Wünsche, Druckdetails..."
+    },
+    "submit": "Bestellung bestätigen",
+    "submitting": "Wird gesendet...",
+    "finalPriceManager": "Endpreis und Rechnung werden vom Ansprechpartner nach Bestätigung gesendet",
+    "success": {
+      "title": "Bestellung eingegangen!",
+      "desc": "Unser Ansprechpartner meldet sich innerhalb von 24 Stunden.",
+      "createAccount": "Persönliches Konto erstellen",
+      "loginAccount": "Im Konto anmelden",
+      "createAccountDesc": "Bestellstatus verfolgen, mit dem Ansprechpartner chatten und Rechnungen einsehen.",
+      "emailExists": "Diese E-Mail ist bereits registriert. Passwort eingeben, um sich anzumelden.",
+      "emailLabel": "E-Mail",
+      "passwordLabel": "Passwort",
+      "newPasswordLabel": "Passwort erstellen",
+      "passwordPlaceholder": "Mindestens 6 Zeichen",
+      "enterPasswordPlaceholder": "Passwort eingeben",
+      "creating": "Wird erstellt...",
+      "create": "Konto erstellen",
+      "loggingIn": "Anmeldung...",
+      "login": "Anmelden",
+      "passwordError": "Passwort muss mindestens 6 Zeichen haben",
+      "enterPasswordError": "Passwort eingeben",
+      "wrongPassword": "Falsches Passwort",
+      "registrationError": "Registrierungsfehler. Später erneut versuchen.",
+      "skip": "Überspringen, zur Startseite",
+      "accountCreated": {
+        "title": "Konto erstellt!",
+        "desc": "Wir haben eine Bestätigungs-E-Mail an {email} gesendet. E-Mail bestätigen, um sich anzumelden.",
+        "loginBtn": "Im Konto anmelden",
+        "homeLink": "Zur Startseite"
+      }
+    },
+    "back": "Zurück",
+    "header": "U:DO",
+    "backAriaLabel": "Zurück"
+  },
+  "cabinet": {
+    "breadcrumb": "/ Konto",
+    "settings": "Einstellungen",
+    "logout": "Abmelden",
+    "noOrders": "Noch keine Bestellungen",
+    "toCatalog": "Zum Katalog",
+    "writeTo": "Ansprechpartner schreiben",
+    "tabs": {
+      "details": "Details",
+      "chat": "Chat",
+      "files": "Dateien"
+    },
+    "status": {
+      "new": "Neue Anfrage",
+      "in_progress": "In Bearbeitung",
+      "production": "Produktion",
+      "completed": "Abgeschlossen",
+      "archived": "Archiv"
+    },
+    "delivery": {
+      "nova_poshta": "DHL",
+      "ukrposhta": "DPD",
+      "pickup": "Abholung"
+    },
+    "details": {
+      "phone": "Telefon",
+      "email": "E-Mail",
+      "company": "Unternehmen",
+      "orderDate": "Bestelldatum",
+      "orderAmount": "Bestellbetrag",
+      "delivery": "Lieferung",
+      "deadline": "Frist",
+      "positions": "Positionen ({n})",
+      "attachments": "Anhänge ({n})",
+      "invoice": "Rechnung herunterladen",
+      "print": "Druck"
+    },
+    "chat": {
+      "placeholder": "Nachricht...",
+      "sendLabel": "Nachricht senden",
+      "attachLabel": "Datei anhängen",
+      "loading": "Nachrichten werden geladen...",
+      "empty": "Noch keine Nachrichten",
+      "fileTooLarge": "\"{name}\" überschreitet 10 MB"
+    },
+    "files": {
+      "empty": "Noch keine Dateien",
+      "openFile": "Datei öffnen"
+    }
+  },
+  "popup": {
+    "badge": "Mobiler Popup-Service",
+    "heroHeading": "Merch-Popup auf Ihrer Veranstaltung —",
+    "heroSubheading": "ein Live-Erlebnis, das man nicht vergisst",
+    "heroDesc": "Wir kommen zu Ihnen. Gäste wählen Kleidung, personalisieren den Druck vor Ort und nehmen fertigen Merch mit.",
+    "bookBtn": "Popup buchen",
+    "howItWorks": "So funktioniert's",
+    "stats": {
+      "events": "Durchgeführte Popups",
+      "time": "Personalisierungszeit",
+      "guests": "Gäste pro Veranstaltung",
+      "satisfaction": "Zufriedene Veranstalter"
+    },
+    "useCases": {
+      "label": "Für wen",
+      "heading": "Für jede Veranstaltung geeignet",
+      "items": {
+        "corporate": {
+          "title": "Firmenveranstaltungen",
+          "desc": "Firmenevents unvergesslich machen — Gäste nehmen personalisierten Merch mit."
+        },
+        "conferences": {
+          "title": "Konferenzen & Foren",
+          "desc": "Gebrandeter Merch vor Ort — bestes Networking-Tool."
+        },
+        "festivals": {
+          "title": "Festivals & Märkte",
+          "desc": "Popup-Stand, der Aufmerksamkeit erregt. Live-Personalisierung als Show."
+        },
+        "launches": {
+          "title": "Produktlaunches",
+          "desc": "Produktlaunch mit Merch, den die Gäste selbst gemacht haben."
+        },
+        "universities": {
+          "title": "Universitäten & Schulen",
+          "desc": "Abschlussfeiern, Open Days, Studentenveranstaltungen."
+        },
+        "b2b": {
+          "title": "B2B-Veranstaltungen",
+          "desc": "Partnertreffen, Messen, Präsentationen."
+        }
+      }
+    },
+    "process": {
+      "label": "Ablauf",
+      "heading": "Drei Schritte zum perfekten Popup",
+      "steps": {
+        "0": {
+          "step": "01",
+          "title": "Format wählen",
+          "desc": "Veranstaltungsdetails mitteilen — Gästezahl, Ort, Datum. Wir wählen das optimale Format."
+        },
+        "1": {
+          "step": "02",
+          "title": "Stand vorbereiten",
+          "desc": "Wir bringen Equipment, Kleidung und alles für die Personalisierung. Stand vor Veranstaltungsbeginn aufbauen."
+        },
+        "2": {
+          "step": "03",
+          "title": "Gäste personalisieren",
+          "desc": "Jeder Gast wählt ein Produkt, platziert den Druck und erhält fertigen Merch vor Ort."
+        }
+      }
+    },
+    "faq": {
+      "label": "FAQ",
+      "heading": "Häufig gestellte Fragen",
+      "items": {
+        "0": {
+          "q": "Wie viele Teilnehmer sind mindestens nötig?",
+          "a": "Ab 50 Personen."
+        },
+        "1": {
+          "q": "Wie lange dauert die Personalisierung eines Produkts?",
+          "a": "3 bis 10 Minuten je nach Druckkomplexität."
+        },
+        "2": {
+          "q": "Welche Produkte gibt es beim Popup?",
+          "a": "T-Shirts, Hoodies, Longsleeves, Caps und Accessoires."
+        },
+        "3": {
+          "q": "Wer bezahlt den Merch — Veranstalter oder Gäste?",
+          "a": "Beide Optionen möglich."
+        },
+        "4": {
+          "q": "Wie weit im Voraus buchen?",
+          "a": "2–3 Wochen vor der Veranstaltung empfohlen."
+        }
+      }
+    },
+    "contact": {
+      "label": "Buchen",
+      "heading": "Erzählen Sie uns von Ihrer Veranstaltung",
+      "desc": "Anfrage stellen — ein Ansprechpartner meldet sich innerhalb eines Werktages.",
+      "benefits": {
+        "0": "Kostenlose Beratung",
+        "1": "Individueller Kostenvoranschlag",
+        "2": "Antwort innerhalb von 24 Stunden"
+      }
+    },
+    "nav": {
+      "useCases": "Für wen",
+      "how": "So funktioniert's",
+      "faq": "FAQ",
+      "contacts": "Kontakt"
+    },
+    "book": "Buchen",
+    "footerCopyright": "U:DO CRAFT. Alle Rechte vorbehalten.",
+    "menuOpen": "Menü öffnen",
+    "menuClose": "Menü schließen",
+    "homeLink": "Startseite"
+  },
+  "contactForm": {
+    "nameLabel": "Ihr Name *",
+    "namePlaceholder": "Hans Müller",
+    "emailLabel": "E-Mail *",
+    "emailPlaceholder": "hr@firma.de",
+    "phoneLabel": "Telefon *",
+    "phonePlaceholder": "+49 XXX XXXXXXX",
+    "companyLabel": "Unternehmen",
+    "companyPlaceholder": "Firmenname",
+    "topicLabel": "Betreff *",
+    "messageLabel": "Erzählen Sie uns von Ihrem Projekt",
+    "messagePlaceholder": "Menge, Produkttyp, Fristen...",
+    "filesLabel": "Dateien hochladen (Designs, Logos usw.)",
+    "filesClick": "Klicken oder Dateien hierher ziehen",
+    "filesDesc": "Designs, Logos, Bilder...",
+    "submit": "Senden",
+    "submitting": "Wird gesendet...",
+    "error": "Ein Fehler ist aufgetreten. Bitte erneut versuchen oder direkt kontaktieren.",
+    "success": "Vielen Dank für Ihre Nachricht!",
+    "successDesc": "Wir haben Ihre Anfrage erhalten und werden uns bald melden.",
+    "deleteFile": "Datei löschen {name}",
+    "topics": {
+      "merch": {
+        "label": "Corporate Merch",
+        "desc": "T-Shirts, Hoodies, Accessoires für Ihr Team oder Ihre Marke"
+      },
+      "popup": {
+        "label": "Popup-Stand für Veranstaltungen",
+        "desc": "Live-Merch-Personalisierung auf Ihrer Veranstaltung"
+      },
+      "box": {
+        "label": "Box of Touch",
+        "desc": "Physische Muster von Stoffen und Produkten vor der Produktion"
+      },
+      "designer": {
+        "label": "Designerleistungen",
+        "desc": "Logo-Entwicklung oder -Anpassung für den Druck"
+      },
+      "bulk": {
+        "label": "Großbestellung (500+)",
+        "desc": "Großhandelsbestellungen mit individuellen Konditionen"
+      },
+      "other": {
+        "label": "Sonstiges",
+        "desc": "Jede andere Frage oder Anregung"
+      }
+    }
+  },
+  "privacy": {
+    "title": "Datenschutzerklärung",
+    "noContent": "Inhalt noch nicht hinzugefügt."
+  },
+  "terms": {
+    "title": "Allgemeine Geschäftsbedingungen",
+    "noContent": "Inhalt noch nicht hinzugefügt."
+  },
+  "order": {
+    "loadError": "Katalog konnte nicht geladen werden. Bitte Seite neu laden."
+  },
+  "leadMagnet": {
+    "badge": "Kostenlos",
+    "heading": "Kostenloses Mockup Ihres Merchs erhalten",
+    "desc": "Logo hochladen — wir legen es auf ein echtes Produkt und senden das Mockup an Ihre E-Mail.",
+    "emailLabel": "Ihre E-Mail",
+    "cta": "Mockup erhalten",
+    "loading": "Wird gesendet...",
+    "emailError": "Gültige E-Mail eingeben",
+    "success": "Danke!",
+    "successDesc": "Das Mockup kommt innerhalb von 24 Stunden in Ihrem Postfach an",
+    "formLabel": "Mockup-Anforderungsformular",
+    "orCalculate": "Möchten Sie den Preis jetzt wissen?",
+    "openCalculator": "Preiskalkulator öffnen →"
+  },
+  "howItWorks": {
+    "label": "So funktioniert's",
+    "heading": "Für Ihre Ziele anpassen",
+    "steps": {
+      "0": {
+        "title": "Produkte wählen",
+        "desc": "Katalog durchsuchen, nach Kategorien filtern. Basis für Ihren Merch wählen.",
+        "cta": "Zum Katalog"
+      },
+      "1": {
+        "title": "Kleidung anpassen",
+        "desc": "Logo hochladen, Druckzone, Größe und Farbe wählen. Echtzeit-Vorschau.",
+        "cta": "Ausprobieren"
+      },
+      "2": {
+        "title": "Angebot erhalten",
+        "desc": "Bestellformular ausfüllen. Ein Ansprechpartner meldet sich zur Bestätigung.",
+        "cta": "Bestellen"
+      }
+    }
+  },
+  "stats": {
+    "ariaLabel": "Key metrics"
+  },
+  "langSwitcher": {
+    "label": "Language"
+  }
+}

@@ -5,7 +5,11 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
   const { service, error } = await requireErpUser();
   if (error) return error;
   try {
-    const apiKey = process.env.NOVA_POSHTA_API_KEY;
+    // Get NovaPoshta settings (api_key + sender refs)
+    const { data: settingsData } = await service!.from("app_settings").select("value").eq("key", "nova_poshta").single();
+    const npSettings = settingsData?.value || {};
+    const apiKey = npSettings.api_key || process.env.NOVA_POSHTA_API_KEY;
+    
     if (!apiKey) return NextResponse.json({ error: "NOVA_POSHTA_API_KEY is not configured" }, { status: 400 });
 
     const { data: lead, error: leadError } = await service!
@@ -20,8 +24,13 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
       provider: "nova_poshta",
       recipient: lead.customer_data,
       cod_cents: lead.total_amount_cents,
+      sender_ref: npSettings.sender_ref || null,
+      sender_contact_ref: npSettings.sender_contact_ref || null,
+      sender_address_ref: npSettings.sender_address_ref || null,
       created_at: new Date().toISOString(),
-      message: "Дані підготовлені. Для бойового створення ТТН потрібно додати sender/cargo налаштування бізнесу.",
+      message: npSettings.sender_ref && npSettings.sender_contact_ref && npSettings.sender_address_ref
+        ? "Дані підготовані з налаштувань відправника."
+        : "Дані підготовані. Для створення ТТН додайте sender refs у налаштуваннях НоваПошта.",
     };
 
     const { data, error: updateError } = await service!

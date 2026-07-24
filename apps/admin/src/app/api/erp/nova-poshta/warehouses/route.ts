@@ -2,10 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { apiError, requireErpUser } from "../../_lib";
 
 export async function GET(req: NextRequest) {
-  const { error } = await requireErpUser();
+  const { service, error } = await requireErpUser();
   if (error) return error;
 
-  const apiKey = process.env.NOVA_POSHTA_API_KEY;
+  // Try settings first, fall back to env
+  const { data: settingsData } = await service!.from("app_settings").select("value").eq("key", "nova_poshta").single();
+  const apiKey = settingsData?.value?.api_key || process.env.NOVA_POSHTA_API_KEY;
+  
   const city = new URL(req.url).searchParams.get("city") || "";
   if (!apiKey) {
     return NextResponse.json({ configured: false, data: [], error: "NOVA_POSHTA_API_KEY is not configured" });

@@ -199,6 +199,13 @@ export default function ProductCanvas({
       };
       layerTransforms.current[id] = transform;
       onLayerTransformChangeRef.current?.(id, transform);
+
+      if ((obj as any)._isText && obj instanceof fabric.Textbox) {
+        onLayerPatchRef.current?.(id, {
+          textBoxWidth: obj.width,
+          textBoxHeight: obj.height,
+        });
+      }
     };
     canvas.on("object:modified", saveTransform);
 
@@ -468,6 +475,11 @@ export default function ProductCanvas({
     const scaleY = saved?.scaleY ?? 1;
     const angle = saved?.angle ?? 0;
 
+    const charSpacing = layer.textLetterSpacing != null ? layer.textLetterSpacing * 10 : 0;
+    const lineHeight = layer.textLineHeight ?? 1.2;
+    const fontWeight = layer.textBold ? "bold" : "normal";
+    const fontStyle = layer.textItalic ? "italic" : "normal";
+
     if (curve !== 0) {
       const radius = Math.max(50, Math.abs(5000 / curve));
       const arcDeg = Math.min(Math.abs(curve), 340);
@@ -499,10 +511,14 @@ export default function ProductCanvas({
         scaleY,
         angle,
         editable: !readOnly,
+        charSpacing,
+        lineHeight,
+        fontWeight,
+        fontStyle,
       } as any);
     }
 
-    return new fabric.IText(content, {
+    const textbox = new fabric.Textbox(content, {
       fontFamily,
       fontSize,
       fill,
@@ -516,9 +532,24 @@ export default function ProductCanvas({
       scaleX,
       scaleY,
       angle,
-      width: 400,
+      width: layer.textBoxWidth ?? 400,
       editable: !readOnly,
+      charSpacing,
+      lineHeight,
+      fontWeight,
+      fontStyle,
     });
+
+    if (!readOnly) {
+      textbox.setControlsVisibility({
+        mt: false,
+        mb: false,
+        ml: true,
+        mr: true,
+      });
+    }
+
+    return textbox;
   };
 
   const placeTextLayer = (canvas: fabric.Canvas, layer: PrintLayer) => {
@@ -603,13 +634,25 @@ export default function ProductCanvas({
               if ((textObj as any).isEditing) {
                 syncLayerSizing(textObj, layer);
               } else {
+                const charSpacing = layer.textLetterSpacing != null ? layer.textLetterSpacing * 10 : 0;
+                const lineHeight = layer.textLineHeight ?? 1.2;
+                const fontWeight = layer.textBold ? "bold" : "normal";
+                const fontStyle = layer.textItalic ? "italic" : "normal";
+
                 textObj.set({
                   text: layer.textContent ?? "Текст",
                   fill: layer.textColor ?? "#000000",
                   fontFamily: layer.textFont ?? "Montserrat",
                   fontSize: layer.textFontSize ?? 48,
                   textAlign: layer.textAlign ?? "center",
+                  charSpacing,
+                  lineHeight,
+                  fontWeight,
+                  fontStyle,
                 } as any);
+                if (existing instanceof fabric.Textbox && layer.textBoxWidth != null) {
+                  existing.set("width", layer.textBoxWidth);
+                }
                 if (typeof (textObj as any).initDimensions === "function") (textObj as any).initDimensions();
                 syncLayerSizing(textObj, layer);
               }

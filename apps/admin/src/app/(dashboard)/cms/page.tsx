@@ -5,13 +5,31 @@ import { useState } from "react";
 import { ChevronUp, Menu } from "lucide-react";
 import { CmsTreeSidebar, CmsTreeDrawer, type TreeNode } from "./_components/CmsTree";
 import { LandingSectionEditor, type SectionConfig } from "./_components/LandingSectionEditor";
+import { PreviewPane } from "./_components/PreviewPane";
 
 const BlockEditor = dynamic(
   () => import("./_components/BlockEditor").then((m) => ({ default: m.BlockEditor })),
   { ssr: false }
 );
 
-// ── Tree definition ───────────────────────────────────────────────────────────
+// ── Section Definitions ───────────────────────────────────────────────────────
+
+const LAYOUT_SECTION: SectionConfig = {
+  slug: "home_layout",
+  label: "Структура сторінки",
+  fields: [
+    {
+      key: "sections",
+      label: "Порядок секцій",
+      type: "repeater",
+      itemLabelKey: "id",
+      fields: [
+        { key: "id", label: "ID секції", type: "input", placeholder: "hero, stats, services, trust, faq, popup, contact" },
+        { key: "visible", label: "Видимість", type: "input", placeholder: "true/false" },
+      ],
+    },
+  ],
+};
 
 const HERO_SECTION: SectionConfig = {
   slug: "home_hero",
@@ -59,6 +77,53 @@ const SERVICES_SECTION: SectionConfig = {
     { key: "service2_title", label: "Послуга 2 — назва", type: "input",    placeholder: "Найми дизайнера" },
     { key: "service2_desc",  label: "Послуга 2 — опис",  type: "textarea" },
     { key: "service2_cta",   label: "Послуга 2 — кнопка", type: "input",  placeholder: "Обговорити проєкт" },
+  ],
+};
+
+const TRUST_SECTION: SectionConfig = {
+  slug: "home_trust",
+  label: "Довіра",
+  fields: [
+    { key: "heading", label: "Заголовок", type: "input", placeholder: "Чому нам довіряють" },
+    { key: "subtext", label: "Підзаголовок", type: "textarea", placeholder: "Не просто слова — конкретні гарантії..." },
+    {
+      key: "guarantees",
+      label: "Гарантії",
+      type: "repeater",
+      itemLabelKey: "title",
+      fields: [
+        { key: "title", label: "Назва", type: "input", placeholder: "Гарантія якості" },
+        { key: "body", label: "Опис", type: "textarea", placeholder: "Якщо виріб не відповідає..." },
+      ],
+    },
+    {
+      key: "numbers",
+      label: "Показники (цифри)",
+      type: "repeater",
+      itemLabelKey: "label",
+      fields: [
+        { key: "value", label: "Значення", type: "input", placeholder: "500+" },
+        { key: "label", label: "Підпис", type: "input", placeholder: "задоволених клієнтів" },
+      ],
+    },
+  ],
+};
+
+const FAQ_SECTION: SectionConfig = {
+  slug: "home_faq",
+  label: "FAQ",
+  fields: [
+    { key: "heading", label: "Заголовок", type: "input", placeholder: "Часті запитання" },
+    {
+      key: "items",
+      label: "Питання та відповіді",
+      type: "repeater",
+      itemLabelKey: "question",
+      fields: [
+        { key: "question", label: "Питання", type: "input" },
+        { key: "answer", label: "Відповідь", type: "textarea" },
+      ],
+    },
   ],
 };
 
@@ -131,9 +196,12 @@ const TREE: TreeNode[] = [
     icon: "🏠",
     type: "group",
     children: [
+      { id: "home_layout",   label: "Структура",    icon: "🏗️", type: "section", section: LAYOUT_SECTION },
       { id: "home_hero",     label: "Hero",         icon: "✦",  type: "section", section: HERO_SECTION },
       { id: "home_stats",    label: "Статистика",   icon: "📊", type: "section", section: STATS_SECTION },
       { id: "home_services", label: "Послуги",      icon: "🛠", type: "section", section: SERVICES_SECTION },
+      { id: "home_trust",    label: "Довіра",       icon: "🛡️", type: "section", section: TRUST_SECTION },
+      { id: "home_faq",      label: "FAQ",          icon: "❓", type: "section", section: FAQ_SECTION },
       { id: "home_popup",    label: "Popup-стенд",  icon: "🎪", type: "section", section: POPUP_SECTION },
       { id: "home_contact",  label: "Контакти",     icon: "📞", type: "section", section: CONTACT_SECTION },
       { id: "footer",        label: "Футер",        icon: "⬇️", type: "section", section: FOOTER_SECTION },
@@ -216,28 +284,11 @@ export default function CmsPage() {
           </div>
         </main>
 
-        {/* Live Preview area - hidden on small screens */}
-        <div className="hidden lg:flex flex-1 flex-col bg-muted/30 relative">
-          <div className="flex items-center justify-between px-4 py-2 border-b border-border bg-white shrink-0">
-            <span className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              Live Preview
-            </span>
-          </div>
-          <div className="flex-1 overflow-hidden p-4 flex justify-center">
-            <div className="w-full max-w-[1440px] h-full bg-white rounded-xl shadow-sm border border-border overflow-hidden">
-              <iframe
-                key={previewKey}
-                src={process.env.NEXT_PUBLIC_CLIENT_URL || "http://localhost:3000"}
-                className="w-full h-full border-0"
-                title="Client Website Preview"
-              />
-            </div>
-          </div>
-        </div>
+        {/* Live Preview area */}
+        <PreviewPane
+          previewKey={previewKey}
+          url={process.env.NEXT_PUBLIC_CLIENT_URL || "http://localhost:3000"}
+        />
 
         {/* Mobile bottom bar — only visible on mobile */}
         <div className="md:hidden shrink-0 border-t border-border bg-background">

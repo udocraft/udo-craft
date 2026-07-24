@@ -4,9 +4,9 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
-  BarChart2, Users, MessageCircleHeart, ShoppingBag, ImagePlus,
+  BarChart3, Users, MessageCircle, ShoppingBag, ImagePlus,
   Settings, ChevronRight, UserCog, ShelvingUnit,
-  FileEdit, Globe, Search, Tag,
+  FileEdit, Globe, Search, Tag, Plus, Boxes,
 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { NavUser } from "@/components/nav-user";
@@ -29,7 +29,6 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
-  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
 import {
@@ -46,6 +45,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 
 // ── Nav structure ─────────────────────────────────────────────────────────────
 
@@ -64,11 +64,6 @@ interface NavItem {
 
 type AdminRole = "admin" | "manager" | "viewer" | "seamstress" | "sewer";
 
-const CORE_NAV: NavItem[] = [
-  { title: "Аналітика",    url: "/analytics", icon: BarChart2 },
-  { title: "Відвідувачі",  url: "/visitors",  icon: Globe },
-];
-
 const CRM_NAV: NavItem[] = [
   {
     title: "Замовлення",
@@ -80,8 +75,13 @@ const CRM_NAV: NavItem[] = [
       { title: "Нове замовлення", url: "/orders/new" },
     ],
   },
-  { title: "Клієнти",      url: "/clients",   icon: Users },
-  { title: "Повідомлення", url: "/messages",  icon: MessageCircleHeart, badgeKey: "messages" },
+  { title: "Клієнти", url: "/clients", icon: Users },
+  { title: "Повідомлення", url: "/messages", icon: MessageCircle, badgeKey: "messages" },
+];
+
+const ANALYTICS_NAV: NavItem[] = [
+  { title: "Аналітика", url: "/analytics", icon: BarChart3 },
+  { title: "Відвідувачі", url: "/visitors", icon: Globe },
 ];
 
 const CATALOG_NAV: NavItem[] = [
@@ -90,21 +90,20 @@ const CATALOG_NAV: NavItem[] = [
     url: "/catalog",
     icon: Tag,
     children: [
-      { title: "Товари",              url: "/catalog?tab=products" },
-      { title: "Категорії",           url: "/catalog?tab=categories" },
+      { title: "Товари", url: "/catalog?tab=products" },
+      { title: "Категорії", url: "/catalog?tab=categories" },
       { title: "Кольори та матеріали", url: "/catalog?tab=colors" },
-      { title: "Розмірна сітка",      url: "/catalog?tab=sizes" },
+      { title: "Розмірна сітка", url: "/catalog?tab=sizes" },
     ],
   },
-  { title: "SKU Matrix", url: "/products", icon: FileEdit },
   {
     title: "Принти",
     url: "/prints",
     icon: ImagePlus,
     children: [
       { title: "Бібліотека принтів", url: "/prints?tab=prints" },
-      { title: "Технології друку",    url: "/prints?tab=types" },
-      { title: "Формати друку",      url: "/prints?tab=sizes" },
+      { title: "Технології друку", url: "/prints?tab=types" },
+      { title: "Формати друку", url: "/prints?tab=sizes" },
     ],
   },
   {
@@ -112,12 +111,17 @@ const CATALOG_NAV: NavItem[] = [
     url: "/warehouse",
     icon: ShelvingUnit,
     children: [
-      { title: "Залишки",    url: "/warehouse?tab=stock" },
-      { title: "Постачання",  url: "/warehouse?tab=receipts" },
+      { title: "Залишки", url: "/warehouse?tab=stock" },
+      { title: "Постачання", url: "/warehouse?tab=receipts" },
       { title: "Виробництво", url: "/warehouse?tab=production" },
       { title: "Акти пошиття", url: "/warehouse?tab=acts" },
       { title: "Переміщення", url: "/warehouse?tab=transfers" },
     ],
+  },
+  {
+    title: "ERP",
+    url: "/erp",
+    icon: Boxes,
   },
 ];
 
@@ -127,7 +131,7 @@ const SYSTEM_NAV: NavItem[] = [
     url: "/cms",
     icon: FileEdit,
     children: [
-      { title: "Сторінки",        url: "/cms" },
+      { title: "Сторінки", url: "/cms" },
       { title: "Умови та правила", url: "/cms/terms" },
       { title: "Конфіденційність", url: "/cms/privacy" },
     ],
@@ -137,11 +141,10 @@ const SYSTEM_NAV: NavItem[] = [
     url: "/users",
     icon: UserCog,
     children: [
-      { title: "Всі",        url: "/users?role=all" },
-      { title: "Адміни",     url: "/users?role=admin" },
-      { title: "Менеджери",  url: "/users?role=manager" },
-      { title: "Швеї",       url: "/users?role=sewer" },
-      { title: "Перегляд",   url: "/users?role=viewer" },
+      { title: "Всі", url: "/users?role=all" },
+      { title: "Адміни", url: "/users?role=admin" },
+      { title: "Менеджери", url: "/users?role=manager" },
+      { title: "Швеї", url: "/users?role=sewer" },
     ],
   },
   {
@@ -149,10 +152,10 @@ const SYSTEM_NAV: NavItem[] = [
     url: "/settings",
     icon: Settings,
     children: [
-      { title: "Профіль",     url: "/settings?tab=profile" },
-      { title: "Безпека",     url: "/settings?tab=security" },
-      { title: "Сповіщення",  url: "/settings?tab=notifications" },
-      { title: "Система",     url: "/settings?tab=system" },
+      { title: "Профіль", url: "/settings?tab=profile" },
+      { title: "Безпека", url: "/settings?tab=security" },
+      { title: "Сповіщення", url: "/settings?tab=notifications" },
+      { title: "Система", url: "/settings?tab=system" },
     ],
   },
 ];
@@ -176,7 +179,6 @@ export function AppSidebar({ user }: AppSidebarProps) {
   const role = (user.role || "manager") as AdminRole;
   const isSeamstress = role === "seamstress" || role === "sewer";
 
-  // Track which collapsibles are open
   const [openGroups, setOpenGroups] = React.useState<Record<string, boolean>>({
     "/orders": pathname.startsWith("/orders"),
     "/catalog": pathname.startsWith("/catalog"),
@@ -270,13 +272,19 @@ export function AppSidebar({ user }: AppSidebarProps) {
             const ok = handleNavClick(item.url, isActive);
             if (!ok) e.preventDefault();
           }}
-          className="h-8 gap-2 px-2.5 py-1.5 text-[13px] transition-colors group-data-[collapsible=icon]:mx-auto"
+          className="h-8 gap-2.5 px-2.5 text-[13px] transition-colors group-data-[collapsible=icon]:mx-auto rounded-lg"
         >
-          <item.icon className={`transition-colors ${isActive ? "text-primary" : "text-muted-foreground"}`} />
-          <span className={`${isActive ? "font-medium leading-none text-foreground" : "leading-none text-muted-foreground"} group-data-[collapsible=icon]:hidden`}>{item.title}</span>
+          <item.icon
+            className={`size-4 shrink-0 transition-colors ${isActive ? "text-primary" : "text-muted-foreground/70"}`}
+          />
+          <span
+            className={`truncate ${isActive ? "font-medium text-foreground" : "text-muted-foreground"} group-data-[collapsible=icon]:hidden`}
+          >
+            {item.title}
+          </span>
         </SidebarMenuButton>
         {showBadge && (
-          <SidebarMenuBadge className="bg-primary text-primary-foreground rounded-full text-[10px] font-bold px-1.5 min-w-[1.25rem] h-5 border-2 border-background">
+          <SidebarMenuBadge className="bg-primary text-primary-foreground rounded-full text-[9px] font-bold min-w-[1.125rem] h-[1.125rem] flex items-center justify-center border border-sidebar">
             {count > 99 ? "99+" : count}
           </SidebarMenuBadge>
         )}
@@ -315,14 +323,22 @@ export function AppSidebar({ user }: AppSidebarProps) {
               setOpenGroups((prev) => ({ ...prev, [item.url]: true }));
               router.push(firstChildUrl);
             }}
-            className="h-8 gap-2 px-2.5 py-1.5 text-[13px] transition-colors group-data-[collapsible=icon]:mx-auto"
-        >
-          <item.icon className={`transition-colors ${isGroupActive ? "text-primary" : "text-muted-foreground"}`} />
-            <span className={`${isGroupActive ? "font-medium leading-none text-foreground" : "leading-none text-muted-foreground"} group-data-[collapsible=icon]:hidden`}>{item.title}</span>
-            <ChevronRight className="ml-auto size-3.5 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 text-muted-foreground group-data-[collapsible=icon]:hidden" />
+            className="h-8 gap-2.5 px-2.5 text-[13px] transition-colors group-data-[collapsible=icon]:mx-auto rounded-lg"
+          >
+            <item.icon
+              className={`size-4 shrink-0 transition-colors ${isGroupActive ? "text-primary" : "text-muted-foreground/70"}`}
+            />
+            <span
+              className={`truncate ${isGroupActive ? "font-medium text-foreground" : "text-muted-foreground"} group-data-[collapsible=icon]:hidden`}
+            >
+              {item.title}
+            </span>
+            <ChevronRight
+              className="ml-auto size-3 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 text-muted-foreground/40 group-data-[collapsible=icon]:hidden"
+            />
           </SidebarMenuButton>
-          <CollapsibleContent className="data-[state=closed]:animate-none data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:slide-in-from-top-1">
-            <SidebarMenuSub className="ml-4 mt-0.5 space-y-0 border-l border-border pl-2">
+          <CollapsibleContent className="data-[state=closed]:animate-none">
+            <SidebarMenuSub className="ml-5 mt-0.5 border-l border-border/50 pl-2 gap-0">
               {item.children?.map((child) => {
                 let childActive = false;
                 if (child.url.includes("?")) {
@@ -345,7 +361,11 @@ export function AppSidebar({ user }: AppSidebarProps) {
                         const ok = handleNavClick(child.url, childActive);
                         if (!ok) e.preventDefault();
                       }}
-                      className={`h-6 py-1 text-[11px] transition-colors ${childActive ? "font-medium text-primary" : "text-muted-foreground hover:text-foreground"}`}
+                      className={`h-7 py-1 text-[12px] rounded-md transition-colors ${
+                        childActive
+                          ? "font-medium text-primary bg-primary/5"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
                     >
                       {child.title}
                     </SidebarMenuSubButton>
@@ -361,108 +381,153 @@ export function AppSidebar({ user }: AppSidebarProps) {
 
   return (
     <>
-    <Sidebar collapsible="icon" className="border-r border-border bg-sidebar">
-      <SidebarHeader className="h-16 flex items-center px-3 border-b border-border bg-white">
-        <div className={`flex items-center w-full ${isCollapsed ? "justify-center" : "justify-between"}`}>
-          {!isCollapsed && (
-            <Link
-              href="/"
-              className="flex items-center rounded-md transition-colors hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              aria-label="U:DO CRAFT"
-            >
-              <BrandLogo className="h-6 w-auto" />
-            </Link>
-          )}
-          <SidebarTrigger className="-mr-1" />
-        </div>
-      </SidebarHeader>
-
-      <SidebarContent className="gap-2 px-3 py-2 group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:px-2">
-        {/* Search */}
-        <SidebarGroup className="p-1">
+      <Sidebar collapsible="icon" className="border-r border-border/60 bg-sidebar">
+        {/* Brand header */}
+        <SidebarHeader className="px-3 py-3 border-b border-border/40">
           <SidebarMenu>
             <SidebarMenuItem>
-              <CommandMenu
-                trigger={
-                  <SidebarMenuButton tooltip="Швидкий пошук (⌘K)" className="group h-9 gap-2 border border-border bg-white px-2.5 py-1.5 hover:bg-muted group-data-[collapsible=icon]:mx-auto">
-                    <Search className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                    <span className="text-xs font-medium text-muted-foreground group-data-[collapsible=icon]:hidden">Швидкий пошук...</span>
-                    {!isCollapsed && (
-                      <kbd className="ml-auto pointer-events-none hidden h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[9px] font-bold opacity-70 md:flex">
-                        <span className="text-[10px]">⌘</span>K
-                      </kbd>
-                    )}
-                  </SidebarMenuButton>
-                }
-              />
+              <SidebarMenuButton
+                size="lg"
+                render={<Link href="/" />}
+                className="h-9 gap-2.5 px-2 rounded-lg hover:bg-sidebar-accent"
+              >
+                <div className="flex aspect-square size-7 items-center justify-center rounded-md bg-primary text-primary-foreground shrink-0">
+                  <BrandLogo className="size-3.5" />
+                </div>
+                <div className="grid flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
+                  <span className="truncate text-sm font-semibold tracking-tight">U:DO Craft</span>
+                  <span className="truncate text-[10px] text-muted-foreground">Admin</span>
+                </div>
+              </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
-        </SidebarGroup>
+        </SidebarHeader>
 
-        {/* Group 1: Core & Analytics */}
-        <SidebarGroup className="p-1">
-          <SidebarGroupLabel className="mb-1 h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/60">Core & Analytics</SidebarGroupLabel>
-          <SidebarMenu className="gap-0.5">
-            {!isSeamstress && CORE_NAV.map(renderSimpleItem)}
+        <SidebarContent className="px-2 py-2 gap-1 group-data-[collapsible=icon]:px-1.5">
+          {/* Quick search */}
+          <SidebarGroup className="p-0 mb-1">
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <CommandMenu
+                  trigger={
+                    <SidebarMenuButton
+                      tooltip="Швидкий пошук (⌘K)"
+                      className="h-8 gap-2 border border-border/60 bg-background/60 px-2.5 hover:bg-muted/80 rounded-lg group-data-[collapsible=icon]:mx-auto"
+                    >
+                      <Search className="size-3.5 text-muted-foreground shrink-0" />
+                      <span className="text-xs text-muted-foreground group-data-[collapsible=icon]:hidden">
+                        Пошук...
+                      </span>
+                      {!isCollapsed && (
+                        <kbd className="ml-auto pointer-events-none hidden h-4 select-none items-center rounded border bg-background/80 px-1 font-mono text-[9px] font-semibold opacity-60 md:flex">
+                          ⌘K
+                        </kbd>
+                      )}
+                    </SidebarMenuButton>
+                  }
+                />
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroup>
+
+          {/* CRM & Sales */}
+          <SidebarGroup className="p-0">
+            <SidebarGroupLabel className="h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/50 mb-0.5">
+              CRM
+            </SidebarGroupLabel>
+            <SidebarMenu className="gap-px">
+              {(isSeamstress ? CRM_NAV.filter((item) => item.url !== "/clients") : CRM_NAV).map((item) =>
+                item.children ? renderCollapsibleItem(item) : renderSimpleItem(item)
+              )}
+            </SidebarMenu>
+          </SidebarGroup>
+
+          {/* Analytics */}
+          {!isSeamstress && (
+            <SidebarGroup className="p-0">
+              <SidebarGroupLabel className="h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/50 mb-0.5">
+                Аналітика
+              </SidebarGroupLabel>
+              <SidebarMenu className="gap-px">
+                {ANALYTICS_NAV.map(renderSimpleItem)}
+              </SidebarMenu>
+            </SidebarGroup>
+          )}
+
+          {/* Catalog & Production */}
+          <SidebarGroup className="p-0">
+            <SidebarGroupLabel className="h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/50 mb-0.5">
+              Виробництво
+            </SidebarGroupLabel>
+            <SidebarMenu className="gap-px">
+              {(isSeamstress ? CATALOG_NAV.filter((item) => item.url === "/warehouse") : CATALOG_NAV).map((item) =>
+                item.children ? renderCollapsibleItem(item) : renderSimpleItem(item)
+              )}
+            </SidebarMenu>
+          </SidebarGroup>
+
+          {/* System */}
+          {!isSeamstress && (
+            <SidebarGroup className="p-0">
+              <SidebarGroupLabel className="h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/50 mb-0.5">
+                Система
+              </SidebarGroupLabel>
+              <SidebarMenu className="gap-px">
+                {SYSTEM_NAV.map((item) =>
+                  item.children ? renderCollapsibleItem(item) : renderSimpleItem(item)
+                )}
+              </SidebarMenu>
+            </SidebarGroup>
+          )}
+
+          {/* Quick new order shortcut */}
+          {!isCollapsed && !isSeamstress && (
+            <div className="mt-auto pt-2 px-1">
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="w-full h-8 gap-2 text-xs border-dashed text-muted-foreground hover:text-primary hover:border-primary/40 rounded-lg"
+              >
+                <Link href="/orders/new">
+                  <Plus className="size-3.5" />
+                  Нове замовлення
+                </Link>
+              </Button>
+            </div>
+          )}
+        </SidebarContent>
+
+        <SidebarFooter className="border-t border-border/40 px-2 py-2">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <NavUser user={user} />
+            </SidebarMenuItem>
           </SidebarMenu>
-        </SidebarGroup>
+        </SidebarFooter>
 
-        {/* Group 2: CRM & Sales */}
-        <SidebarGroup className="p-1">
-          <SidebarGroupLabel className="mb-1 h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/60">CRM & Sales</SidebarGroupLabel>
-          <SidebarMenu className="gap-0.5">
-            {(isSeamstress ? CRM_NAV.filter((item) => item.url !== "/clients") : CRM_NAV).map(renderSimpleItem)}
-          </SidebarMenu>
-        </SidebarGroup>
+        <SidebarRail />
+      </Sidebar>
 
-        {/* Group 3: Catalog & Production */}
-        <SidebarGroup className="p-1">
-          <SidebarGroupLabel className="mb-1 h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/60">Catalog & Production</SidebarGroupLabel>
-          <SidebarMenu className="gap-0.5">
-            {(isSeamstress ? CATALOG_NAV.filter((item) => item.url === "/warehouse") : CATALOG_NAV).map((item) =>
-              item.children ? renderCollapsibleItem(item) : renderSimpleItem(item)
-            )}
-          </SidebarMenu>
-        </SidebarGroup>
-
-        {/* Group 4: System & CMS */}
-        <SidebarGroup className="p-1">
-          <SidebarGroupLabel className="mb-1 h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/60">System & CMS</SidebarGroupLabel>
-          <SidebarMenu className="gap-0.5">
-            {!isSeamstress && SYSTEM_NAV.map((item) =>
-              item.children ? renderCollapsibleItem(item) : renderSimpleItem(item)
-            )}
-          </SidebarMenu>
-        </SidebarGroup>
-      </SidebarContent>
-
-      <SidebarFooter className="border-t border-border bg-white p-2">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <NavUser user={user} />
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
-
-      <SidebarRail />
-    </Sidebar>
-
-    <AlertDialog open={!!pendingUrl} onOpenChange={(open) => { if (!open) setPendingUrl(null); }}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Покинути сторінку?</AlertDialogTitle>
-          <AlertDialogDescription>
-            У вас є незбережене замовлення. Якщо ви покинете сторінку, всі зміни буде втрачено.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Залишитись</AlertDialogCancel>
-          <AlertDialogAction onClick={handleConfirmLeave} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-            Покинути
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+      <AlertDialog open={!!pendingUrl} onOpenChange={(open) => { if (!open) setPendingUrl(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Покинути сторінку?</AlertDialogTitle>
+            <AlertDialogDescription>
+              У вас є незбережене замовлення. Якщо ви покинете сторінку, всі зміни буде втрачено.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Залишитись</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmLeave}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Покинути
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

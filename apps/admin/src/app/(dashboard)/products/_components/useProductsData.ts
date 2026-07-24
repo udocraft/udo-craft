@@ -110,6 +110,7 @@ export function useProductsData() {
 
   return {
     products,
+    setProducts,
     categories,
     materials,
     sizeCharts,

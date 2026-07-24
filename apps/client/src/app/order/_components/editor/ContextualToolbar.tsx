@@ -207,6 +207,8 @@ function ColorSwatch({
 
 // ── Font select ───────────────────────────────────────────────────────────
 
+const FONT_CATEGORIES = ["Гротеск", "Конденсований", "Антиква", "Дисплейний", "Декоративний", "Рукописний", "Технічний"] as const;
+
 function FontSelect({
   value,
   onChange,
@@ -216,47 +218,108 @@ function FontSelect({
 }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const searchRef = React.useRef<HTMLInputElement>(null);
+
+  // Click outside to close
+  React.useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+        setSearch("");
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  // Focus search on open
+  React.useEffect(() => {
+    if (open) setTimeout(() => searchRef.current?.focus(), 50);
+  }, [open]);
+
   const filtered = TEXT_FONTS.filter((f) =>
-    !search || f.label.toLowerCase().includes(search.toLowerCase())
+    !search || f.label.toLowerCase().includes(search.toLowerCase()) || f.category.toLowerCase().includes(search.toLowerCase())
   );
+
   const current = TEXT_FONTS.find((f) => f.id === value) ?? TEXT_FONTS[0];
 
+  // Group filtered fonts by category
+  const grouped = FONT_CATEGORIES
+    .map((cat) => ({ category: cat, fonts: filtered.filter((f) => f.category === cat) }))
+    .filter((g) => g.fonts.length > 0);
+
   return (
-    <div className="relative shrink-0">
+    <div className="relative shrink-0" ref={containerRef}>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="h-8 px-2.5 rounded-lg border border-border bg-background hover:border-primary/50 transition-colors text-xs font-medium flex items-center gap-1.5 max-w-[120px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+        className="h-8 px-2.5 rounded-lg border border-border bg-background hover:border-primary/50 transition-colors text-xs font-medium flex items-center gap-1.5 max-w-[140px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
         style={{ fontFamily: current.id }}
       >
         <span className="truncate">{current.label}</span>
+        <svg className={`size-3 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 5l3 3 3-3"/></svg>
       </button>
       {open && (
-        <div className="absolute top-full left-0 mt-1 z-50 bg-card border border-border rounded-xl shadow-lg w-48 overflow-hidden">
+        <div className="absolute top-full left-0 mt-1 z-50 bg-card border border-border rounded-xl shadow-xl w-[260px] overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150">
+          {/* Search */}
           <div className="p-2 border-b border-border">
-            <input
-              type="text"
-              placeholder="Пошук шрифту..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full text-xs rounded border border-input bg-background px-2 py-1 focus:outline-none focus:ring-1 focus:ring-primary"
-            />
+            <div className="relative">
+              <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input
+                ref={searchRef}
+                type="text"
+                placeholder="Пошук шрифту..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full text-xs rounded-lg border border-input bg-background pl-8 pr-8 py-1.5 focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+              {search && (
+                <button type="button" onClick={() => setSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  <X className="size-3" />
+                </button>
+              )}
+            </div>
           </div>
-          <div className="max-h-48 overflow-y-auto p-1 space-y-0.5">
-            {filtered.map((f) => (
-              <button
-                key={f.id}
-                type="button"
-                onClick={() => { onChange(f.id as TextFontId); setOpen(false); setSearch(""); }}
-                style={{ fontFamily: f.id }}
-                className={[
-                  "w-full text-left px-3 py-1.5 text-sm hover:bg-muted/60 transition-colors",
-                  value === f.id ? "bg-primary/5 text-primary" : "",
-                ].join(" ")}
-              >
-                {f.label}
-              </button>
+          {/* Font list */}
+          <div className="max-h-[320px] overflow-y-auto p-1 scrollbar-thin">
+            {grouped.map((group) => (
+              <div key={group.category}>
+                <div className="px-3 pt-2.5 pb-1 text-[9px] font-bold uppercase tracking-wider text-muted-foreground/60 select-none">
+                  {group.category}
+                </div>
+                {group.fonts.map((f) => (
+                  <button
+                    key={f.id}
+                    type="button"
+                    onClick={() => { onChange(f.id as TextFontId); setOpen(false); setSearch(""); }}
+                    className={[
+                      "w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 transition-colors group",
+                      value === f.id ? "bg-primary/10 text-primary" : "hover:bg-muted/60",
+                    ].join(" ")}
+                  >
+                    <div className="flex flex-col gap-0.5 min-w-0">
+                      <span className="text-[10px] text-muted-foreground truncate">{f.label}</span>
+                      <span
+                        style={{ fontFamily: f.id }}
+                        className="text-sm leading-tight truncate"
+                      >
+                        Аа Бб Вв Гг
+                      </span>
+                    </div>
+                    {value === f.id && (
+                      <svg className="size-4 text-primary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    )}
+                  </button>
+                ))}
+              </div>
             ))}
+            {filtered.length === 0 && (
+              <div className="px-3 py-4 text-xs text-muted-foreground text-center">
+                Нічого не знайдено
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -333,6 +396,42 @@ function TextControls({
           className="w-20 h-1.5 accent-primary"
         />
         <span className="text-[10px] text-muted-foreground w-8 text-right">{layer.textCurve ?? 0}°</span>
+      </div>
+      {/* Letter spacing */}
+      <div className="flex items-center gap-1.5 shrink-0">
+        <span className="text-[10px] text-muted-foreground whitespace-nowrap" title="Міжлітерний інтервал">AV</span>
+        <input
+          type="range"
+          min={-10}
+          max={100}
+          value={layer.textLetterSpacing ?? 0}
+          onChange={(e) => {
+            const v = Number(e.target.value);
+            patch({ textLetterSpacing: v });
+            const obj = canvas?.getActiveObject();
+            if (obj && 'set' in obj) { (obj as any).set('charSpacing', v * 10); canvas?.renderAll(); }
+          }}
+          className="w-16 h-1.5 accent-primary"
+        />
+        <span className="text-[10px] text-muted-foreground w-6 text-right">{layer.textLetterSpacing ?? 0}</span>
+      </div>
+      {/* Line height */}
+      <div className="flex items-center gap-1.5 shrink-0">
+        <span className="text-[10px] text-muted-foreground whitespace-nowrap" title="Міжрядковий інтервал">↕</span>
+        <input
+          type="range"
+          min={50}
+          max={300}
+          value={Math.round((layer.textLineHeight ?? 1.2) * 100)}
+          onChange={(e) => {
+            const v = Number(e.target.value) / 100;
+            patch({ textLineHeight: v });
+            const obj = canvas?.getActiveObject();
+            if (obj && 'set' in obj) { (obj as any).set('lineHeight', v); canvas?.renderAll(); }
+          }}
+          className="w-16 h-1.5 accent-primary"
+        />
+        <span className="text-[10px] text-muted-foreground w-6 text-right">{(layer.textLineHeight ?? 1.2).toFixed(1)}</span>
       </div>
       <OpacityControl
         value={layer.opacity ?? 1}

@@ -1,10 +1,18 @@
 "use client";
 
-import { Inbox } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { OrderCard } from "./OrderCard";
 import type { LeadStatus } from "@/components/status-badge";
 import type { Lead } from "./useKanbanDrag";
+
+const STATUS_COLORS: Record<string, string> = {
+  draft: "bg-muted-foreground/20",
+  new: "bg-blue-500",
+  in_progress: "bg-amber-500",
+  production: "bg-primary",
+  completed: "bg-emerald-500",
+  archived: "bg-slate-400",
+};
 
 interface KanbanColumnProps {
   status: LeadStatus;
@@ -44,6 +52,7 @@ export function KanbanColumn({
   onColDrop,
 }: KanbanColumnProps) {
   const isOver = dragOverCol === status;
+  const dot = STATUS_COLORS[status] ?? "bg-muted-foreground";
 
   return (
     <div
@@ -52,30 +61,30 @@ export function KanbanColumn({
       onDragLeave={onColDragLeave}
       onDrop={(e) => onColDrop(e, status)}
       className={cn(
-        "flex h-full w-80 shrink-0 flex-col overflow-hidden rounded-md border transition-colors group/col",
+        "flex h-full w-72 shrink-0 flex-col rounded-lg border transition-colors",
         isOver
-          ? "border-primary bg-primary/[0.03]"
-          : "border-border bg-background hover:border-border"
+          ? "border-primary/30 bg-primary/[0.02]"
+          : "border-border/60 bg-muted/20"
       )}
     >
       {/* Column header */}
-      <div className="sticky top-0 z-10 flex h-12 shrink-0 items-center justify-between border-b border-border bg-white px-4">
-        <div className="flex items-center gap-2.5">
-          <p className="text-xs font-semibold uppercase tracking-widest text-foreground/80">{label}</p>
-          <span className="flex h-5 items-center justify-center rounded-full border border-primary/10 bg-primary/10 px-2 text-[10px] font-semibold text-primary">
+      <div className="flex h-11 shrink-0 items-center justify-between px-3.5 border-b border-border/40">
+        <div className="flex items-center gap-2">
+          <span className={cn("size-2 rounded-full shrink-0", dot)} />
+          <p className="text-xs font-semibold text-foreground">{label}</p>
+          <span className="flex h-4.5 min-w-[1.25rem] items-center justify-center rounded-full bg-muted px-1.5 text-[10px] font-semibold text-muted-foreground">
             {orders.length}
           </span>
         </div>
-        
         {totalAmount > 0 && (
-          <span className="text-[11px] font-semibold tracking-tight text-muted-foreground/70">
+          <span className="text-[10px] font-medium text-muted-foreground/60">
             ₴{(totalAmount / 100).toLocaleString("uk-UA")}
           </span>
         )}
       </div>
 
-      {/* Cards container */}
-      <div className="flex-1 space-y-3 overflow-y-auto p-3 scrollbar-hide">
+      {/* Cards */}
+      <div className="flex-1 space-y-2 overflow-y-auto p-2.5 scrollbar-hide">
         {orders.map((lead) => (
           <OrderCard
             key={lead.id}
@@ -90,12 +99,13 @@ export function KanbanColumn({
             onTouchEnd={onCardTouchEnd}
           />
         ))}
+
         {orders.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-20 px-4 text-center animate-in">
-            <div className="mb-4 flex size-14 items-center justify-center rounded-md border border-border bg-muted/30">
-              <Inbox className="size-7 text-muted-foreground/20" />
-            </div>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/50">Порожньо</p>
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className={cn("size-2 rounded-full mb-3 opacity-30", dot)} />
+            <p className="text-[10px] font-medium text-muted-foreground/40 uppercase tracking-widest">
+              Порожньо
+            </p>
           </div>
         )}
       </div>

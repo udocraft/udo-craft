@@ -4,22 +4,21 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
-} from "@/components/ui/dialog";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import {
+  Sheet, SheetContent, SheetHeader, SheetTitle,
+} from "@/components/ui/sheet";
+import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DashboardPage } from "@/components/dashboard-page";
-import { AdminToolbar, AdminFilter, AdminTablePanel, AdminTabs } from "@/components/admin-layout";
-import { UserPlus, Pencil, Trash2, RefreshCw, Loader2, Search } from "lucide-react";
+import { AdminToolbar, AdminTablePanel, AdminTabs } from "@/components/admin-layout";
+import { UserPlus, Pencil, Trash2, RefreshCw, Loader2, Search, Mail, Calendar, Shield, Eye, Scissors, User, ShoppingBag, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Role = "admin" | "manager" | "viewer" | "sewer" | "seamstress";
@@ -81,24 +80,35 @@ function initials(name: string, email: string) {
   return email.charAt(0).toUpperCase();
 }
 
+const ROLE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  admin: Shield,
+  manager: User,
+  sewer: Scissors,
+  viewer: Eye,
+};
+
 function RolePicker({ value, onChange }: { value: Role; onChange: (r: Role) => void }) {
   return (
     <div className="grid grid-cols-2 gap-2">
-      {ROLES.map((r) => (
-        <button
-          key={r.value}
-          type="button"
-          onClick={() => onChange(r.value)}
-          className={cn(
-            "rounded-lg border py-2 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
-            value === r.value
-              ? "border-primary bg-primary/10 text-primary"
-              : "border-border bg-muted/40 text-muted-foreground hover:bg-muted"
-          )}
-        >
-          {r.label}
-        </button>
-      ))}
+      {ROLES.map((r) => {
+        const Icon = ROLE_ICONS[r.value] || User;
+        return (
+          <button
+            key={r.value}
+            type="button"
+            onClick={() => onChange(r.value)}
+            className={cn(
+              "flex items-center gap-2.5 rounded-xl border px-3 py-2.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
+              value === r.value
+                ? "border-primary bg-primary/10 text-primary"
+                : "border-border/60 bg-white text-muted-foreground hover:bg-muted/40 hover:text-foreground"
+            )}
+          >
+            <Icon className="size-3.5 shrink-0" />
+            {r.label}
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -113,7 +123,7 @@ export default function UsersPage() {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [inviteOpen, setInviteOpen] = useState(false);
-  const [editUser, setEditUser] = useState<AdminUser | null>(null);
+  const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
   const [deleteUser, setDeleteUser] = useState<AdminUser | null>(null);
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
@@ -164,18 +174,18 @@ export default function UsersPage() {
   };
 
   const handleEdit = async () => {
-    if (!editUser) return;
+    if (!selectedUser) return;
     setSaving(true);
     try {
-      const res = await fetch(`/api/users/${editUser.id}`, {
+      const res = await fetch(`/api/users/${selectedUser.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ full_name: editUser.full_name, role: editUser.role }),
+        body: JSON.stringify({ full_name: selectedUser.full_name, role: selectedUser.role }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       toast.success("Оновлено");
-      setEditUser(null);
+      setSelectedUser(null);
       load();
     } catch (e: unknown) {
       toast.error((e as Error).message || "Помилка");
@@ -224,16 +234,6 @@ export default function UsersPage() {
             placeholder="Швидкий пошук..."
           />
         </div>
-
-        <div className="flex items-center gap-2">
-           <AdminFilter
-            label="Роль"
-            active={filter !== "all"}
-            value={filter === "all" ? undefined : TABS.find(t => t.key === filter)?.label}
-            onClear={() => router.push("/users?role=all")}
-          />
-        </div>
-
         <span className="ml-auto text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
           {filtered.length} користувачів
         </span>
@@ -266,7 +266,11 @@ export default function UsersPage() {
                 </TableRow>
               )}
               {filtered.map((u) => (
-                <TableRow key={u.id}>
+                <TableRow
+                  key={u.id}
+                  className={cn("cursor-pointer", selectedUser?.id === u.id && "bg-muted/60")}
+                  onClick={() => setSelectedUser({ ...u, role: normalizeRole((u.access_role || "viewer") as Role) })}
+                >
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <Avatar className="size-8 rounded-lg shrink-0">
@@ -299,17 +303,22 @@ export default function UsersPage() {
                   <TableCell className="hidden sm:table-cell text-xs text-muted-foreground">
                     {u.confirmed ? "Активний" : "Запрошений"}
                   </TableCell>
-                  <TableCell>
+                  <TableCell onClick={(e) => e.stopPropagation()}>
                     <div className="flex items-center gap-1 justify-end">
                       <Button
                         variant="ghost"
                         size="icon"
                         className="size-7"
-                        onClick={() => setEditUser({ ...u, role: normalizeRole((u.access_role || "viewer") as Role) })}
+                        onClick={() => setSelectedUser({ ...u, role: normalizeRole((u.access_role || "viewer") as Role) })}
                       >
                         <Pencil className="size-3.5" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="size-7 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => setDeleteUser(u)}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="size-7 text-destructive hover:text-destructive hover:bg-destructive/10"
+                        onClick={() => setDeleteUser(u)}
+                      >
                         <Trash2 className="size-3.5" />
                       </Button>
                     </div>
@@ -321,76 +330,130 @@ export default function UsersPage() {
         )}
       </AdminTablePanel>
 
-      <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
-        <DialogContent className="max-w-sm">
-          <DialogHeader>
-            <DialogTitle>Запросити користувача</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-1">
-            <div className="space-y-1.5">
-              <Label className="text-xs">Email</Label>
-              <Input
-                type="email"
-                placeholder="user@example.com"
-                value={form.email}
-                onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs">Ім&apos;я</Label>
-              <Input
-                placeholder="Ім'я Прізвище"
-                value={form.full_name}
-                onChange={(e) => setForm((f) => ({ ...f, full_name: e.target.value }))}
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs">Роль</Label>
-              <RolePicker value={form.role} onChange={(r) => setForm((f) => ({ ...f, role: r }))} />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" size="sm" onClick={() => setInviteOpen(false)}>Скасувати</Button>
-            <Button size="sm" onClick={handleInvite} disabled={saving}>
-              {saving && <Loader2 className="size-4 mr-2 animate-spin" />}
-              Надіслати
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* ── User detail / invite sheet ── */}
+      <Sheet
+        open={inviteOpen || !!selectedUser}
+        onOpenChange={(open) => { if (!open) { setInviteOpen(false); setSelectedUser(null); } }}
+      >
+        <SheetContent side="right" className="w-[380px] max-w-full p-0 flex flex-col gap-0 overflow-hidden bg-white" showCloseButton={false}>
+          {inviteOpen ? (
+            /* ── Invite panel ── */
+            <>
+              <SheetHeader className="flex-row items-start justify-between px-5 pt-5 pb-4 gap-3 shrink-0">
+                <div>
+                  <SheetTitle className="text-base font-bold">Запросити користувача</SheetTitle>
+                  <p className="text-xs text-muted-foreground mt-0.5">Надішлемо посилання для реєстрації</p>
+                </div>
+                <Button variant="ghost" size="icon-sm" className="text-muted-foreground shrink-0" onClick={() => setInviteOpen(false)}>
+                  ×
+                </Button>
+              </SheetHeader>
+              <div className="flex-1 overflow-y-auto px-5 py-2 space-y-5">
+                <div className="space-y-1.5">
+                  <p className="text-[10px] font-semibold tracking-[0.1em] text-muted-foreground/50 uppercase">EMAIL</p>
+                  <Input type="email" placeholder="user@example.com" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} className="h-10" />
+                </div>
+                <div className="space-y-1.5">
+                  <p className="text-[10px] font-semibold tracking-[0.1em] text-muted-foreground/50 uppercase">ІМ&apos;Я</p>
+                  <Input placeholder="Ім'я Прізвище" value={form.full_name} onChange={(e) => setForm((f) => ({ ...f, full_name: e.target.value }))} className="h-10" />
+                </div>
+                <div className="space-y-2">
+                  <p className="text-[10px] font-semibold tracking-[0.1em] text-muted-foreground/50 uppercase">РОЛЬ</p>
+                  <RolePicker value={form.role} onChange={(r) => setForm((f) => ({ ...f, role: r }))} />
+                </div>
+              </div>
+              <div className="px-5 pb-5 pt-3 border-t shrink-0">
+                <Button className="w-full h-10 gap-2" onClick={handleInvite} disabled={saving}>
+                  {saving ? <Loader2 className="size-4 animate-spin" /> : <UserPlus className="size-4" />}
+                  Надіслати запрошення
+                </Button>
+              </div>
+            </>
+          ) : selectedUser ? (
+            /* ── Edit user panel ── */
+            <>
+              <SheetHeader className="flex-row items-start justify-between px-5 pt-5 pb-4 gap-3 shrink-0">
+                <div className="flex items-center gap-3 min-w-0">
+                  <Avatar className="size-10 rounded-full shrink-0">
+                    <AvatarImage src={selectedUser.avatar_url} />
+                    <AvatarFallback className="bg-primary/10 text-primary text-sm font-bold">
+                      {initials(selectedUser.full_name, selectedUser.email)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0">
+                    <SheetTitle className="text-base font-bold truncate">{selectedUser.full_name || "Без імені"}</SheetTitle>
+                    <p className="text-xs text-muted-foreground truncate">{selectedUser.email}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1 shrink-0">
+                  <Button variant="ghost" size="icon-sm" className="text-destructive hover:bg-destructive/10" onClick={() => { setDeleteUser(selectedUser); setSelectedUser(null); }}>
+                    <Trash2 className="size-3.5" />
+                  </Button>
+                  <Button variant="ghost" size="icon-sm" className="text-muted-foreground" onClick={() => setSelectedUser(null)}>
+                    ×
+                  </Button>
+                </div>
+              </SheetHeader>
 
-      <Dialog open={!!editUser} onOpenChange={(o) => { if (!o) setEditUser(null); }}>
-        <DialogContent className="max-w-sm">
-          <DialogHeader>
-            <DialogTitle>Редагувати</DialogTitle>
-          </DialogHeader>
-          {editUser && (
-            <div className="space-y-4 py-1">
-              <div className="space-y-1.5">
-                <Label className="text-xs">Ім&apos;я</Label>
-                <Input
-                  value={editUser.full_name}
-                  onChange={(e) => setEditUser((u) => u ? { ...u, full_name: e.target.value } : u)}
-                />
+              <div className="flex-1 overflow-y-auto">
+                {/* Stats bar */}
+                <div className="grid grid-cols-3 divide-x border-b bg-muted/20">
+                  <UserStatTile label="Замовлень" value={String(selectedUser.order_count || 0)} />
+                  <UserStatTile label="Зареєстрований" value={fmtDate(selectedUser.created_at)} />
+                  <UserStatTile label="Статус" value={selectedUser.confirmed ? "Активний" : "Запрошений"} positive={selectedUser.confirmed} />
+                </div>
+
+                {/* Info rows */}
+                <div className="px-5 pt-5 pb-4">
+                  <p className="text-[10px] font-semibold tracking-[0.1em] text-muted-foreground/50 uppercase mb-3">ПРОФІЛЬ</p>
+                  <div className="space-y-2.5">
+                    <UserInfoRow icon={Mail} value={selectedUser.email} href={`mailto:${selectedUser.email}`} />
+                    {selectedUser.order_count > 0 && (
+                      <UserInfoRow icon={ShoppingBag} value={`${selectedUser.order_count} замовлень · ${Math.round(selectedUser.lifetime_value_cents / 100).toLocaleString("uk-UA")} ₴`} />
+                    )}
+                    <UserInfoRow icon={Calendar} value={fmtDate(selectedUser.created_at)} label="Реєстрація" />
+                    {(selectedUser.last_customer_activity_at || selectedUser.last_sign_in_at) && (
+                      <UserInfoRow icon={Clock} value={fmtDate(selectedUser.last_customer_activity_at || selectedUser.last_sign_in_at)} label="Остання активність" />
+                    )}
+                    <UserInfoRow
+                      icon={selectedUser.lifecycle_stage === "internal_staff" ? Shield : User}
+                      value={STAGE_LABELS[selectedUser.lifecycle_stage]}
+                      label="Сегмент"
+                    />
+                  </div>
+                </div>
+
+                {/* Role picker */}
+                <div className="px-5 pb-5">
+                  <p className="text-[10px] font-semibold tracking-[0.1em] text-muted-foreground/50 uppercase mb-3">РОЛЬ</p>
+                  <RolePicker
+                    value={selectedUser.role || "viewer"}
+                    onChange={(r) => setSelectedUser((u) => u ? { ...u, role: r } : u)}
+                  />
+                </div>
+
+                {/* Name input */}
+                <div className="px-5 pb-5 border-t pt-4">
+                  <p className="text-[10px] font-semibold tracking-[0.1em] text-muted-foreground/50 uppercase mb-2">ІМ&apos;Я</p>
+                  <Input
+                    value={selectedUser.full_name}
+                    onChange={(e) => setSelectedUser((u) => u ? { ...u, full_name: e.target.value } : u)}
+                    className="h-10"
+                    placeholder="Ім'я Прізвище"
+                  />
+                </div>
               </div>
-              <div className="space-y-1.5">
-                <Label className="text-xs">Роль</Label>
-                <RolePicker
-                  value={editUser.role || "viewer"}
-                  onChange={(r) => setEditUser((u) => u ? { ...u, role: r } : u)}
-                />
+
+              <div className="px-5 pb-5 pt-3 border-t shrink-0">
+                <Button className="w-full h-10" onClick={handleEdit} disabled={saving}>
+                  {saving && <Loader2 className="size-4 animate-spin mr-2" />}
+                  Зберегти зміни
+                </Button>
               </div>
-            </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" size="sm" onClick={() => setEditUser(null)}>Скасувати</Button>
-            <Button size="sm" onClick={handleEdit} disabled={saving}>
-              {saving && <Loader2 className="size-4 mr-2 animate-spin" />}
-              Зберегти
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            </>
+          ) : null}
+        </SheetContent>
+      </Sheet>
 
       <AlertDialog open={!!deleteUser} onOpenChange={(o) => { if (!o) setDeleteUser(null); }}>
         <AlertDialogContent>
@@ -409,5 +472,50 @@ export default function UsersPage() {
         </AlertDialogContent>
       </AlertDialog>
     </DashboardPage>
+  );
+}
+
+function UserInfoRow({
+  icon: Icon,
+  value,
+  label,
+  href,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  value: string;
+  label?: string;
+  href?: string;
+}) {
+  return (
+    <div className="flex items-center gap-3">
+      <Icon className="size-3.5 text-muted-foreground/50 shrink-0" />
+      <div className="flex items-center gap-1.5 min-w-0">
+        {href ? (
+          <a href={href} className="text-sm text-primary hover:underline truncate">{value}</a>
+        ) : (
+          <span className="text-sm text-foreground/90 truncate">{value}</span>
+        )}
+        {label && <span className="text-[10px] text-muted-foreground/50 shrink-0">· {label}</span>}
+      </div>
+    </div>
+  );
+}
+
+function UserStatTile({
+  label,
+  value,
+  positive,
+}: {
+  label: string;
+  value: string;
+  positive?: boolean;
+}) {
+  return (
+    <div className="flex flex-col items-center justify-center py-3 px-2 text-center gap-0.5">
+      <p className={cn("text-sm font-bold truncate w-full text-center tabular-nums", positive ? "text-emerald-600" : "text-foreground")}>
+        {value}
+      </p>
+      <p className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground/60">{label}</p>
+    </div>
   );
 }

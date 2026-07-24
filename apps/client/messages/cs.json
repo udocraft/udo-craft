@@ -1,0 +1,787 @@
+{
+  "nav": {
+    "catalog": "Katalog",
+    "popup": "Popup",
+    "about": "O nás",
+    "how": "Jak to funguje",
+    "contacts": "Kontakt",
+    "startProject": "Spustit projekt",
+    "openMenu": "Otevřít menu",
+    "closeMenu": "Zavřít menu",
+    "goToAccount": "Přejít na účet",
+    "signIn": "Přihlásit se",
+    "cartItems": "Košík — {count} položek",
+    "mainNav": "Hlavní navigace",
+    "logoLink": "U:DO CRAFT — zpět na úvod"
+  },
+  "hero": {
+    "skipToCatalog": "Do katalogu",
+    "watchVideo": "Přehrát video",
+    "closeVideo": "Zavřít video",
+    "mainSection": "Hero section",
+    "fullscreenVideo": "Video in fullscreen mode"
+  },
+  "socialProof": {
+    "trustedBy": "Důvěra týmů po celém světě"
+  },
+  "about": {
+    "label": "O nás",
+    "heading": "Platforma pro",
+    "headingHighlight": "firemní merchandise",
+    "desc1": "Od startupů po velké korporace — pomáháme týmům vytvářet merch, na který jsou hrdé.",
+    "desc2": "Od 10 kusů, bez skrytých poplatků, vlastní výroba, osobní account manager, záruka kvality.",
+    "features": {
+      "editor": {
+        "title": "Online editor",
+        "desc": "Nahraj logo, umísti ho na produkt a okamžitě uvidíš výsledek."
+      },
+      "minOrder": {
+        "title": "Od 10 kusů",
+        "desc": "Ideální pro startupy a malé týmy."
+      },
+      "pricing": {
+        "title": "Transparentní ceny",
+        "desc": "Faktura ihned. Žádné skryté poplatky."
+      },
+      "timeline": {
+        "title": "7–14 dní",
+        "desc": "Od potvrzení do doručení."
+      },
+      "quality": {
+        "title": "Kontrola kvality",
+        "desc": "Každá šarže je zkontrolována před odesláním."
+      },
+      "manager": {
+        "title": "Osobní account manager",
+        "desc": "K dispozici od první poptávky do doručení."
+      }
+    }
+  },
+  "problemSolution": {
+    "problemHeading": "Trh je zahlcen levným merchem, který nikdo nenosí",
+    "problemsLabel": "Časté problémy",
+    "problems": {
+      "minOrder": "Minimální objednávka 500+ kusů",
+      "approvals": "Týdny schvalování designů",
+      "quality": "Kvalita nesplňuje očekávání",
+      "hidden": "Skryté náklady po objednávce"
+    },
+    "solutionHeading": "Merch, který se stane součástí tvé značky",
+    "solutionsLabel": "Výhody U:DO",
+    "solutions": {
+      "minOrder": "Od 10 kusů bez příplatku",
+      "editor": "Online editor — výsledek vidíš ihned",
+      "samples": "Vzorky před výrobou (Box of Touch)",
+      "price": "Pevná cena na faktuře"
+    },
+    "ctaLabel": "Zobrazit katalog"
+  },
+  "collections": {
+    "heading": "Katalog",
+    "allProducts": "Všechny produkty",
+    "all": "Vše",
+    "empty": "V této kategorii nejsou žádné produkty",
+    "prevPage": "Předchozí",
+    "nextPage": "Další",
+    "page": "Strana {n}"
+  },
+  "process": {
+    "heading": "Od nápadu k merchi — ve 4 krocích",
+    "subtext": "Celý proces trvá méně než 15 minut. Ceny jsou viditelné ihned — žádné telefonáty ani vyjednávání.",
+    "estimatedTime": "Odhadovaný čas",
+    "stepLabel": "Krok {n}: {title}",
+    "stepsLabel": "Kroky procesu",
+    "steps": {
+      "1": {
+        "title": "Vybrat produkt",
+        "body": "Procházej katalog se skutečnými cenami. Cena se okamžitě aktualizuje při změně množství nebo typu tisku.",
+        "cta": "Otevřít katalog",
+        "time": "~5 min"
+      },
+      "2": {
+        "title": "Přizpůsobit online",
+        "body": "Nahraj logo, umísti ho na produkt, zvol tiskovou zónu. Editor zobrazuje přesné náklady v reálném čase.",
+        "cta": "Vyzkoušet editor",
+        "time": "~10 min"
+      },
+      "3": {
+        "title": "Získat nabídku",
+        "body": "Vyplň formulář — account manager se ozve do 2 hodin. Pevná cena bez skrytých poplatků.",
+        "cta": "Kontaktovat nás",
+        "time": "~2 hod"
+      },
+      "4": {
+        "title": "Dostat merch",
+        "body": "Výroba 7–14 pracovních dní. Doručení. Pokud něco nesouhlasí — přepracujeme zdarma.",
+        "cta": "Číst FAQ",
+        "time": "7–14 dní"
+      }
+    }
+  },
+  "boxOfTouch": {
+    "label": "Box of Touch",
+    "heading": "Pocit kvality",
+    "headingHighlight": "před objednávkou",
+    "desc": "Většina firem objednává naslepo. Box of Touch to řeší: fyzická sada vzorků látek, barev a tiskových typů.",
+    "contentsLabel": "Obsah Box of Touch",
+    "contents": {
+      "products": {
+        "label": "Vzorky produktů",
+        "desc": "Trička, mikiny, longsleeve — pocit střihu a padnutí"
+      },
+      "fabrics": {
+        "label": "Vzorky látek",
+        "desc": "Různé složení a gramáže — od 180 do 320 g/m²"
+      },
+      "palette": {
+        "label": "Barevná paleta",
+        "desc": "Všechny dostupné barvy se skutečnými vzorky"
+      },
+      "printing": {
+        "label": "Typy tisku",
+        "desc": "Sítotisk, výšivka, DTF — porovnej na dotek"
+      }
+    },
+    "cta": "Objednat Box of Touch",
+    "freeDelivery": "Doprava zdarma · Bez závazků"
+  },
+  "popupStand": {
+    "label": "U:DO Popup",
+    "heading": "Pop-up stand — merch right at the event",
+    "slides": {
+      "0": {
+        "title": "Choose a package",
+        "desc": "Sticker packs or print packages — find the right format for your event"
+      },
+      "1": {
+        "title": "Choose a product",
+        "desc": "T-shirts, hoodies, accessories — guests choose on-site"
+      },
+      "2": {
+        "title": "We come to you",
+        "desc": "We bring equipment and apply prints right at the event"
+      }
+    },
+    "cta": "Learn more",
+    "slideLabel": "Slide {n}",
+    "photosLabel": "Pop-up stand photos"
+  },
+  "subscription": {
+    "label": "Merch subscription",
+    "heading": "Merch by subscription.",
+    "headingMuted": "No boxes in the office.",
+    "desc": "We store your items, assemble kits and ship them on a schedule: new employee, seasonal replacement, event or regular team need.",
+    "steps": {
+      "warehouse": "Warehouse",
+      "packing": "Packing",
+      "shipping": "Shipping"
+    },
+    "plans": {
+      "welcome": {
+        "title": "Welcome kits",
+        "desc": "For onboarding, HR processes and growing teams.",
+        "features": [
+          "storage",
+          "personalization",
+          "delivery to employee"
+        ]
+      },
+      "uniform": {
+        "title": "Regular uniforms",
+        "desc": "For HoReCa, retail and teams with regular uniform replacement.",
+        "features": [
+          "size tracking",
+          "repeat shipments",
+          "stock management"
+        ]
+      }
+    },
+    "cta": "Discuss subscription"
+  },
+  "designer": {
+    "label": "Design service",
+    "heading": "No logo? We'll help",
+    "desc": "Our designer will adapt your logo for printing or create a brand identity from scratch. Result — in 2 days.",
+    "steps": {
+      "0": {
+        "emoji": "💬",
+        "title": "Tell us about your brand",
+        "body": "Send your logo, brand colors and style description. If you have nothing — just tell us about the company. The brief takes 10–15 minutes online or by phone."
+      },
+      "1": {
+        "emoji": "✨",
+        "title": "Get a concept",
+        "body": "The designer will prepare 2–3 adaptation options for printing on clothing. Deadline — 2 business days. Includes adaptation for silk-screen, embroidery and DTF."
+      },
+      "2": {
+        "emoji": "✅",
+        "title": "Approve and order",
+        "body": "Choose an option, make edits (up to 2 rounds included), receive final files. All files stay with you — for any future orders."
+      }
+    },
+    "cta": "Discuss project"
+  },
+  "customizer": {
+    "label": "Online constructor",
+    "heading": "Build your merch right in the interface",
+    "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
+    "openEditor": "Open constructor",
+    "productLabel": "Product",
+    "colorLabel": "Color",
+    "printsLabel": "Prints",
+    "textLabel": "Text",
+    "fileLabel": "File",
+    "volumeLabel": "Volume & price",
+    "totalLabel": "Total",
+    "saved": "Draft saved",
+    "layersReady": "Layers ready",
+    "priceUpdated": "Price updated",
+    "sizeLabel": "Size"
+  },
+  "trust": {
+    "heading": "Why they trust us",
+    "subtext": "Not just words — specific guarantees we uphold every day.",
+    "guarantees": {
+      "0": {
+        "title": "Quality guarantee",
+        "body": "If the product doesn't match the approved design — we redo it for free. No arguments, no bureaucracy."
+      },
+      "1": {
+        "title": "Own production",
+        "body": "We control every stage — from material selection to printing. No intermediaries, no surprises."
+      },
+      "2": {
+        "title": "Fixed price",
+        "body": "Invoice immediately after confirmation. Price doesn't change after production starts."
+      },
+      "3": {
+        "title": "Personal manager",
+        "body": "One contact from first request to order delivery. We respond within 2 hours during business hours."
+      }
+    }
+  },
+  "comparison": {
+    "heading": "U:DO vs the rest of the market",
+    "subtext": "Compare the conditions — and understand why 500+ teams choose us.",
+    "featureLabel": "Feature",
+    "yourChoice": "Your choice",
+    "yes": "Yes",
+    "no": "No",
+    "partial": "Partial",
+    "selectProvider": "Select provider",
+    "goTo": "Go to: {name}",
+    "features": {
+      "minOrder": {
+        "name": "Minimum run",
+        "desc": "Minimum quantity for an order"
+      },
+      "editor": {
+        "name": "Online editor",
+        "desc": "Ability to create a design 24/7 independently"
+      },
+      "samples": {
+        "name": "Samples before run",
+        "desc": "Getting a test sample before launching the batch"
+      },
+      "manager": {
+        "name": "Personal manager",
+        "desc": "Direct contact for quick problem solving"
+      },
+      "fixedPrice": {
+        "name": "Fixed price",
+        "desc": "No hidden fees after approval"
+      },
+      "timeline": {
+        "name": "Production time",
+        "desc": "Time from design approval to shipping"
+      },
+      "quality": {
+        "name": "Quality guarantee",
+        "desc": "Free replacement if defects are found"
+      },
+      "popup": {
+        "name": "Mobile pop-up stand",
+        "desc": "Organizing an offline point at your event"
+      },
+      "design": {
+        "name": "Designer help",
+        "desc": "Logo adaptation and design for printing"
+      },
+      "logistics": {
+        "name": "Logistics",
+        "desc": "Packing and delivery to each employee separately"
+      }
+    },
+    "columns": {
+      "typical": "Typical supplier",
+      "udo": "U:DO Craft",
+      "printer": "Print shop"
+    }
+  },
+  "faq": {
+    "heading": "Časté dotazy",
+    "noAnswer": "Nenašel jsi odpověď?",
+    "contactUs": "Kontaktuj nás",
+    "replyTime": "— odpovíme do hodiny.",
+    "questionsLabel": "Otázky a odpovědi",
+    "items": {
+      "0": {
+        "question": "Jaké je minimální množství objednávky?",
+        "answer": "Od 10 kusů. Žádný příplatek za malé náklady."
+      },
+      "1": {
+        "question": "Kolik stojí tisk?",
+        "answer": "Cena závisí na typu (sítotisk, výšivka, DTF) a množství. Viditelná v online editoru."
+      },
+      "2": {
+        "question": "Jak dlouho trvá objednávka?",
+        "answer": "Standardní lhůta — 7–14 pracovních dní od potvrzení."
+      },
+      "3": {
+        "question": "Mohu vidět kvalitu před velkou objednávkou?",
+        "answer": "Ano. Box of Touch — fyzické vzorky látek, barev a produktů."
+      },
+      "4": {
+        "question": "Co když se mi výsledek nelíbí?",
+        "answer": "Před výrobou schvalujeme design. Pokud produkt neodpovídá — přepracujeme zdarma."
+      },
+      "5": {
+        "question": "Existují slevy na velké objednávky?",
+        "answer": "Ano. 10–49 ks — základní cena. 50–99 — sleva 12 %. 100+ — sleva 15 %."
+      }
+    }
+  },
+  "finalCta": {
+    "ready": "Připraven začít?",
+    "heading": "Tvůj merch — za 14 dní",
+    "desc": "Od nápadu k hotovému produktu. Online editor, account manager, záruka kvality.",
+    "cta": "Spustit projekt",
+    "footer": "Od 10 kusů · Bez skrytých poplatků · Doprava v ceně"
+  },
+  "contact": {
+    "phone": "Phone",
+    "address": "Address"
+  },
+  "footer": {
+    "readyToStart": "Připraven začít?",
+    "readyDesc": "Od 10 kusů · 7–14 dní · Doprava",
+    "startProject": "Spustit projekt",
+    "ariaLabel": "Zápatí",
+    "homeLink": "U:DO CRAFT — zpět na úvod",
+    "columns": {
+      "products": {
+        "title": "Produkty",
+        "links": {
+          "constructor": "Konfigurátor merche",
+          "catalog": "Katalog",
+          "popup": "Popup stánek",
+          "box": "Box of Touch",
+          "designer": "Najmout designéra"
+        }
+      },
+      "company": {
+        "title": "Firma",
+        "links": {
+          "about": "O nás",
+          "how": "Jak to funguje",
+          "career": "Kariéra",
+          "blog": "Blog"
+        }
+      },
+      "support": {
+        "title": "Podpora",
+        "links": {
+          "faq": "FAQ",
+          "contact": "Kontakt",
+          "cabinet": "Účet",
+          "delivery": "Doprava a platba"
+        }
+      }
+    },
+    "privacy": "Soukromí",
+    "terms": "Podmínky",
+    "cookies": "Cookies"
+  },
+  "cart": {
+    "title": "Košík",
+    "titleWithCount": "Košík ({count})",
+    "empty": "Košík je prázdný",
+    "emptyDesc": "Vyberte produkt a nastavte tisk",
+    "toCatalog": "Do katalogu",
+    "ariaLabel": "Košík",
+    "quantity": "{qty} ks · {size}",
+    "total": "Celkem:",
+    "cartItem": "Položka košíku"
+  },
+  "services": {
+    "heading": "Three ways to get",
+    "headingAccent": "perfect merch",
+    "desc": "From physical samples to a pop-up stand — choose the format that suits you.",
+    "popup": {
+      "title": "U:DO Popup",
+      "desc": "Mobile stand with live customization. Guests create unique merch and take it away immediately.",
+      "stats": {
+        "events": "events",
+        "product": "per product"
+      },
+      "learnMore": "Learn more",
+      "discuss": "Discuss →"
+    },
+    "ctaStrip": {
+      "title": "Mobile pop-up stand for your event",
+      "desc": "500+ events · 50k+ guests · 5 min per product",
+      "learnMore": "Learn more",
+      "discuss": "Discuss →"
+    },
+    "stepLabel": "Step {n}",
+    "prevStep": "Previous",
+    "nextStep": "Next"
+  },
+  "checkout": {
+    "title": "Košík",
+    "orderTitle": "Zadat objednávku",
+    "stepCart": "Košík",
+    "stepForm": "Firemní údaje",
+    "emptyCart": "Košík je prázdný",
+    "toCatalog": "Do katalogu",
+    "total": "Celkem",
+    "finalPriceNote": "Konečná cena se dohodne s account managerem",
+    "placeOrder": "Zadat objednávku",
+    "edit": "Upravit",
+    "discount": "-{pct}% sleva",
+    "company": {
+      "title": "Firemní údaje",
+      "name": "Název firmy *",
+      "namePlaceholder": "s.r.o. «Název»",
+      "taxId": "IČO / DIČ",
+      "taxIdPlaceholder": "CZ12345678"
+    },
+    "contact": {
+      "title": "Kontaktní osoba",
+      "fullName": "Jméno a příjmení *",
+      "fullNamePlaceholder": "Jan Novák",
+      "email": "E-mail *",
+      "emailPlaceholder": "hr@firma.cz",
+      "phone": "Telefon",
+      "phonePlaceholder": "+420 XXX XXX XXX",
+      "social": "Telegram / Instagram",
+      "socialPlaceholder": "@uživatel nebo odkaz"
+    },
+    "delivery": {
+      "title": "Doprava a termíny",
+      "options": {
+        "nova_poshta": {
+          "label": "Česká pošta",
+          "desc": "2–4 pracovní dny"
+        },
+        "ukrposhta": {
+          "label": "DHL",
+          "desc": "1–2 pracovní dny"
+        },
+        "pickup": {
+          "label": "Osobní odběr",
+          "desc": "Po domluvě"
+        }
+      },
+      "deadline": "Požadovaný termín",
+      "comment": "Poznámka k objednávce",
+      "commentPlaceholder": "Zvláštní přání, detaily tisku..."
+    },
+    "submit": "Potvrdit objednávku",
+    "submitting": "Odesílání...",
+    "finalPriceManager": "Konečnou cenu a fakturu zašle account manager po potvrzení",
+    "success": {
+      "title": "Objednávka přijata!",
+      "desc": "Náš account manager se ti ozve do 24 hodin.",
+      "createAccount": "Vytvořit osobní účet",
+      "loginAccount": "Přihlásit se k účtu",
+      "createAccountDesc": "Sleduj stav objednávky, chatuj s account managerem a prohlížej faktury.",
+      "emailExists": "Tento e-mail je již registrován. Zadej heslo pro přihlášení.",
+      "emailLabel": "E-mail",
+      "passwordLabel": "Heslo",
+      "newPasswordLabel": "Vytvořit heslo",
+      "passwordPlaceholder": "Minimálně 6 znaků",
+      "enterPasswordPlaceholder": "Zadat heslo",
+      "creating": "Vytváření...",
+      "create": "Vytvořit účet",
+      "loggingIn": "Přihlašování...",
+      "login": "Přihlásit se",
+      "passwordError": "Heslo musí mít alespoň 6 znaků",
+      "enterPasswordError": "Zadat heslo",
+      "wrongPassword": "Nesprávné heslo",
+      "registrationError": "Chyba registrace. Zkus to znovu později.",
+      "skip": "Přeskočit, zpět na úvod",
+      "accountCreated": {
+        "title": "Účet vytvořen!",
+        "desc": "Odeslali jsme potvrzovací e-mail na {email}.",
+        "loginBtn": "Přihlásit se k účtu",
+        "homeLink": "Zpět na úvod"
+      }
+    },
+    "back": "Zpět",
+    "header": "U:DO",
+    "backAriaLabel": "Zpět"
+  },
+  "cabinet": {
+    "breadcrumb": "/ Účet",
+    "settings": "Nastavení",
+    "logout": "Odhlásit se",
+    "noOrders": "Zatím žádné objednávky",
+    "toCatalog": "Do katalogu",
+    "writeTo": "Napsat account managerovi",
+    "tabs": {
+      "details": "Detaily",
+      "chat": "Chat",
+      "files": "Soubory"
+    },
+    "status": {
+      "new": "Nová žádost",
+      "in_progress": "Probíhá",
+      "production": "Výroba",
+      "completed": "Dokončeno",
+      "archived": "Archiv"
+    },
+    "delivery": {
+      "nova_poshta": "Česká pošta",
+      "ukrposhta": "DHL",
+      "pickup": "Osobní odběr"
+    },
+    "details": {
+      "phone": "Telefon",
+      "email": "E-mail",
+      "company": "Firma",
+      "orderDate": "Datum objednávky",
+      "orderAmount": "Částka objednávky",
+      "delivery": "Doprava",
+      "deadline": "Termín",
+      "positions": "Položky ({n})",
+      "attachments": "Přílohy ({n})",
+      "invoice": "Stáhnout fakturu",
+      "print": "Tisk"
+    },
+    "chat": {
+      "placeholder": "Zpráva...",
+      "sendLabel": "Odeslat zprávu",
+      "attachLabel": "Připojit soubor",
+      "loading": "Načítání zpráv...",
+      "empty": "Zatím žádné zprávy",
+      "fileTooLarge": "\"{name}\" překračuje 10 MB"
+    },
+    "files": {
+      "empty": "Zatím žádné soubory",
+      "openFile": "Otevřít soubor"
+    }
+  },
+  "popup": {
+    "badge": "Mobilní popup služba",
+    "heroHeading": "Merch popup na tvé akci —",
+    "heroSubheading": "živý zážitek, na který se nezapomíná",
+    "heroDesc": "Přijedeme za tebou. Hosté si vybírají oblečení, personalizují tisk na místě a odcházejí s hotovým merchem.",
+    "bookBtn": "Rezervovat popup",
+    "howItWorks": "Jak to funguje",
+    "stats": {
+      "events": "Provedených popupů",
+      "time": "Čas personalizace",
+      "guests": "Hostů na jedné akci",
+      "satisfaction": "Spokojených organizátorů"
+    },
+    "useCases": {
+      "label": "Pro koho",
+      "heading": "Vhodné pro jakoukoli akci",
+      "items": {
+        "corporate": {
+          "title": "Firemní akce",
+          "desc": "Udělejte firemní akci nezapomenutelnou — hosté odcházejí s personalizovaným merchem."
+        },
+        "conferences": {
+          "title": "Konference a fóra",
+          "desc": "Brandovaný merch na místě — nejlepší nástroj pro networking."
+        },
+        "festivals": {
+          "title": "Festivaly a trhy",
+          "desc": "Popup stánek, který přitahuje pozornost. Živá personalizace — to je show."
+        },
+        "launches": {
+          "title": "Produktové launche",
+          "desc": "Launch s merchem, který si hosté vyrobili sami."
+        },
+        "universities": {
+          "title": "Univerzity a školy",
+          "desc": "Promoce, dny otevřených dveří, studentské akce."
+        },
+        "b2b": {
+          "title": "B2B akce",
+          "desc": "Partnerská setkání, veletrhy, prezentace."
+        }
+      }
+    },
+    "process": {
+      "label": "Postup",
+      "heading": "Tři kroky k dokonalému popupu",
+      "steps": {
+        "0": {
+          "step": "01",
+          "title": "Vybrat formát",
+          "desc": "Řekni nám o akci — počet hostů, místo, datum."
+        },
+        "1": {
+          "step": "02",
+          "title": "Připravit stánek",
+          "desc": "Přivezeme vybavení, oblečení a vše potřebné pro personalizaci."
+        },
+        "2": {
+          "step": "03",
+          "title": "Hosté personalizují",
+          "desc": "Každý host si vybere produkt, umístí tisk a odchází s hotovým merchem."
+        }
+      }
+    },
+    "faq": {
+      "label": "FAQ",
+      "heading": "Časté dotazy",
+      "items": {
+        "0": {
+          "q": "Minimální počet účastníků?",
+          "a": "Od 50 osob."
+        },
+        "1": {
+          "q": "Jak dlouho trvá personalizace jednoho produktu?",
+          "a": "3 až 10 minut podle složitosti tisku."
+        },
+        "2": {
+          "q": "Jaké produkty jsou na popupu k dispozici?",
+          "a": "Trička, mikiny, longsleeve, kšiltovky a doplňky."
+        },
+        "3": {
+          "q": "Kdo platí za merch?",
+          "a": "Obě možnosti jsou možné."
+        },
+        "4": {
+          "q": "Jak daleko dopředu rezervovat?",
+          "a": "Doporučujeme 2–3 týdny před akcí."
+        }
+      }
+    },
+    "contact": {
+      "label": "Rezervovat",
+      "heading": "Řekni nám o své akci",
+      "desc": "Zanech poptávku — account manager se ozve do jednoho pracovního dne.",
+      "benefits": {
+        "0": "Bezplatná konzultace",
+        "1": "Individuální odhad",
+        "2": "Odpověď do 24 hodin"
+      }
+    },
+    "nav": {
+      "useCases": "Pro koho",
+      "how": "Jak to funguje",
+      "faq": "FAQ",
+      "contacts": "Kontakt"
+    },
+    "book": "Rezervovat",
+    "footerCopyright": "U:DO CRAFT. Všechna práva vyhrazena.",
+    "menuOpen": "Otevřít menu",
+    "menuClose": "Zavřít menu",
+    "homeLink": "Úvod"
+  },
+  "contactForm": {
+    "nameLabel": "Tvoje jméno *",
+    "namePlaceholder": "Jan Novák",
+    "emailLabel": "E-mail *",
+    "emailPlaceholder": "hr@firma.cz",
+    "phoneLabel": "Telefon *",
+    "phonePlaceholder": "+420 XXX XXX XXX",
+    "companyLabel": "Firma",
+    "companyPlaceholder": "Název firmy",
+    "topicLabel": "Předmět *",
+    "messageLabel": "Řekni nám o svém projektu",
+    "messagePlaceholder": "Množství, typ produktu, termíny...",
+    "filesLabel": "Nahrát soubory (návrhy, loga atd.)",
+    "filesClick": "Klikni nebo přetáhni soubory sem",
+    "filesDesc": "Návrhy, loga, obrázky...",
+    "submit": "Odeslat",
+    "submitting": "Odesílání...",
+    "error": "Došlo k chybě. Zkus to znovu nebo nás kontaktuj přímo.",
+    "success": "Děkujeme za kontakt!",
+    "successDesc": "Přijali jsme tvůj požadavek a brzy se ozveme.",
+    "deleteFile": "Smazat {name}",
+    "topics": {
+      "merch": {
+        "label": "Firemní merch",
+        "desc": "Trička, mikiny, doplňky pro tvůj tým nebo značku"
+      },
+      "popup": {
+        "label": "Popup stánek na akci",
+        "desc": "Živá personalizace merche na tvé akci"
+      },
+      "box": {
+        "label": "Box of Touch",
+        "desc": "Fyzické vzorky látek a produktů před výrobou"
+      },
+      "designer": {
+        "label": "Designérské služby",
+        "desc": "Vývoj nebo úprava loga pro tisk"
+      },
+      "bulk": {
+        "label": "Velká objednávka (500+)",
+        "desc": "Velkoobchodní objednávky s individuálními podmínkami"
+      },
+      "other": {
+        "label": "Ostatní",
+        "desc": "Jakýkoli jiný dotaz nebo návrh"
+      }
+    }
+  },
+  "privacy": {
+    "title": "Zásady ochrany osobních údajů",
+    "noContent": "Obsah zatím nebyl přidán."
+  },
+  "terms": {
+    "title": "Obchodní podmínky",
+    "noContent": "Obsah zatím nebyl přidán."
+  },
+  "order": {
+    "loadError": "Katalog se nepodařilo načíst. Obnovte stránku."
+  },
+  "leadMagnet": {
+    "badge": "Zdarma",
+    "heading": "Získej zdarma mockup svého merche",
+    "desc": "Nahraj logo — aplikujeme ho na skutečný produkt a pošleme mockup na tvůj e-mail.",
+    "emailLabel": "Tvůj e-mail",
+    "cta": "Získat mockup",
+    "loading": "Odesílání...",
+    "emailError": "Zadej platný e-mail",
+    "success": "Děkujeme!",
+    "successDesc": "Mockup dorazí do tvé schránky do 24 hodin",
+    "formLabel": "Formulář pro mockup",
+    "orCalculate": "Chceš znát cenu hned?",
+    "openCalculator": "Otevřít kalkulačku cen →"
+  },
+  "howItWorks": {
+    "label": "Jak to funguje",
+    "heading": "Přizpůsob pro své cíle",
+    "steps": {
+      "0": {
+        "title": "Vybrat produkty",
+        "desc": "Procházej katalog, filtruj podle kategorií. Zvol základ pro svůj merch.",
+        "cta": "Do katalogu"
+      },
+      "1": {
+        "title": "Přizpůsobit oblečení",
+        "desc": "Nahraj logo, zvol zónu tisku, velikost a barvu. Náhled v reálném čase.",
+        "cta": "Vyzkoušet"
+      },
+      "2": {
+        "title": "Získat návrh",
+        "desc": "Vyplň objednávkový formulář. Account manager se ozve k potvrzení.",
+        "cta": "Objednat"
+      }
+    }
+  },
+  "stats": {
+    "ariaLabel": "Key metrics"
+  },
+  "langSwitcher": {
+    "label": "Language"
+  }
+}

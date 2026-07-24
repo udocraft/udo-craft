@@ -4,6 +4,7 @@ import Link from "next/link";
 import { X, ShoppingBag, ArrowRight } from "lucide-react";
 import { MockupViewer } from "@/components/MockupViewer";
 import type { CartItem } from "@/hooks/useCart";
+import { useTranslations } from "next-intl";
 
 interface CartSidebarProps {
   open: boolean;
@@ -14,6 +15,7 @@ interface CartSidebarProps {
 }
 
 export function CartSidebar({ open, onClose, cart, cartCount, totalCents }: CartSidebarProps) {
+  const t = useTranslations("cart");
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-[60] flex justify-end">
@@ -22,11 +24,11 @@ export function CartSidebar({ open, onClose, cart, cartCount, totalCents }: Cart
         className="relative bg-background w-80 max-w-full h-full flex flex-col shadow-2xl"
         role="dialog"
         aria-modal="true"
-        aria-label="Кошик"
+        aria-label={t("ariaLabel")}
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
           <span className="font-semibold text-sm tracking-tight">
-            Кошик {cartCount > 0 ? `(${cartCount})` : ""}
+            {cartCount > 0 ? t("titleWithCount", { count: cartCount }) : t("title")}
           </span>
           <button
             onClick={onClose}
@@ -39,14 +41,14 @@ export function CartSidebar({ open, onClose, cart, cartCount, totalCents }: Cart
         {cartCount === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center px-6">
             <ShoppingBag className="size-10 text-muted-foreground/30" />
-            <p className="text-sm text-muted-foreground font-medium">Кошик порожній</p>
-            <p className="text-xs text-muted-foreground/60">Оберіть товар та налаштуйте принт</p>
+            <p className="text-sm text-muted-foreground font-medium">{t("empty")}</p>
+            <p className="text-xs text-muted-foreground/60">{t("emptyDesc")}</p>
             <Link
               href="/order"
               onClick={onClose}
               className="mt-2 inline-flex items-center gap-1.5 bg-primary text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-primary/90 transition-colors"
             >
-              До каталогу <ArrowRight className="size-3.5" />
+              {t("toCatalog")} <ArrowRight className="size-3.5" />
             </Link>
           </div>
         ) : (
@@ -71,7 +73,7 @@ export function CartSidebar({ open, onClose, cart, cartCount, totalCents }: Cart
                         {item.productName}
                       </p>
                       <p className="text-[10px] text-muted-foreground mt-0.5">
-                        {item.quantity} шт · {item.size}
+                        {t("quantity", { qty: item.quantity, size: item.size })}
                       </p>
                       <p className="text-xs font-bold text-primary mt-0.5">
                         {lineTotal.toFixed(0)} ₴
@@ -83,7 +85,7 @@ export function CartSidebar({ open, onClose, cart, cartCount, totalCents }: Cart
             </div>
             <div className="p-4 border-t border-border">
               <div className="flex items-center justify-between text-sm mb-3">
-                <span className="text-muted-foreground">Разом:</span>
+                <span className="text-muted-foreground">{t("total")}</span>
                 <span className="font-bold text-foreground">
                   {(totalCents / 100).toFixed(0)} ₴
                 </span>

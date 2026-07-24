@@ -14,11 +14,26 @@ const PatchPayload = z.object({
   size: z.string().min(1).optional(),
   sku: z.string().trim().optional(),
   color_name: z.string().trim().nullable().optional(),
+  color_variant_id: z.string().uuid().nullable().optional(),
   sewing_cost_cents: z.coerce.number().int().min(0).optional(),
   is_active: z.boolean().optional(),
   sort_order: z.coerce.number().int().optional(),
   recipe: z.array(RecipeLine).optional(),
 });
+
+export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
+  const { service, error } = await requireErpUser();
+  if (error) return error;
+  const { data, error: dbError } = await service!
+    .from("product_variant_skus")
+    .select(
+      "*, product:products(id,name,slug), color_variant:product_color_variants(*), recipe:product_variant_recipe_lines(*, material:erp_materials(*))"
+    )
+    .eq("id", params.id)
+    .single();
+  if (dbError) return apiError(dbError, dbError.code === "PGRST116" ? 404 : 500);
+  return NextResponse.json(data);
+}
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   const { service, error } = await requireErpUser();

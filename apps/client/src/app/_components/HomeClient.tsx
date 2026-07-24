@@ -52,7 +52,7 @@ export function HomeClient({
   colorVariants: ProductColorVariant[];
   cmsData: any;
 }) {
-  const { get } = useCms(cmsData);
+  const { get, cms } = useCms(cmsData);
   const supabase = createClient();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -67,6 +67,89 @@ export function HomeClient({
     void supabase.auth.getSession().then((r: { data: { session: unknown } }) => setIsLoggedIn(!!r.data.session));
   }, []);
 
+  const layout = (cms.home_layout?.sections as unknown as any[]) || [
+    { id: "hero", visible: "true" },
+    { id: "social", visible: "true" },
+    { id: "problems", visible: "true" },
+    { id: "stats", visible: "true" },
+    { id: "collections", visible: "true" },
+    { id: "process", visible: "true" },
+    { id: "box", visible: "true" },
+    { id: "popup", visible: "true" },
+    { id: "subscription", visible: "true" },
+    { id: "designer", visible: "true" },
+    { id: "customizer", visible: "true" },
+    { id: "trust", visible: "true" },
+    { id: "comparison", visible: "true" },
+    { id: "faq", visible: "true" },
+    { id: "cta", visible: "true" },
+    { id: "contact", visible: "true" },
+  ];
+
+  const renderSection = (id: string) => {
+    switch (id) {
+      case "hero":
+        return (
+          <HeroSection
+            key="hero"
+            cinemaMode={cinemaMode}
+            onCinemaEnter={() => setCinemaMode(true)}
+            onCinemaExit={() => setCinemaMode(false)}
+            heading={get("home_hero", "heading", "Одяг, який стає частиною вашої корпоративної ДНК")}
+            subheading={get("home_hero", "subheading", "Ми створюємо речі, які стають улюбленими в гардеробі.")}
+            ctaPrimaryText={get("home_hero", "cta_primary_text", "Переглянути каталог")}
+            ctaPrimaryUrl={get("home_hero", "cta_primary_url", "#catalog")}
+            ctaSecondaryText="Контакти"
+          />
+        );
+      case "social": return <SocialProofBar key="social" />;
+      case "problems": return <ProblemSolutionSection key="problems" />;
+      case "stats":
+        return (
+          <StatsSection
+            key="stats"
+            stat1Value={Number(get("home_stats", "stat1_value", "500"))}
+            stat1Suffix={get("home_stats", "stat1_suffix", "+")}
+            stat1Label={get("home_stats", "stat1_label", "Задоволених клієнтів")}
+            stat2Value={Number(get("home_stats", "stat2_value", "15"))}
+            stat2Suffix={get("home_stats", "stat2_suffix", "%")}
+            stat2Label={get("home_stats", "stat2_label", "Знижка від 100 шт")}
+            stat3Value={Number(get("home_stats", "stat3_value", "14"))}
+            stat3Suffix={get("home_stats", "stat3_suffix", " дн")}
+            stat3Label={get("home_stats", "stat3_label", "Середній термін")}
+            stat4Value={Number(get("home_stats", "stat4_value", "100"))}
+            stat4Suffix={get("home_stats", "stat4_suffix", "%")}
+            stat4Label={get("home_stats", "stat4_label", "Контроль якості")}
+          />
+        );
+      case "collections": return <CollectionsSection key="collections" products={products} categories={categories} materials={materials} colorVariants={colorVariants} />;
+      case "process": return <ProcessSection key="process" />;
+      case "box": return <BoxOfTouchSection key="box" />;
+      case "popup": return <PopupStandSection key="popup" />;
+      case "subscription": return <SubscriptionSection key="subscription" />;
+      case "designer": return <DesignerSection key="designer" />;
+      case "customizer": return <CustomizerPreviewSection key="customizer" />;
+      case "trust": return <TrustSection key="trust" />;
+      case "comparison": return <ComparisonSection key="comparison" />;
+      case "faq": return <FaqSection key="faq" />;
+      case "cta": return <FinalCtaSection key="cta" />;
+      case "contact":
+        return (
+          <ContactSection
+            key="contact"
+            heading={get("home_contact", "heading", "Зв'яжіться з нами")}
+            subtext={get("home_contact", "subtext", "Розкажіть про ваш проєкт — надішлемо пропозицію протягом 24 годин.")}
+            email={get("home_contact", "email", "info@udocraft.com")}
+            phone={get("home_contact", "phone", "+380 63 070 33 072")}
+            address={get("home_contact", "address", "м. Львів, вул. Джерельна, 69")}
+            instagram={get("home_contact", "instagram", "https://www.instagram.com/u.do.craft/")}
+            telegram={get("home_contact", "telegram", "https://t.me/udostore")}
+          />
+        );
+      default: return null;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden scroll-smooth">
       <NavBar isLoggedIn={isLoggedIn} cartCount={cartCount} onCartOpen={() => setCartOpen(true)} cinemaMode={cinemaMode} onAuthOpen={() => setAuthOpen(true)} />
@@ -78,52 +161,7 @@ export function HomeClient({
       />
 
       <main>
-        <HeroSection
-          cinemaMode={cinemaMode}
-          onCinemaEnter={() => setCinemaMode(true)}
-          onCinemaExit={() => setCinemaMode(false)}
-          heading={get("home_hero", "heading", "Одяг, який стає частиною вашої корпоративної ДНК")}
-          subheading={get("home_hero", "subheading", "Ми створюємо речі, які стають улюбленими в гардеробі.")}
-          ctaPrimaryText={get("home_hero", "cta_primary_text", "Переглянути каталог")}
-          ctaPrimaryUrl={get("home_hero", "cta_primary_url", "#catalog")}
-          ctaSecondaryText="Контакти"
-        />
-        <SocialProofBar />
-        <ProblemSolutionSection />
-        <StatsSection
-          stat1Value={Number(get("home_stats", "stat1_value", "500"))}
-          stat1Suffix={get("home_stats", "stat1_suffix", "+")}
-          stat1Label={get("home_stats", "stat1_label", "Задоволених клієнтів")}
-          stat2Value={Number(get("home_stats", "stat2_value", "15"))}
-          stat2Suffix={get("home_stats", "stat2_suffix", "%")}
-          stat2Label={get("home_stats", "stat2_label", "Знижка від 100 шт")}
-          stat3Value={Number(get("home_stats", "stat3_value", "14"))}
-          stat3Suffix={get("home_stats", "stat3_suffix", " дн")}
-          stat3Label={get("home_stats", "stat3_label", "Середній термін")}
-          stat4Value={Number(get("home_stats", "stat4_value", "100"))}
-          stat4Suffix={get("home_stats", "stat4_suffix", "%")}
-          stat4Label={get("home_stats", "stat4_label", "Контроль якості")}
-        />
-        <CollectionsSection products={products} categories={categories} materials={materials} colorVariants={colorVariants} />
-        <ProcessSection />
-        <BoxOfTouchSection />
-        <PopupStandSection />
-        <SubscriptionSection />
-        <DesignerSection />
-        <CustomizerPreviewSection />
-        <TrustSection />
-        <ComparisonSection />
-        <FaqSection />
-        <FinalCtaSection />
-        <ContactSection
-          heading={get("home_contact", "heading", "Зв'яжіться з нами")}
-          subtext={get("home_contact", "subtext", "Розкажіть про ваш проєкт — надішлемо пропозицію протягом 24 годин.")}
-          email={get("home_contact", "email", "info@udocraft.com")}
-          phone={get("home_contact", "phone", "+380 63 070 33 072")}
-          address={get("home_contact", "address", "м. Львів, вул. Джерельна, 69")}
-          instagram={get("home_contact", "instagram", "https://www.instagram.com/u.do.craft/")}
-          telegram={get("home_contact", "telegram", "https://t.me/udostore")}
-        />
+        {layout.map((s) => s.visible !== "false" && renderSection(s.id))}
       </main>
 
       <FooterSection

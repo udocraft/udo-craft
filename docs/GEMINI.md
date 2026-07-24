@@ -4,7 +4,7 @@
 - **Monorepo:** Use Turborepo. Apps: `admin`, `client`. Packages: `shared`, `ui`, `authz`.
 - **RBAC:** Managed via `packages/authz` (TypeScript source of truth) and synchronized with Supabase SQL policies.
 - **Validation:** Use Zod schemas in `packages/shared`. Always validate data at the API boundary.
-- **Styling:** Tailwind CSS 4. Prefer shared UI components from `packages/ui`.
+- **Styling:** Tailwind CSS 4. Prefer shared UI components from `packages/ui`. Follow [UI/UX Standards & Consistency Guide](./UI_UX_STANDARDS.md) for all changes.
 - **Commits:** Use semantic commits: `type(area): description`. Areas: `customizer`, `orders`, `erp`, `cms`, `analytics`, `shared`, `ui`, `infra`.
 
 ## 📂 Product Areas

@@ -984,3 +984,10 @@ USING ( bucket_id = 'product-images' );
 DROP POLICY IF EXISTS "Public Insert Access" ON storage.objects;
 CREATE POLICY "Public Insert Access" ON storage.objects FOR INSERT
 WITH CHECK ( bucket_id = 'product-images' );
+
+CREATE TABLE IF NOT EXISTS app_settings (
+  key TEXT PRIMARY KEY,
+  value JSONB NOT NULL DEFAULT '{}',
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  updated_by UUID REFERENCES auth.users(id)
+);

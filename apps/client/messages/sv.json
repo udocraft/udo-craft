@@ -1,0 +1,787 @@
+{
+  "nav": {
+    "catalog": "Katalog",
+    "popup": "Popup",
+    "about": "Om oss",
+    "how": "Hur det fungerar",
+    "contacts": "Kontakt",
+    "startProject": "Starta projekt",
+    "openMenu": "Öppna meny",
+    "closeMenu": "Stäng meny",
+    "goToAccount": "Till kontot",
+    "signIn": "Logga in",
+    "cartItems": "Kundvagn — {count} artiklar",
+    "mainNav": "Huvudnavigation",
+    "logoLink": "U:DO CRAFT — tillbaka till startsidan"
+  },
+  "hero": {
+    "skipToCatalog": "Till katalog",
+    "watchVideo": "Se video",
+    "closeVideo": "Stäng video",
+    "mainSection": "Hero section",
+    "fullscreenVideo": "Video in fullscreen mode"
+  },
+  "socialProof": {
+    "trustedBy": "Förtroendet från team runt om i världen"
+  },
+  "about": {
+    "label": "Om oss",
+    "heading": "Plattform för",
+    "headingHighlight": "företagsmerchandise",
+    "desc1": "Från startups till stora företag — vi hjälper team att skapa merch de är stolta över.",
+    "desc2": "Från 10 exemplar, inga dolda kostnader, egen produktion, personlig account manager, kvalitetsgaranti.",
+    "features": {
+      "editor": {
+        "title": "Online-editor",
+        "desc": "Ladda upp logotypen, placera den på produkten och se resultatet direkt."
+      },
+      "minOrder": {
+        "title": "Från 10 exemplar",
+        "desc": "Perfekt för startups och små team."
+      },
+      "pricing": {
+        "title": "Transparenta priser",
+        "desc": "Faktura direkt. Inga dolda kostnader."
+      },
+      "timeline": {
+        "title": "7–14 dagar",
+        "desc": "Från bekräftelse till leverans."
+      },
+      "quality": {
+        "title": "Kvalitetskontroll",
+        "desc": "Varje batch inspekteras innan leverans."
+      },
+      "manager": {
+        "title": "Personlig account manager",
+        "desc": "Tillgänglig från första förfrågan till leverans."
+      }
+    }
+  },
+  "problemSolution": {
+    "problemHeading": "Marknaden är översvämmad av billig merch som ingen bär",
+    "problemsLabel": "Vanliga problem",
+    "problems": {
+      "minOrder": "Minimiorder 500+ exemplar",
+      "approvals": "Veckors designgodkännanden",
+      "quality": "Kvaliteten lever inte upp till förväntningarna",
+      "hidden": "Dolda kostnader efter beställning"
+    },
+    "solutionHeading": "Merch som blir en del av ditt varumärke",
+    "solutionsLabel": "U:DO fördelar",
+    "solutions": {
+      "minOrder": "Från 10 exemplar utan pristillägg",
+      "editor": "Online-editor — resultatet syns direkt",
+      "samples": "Prover före produktion (Box of Touch)",
+      "price": "Fast pris på fakturan"
+    },
+    "ctaLabel": "Bläddra i katalog"
+  },
+  "collections": {
+    "heading": "Katalog",
+    "allProducts": "Alla produkter",
+    "all": "Alla",
+    "empty": "Inga produkter i den här kategorin",
+    "prevPage": "Föregående",
+    "nextPage": "Nästa",
+    "page": "Sida {n}"
+  },
+  "process": {
+    "heading": "Från idé till merch — i 4 steg",
+    "subtext": "Hela processen tar mindre än 15 minuter. Priser visas direkt — inga samtal eller förhandlingar.",
+    "estimatedTime": "Uppskattad tid",
+    "stepLabel": "Steg {n}: {title}",
+    "stepsLabel": "Processteg",
+    "steps": {
+      "1": {
+        "title": "Välj en produkt",
+        "body": "Bläddra i katalogen med riktiga priser. Priset uppdateras direkt vid ändring av antal eller trycktyp.",
+        "cta": "Öppna katalog",
+        "time": "~5 min"
+      },
+      "2": {
+        "title": "Anpassa online",
+        "body": "Ladda upp logotypen, placera den på produkten, välj tryckszon. Editorn visar exakta kostnader i realtid.",
+        "cta": "Testa editor",
+        "time": "~10 min"
+      },
+      "3": {
+        "title": "Få offert",
+        "body": "Fyll i formuläret — en account manager kontaktar dig inom 2 timmar. Fast pris utan dolda kostnader.",
+        "cta": "Kontakta oss",
+        "time": "~2 tim"
+      },
+      "4": {
+        "title": "Ta emot merch",
+        "body": "Produktion 7–14 arbetsdagar. Leverans. Om något är fel — gör vi om det gratis.",
+        "cta": "Läs FAQ",
+        "time": "7–14 dagar"
+      }
+    }
+  },
+  "boxOfTouch": {
+    "label": "Box of Touch",
+    "heading": "Känn kvaliteten",
+    "headingHighlight": "innan du beställer",
+    "desc": "De flesta företag beställer i blindo. Box of Touch löser det: ett fysiskt set med tygprover, färger och trycktyper.",
+    "contentsLabel": "Innehåll i Box of Touch",
+    "contents": {
+      "products": {
+        "label": "Produktprover",
+        "desc": "T-shirts, hoodies, longsleeves — känn snitt och passform"
+      },
+      "fabrics": {
+        "label": "Tygprover",
+        "desc": "Olika sammansättningar och vikter — från 180 till 320 g/m²"
+      },
+      "palette": {
+        "label": "Färgpalett",
+        "desc": "Alla tillgängliga färger med riktiga prover"
+      },
+      "printing": {
+        "label": "Trycktyper",
+        "desc": "Screentryck, broderi, DTF — jämför med handen"
+      }
+    },
+    "cta": "Beställ Box of Touch",
+    "freeDelivery": "Gratis frakt · Inga förpliktelser"
+  },
+  "popupStand": {
+    "label": "U:DO Popup",
+    "heading": "Pop-up stand — merch right at the event",
+    "slides": {
+      "0": {
+        "title": "Choose a package",
+        "desc": "Sticker packs or print packages — find the right format for your event"
+      },
+      "1": {
+        "title": "Choose a product",
+        "desc": "T-shirts, hoodies, accessories — guests choose on-site"
+      },
+      "2": {
+        "title": "We come to you",
+        "desc": "We bring equipment and apply prints right at the event"
+      }
+    },
+    "cta": "Learn more",
+    "slideLabel": "Slide {n}",
+    "photosLabel": "Pop-up stand photos"
+  },
+  "subscription": {
+    "label": "Merch subscription",
+    "heading": "Merch by subscription.",
+    "headingMuted": "No boxes in the office.",
+    "desc": "We store your items, assemble kits and ship them on a schedule: new employee, seasonal replacement, event or regular team need.",
+    "steps": {
+      "warehouse": "Warehouse",
+      "packing": "Packing",
+      "shipping": "Shipping"
+    },
+    "plans": {
+      "welcome": {
+        "title": "Welcome kits",
+        "desc": "For onboarding, HR processes and growing teams.",
+        "features": [
+          "storage",
+          "personalization",
+          "delivery to employee"
+        ]
+      },
+      "uniform": {
+        "title": "Regular uniforms",
+        "desc": "For HoReCa, retail and teams with regular uniform replacement.",
+        "features": [
+          "size tracking",
+          "repeat shipments",
+          "stock management"
+        ]
+      }
+    },
+    "cta": "Discuss subscription"
+  },
+  "designer": {
+    "label": "Design service",
+    "heading": "No logo? We'll help",
+    "desc": "Our designer will adapt your logo for printing or create a brand identity from scratch. Result — in 2 days.",
+    "steps": {
+      "0": {
+        "emoji": "💬",
+        "title": "Tell us about your brand",
+        "body": "Send your logo, brand colors and style description. If you have nothing — just tell us about the company. The brief takes 10–15 minutes online or by phone."
+      },
+      "1": {
+        "emoji": "✨",
+        "title": "Get a concept",
+        "body": "The designer will prepare 2–3 adaptation options for printing on clothing. Deadline — 2 business days. Includes adaptation for silk-screen, embroidery and DTF."
+      },
+      "2": {
+        "emoji": "✅",
+        "title": "Approve and order",
+        "body": "Choose an option, make edits (up to 2 rounds included), receive final files. All files stay with you — for any future orders."
+      }
+    },
+    "cta": "Discuss project"
+  },
+  "customizer": {
+    "label": "Online constructor",
+    "heading": "Build your merch right in the interface",
+    "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
+    "openEditor": "Open constructor",
+    "productLabel": "Product",
+    "colorLabel": "Color",
+    "printsLabel": "Prints",
+    "textLabel": "Text",
+    "fileLabel": "File",
+    "volumeLabel": "Volume & price",
+    "totalLabel": "Total",
+    "saved": "Draft saved",
+    "layersReady": "Layers ready",
+    "priceUpdated": "Price updated",
+    "sizeLabel": "Size"
+  },
+  "trust": {
+    "heading": "Why they trust us",
+    "subtext": "Not just words — specific guarantees we uphold every day.",
+    "guarantees": {
+      "0": {
+        "title": "Quality guarantee",
+        "body": "If the product doesn't match the approved design — we redo it for free. No arguments, no bureaucracy."
+      },
+      "1": {
+        "title": "Own production",
+        "body": "We control every stage — from material selection to printing. No intermediaries, no surprises."
+      },
+      "2": {
+        "title": "Fixed price",
+        "body": "Invoice immediately after confirmation. Price doesn't change after production starts."
+      },
+      "3": {
+        "title": "Personal manager",
+        "body": "One contact from first request to order delivery. We respond within 2 hours during business hours."
+      }
+    }
+  },
+  "comparison": {
+    "heading": "U:DO vs the rest of the market",
+    "subtext": "Compare the conditions — and understand why 500+ teams choose us.",
+    "featureLabel": "Feature",
+    "yourChoice": "Your choice",
+    "yes": "Yes",
+    "no": "No",
+    "partial": "Partial",
+    "selectProvider": "Select provider",
+    "goTo": "Go to: {name}",
+    "features": {
+      "minOrder": {
+        "name": "Minimum run",
+        "desc": "Minimum quantity for an order"
+      },
+      "editor": {
+        "name": "Online editor",
+        "desc": "Ability to create a design 24/7 independently"
+      },
+      "samples": {
+        "name": "Samples before run",
+        "desc": "Getting a test sample before launching the batch"
+      },
+      "manager": {
+        "name": "Personal manager",
+        "desc": "Direct contact for quick problem solving"
+      },
+      "fixedPrice": {
+        "name": "Fixed price",
+        "desc": "No hidden fees after approval"
+      },
+      "timeline": {
+        "name": "Production time",
+        "desc": "Time from design approval to shipping"
+      },
+      "quality": {
+        "name": "Quality guarantee",
+        "desc": "Free replacement if defects are found"
+      },
+      "popup": {
+        "name": "Mobile pop-up stand",
+        "desc": "Organizing an offline point at your event"
+      },
+      "design": {
+        "name": "Designer help",
+        "desc": "Logo adaptation and design for printing"
+      },
+      "logistics": {
+        "name": "Logistics",
+        "desc": "Packing and delivery to each employee separately"
+      }
+    },
+    "columns": {
+      "typical": "Typical supplier",
+      "udo": "U:DO Craft",
+      "printer": "Print shop"
+    }
+  },
+  "faq": {
+    "heading": "Vanliga frågor",
+    "noAnswer": "Hittade du inget svar?",
+    "contactUs": "Kontakta oss",
+    "replyTime": "— vi svarar inom en timme.",
+    "questionsLabel": "Frågor och svar",
+    "items": {
+      "0": {
+        "question": "Vad är minsta orderkvantitet?",
+        "answer": "Från 10 exemplar. Inget pristillägg för små upplagor."
+      },
+      "1": {
+        "question": "Vad kostar trycket?",
+        "answer": "Priset beror på typ (screentryck, broderi, DTF) och kvantitet. Visas i online-editorn."
+      },
+      "2": {
+        "question": "Hur lång tid tar en beställning?",
+        "answer": "Standardleveranstid — 7–14 arbetsdagar från bekräftelse."
+      },
+      "3": {
+        "question": "Kan jag se kvaliteten innan en stor beställning?",
+        "answer": "Ja. Box of Touch — fysiska prover på tyger, färger och produkter."
+      },
+      "4": {
+        "question": "Vad händer om jag inte gillar resultatet?",
+        "answer": "Vi godkänner designen före produktion. Om produkten inte stämmer — gör vi om det gratis."
+      },
+      "5": {
+        "question": "Finns det rabatter för stora beställningar?",
+        "answer": "Ja. 10–49 exemplar — grundpris. 50–99 — 12 % rabatt. 100+ — 15 % rabatt."
+      }
+    }
+  },
+  "finalCta": {
+    "ready": "Redo att börja?",
+    "heading": "Din merch — på 14 dagar",
+    "desc": "Från idé till färdig produkt. Online-editor, account manager, kvalitetsgaranti.",
+    "cta": "Starta projekt",
+    "footer": "Från 10 exemplar · Inga dolda kostnader · Leverans ingår"
+  },
+  "contact": {
+    "phone": "Phone",
+    "address": "Address"
+  },
+  "footer": {
+    "readyToStart": "Redo att börja?",
+    "readyDesc": "Från 10 exemplar · 7–14 dagar · Leverans",
+    "startProject": "Starta projekt",
+    "ariaLabel": "Sidfot",
+    "homeLink": "U:DO CRAFT — tillbaka till startsidan",
+    "columns": {
+      "products": {
+        "title": "Produkter",
+        "links": {
+          "constructor": "Merch-konfigurator",
+          "catalog": "Katalog",
+          "popup": "Popup-stånd",
+          "box": "Box of Touch",
+          "designer": "Anlita designer"
+        }
+      },
+      "company": {
+        "title": "Företag",
+        "links": {
+          "about": "Om oss",
+          "how": "Hur det fungerar",
+          "career": "Karriär",
+          "blog": "Blogg"
+        }
+      },
+      "support": {
+        "title": "Support",
+        "links": {
+          "faq": "FAQ",
+          "contact": "Kontakt",
+          "cabinet": "Konto",
+          "delivery": "Frakt & betalning"
+        }
+      }
+    },
+    "privacy": "Integritet",
+    "terms": "Villkor",
+    "cookies": "Cookies"
+  },
+  "cart": {
+    "title": "Kundvagn",
+    "titleWithCount": "Kundvagn ({count})",
+    "empty": "Kundvagnen är tom",
+    "emptyDesc": "Välj en produkt och konfigurera trycket",
+    "toCatalog": "Till katalog",
+    "ariaLabel": "Kundvagn",
+    "quantity": "{qty} st · {size}",
+    "total": "Totalt:",
+    "cartItem": "Kundvagnsartikel"
+  },
+  "services": {
+    "heading": "Three ways to get",
+    "headingAccent": "perfect merch",
+    "desc": "From physical samples to a pop-up stand — choose the format that suits you.",
+    "popup": {
+      "title": "U:DO Popup",
+      "desc": "Mobile stand with live customization. Guests create unique merch and take it away immediately.",
+      "stats": {
+        "events": "events",
+        "product": "per product"
+      },
+      "learnMore": "Learn more",
+      "discuss": "Discuss →"
+    },
+    "ctaStrip": {
+      "title": "Mobile pop-up stand for your event",
+      "desc": "500+ events · 50k+ guests · 5 min per product",
+      "learnMore": "Learn more",
+      "discuss": "Discuss →"
+    },
+    "stepLabel": "Step {n}",
+    "prevStep": "Previous",
+    "nextStep": "Next"
+  },
+  "checkout": {
+    "title": "Kundvagn",
+    "orderTitle": "Lägg beställning",
+    "stepCart": "Kundvagn",
+    "stepForm": "Företagsuppgifter",
+    "emptyCart": "Kundvagnen är tom",
+    "toCatalog": "Till katalog",
+    "total": "Totalt",
+    "finalPriceNote": "Slutpris överenskommes med account manager",
+    "placeOrder": "Lägg beställning",
+    "edit": "Redigera",
+    "discount": "-{pct}% rabatt",
+    "company": {
+      "title": "Företagsuppgifter",
+      "name": "Företagsnamn *",
+      "namePlaceholder": "AB «Namn»",
+      "taxId": "Organisationsnummer / VAT",
+      "taxIdPlaceholder": "SE556123456701"
+    },
+    "contact": {
+      "title": "Kontaktperson",
+      "fullName": "För- och efternamn *",
+      "fullNamePlaceholder": "Erik Svensson",
+      "email": "E-post *",
+      "emailPlaceholder": "hr@foretag.se",
+      "phone": "Telefon",
+      "phonePlaceholder": "+46 XX XXX XXXX",
+      "social": "Telegram / Instagram",
+      "socialPlaceholder": "@användarnamn eller länk"
+    },
+    "delivery": {
+      "title": "Leverans & deadlines",
+      "options": {
+        "nova_poshta": {
+          "label": "PostNord",
+          "desc": "2–4 arbetsdagar"
+        },
+        "ukrposhta": {
+          "label": "DHL",
+          "desc": "1–2 arbetsdagar"
+        },
+        "pickup": {
+          "label": "Upphämtning",
+          "desc": "Efter överenskommelse"
+        }
+      },
+      "deadline": "Önskat datum",
+      "comment": "Kommentar till beställning",
+      "commentPlaceholder": "Särskilda önskemål, tryckdetaljer..."
+    },
+    "submit": "Bekräfta beställning",
+    "submitting": "Skickar...",
+    "finalPriceManager": "Slutpris och faktura skickas av account manager efter bekräftelse",
+    "success": {
+      "title": "Beställning mottagen!",
+      "desc": "Vår account manager kontaktar dig inom 24 timmar.",
+      "createAccount": "Skapa personligt konto",
+      "loginAccount": "Logga in på konto",
+      "createAccountDesc": "Följ beställningsstatus, chatta med account manager och visa fakturor.",
+      "emailExists": "Den här e-posten är redan registrerad. Ange lösenord för att logga in.",
+      "emailLabel": "E-post",
+      "passwordLabel": "Lösenord",
+      "newPasswordLabel": "Skapa ett lösenord",
+      "passwordPlaceholder": "Minst 6 tecken",
+      "enterPasswordPlaceholder": "Ange lösenord",
+      "creating": "Skapar...",
+      "create": "Skapa konto",
+      "loggingIn": "Loggar in...",
+      "login": "Logga in",
+      "passwordError": "Lösenordet måste ha minst 6 tecken",
+      "enterPasswordError": "Ange lösenord",
+      "wrongPassword": "Fel lösenord",
+      "registrationError": "Registreringsfel. Försök igen senare.",
+      "skip": "Hoppa över, tillbaka till startsidan",
+      "accountCreated": {
+        "title": "Konto skapat!",
+        "desc": "Vi skickade ett bekräftelsemail till {email}.",
+        "loginBtn": "Logga in på konto",
+        "homeLink": "Tillbaka till startsidan"
+      }
+    },
+    "back": "Tillbaka",
+    "header": "U:DO",
+    "backAriaLabel": "Tillbaka"
+  },
+  "cabinet": {
+    "breadcrumb": "/ Konto",
+    "settings": "Inställningar",
+    "logout": "Logga ut",
+    "noOrders": "Inga beställningar ännu",
+    "toCatalog": "Till katalog",
+    "writeTo": "Skriv till account manager",
+    "tabs": {
+      "details": "Detaljer",
+      "chat": "Chatt",
+      "files": "Filer"
+    },
+    "status": {
+      "new": "Ny förfrågan",
+      "in_progress": "Pågående",
+      "production": "Produktion",
+      "completed": "Slutförd",
+      "archived": "Arkiv"
+    },
+    "delivery": {
+      "nova_poshta": "PostNord",
+      "ukrposhta": "DHL",
+      "pickup": "Upphämtning"
+    },
+    "details": {
+      "phone": "Telefon",
+      "email": "E-post",
+      "company": "Företag",
+      "orderDate": "Beställningsdatum",
+      "orderAmount": "Beställningsbelopp",
+      "delivery": "Leverans",
+      "deadline": "Deadline",
+      "positions": "Positioner ({n})",
+      "attachments": "Bilagor ({n})",
+      "invoice": "Ladda ner faktura",
+      "print": "Tryck"
+    },
+    "chat": {
+      "placeholder": "Meddelande...",
+      "sendLabel": "Skicka meddelande",
+      "attachLabel": "Bifoga fil",
+      "loading": "Laddar meddelanden...",
+      "empty": "Inga meddelanden ännu",
+      "fileTooLarge": "\"{name}\" överstiger 10 MB"
+    },
+    "files": {
+      "empty": "Inga filer ännu",
+      "openFile": "Öppna fil"
+    }
+  },
+  "popup": {
+    "badge": "Mobil popup-tjänst",
+    "heroHeading": "Merch-popup på ditt evenemang —",
+    "heroSubheading": "en liveupplevelse man inte glömmer",
+    "heroDesc": "Vi kommer till dig. Gästerna väljer kläder, personaliserar trycket på plats och går hem med färdig merch.",
+    "bookBtn": "Boka popup",
+    "howItWorks": "Hur det fungerar",
+    "stats": {
+      "events": "Genomförda popups",
+      "time": "Personaliseringstid",
+      "guests": "Gäster vid ett evenemang",
+      "satisfaction": "Nöjda arrangörer"
+    },
+    "useCases": {
+      "label": "För vem",
+      "heading": "Lämpligt för alla evenemang",
+      "items": {
+        "corporate": {
+          "title": "Företagsevenemang",
+          "desc": "Gör företagsevemanget oförglömligt — gästerna går hem med personaliserad merch."
+        },
+        "conferences": {
+          "title": "Konferenser och forum",
+          "desc": "Brandad merch på plats — bästa nätverkingsverktyget."
+        },
+        "festivals": {
+          "title": "Festivaler och marknader",
+          "desc": "Popup-stånd som väcker uppmärksamhet. Livepersonalisering — det är ett show."
+        },
+        "launches": {
+          "title": "Produktlanseringar",
+          "desc": "Lansering med merch som gästerna tillverkade själva."
+        },
+        "universities": {
+          "title": "Universitet och skolor",
+          "desc": "Examina, öppet hus, studentevenemang."
+        },
+        "b2b": {
+          "title": "B2B-evenemang",
+          "desc": "Partnermöten, mässor, presentationer."
+        }
+      }
+    },
+    "process": {
+      "label": "Process",
+      "heading": "Tre steg till den perfekta popupen",
+      "steps": {
+        "0": {
+          "step": "01",
+          "title": "Välj format",
+          "desc": "Berätta om evenemanget — antal gäster, plats, datum."
+        },
+        "1": {
+          "step": "02",
+          "title": "Förbereda stånd",
+          "desc": "Vi tar med utrustning, kläder och allt som behövs för personalisering."
+        },
+        "2": {
+          "step": "03",
+          "title": "Gästerna personaliserar",
+          "desc": "Varje gäst väljer en produkt, placerar trycket och går hem med färdig merch."
+        }
+      }
+    },
+    "faq": {
+      "label": "FAQ",
+      "heading": "Vanliga frågor",
+      "items": {
+        "0": {
+          "q": "Minsta antal deltagare?",
+          "a": "Från 50 personer."
+        },
+        "1": {
+          "q": "Hur lång tid tar personalisering av en produkt?",
+          "a": "3 till 10 minuter beroende på komplexitet."
+        },
+        "2": {
+          "q": "Vilka produkter finns tillgängliga?",
+          "a": "T-shirts, hoodies, longsleeves, kepsar och accessoarer."
+        },
+        "3": {
+          "q": "Vem betalar för merchen?",
+          "a": "Båda alternativen är möjliga."
+        },
+        "4": {
+          "q": "Hur långt i förväg boka?",
+          "a": "Vi rekommenderar 2–3 veckor före evenemanget."
+        }
+      }
+    },
+    "contact": {
+      "label": "Boka",
+      "heading": "Berätta om ditt evenemang",
+      "desc": "Lämna en förfrågan — en account manager kontaktar dig inom en arbetsdag.",
+      "benefits": {
+        "0": "Gratis konsultation",
+        "1": "Individuell uppskattning",
+        "2": "Svar inom 24 timmar"
+      }
+    },
+    "nav": {
+      "useCases": "För vem",
+      "how": "Hur det fungerar",
+      "faq": "FAQ",
+      "contacts": "Kontakt"
+    },
+    "book": "Boka",
+    "footerCopyright": "U:DO CRAFT. Alla rättigheter förbehållna.",
+    "menuOpen": "Öppna meny",
+    "menuClose": "Stäng meny",
+    "homeLink": "Hem"
+  },
+  "contactForm": {
+    "nameLabel": "Ditt namn *",
+    "namePlaceholder": "Erik Svensson",
+    "emailLabel": "E-post *",
+    "emailPlaceholder": "hr@foretag.se",
+    "phoneLabel": "Telefon *",
+    "phonePlaceholder": "+46 XX XXX XXXX",
+    "companyLabel": "Företag",
+    "companyPlaceholder": "Företagsnamn",
+    "topicLabel": "Ämne *",
+    "messageLabel": "Berätta om ditt projekt",
+    "messagePlaceholder": "Antal, produkttyp, deadlines...",
+    "filesLabel": "Ladda upp filer (designer, logotyper etc.)",
+    "filesClick": "Klicka eller dra filer hit",
+    "filesDesc": "Designer, logotyper, bilder...",
+    "submit": "Skicka",
+    "submitting": "Skickar...",
+    "error": "Ett fel uppstod. Försök igen eller kontakta oss direkt.",
+    "success": "Tack för ditt meddelande!",
+    "successDesc": "Vi har tagit emot din förfrågan och återkommer snart.",
+    "deleteFile": "Ta bort {name}",
+    "topics": {
+      "merch": {
+        "label": "Företagsmerch",
+        "desc": "T-shirts, hoodies, accessoarer för ditt team eller varumärke"
+      },
+      "popup": {
+        "label": "Popup-stånd för evenemang",
+        "desc": "Live merch-personalisering på ditt evenemang"
+      },
+      "box": {
+        "label": "Box of Touch",
+        "desc": "Fysiska tyg- och produktprover före produktion"
+      },
+      "designer": {
+        "label": "Designertjänster",
+        "desc": "Logotyputveckling eller -anpassning för tryck"
+      },
+      "bulk": {
+        "label": "Stor beställning (500+)",
+        "desc": "Grossistbeställningar med individuella villkor"
+      },
+      "other": {
+        "label": "Övrigt",
+        "desc": "Andra frågor eller förslag"
+      }
+    }
+  },
+  "privacy": {
+    "title": "Integritetspolicy",
+    "noContent": "Innehåll har inte lagts till ännu."
+  },
+  "terms": {
+    "title": "Allmänna villkor",
+    "noContent": "Innehåll har inte lagts till ännu."
+  },
+  "order": {
+    "loadError": "Det gick inte att ladda katalogen. Uppdatera sidan."
+  },
+  "leadMagnet": {
+    "badge": "Gratis",
+    "heading": "Få en gratis mockup av din merch",
+    "desc": "Ladda upp logotypen — vi applicerar den på en riktig produkt och skickar mockupen till din e-post.",
+    "emailLabel": "Din e-post",
+    "cta": "Hämta mockup",
+    "loading": "Skickar...",
+    "emailError": "Ange en giltig e-postadress",
+    "success": "Tack!",
+    "successDesc": "Mockupen anländer till din inkorg inom 24 timmar",
+    "formLabel": "Mockup-förfrågningsformulär",
+    "orCalculate": "Vill du veta priset nu?",
+    "openCalculator": "Öppna priskalkylator →"
+  },
+  "howItWorks": {
+    "label": "Hur det fungerar",
+    "heading": "Anpassa för dina mål",
+    "steps": {
+      "0": {
+        "title": "Välj produkter",
+        "desc": "Bläddra i katalogen, filtrera efter kategorier. Välj basen för din merch.",
+        "cta": "Till katalog"
+      },
+      "1": {
+        "title": "Anpassa kläder",
+        "desc": "Ladda upp logotyp, välj tryckszon, storlek och färg. Förhandsvisning i realtid.",
+        "cta": "Testa"
+      },
+      "2": {
+        "title": "Få förslag",
+        "desc": "Fyll i beställningsformuläret. En account manager kontaktar dig för bekräftelse.",
+        "cta": "Beställ"
+      }
+    }
+  },
+  "stats": {
+    "ariaLabel": "Key metrics"
+  },
+  "langSwitcher": {
+    "label": "Language"
+  }
+}

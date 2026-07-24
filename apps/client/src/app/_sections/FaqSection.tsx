@@ -1,37 +1,10 @@
 "use client";
 
 import Link from "next/link";
-
 import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Plus, Minus } from "lucide-react";
-
-const FAQS = [
-  {
-    q: "Який мінімальний тираж?",
-    a: "Від 10 одиниць. Немає сенсу переплачувати за великий тираж, якщо ви тільки тестуєте мерч або потрібна невелика партія для команди.",
-  },
-  {
-    q: "Скільки коштує нанесення?",
-    a: "Ціна залежить від типу нанесення (шовкодрук, вишивка, DTF, термоперенос) та кількості одиниць. Чим більший тираж — тим нижча ціна за одиницю. Точну вартість ви побачите одразу в онлайн-редакторі.",
-  },
-  {
-    q: "Як довго виготовляється замовлення?",
-    a: "Стандартний термін — 7–14 робочих днів від підтвердження макету та оплати. Для термінових замовлень є прискорене виробництво — уточнюйте у менеджера.",
-  },
-  {
-    q: "Чи можна побачити якість до замовлення тиражу?",
-    a: "Так. Для цього є Box of Touch — набір фізичних зразків тканин, кольорів та виробів. Ви відчуєте якість руками до того, як зробити тираж.",
-  },
-  {
-    q: "Що якщо мені не подобається результат?",
-    a: "Ми погоджуємо макет перед запуском у виробництво. Якщо готовий виріб не відповідає погодженому макету — ми переробляємо за наш рахунок. Ваш менеджер на зв'язку на кожному етапі.",
-  },
-  {
-    q: "Чи є знижки на великі тиражі?",
-    a: "Так. 10–49 одиниць — базова ціна. 50–99 одиниць — знижка 12%. 100+ одиниць — знижка 15%. Знижки застосовуються автоматично в редакторі.",
-  },
-];
+import { useCms } from "@/hooks/useCms";
 
 function FaqItem({ q, a, index, isInView }: { q: string; a: string; index: number; isInView: boolean }) {
   const [open, setOpen] = useState(false);
@@ -84,6 +57,36 @@ function FaqItem({ q, a, index, isInView }: { q: string; a: string; index: numbe
 }
 
 export function FaqSection() {
+  const { cms } = useCms();
+  const data = cms.home_faq || {};
+  const heading = (data.heading as string) || "Часті запитання";
+  const items = (data.items as unknown as any[]) || [
+    {
+      question: "Який мінімальний тираж?",
+      answer: "Від 10 одиниць. Немає сенсу переплачувати за великий тираж, якщо ви тільки тестуєте мерч або потрібна невелика партія для команди.",
+    },
+    {
+      question: "Скільки коштує нанесення?",
+      answer: "Ціна залежить від типу нанесення (шовкодрук, вишивка, DTF, термоперенос) та кількості одиниць. Чим більший тираж — тим нижча ціна за одиницю. Точну вартість ви побачите одразу в онлайн-редакторі.",
+    },
+    {
+      question: "Як довго виготовляється замовлення?",
+      answer: "Стандартний термін — 7–14 робочих днів від підтвердження макету та оплати. Для термінових замовлень є прискорене виробництво — уточнюйте у менеджера.",
+    },
+    {
+      question: "Чи можна побачити якість до замовлення тиражу?",
+      answer: "Так. Для цього є Box of Touch — набір фізичних зразків тканин, кольорів та виробів. Ви відчуєте якість руками до того, як зробити тираж.",
+    },
+    {
+      question: "Що якщо мені не подобається результат?",
+      answer: "Ми погоджуємо макет перед запуском у виробництво. Якщо готовий виріб не відповідає погодженому макету — ми переробляємо за наш рахунок. Ваш менеджер на зв'язку на кожному етапі.",
+    },
+    {
+      question: "Чи є знижки на великі тиражі?",
+      answer: "Так. 10–49 одиниць — базова ціна. 50–99 одиниць — знижка 12%. 100+ одиниць — знижка 15%. Знижки застосовуються автоматично в редакторі.",
+    },
+  ];
+
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
@@ -106,7 +109,7 @@ export function FaqSection() {
           >
             <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-primary mb-4">FAQ</p>
             <h2 id="faq-heading" className="text-3xl sm:text-4xl font-black tracking-tight leading-tight mb-4">
-              Часті запитання
+              {heading}
             </h2>
             <p className="text-muted-foreground text-sm leading-relaxed">
               Не знайшли відповідь? <Link href="#contact" className="text-primary font-medium hover:underline hover:text-primary/80 transition-colors">Напишіть нам</Link> — відповімо протягом години.
@@ -115,8 +118,8 @@ export function FaqSection() {
 
           {/* Right — accordion */}
           <div role="list" aria-label="Питання та відповіді">
-            {FAQS.map((faq, i) => (
-              <FaqItem key={i} q={faq.q} a={faq.a} index={i} isInView={isInView} />
+            {items.map((faq, i) => (
+              <FaqItem key={i} q={faq.question || faq.q} a={faq.answer || faq.a} index={i} isInView={isInView} />
             ))}
           </div>
         </div>

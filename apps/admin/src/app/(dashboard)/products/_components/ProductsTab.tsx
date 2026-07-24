@@ -2,8 +2,8 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { SearchX, Shirt } from "lucide-react";
-import { AdminTablePanel, AdminToolbar } from "@/components/admin-layout";
+import { Package, SearchX } from "lucide-react";
+import { AdminTablePanel, AdminToolbar, AdminEmptyState } from "@/components/admin-layout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,8 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { EmptyState } from "@/components/empty-state";
-import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { Product, Category } from "./useProductsData";
 import { ProductTableRow } from "./ProductTableRow";
 
@@ -40,18 +39,21 @@ export interface ProductsTabProps {
 
 type StatusFilter = "all" | "active" | "inactive";
 
-// ── Skeleton ──────────────────────────────────────────────────────────────────
+// ── TableSkeleton ─────────────────────────────────────────────────────────────
 
-export function ProductsTableSkeleton() {
+function TableSkeleton({ rows = 5 }: { rows?: number }) {
   return (
     <>
-      {Array.from({ length: 5 }).map((_, i) => (
+      {Array.from({ length: rows }).map((_, i) => (
         <TableRow key={i}>
-          {[4, 8, 8, 32, 16, 12, 12, 8].map((w, j) => (
-            <TableCell key={j}>
-              <div className={`h-4 w-${w} bg-muted rounded animate-pulse`} />
-            </TableCell>
-          ))}
+          <TableCell><Skeleton className="h-4 w-4" /></TableCell>
+          <TableCell><Skeleton className="h-4 w-8" /></TableCell>
+          <TableCell><Skeleton className="h-10 w-10 rounded" /></TableCell>
+          <TableCell><Skeleton className="h-4 w-48" /></TableCell>
+          <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+          <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+          <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+          <TableCell><Skeleton className="h-4 w-8" /></TableCell>
         </TableRow>
       ))}
     </>
@@ -60,7 +62,15 @@ export function ProductsTableSkeleton() {
 
 // ── ProductsTab ───────────────────────────────────────────────────────────────
 
-export function ProductsTab({ products, categories, loading, onRefresh, variantCounts = {}, onToggleActive, onDelete }: ProductsTabProps) {
+export function ProductsTab({ 
+  products, 
+  categories, 
+  loading, 
+  onRefresh, 
+  variantCounts = {}, 
+  onToggleActive, 
+  onDelete 
+}: ProductsTabProps) {
   const router = useRouter();
 
   const [searchInput, setSearchInput] = useState("");
@@ -124,8 +134,33 @@ export function ProductsTab({ products, categories, loading, onRefresh, variantC
     filtered.length === 1 ? "товар" : filtered.length < 5 ? "товари" : "товарів"
   }`;
 
+  // ── Loading state ───────────────────────────────────────────────────────────
+
+  if (loading) {
+    return <TableSkeleton rows={10} />;
+  }
+
+  // ── Empty state ─────────────────────────────────────────────────────────────
+
+  if (products.length === 0) {
+    return (
+      <AdminEmptyState
+        icon={Package}
+        title="Немає товарів"
+        description="Створіть перший товар, щоб почати управляти вашим каталогом"
+        action={
+          <Button onClick={() => router.push("/products/new")}>
+            Додати товар
+          </Button>
+        }
+      />
+    );
+  }
+
+  // ── Main content ────────────────────────────────────────────────────────────
+
   return (
-    <div className="flex flex-col">
+    <>
       <AdminToolbar>
         <Input
           placeholder="Пошук..."
@@ -181,72 +216,58 @@ export function ProductsTab({ products, categories, loading, onRefresh, variantC
         </AdminToolbar>
       )}
 
-      <AdminTablePanel className="m-4 md:m-6">
-      <Table>
-        <TableHeader>
-          <TableRow className="hover:bg-transparent">
-            <TableHead className="w-6"><span className="sr-only">Перетягнути</span></TableHead>
-            <TableHead className="w-10"><span className="sr-only">Активний</span></TableHead>
-            <TableHead className="w-10"><span className="sr-only">Фото</span></TableHead>
-            <TableHead>Назва</TableHead>
-            <TableHead>Категорія</TableHead>
-            <TableHead>Ціна</TableHead>
-            <TableHead>Кольори</TableHead>
-            <TableHead className="w-20"><span className="sr-only">Дії</span></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {loading ? (
-            <ProductsTableSkeleton />
-          ) : products.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={8}>
-                <EmptyState
-                  icon={Shirt}
-                  title="Товарів ще немає"
-                  action={
-                    <Button size="sm" onClick={() => router.push("/products/new")}>
-                      + Додати товар
-                    </Button>
-                  }
-                />
-              </TableCell>
+      <div className="px-4 md:px-6 pb-6">
+        <AdminTablePanel>
+          <Table>
+          <TableHeader>
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="w-6"><span className="sr-only">Перетягнути</span></TableHead>
+              <TableHead className="w-10"><span className="sr-only">Активний</span></TableHead>
+              <TableHead className="w-10"><span className="sr-only">Фото</span></TableHead>
+              <TableHead>Назва</TableHead>
+              <TableHead>Категорія</TableHead>
+              <TableHead>Ціна</TableHead>
+              <TableHead>Кольори</TableHead>
+              <TableHead className="w-20"><span className="sr-only">Дії</span></TableHead>
             </TableRow>
-          ) : filtered.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={8}>
-                <EmptyState
-                  icon={SearchX}
-                  title="Нічого не знайдено"
-                  description="Спробуйте змінити запит або скинути фільтри"
-                  action={
-                    <Button variant="outline" size="sm" onClick={resetFilters}>
-                      Скинути фільтри
-                    </Button>
-                  }
+          </TableHeader>
+          <TableBody>
+            {filtered.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={8}>
+                  <AdminEmptyState
+                    icon={SearchX}
+                    title="Нічого не знайдено"
+                    description="Спробуйте змінити запит або скинути фільтри"
+                    action={
+                      <Button variant="outline" size="sm" onClick={resetFilters}>
+                        Скинути фільтри
+                      </Button>
+                    }
+                  />
+                </TableCell>
+              </TableRow>
+            ) : (
+              filtered.map((p) => (
+                <ProductTableRow
+                  key={p.id}
+                  product={p}
+                  category={categories.find((c) => c.id === p.category_id)}
+                  variantCount={variantCounts[p.id]}
+                  dragOverId={dragOverId}
+                  onDragStart={handleDragStart}
+                  onDragOver={handleDragOver}
+                  onDragEnd={handleDragEnd}
+                  onDrop={handleDrop}
+                  onToggleActive={onToggleActive ?? (() => {})}
+                  onDelete={onDelete ?? (() => {})}
                 />
-              </TableCell>
-            </TableRow>
-          ) : (
-            filtered.map((p) => (
-              <ProductTableRow
-                key={p.id}
-                product={p}
-                category={categories.find((c) => c.id === p.category_id)}
-                variantCount={variantCounts[p.id]}
-                dragOverId={dragOverId}
-                onDragStart={handleDragStart}
-                onDragOver={handleDragOver}
-                onDragEnd={handleDragEnd}
-                onDrop={handleDrop}
-                onToggleActive={onToggleActive ?? (() => {})}
-                onDelete={onDelete ?? (() => {})}
-              />
-            ))
-          )}
-        </TableBody>
-      </Table>
+              ))
+            )}
+          </TableBody>
+        </Table>
       </AdminTablePanel>
-    </div>
+      </div>
+    </>
   );
 }

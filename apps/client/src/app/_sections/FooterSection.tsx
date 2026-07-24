@@ -3,55 +3,57 @@
 import Link from "next/link";
 import { Instagram, Send, ArrowRight } from "lucide-react";
 import { BrandLogoFull } from "@/components/brand-logo";
+import { useTranslations } from "next-intl";
 
 interface FooterSectionProps {
   tagline: string; copyright: string; instagram: string; telegram: string;
 }
 
-const NAV = [
-  {
-    title: "Продукти",
-    links: [
-      { href: "/order", label: "Конструктор мерчу" },
-      { href: "#catalog", label: "Каталог" },
-      { href: "/popup", label: "Popup-стенд" },
-      { href: "#contact", label: "Box of Touch" },
-      { href: "#contact", label: "Найми дизайнера" },
-    ],
-  },
-  {
-    title: "Компанія",
-    links: [
-      { href: "#about", label: "Про нас" },
-      { href: "#how", label: "Як це працює" },
-      { href: "#contact", label: "Кар'єра" },
-      { href: "#contact", label: "Блог" },
-    ],
-  },
-  {
-    title: "Підтримка",
-    links: [
-      { href: "#faq", label: "FAQ" },
-      { href: "#contact", label: "Зв'язатись" },
-      { href: "/cabinet", label: "Кабінет" },
-      { href: "#contact", label: "Доставка та оплата" },
-    ],
-  },
-];
-
 export function FooterSection({ tagline, copyright, instagram, telegram }: FooterSectionProps) {
+  const t = useTranslations("footer");
+
+  const NAV = [
+    {
+      title: t("columns.products.title"),
+      links: [
+        { href: "/order",    label: t("columns.products.links.constructor") },
+        { href: "#catalog",  label: t("columns.products.links.catalog") },
+        { href: "/popup",    label: t("columns.products.links.popup") },
+        { href: "#contact",  label: t("columns.products.links.box") },
+        { href: "#contact",  label: t("columns.products.links.designer") },
+      ],
+    },
+    {
+      title: t("columns.company.title"),
+      links: [
+        { href: "#about",   label: t("columns.company.links.about") },
+        { href: "#how",     label: t("columns.company.links.how") },
+        { href: "#contact", label: t("columns.company.links.career") },
+        { href: "#contact", label: t("columns.company.links.blog") },
+      ],
+    },
+    {
+      title: t("columns.support.title"),
+      links: [
+        { href: "#faq",     label: t("columns.support.links.faq") },
+        { href: "#contact", label: t("columns.support.links.contact") },
+        { href: "/cabinet", label: t("columns.support.links.cabinet") },
+        { href: "#contact", label: t("columns.support.links.delivery") },
+      ],
+    },
+  ];
   return (
-    <footer className="bg-[#0a0d1a]" aria-label="Підвал сайту">
+    <footer className="bg-[#0a0d1a]" aria-label={t("ariaLabel")}>
       {/* Pre-footer CTA strip */}
       <div className="border-t border-white/8">
         <div className="max-w-6xl mx-auto px-5 sm:px-10 lg:px-20 py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div>
-            <p className="text-white font-bold text-base mb-1">Готові почати?</p>
-            <p className="text-white/45 text-sm">Від 10 одиниць · 7–14 днів · Доставка по Україні</p>
+            <p className="text-white font-bold text-base mb-1">{t("readyToStart")}</p>
+            <p className="text-white/45 text-sm">{t("readyDesc")}</p>
           </div>
           <Link href="/order"
             className="inline-flex items-center gap-2 bg-primary text-white font-semibold text-sm px-6 py-3 rounded-full hover:bg-primary/90 active:scale-[0.97] transition-all duration-200 shrink-0">
-            Почати проєкт <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            {t("startProject")} <ArrowRight className="w-4 h-4" aria-hidden="true" />
           </Link>
         </div>
       </div>
@@ -63,7 +65,7 @@ export function FooterSection({ tagline, copyright, instagram, telegram }: Foote
 
             {/* Brand */}
             <div className="col-span-2 md:col-span-1 flex flex-col gap-5">
-              <Link href="/" aria-label="U:DO CRAFT — на головну">
+              <Link href="/" aria-label={t("homeLink")}>
                 <BrandLogoFull className="h-10 w-auto" color="white" />
               </Link>
               <p className="text-white/35 text-xs leading-relaxed max-w-[200px]">{tagline}</p>

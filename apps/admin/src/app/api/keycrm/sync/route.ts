@@ -5,8 +5,6 @@ import { createServiceClient } from "@/lib/supabase/service";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-const KEYCRM_API_KEY = process.env.KEYCRM_API_KEY;
-
 type KeycrmOrder = Record<string, any>;
 
 function moneyToCents(value: unknown) {
@@ -32,8 +30,8 @@ function propertyValue(properties: any[] | undefined, names: string[]) {
   })?.value;
 }
 
-async function keycrmGet(pathname: string, params: Record<string, string | number>) {
-  if (!KEYCRM_API_KEY) {
+async function keycrmGet(apiKey: string, pathname: string, params: Record<string, string | number>) {
+  if (!apiKey) {
     throw new Error("KEYCRM_API_KEY is not configured");
   }
 
@@ -42,7 +40,7 @@ async function keycrmGet(pathname: string, params: Record<string, string | numbe
 
   const response = await fetch(url, {
     headers: {
-      Authorization: `Bearer ${KEYCRM_API_KEY}`,
+      Authorization: `Bearer ${apiKey}`,
       Accept: "application/json",
     },
     cache: "no-store",
@@ -56,12 +54,12 @@ async function keycrmGet(pathname: string, params: Record<string, string | numbe
   return response.json();
 }
 
-async function fetchRecentOrders(pages: number) {
+async function fetchRecentOrders(apiKey: string, pages: number) {
   const orders: KeycrmOrder[] = [];
   const pageCount = Math.max(1, Math.min(pages, 10));
 
   for (let page = 1; page <= pageCount; page += 1) {
-    const data = await keycrmGet("order", {
+    const data = await keycrmGet(apiKey, "order", {
       limit: 50,
       page,
       include: "buyer,products,payments,shipping,manager,tags,custom_fields",
@@ -203,9 +201,22 @@ export async function POST(request: NextRequest) {
   if (authError || !user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
+    // Check feature flags in app_settings
+    const { data: settingsData } = await supabase.from("app_settings").select("value").eq("key", "keycrm").single();
+    const settings = settingsData?.value || { enabled: true, sync_pages: 2 };
+    
+    if (!settings.enabled) {
+      return NextResponse.json({ error: "KeyCRM sync is disabled in settings" }, { status: 400 });
+    }
+
+    const apiKey = settings.api_key || process.env.KEYCRM_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json({ error: "KeyCRM API key not configured" }, { status: 400 });
+    }
+
     const body = await request.json().catch(() => ({}));
-    const pages = Number(body.pages ?? 2);
-    const orders = await fetchRecentOrders(pages);
+    const pages = Number(body.pages ?? settings.sync_pages ?? 2);
+    const orders = await fetchRecentOrders(apiKey, pages);
     let created = 0;
     let updated = 0;
 
@@ -214,6 +225,14 @@ export async function POST(request: NextRequest) {
       if (result === "created") created += 1;
       else updated += 1;
     }
+
+    // Update last sync time
+    await supabase.from("app_settings").upsert({
+      key: "keycrm",
+      value: { ...settings, last_sync_at: new Date().toISOString() },
+      updated_at: new Date().toISOString(),
+      updated_by: user.id
+    });
 
     return NextResponse.json({
       ok: true,
@@ -226,3 +245,4 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
+

@@ -1,0 +1,787 @@
+{
+  "nav": {
+    "catalog": "Catalogus",
+    "popup": "Popup",
+    "about": "Over ons",
+    "how": "Hoe het werkt",
+    "contacts": "Contact",
+    "startProject": "Project starten",
+    "openMenu": "Menu openen",
+    "closeMenu": "Menu sluiten",
+    "goToAccount": "Naar account",
+    "signIn": "Inloggen",
+    "cartItems": "Winkelwagen — {count} artikelen",
+    "mainNav": "Hoofdnavigatie",
+    "logoLink": "U:DO CRAFT — terug naar home"
+  },
+  "hero": {
+    "skipToCatalog": "Naar catalogus",
+    "watchVideo": "Video bekijken",
+    "closeVideo": "Video sluiten",
+    "mainSection": "Hero section",
+    "fullscreenVideo": "Video in fullscreen mode"
+  },
+  "socialProof": {
+    "trustedBy": "Vertrouwd door teams wereldwijd"
+  },
+  "about": {
+    "label": "Over ons",
+    "heading": "Platform voor",
+    "headingHighlight": "bedrijfsmerchandise",
+    "desc1": "Van startups tot grote bedrijven — wij helpen teams merch te maken waar ze trots op zijn.",
+    "desc2": "Vanaf 10 stuks, geen verborgen kosten, eigen productie, persoonlijke accountmanager, kwaliteitsgarantie.",
+    "features": {
+      "editor": {
+        "title": "Online editor",
+        "desc": "Upload je logo, plaats het op het product en zie het resultaat direct."
+      },
+      "minOrder": {
+        "title": "Vanaf 10 stuks",
+        "desc": "Perfect voor startups en kleine teams."
+      },
+      "pricing": {
+        "title": "Transparante prijzen",
+        "desc": "Direct factuur. Geen verborgen kosten."
+      },
+      "timeline": {
+        "title": "7–14 dagen",
+        "desc": "Van bevestiging tot levering."
+      },
+      "quality": {
+        "title": "Kwaliteitscontrole",
+        "desc": "Elke batch wordt gecontroleerd voor verzending."
+      },
+      "manager": {
+        "title": "Persoonlijke accountmanager",
+        "desc": "Beschikbaar van eerste aanvraag tot levering."
+      }
+    }
+  },
+  "problemSolution": {
+    "problemHeading": "De markt staat vol goedkope merch die niemand draagt",
+    "problemsLabel": "Veelvoorkomende problemen",
+    "problems": {
+      "minOrder": "Minimale bestelling 500+ stuks",
+      "approvals": "Weken van ontwerpgoedkeuringen",
+      "quality": "Kwaliteit voldoet niet aan verwachtingen",
+      "hidden": "Verborgen kosten na bestelling"
+    },
+    "solutionHeading": "Merch die deel uitmaakt van je merk",
+    "solutionsLabel": "U:DO voordelen",
+    "solutions": {
+      "minOrder": "Vanaf 10 stuks zonder toeslag",
+      "editor": "Online editor — resultaat direct zichtbaar",
+      "samples": "Samples voor productie (Box of Touch)",
+      "price": "Vaste prijs op factuur"
+    },
+    "ctaLabel": "Bekijk catalogus"
+  },
+  "collections": {
+    "heading": "Catalogus",
+    "allProducts": "Alle producten",
+    "all": "Alle",
+    "empty": "Geen producten in deze categorie",
+    "prevPage": "Vorige",
+    "nextPage": "Volgende",
+    "page": "Pagina {n}"
+  },
+  "process": {
+    "heading": "Van idee naar merch — in 4 stappen",
+    "subtext": "Het hele proces duurt minder dan 15 minuten. Prijzen zijn direct zichtbaar — geen telefoontjes of onderhandelingen.",
+    "estimatedTime": "Geschatte tijd",
+    "stepLabel": "Stap {n}: {title}",
+    "stepsLabel": "Processtappen",
+    "steps": {
+      "1": {
+        "title": "Kies een product",
+        "body": "Blader door de catalogus met echte prijzen. De prijs wordt direct bijgewerkt bij wijziging van aantal of druktype.",
+        "cta": "Catalogus openen",
+        "time": "~5 min"
+      },
+      "2": {
+        "title": "Online aanpassen",
+        "body": "Upload je logo, plaats het op het product, kies de drukzone. De editor toont de exacte kosten in realtime.",
+        "cta": "Editor proberen",
+        "time": "~10 min"
+      },
+      "3": {
+        "title": "Offerte ontvangen",
+        "body": "Vul het formulier in — een accountmanager neemt binnen 2 uur contact op. Vaste prijs zonder verborgen kosten.",
+        "cta": "Contact opnemen",
+        "time": "~2 uur"
+      },
+      "4": {
+        "title": "Merch ontvangen",
+        "body": "Productie 7–14 werkdagen. Levering. Als er iets niet klopt — doen we het gratis opnieuw.",
+        "cta": "FAQ lezen",
+        "time": "7–14 dagen"
+      }
+    }
+  },
+  "boxOfTouch": {
+    "label": "Box of Touch",
+    "heading": "Voel de kwaliteit",
+    "headingHighlight": "voor je bestelt",
+    "desc": "De meeste bedrijven bestellen blind. Box of Touch lost dat op: een fysieke set met stof-, kleur- en productsamples.",
+    "contentsLabel": "Inhoud van Box of Touch",
+    "contents": {
+      "products": {
+        "label": "Productsamples",
+        "desc": "T-shirts, hoodies, longsleeves — voel de snit en pasvorm"
+      },
+      "fabrics": {
+        "label": "Stofsamples",
+        "desc": "Verschillende samenstellingen en gewichten — van 180 tot 320 g/m²"
+      },
+      "palette": {
+        "label": "Kleurenpalet",
+        "desc": "Alle beschikbare kleuren met echte samples"
+      },
+      "printing": {
+        "label": "Druksoorten",
+        "desc": "Zeefdruk, borduurwerk, DTF — vergelijk op aanraking"
+      }
+    },
+    "cta": "Box of Touch bestellen",
+    "freeDelivery": "Gratis levering · Geen verplichtingen"
+  },
+  "popupStand": {
+    "label": "U:DO Popup",
+    "heading": "Pop-up stand — merch right at the event",
+    "slides": {
+      "0": {
+        "title": "Choose a package",
+        "desc": "Sticker packs or print packages — find the right format for your event"
+      },
+      "1": {
+        "title": "Choose a product",
+        "desc": "T-shirts, hoodies, accessories — guests choose on-site"
+      },
+      "2": {
+        "title": "We come to you",
+        "desc": "We bring equipment and apply prints right at the event"
+      }
+    },
+    "cta": "Learn more",
+    "slideLabel": "Slide {n}",
+    "photosLabel": "Pop-up stand photos"
+  },
+  "subscription": {
+    "label": "Merch subscription",
+    "heading": "Merch by subscription.",
+    "headingMuted": "No boxes in the office.",
+    "desc": "We store your items, assemble kits and ship them on a schedule: new employee, seasonal replacement, event or regular team need.",
+    "steps": {
+      "warehouse": "Warehouse",
+      "packing": "Packing",
+      "shipping": "Shipping"
+    },
+    "plans": {
+      "welcome": {
+        "title": "Welcome kits",
+        "desc": "For onboarding, HR processes and growing teams.",
+        "features": [
+          "storage",
+          "personalization",
+          "delivery to employee"
+        ]
+      },
+      "uniform": {
+        "title": "Regular uniforms",
+        "desc": "For HoReCa, retail and teams with regular uniform replacement.",
+        "features": [
+          "size tracking",
+          "repeat shipments",
+          "stock management"
+        ]
+      }
+    },
+    "cta": "Discuss subscription"
+  },
+  "designer": {
+    "label": "Design service",
+    "heading": "No logo? We'll help",
+    "desc": "Our designer will adapt your logo for printing or create a brand identity from scratch. Result — in 2 days.",
+    "steps": {
+      "0": {
+        "emoji": "💬",
+        "title": "Tell us about your brand",
+        "body": "Send your logo, brand colors and style description. If you have nothing — just tell us about the company. The brief takes 10–15 minutes online or by phone."
+      },
+      "1": {
+        "emoji": "✨",
+        "title": "Get a concept",
+        "body": "The designer will prepare 2–3 adaptation options for printing on clothing. Deadline — 2 business days. Includes adaptation for silk-screen, embroidery and DTF."
+      },
+      "2": {
+        "emoji": "✅",
+        "title": "Approve and order",
+        "body": "Choose an option, make edits (up to 2 rounds included), receive final files. All files stay with you — for any future orders."
+      }
+    },
+    "cta": "Discuss project"
+  },
+  "customizer": {
+    "label": "Online constructor",
+    "heading": "Build your merch right in the interface",
+    "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
+    "openEditor": "Open constructor",
+    "productLabel": "Product",
+    "colorLabel": "Color",
+    "printsLabel": "Prints",
+    "textLabel": "Text",
+    "fileLabel": "File",
+    "volumeLabel": "Volume & price",
+    "totalLabel": "Total",
+    "saved": "Draft saved",
+    "layersReady": "Layers ready",
+    "priceUpdated": "Price updated",
+    "sizeLabel": "Size"
+  },
+  "trust": {
+    "heading": "Why they trust us",
+    "subtext": "Not just words — specific guarantees we uphold every day.",
+    "guarantees": {
+      "0": {
+        "title": "Quality guarantee",
+        "body": "If the product doesn't match the approved design — we redo it for free. No arguments, no bureaucracy."
+      },
+      "1": {
+        "title": "Own production",
+        "body": "We control every stage — from material selection to printing. No intermediaries, no surprises."
+      },
+      "2": {
+        "title": "Fixed price",
+        "body": "Invoice immediately after confirmation. Price doesn't change after production starts."
+      },
+      "3": {
+        "title": "Personal manager",
+        "body": "One contact from first request to order delivery. We respond within 2 hours during business hours."
+      }
+    }
+  },
+  "comparison": {
+    "heading": "U:DO vs the rest of the market",
+    "subtext": "Compare the conditions — and understand why 500+ teams choose us.",
+    "featureLabel": "Feature",
+    "yourChoice": "Your choice",
+    "yes": "Yes",
+    "no": "No",
+    "partial": "Partial",
+    "selectProvider": "Select provider",
+    "goTo": "Go to: {name}",
+    "features": {
+      "minOrder": {
+        "name": "Minimum run",
+        "desc": "Minimum quantity for an order"
+      },
+      "editor": {
+        "name": "Online editor",
+        "desc": "Ability to create a design 24/7 independently"
+      },
+      "samples": {
+        "name": "Samples before run",
+        "desc": "Getting a test sample before launching the batch"
+      },
+      "manager": {
+        "name": "Personal manager",
+        "desc": "Direct contact for quick problem solving"
+      },
+      "fixedPrice": {
+        "name": "Fixed price",
+        "desc": "No hidden fees after approval"
+      },
+      "timeline": {
+        "name": "Production time",
+        "desc": "Time from design approval to shipping"
+      },
+      "quality": {
+        "name": "Quality guarantee",
+        "desc": "Free replacement if defects are found"
+      },
+      "popup": {
+        "name": "Mobile pop-up stand",
+        "desc": "Organizing an offline point at your event"
+      },
+      "design": {
+        "name": "Designer help",
+        "desc": "Logo adaptation and design for printing"
+      },
+      "logistics": {
+        "name": "Logistics",
+        "desc": "Packing and delivery to each employee separately"
+      }
+    },
+    "columns": {
+      "typical": "Typical supplier",
+      "udo": "U:DO Craft",
+      "printer": "Print shop"
+    }
+  },
+  "faq": {
+    "heading": "Veelgestelde vragen",
+    "noAnswer": "Geen antwoord gevonden?",
+    "contactUs": "Neem contact op",
+    "replyTime": "— we reageren binnen een uur.",
+    "questionsLabel": "Vragen en antwoorden",
+    "items": {
+      "0": {
+        "question": "Wat is de minimale bestelhoeveelheid?",
+        "answer": "Vanaf 10 stuks. Geen toeslag voor kleine oplagen."
+      },
+      "1": {
+        "question": "Wat kost het drukken?",
+        "answer": "De prijs hangt af van het type (zeefdruk, borduurwerk, DTF) en de hoeveelheid. Zichtbaar in de online editor."
+      },
+      "2": {
+        "question": "Hoe lang duurt een bestelling?",
+        "answer": "Standaard levertijd — 7–14 werkdagen na bevestiging."
+      },
+      "3": {
+        "question": "Kan ik de kwaliteit zien voor een grote bestelling?",
+        "answer": "Ja. Box of Touch — fysieke samples van stoffen, kleuren en producten."
+      },
+      "4": {
+        "question": "Wat als ik het resultaat niet leuk vind?",
+        "answer": "We keuren het ontwerp goed voor productie. Als het product niet overeenkomt — doen we het gratis opnieuw."
+      },
+      "5": {
+        "question": "Zijn er kortingen voor grote bestellingen?",
+        "answer": "Ja. 10–49 stuks — basisprijs. 50–99 — 12% korting. 100+ — 15% korting."
+      }
+    }
+  },
+  "finalCta": {
+    "ready": "Klaar om te beginnen?",
+    "heading": "Jouw merch — in 14 dagen",
+    "desc": "Van idee tot eindproduct. Online editor, persoonlijke accountmanager, kwaliteitsgarantie.",
+    "cta": "Project starten",
+    "footer": "Vanaf 10 stuks · Geen verborgen kosten · Levering inbegrepen"
+  },
+  "contact": {
+    "phone": "Phone",
+    "address": "Address"
+  },
+  "footer": {
+    "readyToStart": "Klaar om te beginnen?",
+    "readyDesc": "Vanaf 10 stuks · 7–14 dagen · Levering",
+    "startProject": "Project starten",
+    "ariaLabel": "Voettekst",
+    "homeLink": "U:DO CRAFT — terug naar home",
+    "columns": {
+      "products": {
+        "title": "Producten",
+        "links": {
+          "constructor": "Merch-configurator",
+          "catalog": "Catalogus",
+          "popup": "Popup-stand",
+          "box": "Box of Touch",
+          "designer": "Designer inhuren"
+        }
+      },
+      "company": {
+        "title": "Bedrijf",
+        "links": {
+          "about": "Over ons",
+          "how": "Hoe het werkt",
+          "career": "Vacatures",
+          "blog": "Blog"
+        }
+      },
+      "support": {
+        "title": "Ondersteuning",
+        "links": {
+          "faq": "FAQ",
+          "contact": "Contact",
+          "cabinet": "Account",
+          "delivery": "Verzending & betaling"
+        }
+      }
+    },
+    "privacy": "Privacy",
+    "terms": "Voorwaarden",
+    "cookies": "Cookies"
+  },
+  "cart": {
+    "title": "Winkelwagen",
+    "titleWithCount": "Winkelwagen ({count})",
+    "empty": "Winkelwagen is leeg",
+    "emptyDesc": "Kies een product en stel de druk in",
+    "toCatalog": "Naar catalogus",
+    "ariaLabel": "Winkelwagen",
+    "quantity": "{qty} st · {size}",
+    "total": "Totaal:",
+    "cartItem": "Winkelwagenartikel"
+  },
+  "services": {
+    "heading": "Three ways to get",
+    "headingAccent": "perfect merch",
+    "desc": "From physical samples to a pop-up stand — choose the format that suits you.",
+    "popup": {
+      "title": "U:DO Popup",
+      "desc": "Mobile stand with live customization. Guests create unique merch and take it away immediately.",
+      "stats": {
+        "events": "events",
+        "product": "per product"
+      },
+      "learnMore": "Learn more",
+      "discuss": "Discuss →"
+    },
+    "ctaStrip": {
+      "title": "Mobile pop-up stand for your event",
+      "desc": "500+ events · 50k+ guests · 5 min per product",
+      "learnMore": "Learn more",
+      "discuss": "Discuss →"
+    },
+    "stepLabel": "Step {n}",
+    "prevStep": "Previous",
+    "nextStep": "Next"
+  },
+  "checkout": {
+    "title": "Winkelwagen",
+    "orderTitle": "Bestelling plaatsen",
+    "stepCart": "Winkelwagen",
+    "stepForm": "Bedrijfsgegevens",
+    "emptyCart": "Winkelwagen is leeg",
+    "toCatalog": "Naar catalogus",
+    "total": "Totaal",
+    "finalPriceNote": "Eindprijs wordt overeengekomen met de accountmanager",
+    "placeOrder": "Bestelling plaatsen",
+    "edit": "Bewerken",
+    "discount": "-{pct}% korting",
+    "company": {
+      "title": "Bedrijfsgegevens",
+      "name": "Bedrijfsnaam *",
+      "namePlaceholder": "BV «Naam»",
+      "taxId": "KVK / BTW-nummer",
+      "taxIdPlaceholder": "NL123456789B01"
+    },
+    "contact": {
+      "title": "Contactpersoon",
+      "fullName": "Voor- en achternaam *",
+      "fullNamePlaceholder": "Jan de Vries",
+      "email": "E-mail *",
+      "emailPlaceholder": "hr@bedrijf.nl",
+      "phone": "Telefoon",
+      "phonePlaceholder": "+31 XX XXX XXXX",
+      "social": "Telegram / Instagram",
+      "socialPlaceholder": "@gebruikersnaam of link"
+    },
+    "delivery": {
+      "title": "Levering & deadlines",
+      "options": {
+        "nova_poshta": {
+          "label": "PostNL",
+          "desc": "2–3 werkdagen"
+        },
+        "ukrposhta": {
+          "label": "DHL",
+          "desc": "1–2 werkdagen"
+        },
+        "pickup": {
+          "label": "Afhalen",
+          "desc": "Op afspraak"
+        }
+      },
+      "deadline": "Gewenste datum",
+      "comment": "Opmerking bij bestelling",
+      "commentPlaceholder": "Speciale wensen, drukdetails..."
+    },
+    "submit": "Bestelling bevestigen",
+    "submitting": "Wordt verzonden...",
+    "finalPriceManager": "Eindprijs en factuur worden door de accountmanager verzonden na bevestiging",
+    "success": {
+      "title": "Bestelling ontvangen!",
+      "desc": "Onze accountmanager neemt binnen 24 uur contact met je op.",
+      "createAccount": "Persoonlijk account aanmaken",
+      "loginAccount": "Inloggen op account",
+      "createAccountDesc": "Volg de bestelstatus, chat met de accountmanager en bekijk facturen.",
+      "emailExists": "Dit e-mailadres is al geregistreerd. Voer je wachtwoord in om in te loggen.",
+      "emailLabel": "E-mail",
+      "passwordLabel": "Wachtwoord",
+      "newPasswordLabel": "Maak een wachtwoord aan",
+      "passwordPlaceholder": "Minimaal 6 tekens",
+      "enterPasswordPlaceholder": "Voer wachtwoord in",
+      "creating": "Aanmaken...",
+      "create": "Account aanmaken",
+      "loggingIn": "Inloggen...",
+      "login": "Inloggen",
+      "passwordError": "Wachtwoord moet minimaal 6 tekens hebben",
+      "enterPasswordError": "Voer wachtwoord in",
+      "wrongPassword": "Onjuist wachtwoord",
+      "registrationError": "Registratiefout. Probeer het later opnieuw.",
+      "skip": "Overslaan, terug naar home",
+      "accountCreated": {
+        "title": "Account aangemaakt!",
+        "desc": "We hebben een bevestigingsmail gestuurd naar {email}.",
+        "loginBtn": "Inloggen op account",
+        "homeLink": "Terug naar home"
+      }
+    },
+    "back": "Terug",
+    "header": "U:DO",
+    "backAriaLabel": "Terug"
+  },
+  "cabinet": {
+    "breadcrumb": "/ Account",
+    "settings": "Instellingen",
+    "logout": "Uitloggen",
+    "noOrders": "Nog geen bestellingen",
+    "toCatalog": "Naar catalogus",
+    "writeTo": "Schrijf naar accountmanager",
+    "tabs": {
+      "details": "Details",
+      "chat": "Chat",
+      "files": "Bestanden"
+    },
+    "status": {
+      "new": "Nieuw verzoek",
+      "in_progress": "In behandeling",
+      "production": "Productie",
+      "completed": "Voltooid",
+      "archived": "Archief"
+    },
+    "delivery": {
+      "nova_poshta": "PostNL",
+      "ukrposhta": "DHL",
+      "pickup": "Afhalen"
+    },
+    "details": {
+      "phone": "Telefoon",
+      "email": "E-mail",
+      "company": "Bedrijf",
+      "orderDate": "Besteldatum",
+      "orderAmount": "Bestelbedrag",
+      "delivery": "Levering",
+      "deadline": "Deadline",
+      "positions": "Posities ({n})",
+      "attachments": "Bijlagen ({n})",
+      "invoice": "Factuur downloaden",
+      "print": "Druk"
+    },
+    "chat": {
+      "placeholder": "Bericht...",
+      "sendLabel": "Bericht verzenden",
+      "attachLabel": "Bestand bijvoegen",
+      "loading": "Berichten worden geladen...",
+      "empty": "Nog geen berichten",
+      "fileTooLarge": "\"{name}\" overschrijdt 10 MB"
+    },
+    "files": {
+      "empty": "Nog geen bestanden",
+      "openFile": "Bestand openen"
+    }
+  },
+  "popup": {
+    "badge": "Mobiele popup-service",
+    "heroHeading": "Merch-popup op jouw evenement —",
+    "heroSubheading": "een live ervaring die men niet vergeet",
+    "heroDesc": "Wij komen naar je toe. Gasten kiezen kleding, personaliseren de druk ter plaatse en gaan weg met kant-en-klare merch.",
+    "bookBtn": "Popup boeken",
+    "howItWorks": "Hoe het werkt",
+    "stats": {
+      "events": "Gehouden popups",
+      "time": "Personalisatietijd",
+      "guests": "Gasten per evenement",
+      "satisfaction": "Tevreden organisatoren"
+    },
+    "useCases": {
+      "label": "Voor wie",
+      "heading": "Geschikt voor elk evenement",
+      "items": {
+        "corporate": {
+          "title": "Bedrijfsevenementen",
+          "desc": "Maak het bedrijfsevenement onvergetelijk — gasten gaan naar huis met gepersonaliseerde merch."
+        },
+        "conferences": {
+          "title": "Conferenties & forums",
+          "desc": "Gebrande merch ter plaatse — het beste netwerkinstrument."
+        },
+        "festivals": {
+          "title": "Festivals & markten",
+          "desc": "Popup-stand die de aandacht trekt. Live personalisatie — het is een show."
+        },
+        "launches": {
+          "title": "Productlanceringen",
+          "desc": "Lancering met merch die gasten zelf hebben gemaakt."
+        },
+        "universities": {
+          "title": "Universiteiten & scholen",
+          "desc": "Diploma-uitreikingen, open dagen, studentenevenementen."
+        },
+        "b2b": {
+          "title": "B2B-evenementen",
+          "desc": "Partnerbijeenkomsten, beurzen, presentaties."
+        }
+      }
+    },
+    "process": {
+      "label": "Proces",
+      "heading": "Drie stappen naar de perfecte popup",
+      "steps": {
+        "0": {
+          "step": "01",
+          "title": "Format kiezen",
+          "desc": "Vertel ons over het evenement — aantal gasten, locatie, datum."
+        },
+        "1": {
+          "step": "02",
+          "title": "Stand voorbereiden",
+          "desc": "Wij brengen apparatuur, kleding en alles wat nodig is voor personalisatie."
+        },
+        "2": {
+          "step": "03",
+          "title": "Gasten personaliseren",
+          "desc": "Elke gast kiest een product, plaatst de druk en gaat weg met kant-en-klare merch."
+        }
+      }
+    },
+    "faq": {
+      "label": "FAQ",
+      "heading": "Veelgestelde vragen",
+      "items": {
+        "0": {
+          "q": "Minimum aantal deelnemers?",
+          "a": "Vanaf 50 personen."
+        },
+        "1": {
+          "q": "Hoe lang duurt personalisatie van één product?",
+          "a": "3 tot 10 minuten afhankelijk van de complexiteit."
+        },
+        "2": {
+          "q": "Welke producten zijn beschikbaar?",
+          "a": "T-shirts, hoodies, longsleeves, petjes en accessoires."
+        },
+        "3": {
+          "q": "Wie betaalt voor de merch?",
+          "a": "Beide opties zijn mogelijk."
+        },
+        "4": {
+          "q": "Hoe ver van tevoren boeken?",
+          "a": "We raden 2–3 weken voor het evenement aan."
+        }
+      }
+    },
+    "contact": {
+      "label": "Boeken",
+      "heading": "Vertel ons over jouw evenement",
+      "desc": "Laat een aanvraag achter — een accountmanager neemt binnen één werkdag contact op.",
+      "benefits": {
+        "0": "Gratis adviesgesprek",
+        "1": "Individuele schatting",
+        "2": "Reactie binnen 24 uur"
+      }
+    },
+    "nav": {
+      "useCases": "Voor wie",
+      "how": "Hoe het werkt",
+      "faq": "FAQ",
+      "contacts": "Contact"
+    },
+    "book": "Boeken",
+    "footerCopyright": "U:DO CRAFT. Alle rechten voorbehouden.",
+    "menuOpen": "Menu openen",
+    "menuClose": "Menu sluiten",
+    "homeLink": "Home"
+  },
+  "contactForm": {
+    "nameLabel": "Uw naam *",
+    "namePlaceholder": "Jan de Vries",
+    "emailLabel": "E-mail *",
+    "emailPlaceholder": "hr@bedrijf.nl",
+    "phoneLabel": "Telefoon *",
+    "phonePlaceholder": "+31 XX XXX XXXX",
+    "companyLabel": "Bedrijf",
+    "companyPlaceholder": "Bedrijfsnaam",
+    "topicLabel": "Onderwerp *",
+    "messageLabel": "Vertel ons over uw project",
+    "messagePlaceholder": "Hoeveelheid, producttype, deadlines...",
+    "filesLabel": "Bestanden uploaden (ontwerpen, logo's enz.)",
+    "filesClick": "Klik of sleep bestanden hier naartoe",
+    "filesDesc": "Ontwerpen, logo's, afbeeldingen...",
+    "submit": "Verzenden",
+    "submitting": "Wordt verzonden...",
+    "error": "Er is een fout opgetreden. Probeer het opnieuw of neem direct contact op.",
+    "success": "Bedankt voor uw bericht!",
+    "successDesc": "We hebben uw verzoek ontvangen en nemen snel contact op.",
+    "deleteFile": "Bestand verwijderen {name}",
+    "topics": {
+      "merch": {
+        "label": "Bedrijfsmerch",
+        "desc": "T-shirts, hoodies, accessoires voor uw team of merk"
+      },
+      "popup": {
+        "label": "Popup-stand voor evenement",
+        "desc": "Live merch-personalisatie op uw evenement"
+      },
+      "box": {
+        "label": "Box of Touch",
+        "desc": "Fysieke stof- en productsamples voor productie"
+      },
+      "designer": {
+        "label": "Ontwerpdiensten",
+        "desc": "Logo-ontwikkeling of -aanpassing voor druk"
+      },
+      "bulk": {
+        "label": "Grote bestelling (500+)",
+        "desc": "Groothandelsbestellingen met individuele voorwaarden"
+      },
+      "other": {
+        "label": "Overig",
+        "desc": "Elke andere vraag of suggestie"
+      }
+    }
+  },
+  "privacy": {
+    "title": "Privacybeleid",
+    "noContent": "Inhoud nog niet toegevoegd."
+  },
+  "terms": {
+    "title": "Algemene voorwaarden",
+    "noContent": "Inhoud nog niet toegevoegd."
+  },
+  "order": {
+    "loadError": "Catalogus kon niet worden geladen. Ververs de pagina."
+  },
+  "leadMagnet": {
+    "badge": "Gratis",
+    "heading": "Ontvang een gratis mockup van je merch",
+    "desc": "Upload je logo — wij plaatsen het op een echt product en sturen de mockup naar je e-mail.",
+    "emailLabel": "Jouw e-mail",
+    "cta": "Mockup ontvangen",
+    "loading": "Verzenden...",
+    "emailError": "Voer een geldig e-mailadres in",
+    "success": "Dank je!",
+    "successDesc": "De mockup arriveert binnen 24 uur in je inbox",
+    "formLabel": "Mockup-aanvraagformulier",
+    "orCalculate": "Wil je de prijs nu weten?",
+    "openCalculator": "Prijscalculator openen →"
+  },
+  "howItWorks": {
+    "label": "Hoe het werkt",
+    "heading": "Aanpassen voor jouw doelen",
+    "steps": {
+      "0": {
+        "title": "Producten kiezen",
+        "desc": "Blader door de catalogus, filter op categorieën. Kies de basis voor je merch.",
+        "cta": "Naar catalogus"
+      },
+      "1": {
+        "title": "Kleding aanpassen",
+        "desc": "Upload logo, kies drukzone, maat en kleur. Realtime preview.",
+        "cta": "Probeer het"
+      },
+      "2": {
+        "title": "Offerte ontvangen",
+        "desc": "Vul het bestelformulier in. Een accountmanager neemt contact op ter bevestiging.",
+        "cta": "Bestellen"
+      }
+    }
+  },
+  "stats": {
+    "ariaLabel": "Key metrics"
+  },
+  "langSwitcher": {
+    "label": "Language"
+  }
+}

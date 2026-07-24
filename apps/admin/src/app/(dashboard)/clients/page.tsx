@@ -11,17 +11,29 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import {
+  Sheet, SheetContent, SheetHeader, SheetTitle,
+} from "@/components/ui/sheet";
+import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { Search, Mail, ExternalLink, Loader2, X, MessageCircle, Phone, Calendar, UserPlus, Trash2, Users, CreditCard, Database, Building2, RefreshCw, Copy, Edit3, MoreHorizontal, Save } from "lucide-react";
+import { Search, Mail, ExternalLink, Loader2, MessageCircle, Phone, Calendar, UserPlus, Trash2, Users, Building2, RefreshCw, Copy, Edit3, MoreHorizontal, Save, ArrowRight, Hash, Package } from "lucide-react";
 import { EmptyState } from "@/components/empty-state";
 import { StatusBadge, type LeadStatus } from "@/components/status-badge";
-import { fmtMoney, fmtDate } from "@/lib/utils";
+import { fmtMoney, fmtDate, cn } from "@/lib/utils";
 import { DashboardPage } from "@/components/dashboard-page";
 import { AdminToolbar, AdminFilter, AdminTablePanel } from "@/components/admin-layout";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+
+interface OrderItem {
+  id: string;
+  color: string;
+  size: string;
+  quantity: number;
+  mockup_url?: string;
+  custom_print_url?: string;
+}
 
 interface Lead {
   id: string;
@@ -41,6 +53,7 @@ interface Lead {
   };
   total_amount_cents: number;
   created_at: string;
+  order_items?: OrderItem[];
 }
 
 interface ClientRecord {
@@ -59,33 +72,13 @@ interface ClientRecord {
   lastManager?: string;
 }
 
-const DRAWER_MIN = 280;
-const DRAWER_MAX = 600;
 type SourceFilter = "all" | "keycrm" | "manual";
 type SortFilter = "spent" | "recent" | "orders";
 type ClientTab = "overview" | "orders" | "activity";
 
 const EMPTY_FORM = { name: "", email: "", phone: "", company: "", social_channel: "" };
 
-function ClientStat({
-  icon: Icon,
-  label,
-  value,
-}: {
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="rounded-lg bg-muted/60 px-3 py-2 text-center">
-      <div className="mb-1 flex items-center justify-center gap-1 text-[10px] text-muted-foreground">
-        <Icon className="size-3" />
-        {label}
-      </div>
-      <p className="truncate text-xs font-bold">{value}</p>
-    </div>
-  );
-}
+
 
 export default function ClientsPage() {
   const router = useRouter();
@@ -97,8 +90,9 @@ export default function ClientsPage() {
   const [sortFilter, setSortFilter] = useState<SortFilter>("spent");
   const [selected, setSelected] = useState<ClientRecord | null>(null);
   const [syncingKeycrm, setSyncingKeycrm] = useState(false);
-  const [drawerWidth, setDrawerWidth] = useState(360);
-  const [isDragging, setIsDragging] = useState(false);
+  // Kept for compatibility — Sheet handles sizing now
+  const [drawerWidth] = useState(460);
+  const [isDragging] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
   const [addForm, setAddForm] = useState(EMPTY_FORM);
   const [addLoading, setAddLoading] = useState(false);
@@ -305,26 +299,7 @@ export default function ClientsPage() {
     }
   };
 
-  const onDrawerDragStart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-    const startX = e.clientX;
-    const startW = drawerWidth;
-    const el = (e.currentTarget as HTMLElement).closest("[data-drawer]") as HTMLElement | null;
-    const onMove = (ev: MouseEvent) => {
-      const w = Math.min(DRAWER_MAX, Math.max(DRAWER_MIN, startW + startX - ev.clientX));
-      if (el) el.style.width = `${w}px`;
-    };
-    const onUp = (ev: MouseEvent) => {
-      const w = Math.min(DRAWER_MAX, Math.max(DRAWER_MIN, startW + startX - ev.clientX));
-      setDrawerWidth(w);
-      setIsDragging(false);
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseup", onUp);
-    };
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseup", onUp);
-  };
+  // onDrawerDragStart replaced by Shadcn Sheet
 
   return (
     <DashboardPage
@@ -347,8 +322,8 @@ export default function ClientsPage() {
         </>
       }
     >
-    <div className={`flex flex-1 h-full overflow-hidden${isDragging ? " select-none" : ""}`}>
-      <div className="flex-1 flex flex-col overflow-hidden transition-[margin] duration-200" style={{ marginRight: selected ? drawerWidth : 0 }}>
+    <div className="flex flex-1 h-full overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden">
         <AdminToolbar>
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
@@ -360,17 +335,29 @@ export default function ClientsPage() {
             />
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <AdminFilter
               label="Джерело"
               active={sourceFilter !== "all"}
-              value={sourceFilter === "all" ? undefined : sourceFilter === "keycrm" ? "KeyCRM" : "Вручну"}
+              value={sourceFilter === "all" ? undefined : sourceFilter}
+              options={[
+                { value: "all", label: "Всі джерела" },
+                { value: "keycrm", label: "KeyCRM" },
+                { value: "manual", label: "Вручну" },
+              ]}
+              onSelect={(v) => setSourceFilter(v as SourceFilter)}
               onClear={() => setSourceFilter("all")}
             />
             <AdminFilter
               label="Сортування"
               active={sortFilter !== "spent"}
-              value={sortFilter === "spent" ? "За сумою" : sortFilter === "recent" ? "Останні" : "За кількістю"}
+              value={sortFilter === "spent" ? undefined : sortFilter}
+              options={[
+                { value: "spent", label: "За сумою" },
+                { value: "recent", label: "Останні" },
+                { value: "orders", label: "За кількістю" },
+              ]}
+              onSelect={(v) => setSortFilter(v as SortFilter)}
               onClear={() => setSortFilter("spent")}
             />
           </div>
@@ -453,259 +440,248 @@ export default function ClientsPage() {
         </div>
       </div>
 
-      {selected && (
-        <div
-          data-drawer
-          className="fixed top-0 right-0 h-full border-l border-border bg-card flex flex-col overflow-hidden z-20"
-          style={{ width: drawerWidth }}
+      {/* ── Client detail sheet ── */}
+      <Sheet open={!!selected} onOpenChange={(open) => { if (!open) { setSelected(null); setEditMode(false); } }}>
+        <SheetContent
+          side="right"
+          className="w-[380px] max-w-full p-0 flex flex-col gap-0 overflow-hidden bg-white"
+          showCloseButton={false}
         >
-          <div onMouseDown={onDrawerDragStart} className="absolute left-0 top-0 h-full w-1 cursor-col-resize hover:bg-primary/40 transition-colors z-10" />
-
-          <div className="h-14 border-b border-border px-4 flex items-center shrink-0">
-            <div className="flex items-center justify-between gap-3 w-full">
-              <div className="min-w-0">
-                <h2 className="truncate text-sm font-semibold">{selected.name}</h2>
+          <SheetHeader className="flex-row items-start justify-between px-5 pt-5 pb-4 gap-3 shrink-0">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                <span className="text-sm font-bold text-primary">{selected?.name[0]?.toUpperCase()}</span>
               </div>
-              <div className="flex items-center gap-1">
-                {editMode ? (
-                  <>
-                    <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => setEditMode(false)} disabled={savingClient}>
-                      Скасувати
-                    </Button>
-                    <Button size="sm" className="h-7 text-xs gap-1.5" onClick={handleSaveClient} disabled={savingClient}>
-                      {savingClient ? <Loader2 className="size-3 animate-spin" /> : <Save className="size-3" />}
-                      Зберегти
-                    </Button>
-                  </>
-                ) : (
-                  <Button size="sm" className="h-7 text-xs gap-1.5" onClick={() => setEditMode(true)}>
-                    <Edit3 className="size-3" />
-                    Редагувати
-                  </Button>
-                )}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground">
-                      <MoreHorizontal className="size-3.5" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-44">
-                    <DropdownMenuItem onClick={() => copyClientContact(selected)}>
-                      <Copy className="size-3.5 mr-2" /> Скопіювати контакт
-                    </DropdownMenuItem>
-                    {selected.leads[0] && (
-                      <DropdownMenuItem onClick={() => router.push(`/messages?leadId=${selected.leads[0].id}`)}>
-                        <MessageCircle className="size-3.5 mr-2" /> Відкрити чат
-                      </DropdownMenuItem>
-                    )}
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem variant="destructive" onClick={() => handleDeleteClient(selected)}>
-                      <Trash2 className="size-3.5 mr-2" /> Видалити
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setSelected(null)}>
-                  <X className="w-3.5 h-3.5" />
-                </Button>
+              <div className="min-w-0">
+                <SheetTitle className="text-base font-bold truncate">{selected?.name}</SheetTitle>
+                <p className="text-xs text-muted-foreground truncate">{selected?.email || selected?.phone}</p>
               </div>
             </div>
-          </div>
+            <div className="flex items-center gap-1 shrink-0">
+              {editMode ? (
+                <>
+                  <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => setEditMode(false)} disabled={savingClient}>Скасувати</Button>
+                  <Button size="sm" className="h-7 text-xs gap-1" onClick={handleSaveClient} disabled={savingClient}>
+                    {savingClient ? <Loader2 className="size-3 animate-spin" /> : <Save className="size-3" />}
+                    Зберегти
+                  </Button>
+                </>
+              ) : (
+                <Button variant="ghost" size="icon-sm" className="text-muted-foreground hover:text-foreground" onClick={() => setEditMode(true)}>
+                  <Edit3 className="size-3.5" />
+                </Button>
+              )}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon-sm" className="text-muted-foreground"><MoreHorizontal className="size-3.5" /></Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-44">
+                  <DropdownMenuItem onClick={() => selected && copyClientContact(selected)}><Copy className="size-3.5 mr-2" /> Скопіювати контакт</DropdownMenuItem>
+                  {selected?.leads[0] && (
+                    <DropdownMenuItem onClick={() => router.push(`/messages?leadId=${selected.leads[0].id}`)}><MessageCircle className="size-3.5 mr-2" /> Відкрити чат</DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem variant="destructive" onClick={() => selected && handleDeleteClient(selected)}><Trash2 className="size-3.5 mr-2" /> Видалити</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button variant="ghost" size="icon-sm" className="text-muted-foreground" onClick={() => setSelected(null)}>
+                ×
+              </Button>
+            </div>
+          </SheetHeader>
 
-          <div className="flex-1 overflow-y-auto">
-            <Tabs value={clientTab} onValueChange={(value) => setClientTab(value as ClientTab)} className="gap-0">
-              <TabsList className="px-4">
-                <TabsTrigger value="overview">Профіль</TabsTrigger>
-                <TabsTrigger value="orders">Замовлення</TabsTrigger>
-                <TabsTrigger value="activity">Активність</TabsTrigger>
-              </TabsList>
+          {selected && (
+            <div className="flex-1 overflow-y-auto">
+              <Tabs value={clientTab} onValueChange={(v) => setClientTab(v as ClientTab)} className="flex flex-col gap-0">
+                <TabsList className="px-5 shrink-0 rounded-none border-b h-10 bg-transparent justify-start gap-5">
+                  <TabsTrigger value="overview" className="text-xs h-10 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none px-0">Профіль</TabsTrigger>
+                  <TabsTrigger value="orders" className="text-xs h-10 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none px-0">
+                    Замовлення{selected.ordersCount > 0 ? ` (${selected.ordersCount})` : ""}
+                  </TabsTrigger>
+                  <TabsTrigger value="activity" className="text-xs h-10 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none px-0">Активність</TabsTrigger>
+                </TabsList>
 
-              <TabsContent value="overview" className="m-0">
-                <div className="flex flex-col items-center px-4 py-5 border-b border-border">
-                  <div className="w-12 h-12 rounded-full bg-primary/15 flex items-center justify-center mb-2.5">
-                    <span className="text-lg font-bold text-primary">{selected.name[0]?.toUpperCase()}</span>
-                  </div>
+                {/* ── Profile tab ── */}
+                <TabsContent value="overview" className="m-0 p-0">
                   {editMode ? (
-                    <div className="w-full space-y-3">
-                      <div className="space-y-1">
-                        <Label htmlFor="edit-client-name" className="text-[10px]">Ім&apos;я *</Label>
-                        <Input id="edit-client-name" className="text-sm" value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} />
-                      </div>
-                      <div className="space-y-1">
-                        <Label htmlFor="edit-client-email" className="text-[10px]">Email *</Label>
-                        <Input id="edit-client-email" type="email" className="text-sm" value={editForm.email} onChange={(e) => setEditForm({ ...editForm, email: e.target.value })} />
-                      </div>
+                    <div className="px-5 py-5 space-y-3">
+                      <div className="space-y-1.5"><Label className="text-[10px] uppercase tracking-wider text-muted-foreground/60">Ім&apos;я *</Label><Input className="h-9 text-sm" value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} /></div>
+                      <div className="space-y-1.5"><Label className="text-[10px] uppercase tracking-wider text-muted-foreground/60">Email *</Label><Input type="email" className="h-9 text-sm" value={editForm.email} onChange={(e) => setEditForm({ ...editForm, email: e.target.value })} /></div>
                       <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-1">
-                          <Label htmlFor="edit-client-phone" className="text-[10px]">Телефон</Label>
-                          <Input id="edit-client-phone" className="text-sm" value={editForm.phone} onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })} />
-                        </div>
-                        <div className="space-y-1">
-                          <Label htmlFor="edit-client-company" className="text-[10px]">Компанія</Label>
-                          <Input id="edit-client-company" className="text-sm" value={editForm.company} onChange={(e) => setEditForm({ ...editForm, company: e.target.value })} />
-                        </div>
+                        <div className="space-y-1.5"><Label className="text-[10px] uppercase tracking-wider text-muted-foreground/60">Телефон</Label><Input className="h-9 text-sm" value={editForm.phone} onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })} /></div>
+                        <div className="space-y-1.5"><Label className="text-[10px] uppercase tracking-wider text-muted-foreground/60">Компанія</Label><Input className="h-9 text-sm" value={editForm.company} onChange={(e) => setEditForm({ ...editForm, company: e.target.value })} /></div>
                       </div>
-                      <div className="space-y-1">
-                        <Label htmlFor="edit-client-social" className="text-[10px]">Telegram / Instagram</Label>
-                        <Input id="edit-client-social" className="text-sm" value={editForm.social_channel} onChange={(e) => setEditForm({ ...editForm, social_channel: e.target.value })} />
-                      </div>
+                      <div className="space-y-1.5"><Label className="text-[10px] uppercase tracking-wider text-muted-foreground/60">Telegram / Instagram</Label><Input className="h-9 text-sm" value={editForm.social_channel} onChange={(e) => setEditForm({ ...editForm, social_channel: e.target.value })} /></div>
                     </div>
                   ) : (
                     <>
-                      <p className="font-semibold text-sm text-center">{selected.name}</p>
-                      <p className="text-[10px] text-muted-foreground mt-0.5">{selected.email || selected.phone || "Без контактів"}</p>
-                      {selected.company && <p className="text-[10px] text-muted-foreground">{selected.company}</p>}
+                      {/* Stats bar */}
+                      <div className="grid grid-cols-3 divide-x border-b bg-muted/20">
+                        <ClientStatTile label="Замовлень" value={String(selected.ordersCount)} />
+                        <ClientStatTile label="Витрачено" value={fmtMoney(selected.totalSpent)} bold />
+                        <ClientStatTile label="Оплачено" value={fmtMoney(selected.paidTotal)} />
+                      </div>
+
+                      {/* Contact rows */}
+                      <div className="px-5 pt-5 pb-3">
+                        <p className="text-[10px] font-semibold tracking-[0.1em] text-muted-foreground/50 uppercase mb-3">КОНТАКТИ</p>
+                        <div className="space-y-2.5">
+                          {selected.phone && <ClientInfoRow icon={Phone} value={selected.phone} href={`tel:${selected.phone}`} />}
+                          {selected.email && <ClientInfoRow icon={Mail} value={selected.email} href={`mailto:${selected.email}`} />}
+                          {selected.company && <ClientInfoRow icon={Building2} value={selected.company} />}
+                          {selected.social_channel && <ClientInfoRow icon={ExternalLink} value={selected.social_channel} />}
+                          {selected.lastManager && <ClientInfoRow icon={Users} value={selected.lastManager} label="Менеджер" />}
+                          <ClientInfoRow icon={Calendar} value={fmtDate(selected.lastOrderAt)} label="Останнє замовлення" />
+                        </div>
+                      </div>
+
+                      {selected.leads[0] && (
+                        <div className="px-5 pb-5">
+                          <button
+                            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-border/60 bg-white hover:bg-muted/40 transition-colors text-sm font-medium text-foreground"
+                            onClick={() => router.push(`/messages?leadId=${selected.leads[0].id}`)}
+                          >
+                            <MessageCircle className="size-4 text-muted-foreground/60 shrink-0" />
+                            Відкрити чат
+                          </button>
+                        </div>
+                      )}
                     </>
                   )}
-                  <div className="flex gap-2 mt-3 w-full">
-                    <div className="flex-1 rounded-lg bg-muted/60 px-2 py-2 text-center">
-                      <p className="text-base font-bold">{selected.ordersCount}</p>
-                      <p className="text-[9px] text-muted-foreground uppercase">замовлень</p>
-                    </div>
-                    <div className="flex-1 rounded-lg bg-muted/60 px-2 py-2 text-center">
-                      <p className="text-sm font-bold">{fmtMoney(selected.totalSpent)}</p>
-                      <p className="text-[9px] text-muted-foreground uppercase">витрачено</p>
-                    </div>
-                  </div>
-                  <div className="mt-2 grid w-full grid-cols-2 gap-2">
-                    <ClientStat icon={Database} label="KeyCRM" value={`${selected.keycrmOrders}/${selected.ordersCount}`} />
-                    <ClientStat icon={CreditCard} label="Оплачено" value={fmtMoney(selected.paidTotal)} />
-                  </div>
-                </div>
+                </TabsContent>
 
-                {selected.leads[0] && (
-                  <div className="px-4 pt-4">
-                    <Button variant="outline" size="sm" className="w-full gap-2 text-xs h-8" onClick={() => router.push(`/messages?leadId=${selected.leads[0].id}`)}>
-                      <MessageCircle className="w-3.5 h-3.5" /> Чат
-                    </Button>
+                {/* ── Orders tab ── */}
+                <TabsContent value="orders" className="m-0 p-0">
+                  <div className="px-5 pt-5 pb-3 flex items-center justify-between">
+                    <p className="text-[10px] font-semibold tracking-[0.1em] text-muted-foreground/50 uppercase">ЗАМОВЛЕННЯ</p>
+                    <Button variant="outline" size="sm" className="h-7 text-[10px] rounded-full" onClick={() => router.push("/orders/new")}>+ Нове</Button>
                   </div>
-                )}
+                  <div className="px-5 pb-5 space-y-3">
+                    {selected.leads.length === 0 ? (
+                      <p className="text-sm text-muted-foreground py-6 text-center">Замовлень немає</p>
+                    ) : (
+                      selected.leads.map((lead) => (
+                        <div key={lead.id} className="rounded-xl border border-border/60 bg-white overflow-hidden">
+                          {/* Order header — clickable */}
+                          <div
+                            className="flex items-center gap-3 px-4 py-3 hover:bg-muted/30 transition-colors cursor-pointer"
+                            onClick={() => router.push(`/orders?leadId=${lead.id}`)}
+                          >
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="text-sm font-bold">{fmtMoney(lead.total_amount_cents)}</span>
+                                {lead.customer_data?.keycrm_id && (
+                                  <span className="text-[10px] text-muted-foreground font-mono">#{lead.customer_data.keycrm_id}</span>
+                                )}
+                              </div>
+                              <p className="text-[11px] text-muted-foreground mt-0.5">{fmtDate(lead.created_at)}</p>
+                            </div>
+                            <StatusBadge status={lead.status} />
+                            <ArrowRight className="size-3.5 text-muted-foreground/40 shrink-0" />
+                          </div>
+                          {/* Order items with print details */}
+                          {lead.order_items && lead.order_items.length > 0 && (
+                            <div className="border-t border-border/40 px-4 py-3 space-y-2.5 bg-muted/10">
+                              {lead.order_items.map((item) => (
+                                <div key={item.id} className="flex items-start gap-3">
+                                  {item.mockup_url ? (
+                                    <img src={item.mockup_url} alt="Макет" className="size-12 rounded-lg border border-border/60 object-cover shrink-0" />
+                                  ) : (
+                                    <div className="size-12 rounded-lg border border-border/40 bg-muted/40 flex items-center justify-center shrink-0">
+                                      <Package className="size-4 text-muted-foreground/40" />
+                                    </div>
+                                  )}
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-xs font-semibold text-foreground truncate">{item.color} / {item.size}</p>
+                                    <p className="text-[10px] text-muted-foreground">× {item.quantity}</p>
+                                    {item.custom_print_url && (
+                                      <a href={item.custom_print_url} target="_blank" rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1 text-[10px] text-primary hover:underline mt-1">
+                                        <ExternalLink className="size-2.5" /> Принт
+                                      </a>
+                                    )}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </TabsContent>
 
-                <div className="px-4 py-4 space-y-3">
-                  <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Контакти</p>
-                  {selected.phone && (
-                    <div className="flex items-start gap-3">
-                      <Phone className="w-3.5 h-3.5 text-muted-foreground mt-0.5 shrink-0" />
-                      <div><p className="text-xs">{selected.phone}</p><p className="text-[10px] text-muted-foreground">Телефон</p></div>
-                    </div>
-                  )}
-                  {selected.company && (
-                    <div className="flex items-start gap-3">
-                      <Building2 className="w-3.5 h-3.5 text-muted-foreground mt-0.5 shrink-0" />
-                      <div><p className="text-xs">{selected.company}</p><p className="text-[10px] text-muted-foreground">Компанія</p></div>
-                    </div>
-                  )}
-                  {selected.lastManager && (
-                    <div className="flex items-start gap-3">
-                      <Users className="w-3.5 h-3.5 text-muted-foreground mt-0.5 shrink-0" />
-                      <div><p className="text-xs">{selected.lastManager}</p><p className="text-[10px] text-muted-foreground">Менеджер KeyCRM</p></div>
-                    </div>
-                  )}
-                  <div className="flex items-start gap-3">
-                    <Mail className="w-3.5 h-3.5 text-muted-foreground mt-0.5 shrink-0" />
-                    <div>
-                      {selected.email ? <a href={`mailto:${selected.email}`} className="text-xs hover:underline break-all">{selected.email}</a> : <p className="text-xs text-muted-foreground">Не вказано</p>}
-                      <p className="text-[10px] text-muted-foreground">Email</p>
+                {/* ── Activity tab ── */}
+                <TabsContent value="activity" className="m-0 p-0">
+                  <div className="px-5 pt-5 pb-5">
+                    <p className="text-[10px] font-semibold tracking-[0.1em] text-muted-foreground/50 uppercase mb-4">АКТИВНІСТЬ</p>
+                    <div className="relative pl-4 space-y-0">
+                      <div className="absolute left-[7px] top-1 bottom-0 w-px bg-border/60" />
+                      {selected.leads.slice(0, 12).map((lead) => (
+                        <div key={lead.id} className="relative pb-4 last:pb-0">
+                          <div className="absolute -left-[13px] top-1.5 size-2 rounded-full bg-primary ring-2 ring-background" />
+                          <p className="text-xs font-semibold text-foreground">{fmtMoney(lead.total_amount_cents)}</p>
+                          <p className="text-[10px] text-muted-foreground mt-0.5">{fmtDate(lead.created_at)}</p>
+                          <div className="mt-1">
+                            <StatusBadge status={lead.status} className="text-[9px] h-4 px-1.5" />
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                  {selected.social_channel && (
-                    <div className="flex items-start gap-3">
-                      <ExternalLink className="w-3.5 h-3.5 text-muted-foreground mt-0.5 shrink-0" />
-                      <div><a href={selected.social_channel} target="_blank" rel="noopener noreferrer" className="text-xs hover:underline truncate block">{selected.social_channel}</a><p className="text-[10px] text-muted-foreground">Соцмережа</p></div>
-                    </div>
-                  )}
-                  <div className="flex items-start gap-3">
-                    <Calendar className="w-3.5 h-3.5 text-muted-foreground mt-0.5 shrink-0" />
-                    <div><p className="text-xs">{fmtDate(selected.lastOrderAt)}</p><p className="text-[10px] text-muted-foreground">Останнє замовлення</p></div>
-                  </div>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="orders" className="m-0 px-4 py-4 space-y-2">
-                <div className="mb-3 flex items-center justify-between">
-                  <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">Історія замовлень</p>
-                  <Button variant="outline" size="sm" className="h-7 text-[10px]" onClick={() => router.push("/orders/new")}>
-                    Нове замовлення
-                  </Button>
-                </div>
-                {selected.leads.map((lead) => (
-                  <div
-                    key={lead.id}
-                    className="flex items-center justify-between rounded-lg border border-border p-2 hover:bg-muted/50 transition-colors cursor-pointer"
-                    onClick={() => router.push(`/orders?leadId=${lead.id}`)}
-                  >
-                    <div>
-                      <p className="text-xs font-medium">{fmtMoney(lead.total_amount_cents)}</p>
-                      <p className="text-[10px] text-muted-foreground">
-                        {fmtDate(lead.created_at)}
-                        {lead.customer_data?.keycrm_id ? ` · KeyCRM #${lead.customer_data.keycrm_id}` : ""}
-                      </p>
-                    </div>
-                    <StatusBadge status={lead.status} />
-                  </div>
-                ))}
-              </TabsContent>
-
-              <TabsContent value="activity" className="m-0 px-4 py-4 space-y-3">
-                <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">Останні події</p>
-                {selected.leads.slice(0, 8).map((lead) => (
-                  <div key={lead.id} className="flex gap-3 border-b border-border/60 pb-3 last:border-b-0">
-                    <div className="mt-1 size-1.5 rounded-full bg-primary" />
-                    <div>
-                      <p className="text-xs font-medium">Замовлення {fmtMoney(lead.total_amount_cents)}</p>
-                      <p className="text-[10px] text-muted-foreground">{fmtDate(lead.created_at)} · {lead.status}</p>
-                    </div>
-                  </div>
-                ))}
-              </TabsContent>
-            </Tabs>
-          </div>
-        </div>
-      )}
+                </TabsContent>
+              </Tabs>
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
 
       <Dialog open={addOpen} onOpenChange={setAddOpen}>
         <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Новий клієнт</DialogTitle>
-          </DialogHeader>
+          <DialogHeader><DialogTitle>Новий клієнт</DialogTitle></DialogHeader>
           <form onSubmit={handleAddClient} className="space-y-3 pt-1">
             <div className="grid grid-cols-2 gap-3">
-              <div className="col-span-2 space-y-1.5">
-                <Label htmlFor="c-name" className="text-xs">Ім&apos;я та прізвище *</Label>
-                <Input id="c-name" className="h-9 text-sm" placeholder="Іван Петренко" value={addForm.name}
-                  onChange={(e) => setAddForm({ ...addForm, name: e.target.value })} required />
-              </div>
-              <div className="col-span-2 space-y-1.5">
-                <Label htmlFor="c-email" className="text-xs">Email *</Label>
-                <Input id="c-email" type="email" className="h-9 text-sm" placeholder="hr@company.com" value={addForm.email}
-                  onChange={(e) => setAddForm({ ...addForm, email: e.target.value })} required />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="c-phone" className="text-xs">Телефон *</Label>
-                <Input id="c-phone" type="tel" className="h-9 text-sm" placeholder="+380 XX XXX XX XX" value={addForm.phone}
-                  onChange={(e) => setAddForm({ ...addForm, phone: e.target.value })} required />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="c-company" className="text-xs">Компанія</Label>
-                <Input id="c-company" className="h-9 text-sm" placeholder="ТОВ «Назва»" value={addForm.company}
-                  onChange={(e) => setAddForm({ ...addForm, company: e.target.value })} />
-              </div>
-              <div className="col-span-2 space-y-1.5">
-                <Label htmlFor="c-social" className="text-xs">Telegram / Instagram</Label>
-                <Input id="c-social" className="h-9 text-sm" placeholder="@username" value={addForm.social_channel}
-                  onChange={(e) => setAddForm({ ...addForm, social_channel: e.target.value })} />
-              </div>
+              <div className="col-span-2 space-y-1.5"><Label className="text-xs">Ім&apos;я та прізвище *</Label><Input className="h-10" placeholder="Іван Петренко" value={addForm.name} onChange={(e) => setAddForm({ ...addForm, name: e.target.value })} required /></div>
+              <div className="col-span-2 space-y-1.5"><Label className="text-xs">Email *</Label><Input type="email" className="h-10" placeholder="hr@company.com" value={addForm.email} onChange={(e) => setAddForm({ ...addForm, email: e.target.value })} required /></div>
+              <div className="space-y-1.5"><Label className="text-xs">Телефон *</Label><Input type="tel" className="h-10" placeholder="+380..." value={addForm.phone} onChange={(e) => setAddForm({ ...addForm, phone: e.target.value })} required /></div>
+              <div className="space-y-1.5"><Label className="text-xs">Компанія</Label><Input className="h-10" placeholder="ТОВ Назва" value={addForm.company} onChange={(e) => setAddForm({ ...addForm, company: e.target.value })} /></div>
+              <div className="col-span-2 space-y-1.5"><Label className="text-xs">Telegram / Instagram</Label><Input className="h-10" placeholder="@username" value={addForm.social_channel} onChange={(e) => setAddForm({ ...addForm, social_channel: e.target.value })} /></div>
             </div>
             <DialogFooter className="pt-2">
               <Button type="button" variant="outline" size="sm" onClick={() => setAddOpen(false)}>Скасувати</Button>
-              <Button type="submit" size="sm" disabled={addLoading}>
-                {addLoading && <Loader2 className="size-3 animate-spin mr-1.5" />}
-                Додати
-              </Button>
+              <Button type="submit" size="sm" disabled={addLoading}>{addLoading && <Loader2 className="size-3 animate-spin mr-1.5" />}Додати</Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
     </div>
     </DashboardPage>
+  );
+}
+
+function ClientInfoRow({ icon: Icon, value, label, href }: { icon: React.ComponentType<{ className?: string }>; value: string; label?: string; href?: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <Icon className="size-3.5 text-muted-foreground/50 shrink-0" />
+      <div className="flex items-center gap-1.5 min-w-0">
+        {href ? (
+          <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" className="text-sm text-primary hover:underline truncate">{value}</a>
+        ) : (
+          <span className="text-sm text-foreground/90 truncate">{value}</span>
+        )}
+        {label && <span className="text-[10px] text-muted-foreground/50 shrink-0">· {label}</span>}
+      </div>
+    </div>
+  );
+}
+
+function ClientStatTile({ label, value, bold }: { label: string; value: string; bold?: boolean }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-3 px-2 text-center gap-0.5">
+      <p className={cn("text-sm tabular-nums truncate w-full text-center", bold ? "font-bold text-foreground" : "font-semibold text-foreground")}>
+        {value}
+      </p>
+      <p className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground/60">{label}</p>
+    </div>
   );
 }

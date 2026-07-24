@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { User, ShoppingBag, ArrowRight, X, Menu } from "lucide-react";
 import { BrandLogoFull } from "@/components/brand-logo";
 import { sound } from "@/lib/sound";
+import { useTranslations } from "next-intl";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 interface NavBarProps {
   isLoggedIn: boolean;
@@ -15,15 +17,15 @@ interface NavBarProps {
   onAuthOpen?: () => void;
 }
 
-const navLinks = [
-  { href: "/#catalog", label: "Каталог" },
-  { href: "/popup", label: "Popup" },
-  { href: "/#about", label: "Про нас" },
-  { href: "/#how", label: "Як це працює" },
-  { href: "/#contact", label: "Контакти" },
-];
-
 export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOpen }: NavBarProps) {
+  const t = useTranslations("nav");
+  const navLinks = [
+    { href: "/#catalog", label: t("catalog") },
+    { href: "/popup", label: t("popup") },
+    { href: "/#about", label: t("about") },
+    { href: "/#how", label: t("how") },
+    { href: "/#contact", label: t("contacts") },
+  ];
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [navVisible, setNavVisible] = useState(true);
@@ -78,7 +80,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
         delay: navVisible && !scrolled ? 1.3 : 0,
       }}
       className="fixed top-4 inset-x-0 z-50 flex justify-center pointer-events-none px-4"
-      aria-label="Головна навігація"
+      aria-label={t("mainNav")}
     >
       <div
         className={`pointer-events-auto inline-flex items-center gap-2 h-12 px-3 rounded-full border transition-all duration-300 ${
@@ -88,7 +90,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
         } md:h-12 h-14 md:px-3 px-4`}
       >
         {/* Logo — always using BrandLogoFull (SVG) */}
-        <Link href="/" aria-label="U:DO CRAFT — на головну" className="shrink-0 pl-1 pr-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg">
+        <Link href="/" aria-label={t("logoLink")} className="shrink-0 pl-1 pr-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg">
           <BrandLogoFull className="h-8 w-auto" color="var(--color-primary)" />
         </Link>
 
@@ -117,7 +119,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
           {isLoggedIn ? (
             <Link
               href="/cabinet"
-              aria-label="Перейти до кабінету"
+              aria-label={t("goToAccount")}
               className={`flex items-center justify-center w-11 h-11 rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                 isLight
                   ? "text-muted-foreground hover:text-foreground hover:bg-muted"
@@ -129,7 +131,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
           ) : (
             <button
               onClick={() => { sound.tap(); onAuthOpen?.(); }}
-              aria-label="Увійти до системи"
+              aria-label={t("signIn")}
               className={`flex items-center justify-center w-11 h-11 rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                 isLight
                   ? "text-muted-foreground hover:text-foreground hover:bg-muted"
@@ -171,12 +173,14 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
                 : "border border-primary text-primary hover:bg-primary hover:text-white"
             }`}
           >
-            Почати проєкт <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+            {t("startProject")} <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
           </Link>
+
+          <LanguageSwitcher />
 
           <button
             onClick={() => { sound.toggle(!menuOpen); setMenuOpen(!menuOpen); }}
-            aria-label={menuOpen ? "Закрити головне меню" : "Відкрити головне меню"}
+            aria-label={menuOpen ? t("closeMenu") : t("openMenu")}
             aria-expanded={menuOpen}
             className={`md:hidden flex items-center justify-center w-11 h-11 rounded-full transition-colors duration-200 ml-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               isLight ? "hover:bg-muted text-foreground" : "hover:bg-white/10 text-white/70"
@@ -214,7 +218,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
                 onClick={() => setMenuOpen(false)}
                 className="block mt-1 text-center bg-primary text-white text-sm font-semibold px-4 py-2.5 rounded-full hover:bg-primary/90 transition-colors duration-200"
               >
-                Почати проєкт
+                {t("startProject")}
               </Link>
             </div>
           </motion.div>

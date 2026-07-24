@@ -25,6 +25,8 @@ import { RefreshCw, CheckCircle2, AlertTriangle, XCircle, Clock, Loader2, Trash2
 import type { AdminHealthResponse, CheckStatus, HealthCheck } from "@/app/api/health/types";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { StatusIndicator } from "@/components/ui/status-indicator";
+import { SettingsCard } from "@/components/settings-card";
 
 // ── Table Groups for Hard Reset ───────────────────────────────────────────────
 
@@ -81,26 +83,6 @@ const TABLE_GROUPS = [
 
 const ALL_TABLES = Array.from(new Set(TABLE_GROUPS.flatMap((g) => g.items.map(i => i.id))));
 
-// ── Status Badge ──────────────────────────────────────────────────────────────
-
-function StatusBadge({ status }: { status: CheckStatus }) {
-  if (status === "ok") return (
-    <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600">
-      <CheckCircle2 className="size-3.5" /> OK
-    </span>
-  );
-  if (status === "degraded") return (
-    <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-600">
-      <AlertTriangle className="size-3.5" /> Потребує уваги
-    </span>
-  );
-  return (
-    <span className="inline-flex items-center gap-1 text-xs font-medium text-red-600">
-      <XCircle className="size-3.5" /> Помилка
-    </span>
-  );
-}
-
 // ── Check Row ─────────────────────────────────────────────────────────────────
 
 function CheckRow({ check }: { check: HealthCheck }) {
@@ -116,19 +98,8 @@ function CheckRow({ check }: { check: HealthCheck }) {
             <Clock className="size-3" />{check.latency_ms}ms
           </span>
         )}
-        <StatusBadge status={check.status} />
+        <StatusIndicator status={check.status === "degraded" ? "warning" : check.status === "error" ? "error" : "ok"} />
       </div>
-    </div>
-  );
-}
-
-// ── Section Card ──────────────────────────────────────────────────────────────
-
-function SectionCard({ title, children, className }: { title: string; children: React.ReactNode; className?: string }) {
-  return (
-    <div className={`rounded-xl border border-border bg-card p-4 space-y-1 ${className}`}>
-      <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-3">{title}</p>
-      {children}
     </div>
   );
 }
@@ -141,7 +112,7 @@ function EnvGrid({ env }: { env: Record<string, boolean> }) {
       {Object.entries(env).map(([key, set]) => (
         <div key={key} className="flex items-center justify-between py-1.5 px-2 rounded-lg bg-muted/40 border border-border/40">
           <span className="text-xs font-mono text-muted-foreground truncate">{key}</span>
-          <StatusBadge status={set ? "ok" : "error"} />
+          <StatusIndicator status={set ? "ok" : "error"} />
         </div>
       ))}
     </div>
@@ -303,21 +274,21 @@ export function SystemTab() {
           <div className="space-y-3">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Адмін-панель</p>
 
-            <SectionCard title="Supabase">
+            <SettingsCard title="Supabase">
               {supabaseChecks.map((c) => <CheckRow key={c.service} check={c} />)}
-            </SectionCard>
+            </SettingsCard>
 
-            <SectionCard title="Зовнішні сервіси">
+            <SettingsCard title="Зовнішні сервіси">
               {externalAdminChecks.map((c) => <CheckRow key={c.service} check={c} />)}
-            </SectionCard>
+            </SettingsCard>
 
-            <SectionCard title="Змінні середовища">
+            <SettingsCard title="Змінні середовища">
               <EnvGrid env={data.admin.env} />
-            </SectionCard>
+            </SettingsCard>
 
-            <SectionCard title="Деплой">
+            <SettingsCard title="Деплой">
               <DeploymentCard deployment={data.admin.deployment} />
-            </SectionCard>
+            </SettingsCard>
           </div>
 
           {/* Client section */}
@@ -330,20 +301,20 @@ export function SystemTab() {
               </div>
             ) : (
               <>
-                <SectionCard title="Зовнішні сервіси">
+                <SettingsCard title="Зовнішні сервіси">
                   {clientChecks.map((c) => <CheckRow key={c.service} check={c} />)}
-                </SectionCard>
+                </SettingsCard>
 
                 {clientEnv && (
-                  <SectionCard title="Змінні середовища">
+                  <SettingsCard title="Змінні середовища">
                     <EnvGrid env={clientEnv} />
-                  </SectionCard>
+                  </SettingsCard>
                 )}
 
                 {clientDeployment && (
-                  <SectionCard title="Деплой">
+                  <SettingsCard title="Деплой">
                     <DeploymentCard deployment={clientDeployment} />
-                  </SectionCard>
+                  </SettingsCard>
                 )}
               </>
             )}
@@ -351,7 +322,7 @@ export function SystemTab() {
         </div>
       )}
 
-      <Accordion type="single" collapsible className="w-full">
+      <Accordion className="w-full">
         <AccordionItem value="danger-zone" className="border rounded-2xl bg-card overflow-hidden border-destructive/20">
           <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-destructive/5 group">
             <div className="flex items-center gap-3 text-destructive">
@@ -476,7 +447,8 @@ export function SystemTab() {
                         }}
                       >
                         <Checkbox 
-                          checked={allChecked ? true : selectedCount > 0 ? "indeterminate" : false}
+                          checked={allChecked}
+                          indeterminate={!allChecked && selectedCount > 0}
                           className="size-4 rounded-md border-2"
                         />
                         <span className="flex-1 text-sm font-bold text-foreground">{group.label}</span>
@@ -537,21 +509,20 @@ export function SystemTab() {
           </div>
 
           <AlertDialogFooter className="px-8 py-6 bg-muted/30 border-t border-border gap-3 sm:gap-0">
-            <AlertDialogCancel asChild>
-              <Button variant="outline" className="h-11 rounded-full px-6 font-bold border-2 hover:bg-background transition-all">Скасувати</Button>
+            <AlertDialogCancel
+              variant="outline"
+              className="h-11 rounded-full px-6 font-bold border-2 hover:bg-background transition-all"
+            >
+              Скасувати
             </AlertDialogCancel>
             <AlertDialogAction
-              asChild
+              variant="destructive"
+              disabled={!canHardReset || resetting}
+              onClick={hardReset}
+              className="h-11 rounded-full px-8 font-black shadow-xl shadow-destructive/20 min-w-[200px]"
             >
-              <Button
-                variant="destructive"
-                disabled={!canHardReset || resetting}
-                onClick={hardReset}
-                className="h-11 rounded-full px-8 font-black shadow-xl shadow-destructive/20 min-w-[200px]"
-              >
-                {resetting ? <Loader2 className="size-4 animate-spin mr-2" /> : <Trash2 className="size-4 mr-2" />}
-                {resetting ? "Очищення..." : "Видалити дані"}
-              </Button>
+              {resetting ? <Loader2 className="size-4 animate-spin mr-2" /> : <Trash2 className="size-4 mr-2" />}
+              {resetting ? "Очищення..." : "Видалити дані"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

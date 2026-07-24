@@ -6,21 +6,21 @@ import { createClient } from "@/lib/supabase/client";
 import { playNotificationTone } from "@/lib/notifications";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { EmptyState } from "@/components/empty-state";
 import { StatusBadge, STATUS_CONFIG } from "@/components/status-badge";
-import { FileViewer, isImage, isVideo, fileName as getFileName } from "@/components/file-viewer";
+import { FileViewer, isImage, isVideo } from "@/components/file-viewer";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  MessageCircle, Search, Send, Loader2, ClipboardList,
-  Info, X, Phone, Mail, Building2, FileText, Package,
-  Calendar, ExternalLink, Paperclip, ChevronsUpDown, ArrowLeft, Trash2,
+  MessageCircle, Search, Send, Loader2, Info, X, Phone, Mail,
+  Building2, FileText, Package, Calendar, ExternalLink, Paperclip,
+  ChevronsUpDown, ArrowLeft, Trash2, ImageIcon, Globe,
 } from "lucide-react";
 import { toast } from "sonner";
-import { fmtTime } from "@/lib/utils";
-import { PageHeader } from "@/components/page-header";
+import { fmtTime, cn } from "@/lib/utils";
+import { DashboardPage } from "@/components/dashboard-page";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 type LeadSource = "web" | "telegram" | "instagram";
 
@@ -35,7 +35,6 @@ interface Message {
   attachments?: string[];
   channel?: string;
 }
-
 
 interface OrderItem {
   id: string;
@@ -70,6 +69,22 @@ interface Lead {
 
 const readLeadIds = new Set<string>();
 
+const SOURCE_CONFIG = {
+  telegram: { label: "TG", className: "bg-sky-100 text-sky-700" },
+  instagram: { label: "IG", className: "bg-pink-100 text-pink-700" },
+  web: { label: "Web", className: "bg-slate-100 text-slate-600" },
+} as const;
+
+const STATUSES = ["new", "in_progress", "production", "completed", "archived"] as const;
+const STATUS_LABELS: Record<string, string> = {
+  new: "Новий", in_progress: "В роботі", production: "Виробництво",
+  completed: "Завершено", archived: "Архів",
+};
+
+function initials(name: string) {
+  return (name || "?").split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
+}
+
 export default function MessagesPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -94,6 +109,10 @@ export default function MessagesPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const selectedLeadRef = useRef<Lead | null>(null);
   const messageIdsRef = useRef<Set<string>>(new Set());
+  const inputBarRef = useRef<HTMLDivElement>(null);
+  const [inputBarHeight, setInputBarHeight] = useState(72);
+  const prevMessageCountRef = useRef(0);
+  const initialScrollDone = useRef(false);
 
   const fetchLeads = useCallback(async () => {
     setLoading(true);
@@ -111,8 +130,7 @@ export default function MessagesPage() {
       const r = await fetch(`/api/messages?lead_id=${leadId}`);
       if (r.ok && selectedLeadRef.current?.id === leadId) {
         const msgs = await r.json() as Message[];
-        // Seed the known IDs so polling doesn't treat existing messages as new
-        messageIdsRef.current = new Set(msgs.map((m: Message) => m.id));
+        messageIdsRef.current = new Set(msgs.map((m) => m.id));
         setMessages(msgs);
       }
     } catch { /* non-critical */ }
@@ -151,9 +169,8 @@ export default function MessagesPage() {
   useEffect(() => { messageIdsRef.current = new Set(messages.map((m) => m.id)); }, [messages]);
 
   useEffect(() => {
-    if (selectedLead && messages.length) {
+    if (selectedLead && messages.length)
       setLastMessages((prev) => ({ ...prev, [selectedLead.id]: messages[messages.length - 1] }));
-    }
   }, [messages, selectedLead]);
 
   useEffect(() => {
@@ -168,21 +185,13 @@ export default function MessagesPage() {
               setUnreadIds((prev) => new Set([...prev, m.lead_id]));
           }
           setLastMessages((prev) => ({ ...prev, [m.lead_id]: m }));
-          // Only append client messages via realtime — manager messages are added optimistically in handleSend
           if (m.sender === "client" && selectedLeadRef.current?.id === m.lead_id)
             setMessages((prev) => prev.some((x) => x.id === m.id) ? prev : [...prev, m]);
         })
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "leads" }, () => {
-        fetchLeads();
-      })
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "leads" }, () => fetchLeads())
       .subscribe();
     return () => { supabase.removeChannel(ch); };
   }, [fetchLeads, supabase]);
-
-  const inputBarRef = useRef<HTMLDivElement>(null);
-  const [inputBarHeight, setInputBarHeight] = useState(72);
-  const prevMessageCountRef = useRef(0);
-  const initialScrollDone = useRef(false);
 
   useEffect(() => {
     if (!inputBarRef.current) return;
@@ -196,13 +205,10 @@ export default function MessagesPage() {
   useEffect(() => {
     const count = messages.length;
     if (count === 0) return;
-
     if (!initialScrollDone.current) {
-      // First load — jump instantly to bottom, no animation
       messagesEndRef.current?.scrollIntoView({ behavior: "instant" as ScrollBehavior });
       initialScrollDone.current = true;
     } else if (count > prevMessageCountRef.current) {
-      // Genuinely new message — smooth scroll
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
     prevMessageCountRef.current = count;
@@ -215,33 +221,24 @@ export default function MessagesPage() {
       const leadIdAtStart = lead.id;
       try {
         const r = await fetch(`/api/messages?lead_id=${leadIdAtStart}`);
-        if (!r.ok) return;
-        // Bail if user switched chats while fetch was in flight
-        if (selectedLeadRef.current?.id !== leadIdAtStart) return;
+        if (!r.ok || selectedLeadRef.current?.id !== leadIdAtStart) return;
         const latest = (await r.json()) as Message[];
         const known = messageIdsRef.current;
-        // Only notify about genuinely new CLIENT messages (not system/manager)
         const fresh = latest.filter((m) => !known.has(m.id) && m.sender === "client" && !m.body?.startsWith("Статус змінено:"));
-        if (fresh.length) {
-          setMessages(latest);
-        }
+        if (fresh.length) setMessages(latest);
       } catch { /* noop */ }
     }, 4000);
     return () => window.clearInterval(iv);
   }, []);
 
   const filteredLeads = leads.filter((l) => {
-    const matchesSearch =
-      l.customer_data?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      l.customer_data?.email?.toLowerCase().includes(searchQuery.toLowerCase());
+    const q = searchQuery.toLowerCase();
+    const matchesSearch = !q ||
+      l.customer_data?.name?.toLowerCase().includes(q) ||
+      l.customer_data?.email?.toLowerCase().includes(q);
     const matchesSource = sourceFilter === "all" || (l.source ?? "web") === sourceFilter;
     return matchesSearch && matchesSource;
   });
-
-  const STATUSES = ["new", "in_progress", "production", "completed", "archived"] as const;
-  const STATUS_LABELS: Record<string, string> = {
-    new: "Новий", in_progress: "В роботі", production: "Виробництво", completed: "Завершено", archived: "Архів",
-  };
 
   const handleStatusChange = async (newStatus: string) => {
     if (!selectedLead) return;
@@ -254,29 +251,11 @@ export default function MessagesPage() {
         body: JSON.stringify({ status: newStatus }),
       });
       if (!r.ok) throw new Error();
-      // Append system message optimistically — no reload
-      const prevLabel = STATUS_LABELS[prev] || prev;
-      const label = STATUS_LABELS[newStatus] || newStatus;
-      const sysBody = `Статус змінено: ${prevLabel} → ${label}`;
-      const sysMsg: Message = {
-        id: `sys-${Date.now()}`,
-        lead_id: selectedLead.id,
-        body: sysBody,
-        sender: "manager",
-        created_at: new Date().toISOString(),
-        attachments: [],
-      };
+      const sysBody = `Статус змінено: ${STATUS_LABELS[prev] || prev} → ${STATUS_LABELS[newStatus] || newStatus}`;
+      const sysMsg: Message = { id: `sys-${Date.now()}`, lead_id: selectedLead.id, body: sysBody, sender: "manager", created_at: new Date().toISOString(), attachments: [] };
       setMessages(ms => [...ms, sysMsg]);
-      // Persist to DB and replace optimistic msg with real one
-      const msgRes = await fetch("/api/messages", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lead_id: selectedLead.id, body: sysBody, attachments: [] }),
-      });
-      if (msgRes.ok) {
-        const realMsg = await msgRes.json() as Message;
-        // Replace optimistic with real so polling doesn't see it as new
-        setMessages(ms => ms.map(m => m.id === sysMsg.id ? realMsg : m));
-      }
+      const msgRes = await fetch("/api/messages", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ lead_id: selectedLead.id, body: sysBody, attachments: [] }) });
+      if (msgRes.ok) { const realMsg = await msgRes.json() as Message; setMessages(ms => ms.map(m => m.id === sysMsg.id ? realMsg : m)); }
     } catch {
       setSelectedLead(s => s ? { ...s, status: prev } : s);
       setLeads(ls => ls.map(l => l.id === selectedLead.id ? { ...l, status: prev } : l));
@@ -285,65 +264,39 @@ export default function MessagesPage() {
   };
 
   const handleDeleteLead = async (lead: Lead) => {
-    if (!confirm(`Видалити чат з "${lead.customer_data?.name}"? Це незворотно.`)) return;
+    if (!confirm(`Видалити чат з "${lead.customer_data?.name}"?`)) return;
     try {
       const r = await fetch(`/api/leads/${lead.id}`, { method: "DELETE" });
       if (!r.ok) throw new Error();
       setLeads((ls) => ls.filter((l) => l.id !== lead.id));
       if (selectedLead?.id === lead.id) { setSelectedLead(null); setShowInfo(false); }
       toast.success("Чат видалено");
-    } catch {
-      toast.error("Помилка видалення");
-    }
+    } catch { toast.error("Помилка видалення"); }
   };
 
-  const uploadFiles = async (files: File[]): Promise<string[]> => {
-    const fd = new FormData();
-    files.forEach((f) => fd.append("files", f));
-    const r = await fetch("/api/upload", { method: "POST", body: fd });
-    if (!r.ok) throw new Error("Upload failed");
-    const { results } = await r.json();
-    return results.map((x: { url: string }) => x.url);
-  };
-
-  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
-
+  const MAX_FILE_SIZE = 10 * 1024 * 1024;
   const addFiles = (incoming: File[]) => {
-    const valid = incoming.filter((f) => {
-      if (f.size > MAX_FILE_SIZE) {
-        toast.error(`"${f.name}" перевищує 10 МБ`);
-        return false;
-      }
-      return true;
-    });
+    const valid = incoming.filter((f) => { if (f.size > MAX_FILE_SIZE) { toast.error(`"${f.name}" перевищує 10 МБ`); return false; } return true; });
     if (valid.length) setPendingFiles((p) => [...p, ...valid]);
   };
 
   const handlePaste = (e: React.ClipboardEvent) => {
     const items = Array.from(e.clipboardData.items);
     const files: File[] = [];
-
     for (const item of items) {
       if (item.kind === "file") {
         const file = item.getAsFile();
         if (!file) continue;
-        const ext = item.type === "image/svg+xml" ? "svg"
-          : item.type.split("/")[1]?.replace("jpeg", "jpg") || "png";
+        const ext = item.type === "image/svg+xml" ? "svg" : item.type.split("/")[1]?.replace("jpeg", "jpg") || "png";
         files.push(new File([file], `pasted-image.${ext}`, { type: item.type }));
       }
     }
-
-    // SVG pasted as text (e.g. from code editor or Figma)
     const svgText = e.clipboardData.getData("text/plain");
     if (!files.length && svgText.trimStart().startsWith("<svg")) {
       const blob = new Blob([svgText], { type: "image/svg+xml" });
       files.push(new File([blob], "pasted-image.svg", { type: "image/svg+xml" }));
     }
-
-    if (files.length) {
-      e.preventDefault();
-      addFiles(files);
-    }
+    if (files.length) { e.preventDefault(); addFiles(files); }
   };
 
   const handleSend = async () => {
@@ -353,14 +306,15 @@ export default function MessagesPage() {
       let attachments: string[] = [];
       if (pendingFiles.length) {
         setUploading(true);
-        attachments = await uploadFiles(pendingFiles);
+        const fd = new FormData();
+        pendingFiles.forEach((f) => fd.append("files", f));
+        const up = await fetch("/api/upload", { method: "POST", body: fd });
+        if (!up.ok) throw new Error("Upload failed");
+        const { results } = await up.json();
+        attachments = results.map((x: { url: string }) => x.url);
         setUploading(false);
       }
-      const r = await fetch("/api/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lead_id: selectedLead.id, body: replyText.trim(), attachments }),
-      });
+      const r = await fetch("/api/messages", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ lead_id: selectedLead.id, body: replyText.trim(), attachments }) });
       if (!r.ok) throw new Error((await r.json()).error);
       const newMsg = await r.json();
       setMessages((prev) => [...prev, newMsg]);
@@ -372,384 +326,441 @@ export default function MessagesPage() {
   };
 
   return (
-    <div className="flex flex-1 h-0 flex-col overflow-hidden relative">
+    <DashboardPage title="Повідомлення" contentClassName="flex-1 flex flex-col overflow-hidden p-0 [&>div]:flex [&>div]:flex-col [&>div]:flex-1 [&>div]:overflow-hidden">
       {viewerUrl && <FileViewer url={viewerUrl} onClose={() => setViewerUrl(null)} />}
-      <PageHeader title="Повідомлення" />
-      <div className="flex flex-1 h-0 overflow-hidden relative">
+      <div className="flex flex-1 min-h-0 overflow-hidden">
 
-      {/* ── Chat list — full screen on mobile, fixed sidebar on desktop ── */}
-      <div className={`${selectedLead ? "hidden md:flex" : "flex"} w-full md:w-72 shrink-0 flex-col border-r border-border bg-card`}>
-        <div className="px-3 py-2 border-b border-border bg-card shrink-0">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
-            <Input placeholder="Пошук..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-8 text-sm" />
-          </div>
-          <div className="flex gap-1 mt-2">
-            {(["all", "web", "telegram", "instagram"] as const).map((s) => (
-              <button key={s} onClick={() => setSourceFilter(s as LeadSource | "all")}
-                className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium transition-colors ${
-                  sourceFilter === s
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground hover:bg-muted/80"
-                }`}>
-                {s === "all" && "Всі"}
-                {s === "web" && <><svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Web</>}
-                {s === "telegram" && <><svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.19 13.9l-2.965-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.963.659z"/></svg>TG</>}
-                {s === "instagram" && <><svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>IG</>}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className="flex-1 overflow-y-auto">
-          {loading ? (
-            <div className="flex justify-center py-10"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
-          ) : filteredLeads.length === 0 ? (
-            <EmptyState
-              icon={MessageCircle}
-              title={searchQuery || sourceFilter !== "all" ? "Нічого не знайдено" : "Немає розмов"}
-              description={searchQuery || sourceFilter !== "all" ? "Спробуйте змінити фільтри" : "Нові повідомлення від клієнтів з'являться тут"}
-              className="py-10"
-            />
-          ) : filteredLeads.map((lead) => {
-            const isUnread = unreadIds.has(lead.id);
-            const isActive = selectedLead?.id === lead.id;
-            const last = lastMessages[lead.id];
-            return (
-              <button key={lead.id} onClick={() => setSelectedLead(lead)}
-                className={`w-full text-left px-4 py-3 border-b border-border/50 transition-colors group ${
-                  isActive ? "bg-primary/5 border-l-2 border-l-primary"
-                  : isUnread ? "bg-blue-50/60 dark:bg-blue-950/20 hover:bg-blue-50"
-                  : "hover:bg-muted/50"}`}>
-                <div className="flex items-start justify-between gap-2">
-                  <p className={`text-sm truncate flex-1 ${isUnread ? "font-semibold" : "font-medium"}`}>
-                    {lead.customer_data?.name}
-                    {lead.customer_data?.company && <span className="text-muted-foreground font-normal text-xs"> · {lead.customer_data.company}</span>}
-                  </p>
-                  <div className="flex items-center gap-1 shrink-0">
-                    {(lead.source === "telegram") && (
-                      <span className="flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded-full bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300 font-medium">
-                        <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.19 13.9l-2.965-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.963.659z"/></svg>
-                        TG
-                      </span>
-                    )}
-                    {(lead.source === "instagram") && (
-                      <span className="flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded-full bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300 font-medium">
-                        <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
-                        IG
-                      </span>
-                    )}
-                    <span className="text-[10px] text-muted-foreground mt-0.5">
-                      {new Date(last ? last.created_at : lead.created_at).toLocaleDateString("uk-UA", { day: "numeric", month: "short" })}
-                    </span>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); handleDeleteLead(lead); }}
-                      className="opacity-0 group-hover:opacity-100 ml-0.5 w-5 h-5 flex items-center justify-center rounded hover:text-destructive transition-all shrink-0">
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                </div>
-                <div className="flex items-end justify-between gap-2 mt-0.5">
-                  <p className="text-xs text-muted-foreground truncate flex-1">
-                    {last ? (
-                      <>{last.sender === "manager" && <span className="font-semibold text-foreground/70">Ви: </span>}
-                      {last.attachments?.length && !last.body ? "📎 Вкладення" : last.body.slice(0, 55)}</>
-                    ) : lead.customer_data?.message?.slice(0, 60)}
-                  </p>
-                  {isUnread && <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0 mb-0.5" />}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* ── Chat area — full screen on mobile, flex-1 on desktop ── */}
-      {selectedLead ? (
-        <div className="flex flex-1 overflow-hidden min-h-0 w-full">
-          <div className="flex-1 relative overflow-hidden bg-background">
-            {/* Header */}
-            <div className="absolute top-0 left-0 right-0 h-14 px-3 border-b border-border flex items-center justify-between bg-card z-10 gap-2">
-              {/* Back button — mobile only */}
-              <button className="md:hidden shrink-0 w-8 h-8 flex items-center justify-center rounded-md hover:bg-muted transition-colors"
-                onClick={() => { setSelectedLead(null); setShowInfo(false); }}>
-                <ArrowLeft className="w-4 h-4" />
-              </button>
-              <div className="flex items-center gap-2 min-w-0 flex-1">
-                <div className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center shrink-0">
-                  <span className="text-sm font-bold text-primary">{selectedLead.customer_data?.name?.[0]?.toUpperCase()}</span>
-                </div>
-                <div className="min-w-0">
-                  <p className="font-semibold text-sm leading-tight truncate">{selectedLead.customer_data?.name}</p>
-                  <p className="text-xs text-muted-foreground truncate">{selectedLead.customer_data?.company || selectedLead.customer_data?.email}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-1 shrink-0">
-                <DropdownMenu>
-                  <DropdownMenuTrigger className="flex items-center gap-1 outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-full cursor-pointer">
-                    <StatusBadge status={selectedLead.status} />
-                    <ChevronsUpDown className="w-3 h-3 text-muted-foreground" />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    {STATUSES.map(s => (
-                      <DropdownMenuItem key={s} onClick={() => handleStatusChange(s)} className="gap-2">
-                        <span className={`w-2 h-2 rounded-full ${STATUS_CONFIG[s]?.className ?? ""}`} />
-                        {STATUS_LABELS[s]}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <Separator orientation="vertical" className="h-5 mx-1" />
-                <Button variant={showInfo ? "secondary" : "ghost"} size="icon" className="h-8 w-8" onClick={() => setShowInfo((v) => !v)}>
-                  <Info className="w-4 h-4" />
-                </Button>
-              </div>
+        {/* ── Chat list ── */}
+        <aside className={cn(
+          "flex flex-col border-r border-border/60 bg-card shrink-0",
+          "w-full md:w-[280px]",
+          selectedLead ? "hidden md:flex" : "flex"
+        )}>
+          {/* Search + filters */}
+          <div className="px-3 pt-3 pb-2 space-y-2 border-b border-border/40 shrink-0">
+            <div className="relative">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground pointer-events-none" />
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Пошук розмов..."
+                className="pl-8 h-8 text-xs bg-muted/40 border-none shadow-none focus-visible:ring-1 focus-visible:ring-primary/20"
+              />
             </div>
+            <div className="flex gap-1">
+              {(["all", "web", "telegram", "instagram"] as const).map((s) => {
+                const active = sourceFilter === s;
+                return (
+                  <button key={s} onClick={() => setSourceFilter(s as LeadSource | "all")}
+                    className={cn(
+                      "flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium transition-colors",
+                      active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    )}>
+                    {s === "all" && "Всі"}
+                    {s === "web" && <><Globe className="size-3" />Web</>}
+                    {s === "telegram" && "TG"}
+                    {s === "instagram" && "IG"}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
-            {/* Messages — scrollable between header and input */}
-            <div className="absolute top-14 left-0 right-0 overflow-y-auto px-4 py-4 space-y-3" style={{ bottom: inputBarHeight }}>
-              {loadingMessages ? (
-                <div className="flex justify-center py-8"><Loader2 className="size-5 animate-spin text-muted-foreground" /></div>
-              ) : (
-                <>
-                  {selectedLead.customer_data?.message && (
-                    <div className="flex justify-start">
-                      <div className="max-w-[85%] md:max-w-sm bg-muted rounded-2xl rounded-bl-sm p-3">
-                        <p className="text-xs font-semibold text-muted-foreground mb-1">Початкове повідомлення</p>
-                        <p className="text-sm">{selectedLead.customer_data.message}</p>
-                        <p className="text-xs text-muted-foreground mt-1">{new Date(selectedLead.created_at).toLocaleString("uk-UA")}</p>
-                      </div>
-                    </div>
-                  )}
-                  {messages.map((msg) => {
-                    const isMgr = msg.sender === "manager";
-                    const isSystem = isMgr && msg.body?.startsWith("Статус змінено:");
-
-                    if (isSystem) {
-                      return (
-                        <div key={msg.id} className="flex items-center gap-3 py-1">
-                          <div className="flex-1 h-px bg-border" />
-                          <span className="text-[11px] text-muted-foreground whitespace-nowrap">
-                            {msg.body} · {fmtTime(msg.created_at)}
-                          </span>
-                          <div className="flex-1 h-px bg-border" />
-                        </div>
-                      );
-                    }
-
-                    return (
-                      <div key={msg.id} className={`flex flex-col gap-0.5 ${isMgr ? "items-end" : "items-start"}`}>
-                        <div className={`flex items-end gap-1.5 ${isMgr ? "flex-row-reverse" : "flex-row"}`}>
-                          <div className={`max-w-[85%] md:max-w-sm rounded-2xl px-3.5 py-2.5 ${isMgr ? "bg-primary text-primary-foreground rounded-br-sm" : "bg-muted text-foreground rounded-bl-sm"}`}>
-                            {msg.body && <p className="text-sm leading-relaxed">{msg.body}</p>}
-                            {msg.attachments?.length ? (
-                              <div className={`grid gap-1.5 mt-1.5 ${msg.attachments.length > 1 ? "grid-cols-2" : "grid-cols-1"}`}>
-                                {msg.attachments.map((url, i) =>
-                                  isImage(url) ? (
-                                    <button key={i} onClick={() => setViewerUrl(url)} className="block">
-                                      <img src={url} alt="" className="rounded-xl max-w-[200px] w-full object-cover hover:opacity-90 transition-opacity cursor-zoom-in" />
-                                    </button>
-                                  ) : isVideo(url) ? (
-                                    <button key={i} onClick={() => setViewerUrl(url)} className="block relative">
-                                      <video src={url} className="rounded-xl max-w-[200px] w-full object-cover" muted />
-                                      <div className="absolute inset-0 flex items-center justify-center">
-                                        <div className="w-8 h-8 rounded-full bg-black/50 flex items-center justify-center">
-                                          <span className="text-white text-xs ml-0.5">▶</span>
-                                        </div>
-                                      </div>
-                                    </button>
-                                  ) : (
-                                    <button key={i} onClick={() => setViewerUrl(url)}
-                                      className={`flex items-center gap-2 text-xs px-2.5 py-2 rounded-lg border ${isMgr ? "border-primary-foreground/20 text-primary-foreground/80 hover:bg-primary-foreground/10" : "border-border text-foreground hover:bg-background"} transition-colors`}>
-                                      <FileText className="w-3.5 h-3.5 shrink-0" />
-                                      <span className="truncate">{decodeURIComponent(url.split("/").pop()?.split("?")[0] || "Файл").slice(0, 28)}</span>
-                                    </button>
-                                  )
-                                )}
-                              </div>
-                            ) : null}
-                          </div>
-                          <span className="text-[10px] text-muted-foreground shrink-0 pb-0.5 flex items-center gap-0.5">
-                            {fmtTime(msg.created_at)}
-                            {isMgr && (
-                              <span className={`inline-flex ml-0.5 ${msg.read_at ? "text-primary" : "text-slate-300"}`}>
-                                <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
-                                  <path d="M1 5l3 3 5-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                  <path d="M6 5l3 3 5-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                </svg>
-                              </span>
-                            )}
+          {/* List */}
+          <div className="flex-1 overflow-y-auto">
+            {loading ? (
+              <div className="flex justify-center items-center h-full">
+                <Loader2 className="size-5 animate-spin text-muted-foreground" />
+              </div>
+            ) : filteredLeads.length === 0 ? (
+              <EmptyState icon={MessageCircle} title={searchQuery ? "Нічого не знайдено" : "Немає розмов"} className="py-12" />
+            ) : filteredLeads.map((lead) => {
+              const isUnread = unreadIds.has(lead.id);
+              const isActive = selectedLead?.id === lead.id;
+              const last = lastMessages[lead.id];
+              const src = SOURCE_CONFIG[lead.source as keyof typeof SOURCE_CONFIG];
+              return (
+                <button key={lead.id} onClick={() => setSelectedLead(lead)}
+                  className={cn(
+                    "w-full text-left px-3 py-3 border-b border-border/30 transition-colors group relative",
+                    isActive ? "bg-primary/5 border-l-2 border-l-primary" : isUnread ? "bg-blue-50/50 hover:bg-blue-50" : "hover:bg-muted/40"
+                  )}>
+                  <div className="flex items-start gap-2.5">
+                    <Avatar className="size-8 shrink-0 mt-0.5">
+                      <AvatarFallback className={cn("text-xs font-semibold", isActive ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground")}>
+                        {initials(lead.customer_data?.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-1 mb-0.5">
+                        <p className={cn("text-xs truncate", isUnread ? "font-semibold text-foreground" : "font-medium text-foreground/90")}>
+                          {lead.customer_data?.name}
+                        </p>
+                        <div className="flex items-center gap-1 shrink-0">
+                          {src && <Badge variant="outline" className={cn("h-4 px-1 text-[9px] font-semibold border-0", src.className)}>{src.label}</Badge>}
+                          <span className="text-[10px] text-muted-foreground">
+                            {new Date(last ? last.created_at : lead.created_at).toLocaleDateString("uk-UA", { day: "numeric", month: "short" })}
                           </span>
                         </div>
                       </div>
-                    );
-                  })}
-                  <div ref={messagesEndRef} />
-                </>
-              )}
-            </div>
-
-            {/* Input bar — fixed to bottom */}
-            <div ref={inputBarRef} className="absolute bottom-0 left-0 right-0 border-t border-border px-3 py-3 bg-card space-y-2">
-              {pendingFiles.length > 0 && (
-                <div className="flex flex-wrap gap-2 pb-1">
-                  {pendingFiles.map((f, i) => (
-                    <div key={i} className="relative group flex-shrink-0">
-                      {uploading ? (
-                        <div className="h-16 w-16 rounded-xl border border-border overflow-hidden bg-muted flex items-end justify-center gap-[3px] pb-2">
-                          {[0, 1, 2, 3].map((j) => (
-                            <span key={j} className="w-1 rounded-full bg-primary/40 animate-pulse"
-                              style={{ height: `${28 + j * 6}px`, animationDelay: `${j * 0.12}s` }} />
-                          ))}
-                        </div>
-                      ) : f.type.startsWith("image/") ? (
-                        <img src={URL.createObjectURL(f)} alt={f.name}
-                          className="h-16 w-16 object-cover rounded-xl border border-border" />
-                      ) : f.type.startsWith("video/") ? (
-                        <video src={URL.createObjectURL(f)} className="h-16 w-16 object-cover rounded-xl border border-border" muted />
-                      ) : (
-                        <div className="h-16 w-28 flex items-center gap-2 px-2.5 rounded-xl border border-border bg-muted">
-                          <FileText className="w-5 h-5 shrink-0 text-muted-foreground" />
-                          <span className="text-xs text-foreground truncate leading-tight">{f.name}</span>
-                        </div>
-                      )}
-                      {!uploading && (
-                        <button onClick={() => setPendingFiles((p) => p.filter((_, j) => j !== i))}
-                          className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-background border border-border shadow-sm flex items-center justify-center hover:bg-destructive hover:border-destructive hover:text-white transition-colors">
-                          <X className="w-3 h-3" />
-                        </button>
-                      )}
+                      <div className="flex items-end justify-between gap-1">
+                        <p className="text-[11px] text-muted-foreground truncate flex-1 leading-relaxed">
+                          {last ? (
+                            <>{last.sender === "manager" && <span className="font-medium text-foreground/60">Ви: </span>}
+                            {last.attachments?.length && !last.body ? "📎 Вкладення" : last.body.slice(0, 50)}</>
+                          ) : lead.customer_data?.message?.slice(0, 50)}
+                        </p>
+                        {isUnread && <span className="size-1.5 rounded-full bg-primary shrink-0 mb-0.5" />}
+                      </div>
                     </div>
-                  ))}
-                </div>
-              )}
-              <div className="flex gap-2 items-center">
-                <label className="h-9 w-9 shrink-0 flex items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors">
-                  <input type="file" multiple accept="image/*,video/*,.pdf,.doc,.docx,.svg,.ai,.eps,.psd,.zip,.rar,.7z,.tar,.gz" className="hidden"
-                    onChange={(e) => {
-                      const files = e.target.files ? Array.from(e.target.files) : [];
-                      addFiles(files);
-                      e.target.value = "";
-                    }} />
-                  <Paperclip className="w-4 h-4" />
-                </label>
-                <Input placeholder="Напишіть відповідь..." value={replyText}
-                  onChange={(e) => setReplyText(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
-                  onPaste={handlePaste}
-                  disabled={sending} className="flex-1" />
-                <Button onClick={handleSend} disabled={sending || uploading || (!replyText.trim() && !pendingFiles.length)} size="icon">
-                  {sending || uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* ── Info panel — overlays on mobile, fixed panel on desktop ── */}
-          {showInfo && (
-            <div className="absolute inset-0 z-20 bg-card flex flex-col md:relative md:inset-auto md:z-auto md:w-80 md:shrink-0 md:border-l md:border-border overflow-hidden">
-              <div className="px-4 py-3 border-b border-border flex items-center justify-between shrink-0">
-                <span className="font-semibold text-sm">Інфо про клієнта</span>
-                <div className="flex items-center gap-1">
-                  <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => handleDeleteLead(selectedLead)}>
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setShowInfo(false)}><X className="w-4 h-4" /></Button>
-                </div>
-              </div>
-              <div className="flex-1 overflow-y-auto">
-                <div className="flex flex-col items-center py-6 px-4 border-b border-border">
-                  <div className="w-16 h-16 rounded-full bg-primary/15 flex items-center justify-center mb-3">
-                    <span className="text-2xl font-bold text-primary">{selectedLead.customer_data?.name?.[0]?.toUpperCase() || "?"}</span>
                   </div>
-                  <p className="font-semibold text-base text-center">{selectedLead.customer_data?.name}</p>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleDeleteLead(lead); }}
+                    className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 size-6 flex items-center justify-center rounded-md hover:bg-destructive/10 hover:text-destructive text-muted-foreground transition-all">
+                    <Trash2 className="size-3" />
+                  </button>
+                </button>
+              );
+            })}
+          </div>
+        </aside>
+
+        {/* ── Chat area ── */}
+        {selectedLead ? (
+          <div className="flex flex-1 min-w-0 overflow-hidden">
+            <div className="flex-1 relative overflow-hidden bg-background">
+              {/* Chat header */}
+              <div className="absolute top-0 left-0 right-0 h-14 border-b border-border/60 bg-card/90 backdrop-blur-sm z-10 flex items-center px-3 gap-2.5">
+                <button className="md:hidden shrink-0 size-8 flex items-center justify-center rounded-md hover:bg-muted transition-colors"
+                  onClick={() => { setSelectedLead(null); setShowInfo(false); }}>
+                  <ArrowLeft className="size-4" />
+                </button>
+                <Avatar className="size-8 shrink-0">
+                  <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
+                    {initials(selectedLead.customer_data?.name)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold leading-tight truncate">{selectedLead.customer_data?.name}</p>
+                  <p className="text-[11px] text-muted-foreground truncate">{selectedLead.customer_data?.company || selectedLead.customer_data?.email}</p>
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0">
                   <DropdownMenu>
-                    <DropdownMenuTrigger className="mt-1.5 flex items-center gap-1 outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-full cursor-pointer">
+                    <DropdownMenuTrigger className="flex items-center gap-1 outline-none rounded-full focus-visible:ring-2 focus-visible:ring-primary cursor-pointer">
                       <StatusBadge status={selectedLead.status} />
-                      <ChevronsUpDown className="w-3 h-3 text-muted-foreground" />
+                      <ChevronsUpDown className="size-3 text-muted-foreground" />
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="center">
+                    <DropdownMenuContent align="end">
                       {STATUSES.map(s => (
-                        <DropdownMenuItem key={s} onClick={() => handleStatusChange(s)} className="gap-2">
-                          <span className={`w-2 h-2 rounded-full ${STATUS_CONFIG[s]?.className ?? ""}`} />
+                        <DropdownMenuItem key={s} onClick={() => handleStatusChange(s)} className="gap-2 text-xs">
+                          <span className={cn("size-2 rounded-full shrink-0", STATUS_CONFIG[s]?.dot)} />
                           {STATUS_LABELS[s]}
                         </DropdownMenuItem>
                       ))}
                     </DropdownMenuContent>
                   </DropdownMenu>
-                </div>
-                <div className="px-4 pb-4">
-                  <Button variant="outline" className="w-full gap-2" onClick={() => router.push(`/orders?leadId=${selectedLead.id}`)}>
-                    <ClipboardList className="w-4 h-4" /> Замовлення
+                  <Separator orientation="vertical" className="h-4" />
+                  <Button variant={showInfo ? "secondary" : "ghost"} size="icon-sm"
+                    className={cn("transition-colors", showInfo && "text-primary")}
+                    onClick={() => setShowInfo((v) => !v)}>
+                    <Info className="size-4" />
                   </Button>
                 </div>
-                <div className="px-4 py-4 space-y-3 border-b border-border">
-                  {selectedLead.customer_data?.phone && (
-                    <div className="flex items-start gap-3"><Phone className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" /><div><p className="text-sm">{selectedLead.customer_data.phone}</p><p className="text-xs text-muted-foreground">Телефон</p></div></div>
-                  )}
-                  {selectedLead.customer_data?.tg_username && (
-                    <div className="flex items-start gap-3"><span className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0 text-xs font-bold">TG</span><div><p className="text-sm">{selectedLead.customer_data.tg_username}</p><p className="text-xs text-muted-foreground">Telegram</p></div></div>
-                  )}
-                  <div className="flex items-start gap-3"><Mail className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" /><div><p className="text-sm break-all">{selectedLead.customer_data?.email}</p><p className="text-xs text-muted-foreground">Email</p></div></div>
-                  {selectedLead.customer_data?.company && (
-                    <div className="flex items-start gap-3"><Building2 className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" /><div><p className="text-sm">{selectedLead.customer_data.company}</p><p className="text-xs text-muted-foreground">Компанія</p></div></div>
-                  )}
-                  <div className="flex items-start gap-3"><Calendar className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" /><div><p className="text-sm">{new Date(selectedLead.created_at).toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" })}</p><p className="text-xs text-muted-foreground">Дата звернення</p></div></div>
-                  {(selectedLead.total_amount_cents ?? 0) > 0 && (
-                    <div className="flex items-start gap-3"><FileText className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" /><div><p className="text-sm font-medium">₴{((selectedLead.total_amount_cents ?? 0) / 100).toFixed(0)}</p><p className="text-xs text-muted-foreground">Сума замовлення</p></div></div>
-                  )}
-                </div>
-                {selectedLead.customer_data?.message && (
-                  <div className="px-4 py-4 border-b border-border">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Початкове повідомлення</p>
-                    <p className="text-sm leading-relaxed">{selectedLead.customer_data.message}</p>
-                  </div>
-                )}
-                {selectedLead.notes && (
-                  <div className="px-4 py-4 border-b border-border">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Нотатки</p>
-                    <p className="text-sm leading-relaxed">{selectedLead.notes}</p>
-                  </div>
-                )}
-                {selectedLead.order_items && selectedLead.order_items.length > 0 && (
-                  <div className="px-4 py-4 border-b border-border">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Позиції ({selectedLead.order_items.length})</p>
-                    <div className="space-y-3">
-                      {selectedLead.order_items.map((item) => (
-                        <div key={item.id} className="flex gap-3 items-start">
-                          {item.mockup_url ? <img src={item.mockup_url} alt="" className="w-12 h-12 rounded-md object-cover border border-border shrink-0" /> : <div className="w-12 h-12 rounded-md bg-muted flex items-center justify-center shrink-0"><Package className="w-5 h-5 text-muted-foreground" /></div>}
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-medium">{item.color} / {item.size}</p>
-                            <p className="text-xs text-muted-foreground">×{item.quantity}</p>
-                            {item.custom_print_url && <a href={item.custom_print_url} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline flex items-center gap-1 mt-0.5"><ExternalLink className="w-3 h-3" /> Принт</a>}
+              </div>
+
+              {/* Messages scroll area */}
+              <div className="absolute top-14 left-0 right-0 overflow-y-auto px-4 py-5 space-y-3"
+                style={{ bottom: inputBarHeight }}>
+                {loadingMessages ? (
+                  <div className="flex justify-center py-10"><Loader2 className="size-5 animate-spin text-muted-foreground" /></div>
+                ) : (
+                  <>
+                    {selectedLead.customer_data?.message && (
+                      <div className="flex justify-start">
+                        <div className="max-w-[80%] md:max-w-sm bg-muted/60 border border-border/40 rounded-2xl rounded-bl-sm px-3.5 py-2.5">
+                          <p className="text-[10px] font-semibold text-muted-foreground mb-1 uppercase tracking-wider">Початкове повідомлення</p>
+                          <p className="text-sm leading-relaxed">{selectedLead.customer_data.message}</p>
+                          <p className="text-[10px] text-muted-foreground mt-1.5">{new Date(selectedLead.created_at).toLocaleString("uk-UA")}</p>
+                        </div>
+                      </div>
+                    )}
+                    {messages.map((msg) => {
+                      const isMgr = msg.sender === "manager";
+                      const isSystem = isMgr && msg.body?.startsWith("Статус змінено:");
+                      if (isSystem) return (
+                        <div key={msg.id} className="flex items-center gap-3 py-0.5">
+                          <div className="flex-1 h-px bg-border/40" />
+                          <span className="text-[10px] text-muted-foreground/60 whitespace-nowrap px-1">{msg.body} · {fmtTime(msg.created_at)}</span>
+                          <div className="flex-1 h-px bg-border/40" />
+                        </div>
+                      );
+                      return (
+                        <div key={msg.id} className={cn("flex flex-col gap-0.5", isMgr ? "items-end" : "items-start")}>
+                          <div className={cn("flex items-end gap-1.5", isMgr ? "flex-row-reverse" : "flex-row")}>
+                            <div className={cn(
+                              "max-w-[80%] md:max-w-sm rounded-2xl px-3.5 py-2.5",
+                              isMgr ? "bg-primary text-primary-foreground rounded-br-sm" : "bg-muted rounded-bl-sm"
+                            )}>
+                              {msg.body && <p className="text-sm leading-relaxed">{msg.body}</p>}
+                              {msg.attachments?.length ? (
+                                <div className={cn("gap-1.5 mt-2", msg.attachments.length > 1 ? "grid grid-cols-2" : "flex")}>
+                                  {msg.attachments.map((url, i) =>
+                                    isImage(url) ? (
+                                      <button key={i} onClick={() => setViewerUrl(url)} className="block rounded-xl overflow-hidden">
+                                        <img src={url} alt="" className="max-w-[200px] w-full object-cover hover:opacity-90 transition-opacity" />
+                                      </button>
+                                    ) : isVideo(url) ? (
+                                      <button key={i} onClick={() => setViewerUrl(url)} className="relative block">
+                                        <video src={url} className="rounded-xl max-w-[200px] w-full" muted />
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                          <div className="size-8 rounded-full bg-black/40 flex items-center justify-center">
+                                            <span className="text-white text-xs ml-0.5">▶</span>
+                                          </div>
+                                        </div>
+                                      </button>
+                                    ) : (
+                                      <button key={i} onClick={() => setViewerUrl(url)}
+                                        className={cn("flex items-center gap-2 text-xs px-2.5 py-2 rounded-lg border transition-colors",
+                                          isMgr ? "border-primary-foreground/20 text-primary-foreground/80 hover:bg-primary-foreground/10" : "border-border text-foreground hover:bg-background")}>
+                                        <FileText className="size-3.5 shrink-0" />
+                                        <span className="truncate max-w-[140px]">{decodeURIComponent(url.split("/").pop()?.split("?")[0] || "Файл").slice(0, 24)}</span>
+                                      </button>
+                                    )
+                                  )}
+                                </div>
+                              ) : null}
+                            </div>
+                            <span className="text-[10px] text-muted-foreground/60 shrink-0 pb-0.5 flex items-center gap-0.5">
+                              {fmtTime(msg.created_at)}
+                              {isMgr && (
+                                <span className={cn("inline-flex ml-0.5", msg.read_at ? "text-primary" : "text-muted-foreground/30")}>
+                                  <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
+                                    <path d="M1 5l3 3 5-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M6 5l3 3 5-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                  </svg>
+                                </span>
+                              )}
+                            </span>
                           </div>
                         </div>
-                      ))}
-                    </div>
+                      );
+                    })}
+                    <div ref={messagesEndRef} />
+                  </>
+                )}
+              </div>
+
+              {/* Input bar */}
+              <div ref={inputBarRef} className="absolute bottom-0 left-0 right-0 border-t border-border/60 bg-card px-3 py-3 space-y-2">
+                {pendingFiles.length > 0 && (
+                  <div className="flex flex-wrap gap-2 pb-1">
+                    {pendingFiles.map((f, i) => (
+                      <div key={i} className="relative group shrink-0">
+                        {f.type.startsWith("image/") ? (
+                          <img src={URL.createObjectURL(f)} alt={f.name} className="h-14 w-14 object-cover rounded-lg border border-border" />
+                        ) : f.type.startsWith("video/") ? (
+                          <video src={URL.createObjectURL(f)} className="h-14 w-14 object-cover rounded-lg border border-border" muted />
+                        ) : (
+                          <div className="h-14 w-24 flex items-center gap-1.5 px-2 rounded-lg border border-border bg-muted">
+                            <FileText className="size-4 shrink-0 text-muted-foreground" />
+                            <span className="text-[10px] text-foreground truncate">{f.name}</span>
+                          </div>
+                        )}
+                        <button onClick={() => setPendingFiles((p) => p.filter((_, j) => j !== i))}
+                          className="absolute -top-1.5 -right-1.5 size-5 rounded-full bg-background border border-border shadow-sm flex items-center justify-center hover:bg-destructive hover:text-white transition-colors">
+                          <X className="size-3" />
+                        </button>
+                      </div>
+                    ))}
                   </div>
                 )}
-                {selectedLead.customer_data?.attachments?.length ? (
-                  <div className="px-4 py-4">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Вкладення ({selectedLead.customer_data.attachments.length})</p>
-                    <div className="grid grid-cols-2 gap-2">
-                      {selectedLead.customer_data.attachments.map((url, i) =>
-                        isImage(url) ? (
-                          <a key={i} href={url} target="_blank" rel="noopener noreferrer"><img src={url} alt="" className="w-full aspect-square object-cover rounded-md border border-border hover:opacity-80 transition-opacity" /></a>
-                        ) : (
-                          <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 rounded-md border border-border hover:bg-muted transition-colors text-xs text-primary truncate"><FileText className="w-4 h-4 shrink-0" /><span className="truncate">Файл {i + 1}</span></a>
-                        )
-                      )}
-                    </div>
-                  </div>
-                ) : null}
+                <div className="flex gap-2 items-center">
+                  <label className="size-8 shrink-0 flex items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer transition-colors">
+                    <input type="file" multiple accept="image/*,video/*,.pdf,.doc,.docx,.svg,.ai,.eps,.psd,.zip" className="hidden"
+                      onChange={(e) => { const files = e.target.files ? Array.from(e.target.files) : []; addFiles(files); e.target.value = ""; }} />
+                    <Paperclip className="size-4" />
+                  </label>
+                  <Input
+                    placeholder="Напишіть відповідь..."
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
+                    onPaste={handlePaste}
+                    disabled={sending}
+                    className="flex-1 h-9 text-sm"
+                  />
+                  <Button onClick={handleSend} disabled={sending || uploading || (!replyText.trim() && !pendingFiles.length)} size="icon" className="size-9 shrink-0">
+                    {sending || uploading ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
+                  </Button>
+                </div>
               </div>
             </div>
-          )}
-        </div>
-      ) : (
-        <div className="hidden md:flex flex-1 items-center justify-center bg-muted/20">
-          <EmptyState icon={MessageCircle} title="Оберіть розмову" description="Натисніть на контакт зліва" />
-        </div>
-      )}
+
+            {/* ── Info panel ── */}
+            {showInfo && (
+              <aside className="absolute inset-0 z-20 flex flex-col bg-card md:relative md:inset-auto md:z-auto md:w-72 md:shrink-0 md:border-l md:border-border/60 overflow-hidden">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-border/60 shrink-0">
+                  <span className="text-sm font-semibold">Деталі</span>
+                  <div className="flex items-center gap-1">
+                    <Button variant="ghost" size="icon-sm" className="text-destructive/60 hover:text-destructive hover:bg-destructive/10" onClick={() => handleDeleteLead(selectedLead)}>
+                      <Trash2 className="size-3.5" />
+                    </Button>
+                    <Button variant="ghost" size="icon-sm" className="text-muted-foreground" onClick={() => setShowInfo(false)}>
+                      <X className="size-4" />
+                    </Button>
+                  </div>
+                </div>
+                <div className="flex-1 overflow-y-auto">
+                  {/* Client header */}
+                  <div className="flex flex-col items-center pt-5 pb-4 px-4 border-b border-border/40">
+                    <Avatar className="size-14 mb-3">
+                      <AvatarFallback className="bg-primary/10 text-primary text-lg font-bold">
+                        {initials(selectedLead.customer_data?.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <p className="font-semibold text-sm text-center">{selectedLead.customer_data?.name}</p>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="mt-2 flex items-center gap-1 outline-none rounded-full focus-visible:ring-2 focus-visible:ring-primary cursor-pointer">
+                        <StatusBadge status={selectedLead.status} />
+                        <ChevronsUpDown className="size-3 text-muted-foreground" />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="center">
+                        {STATUSES.map(s => (
+                          <DropdownMenuItem key={s} onClick={() => handleStatusChange(s)} className="gap-2 text-xs">
+                            <span className={cn("size-2 rounded-full shrink-0", STATUS_CONFIG[s]?.dot)} />
+                            {STATUS_LABELS[s]}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+
+                  {/* Замовлення button */}
+                  <div className="px-4 py-3 border-b border-border/40">
+                    <button
+                      onClick={() => router.push(`/orders?leadId=${selectedLead.id}`)}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border border-border/60 bg-white hover:bg-muted/40 transition-colors text-sm font-medium text-foreground"
+                    >
+                      <Package className="size-4 text-muted-foreground/60 shrink-0" />
+                      Переглянути замовлення
+                    </button>
+                  </div>
+
+                  {/* Contact info */}
+                  <InfoSection label="КОНТАКТИ">
+                    {selectedLead.customer_data?.phone && <InfoDetailRow icon={Phone} value={selectedLead.customer_data.phone} href={`tel:${selectedLead.customer_data.phone}`} />}
+                    {selectedLead.customer_data?.tg_username && <InfoDetailRow icon={MessageCircle} value={`@${selectedLead.customer_data.tg_username}`} label="Telegram" />}
+                    {selectedLead.customer_data?.email && <InfoDetailRow icon={Mail} value={selectedLead.customer_data.email} href={`mailto:${selectedLead.customer_data.email}`} />}
+                    {selectedLead.customer_data?.company && <InfoDetailRow icon={Building2} value={selectedLead.customer_data.company} />}
+                    <InfoDetailRow icon={Calendar} value={new Date(selectedLead.created_at).toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" })} label="Звернення" />
+                    {(selectedLead.total_amount_cents ?? 0) > 0 && (
+                      <InfoDetailRow icon={FileText} value={`₴${((selectedLead.total_amount_cents ?? 0) / 100).toFixed(0)}`} label="Сума" />
+                    )}
+                  </InfoSection>
+
+                  {/* Initial message */}
+                  {selectedLead.customer_data?.message && (
+                    <InfoSection label="ПОЧАТКОВЕ ПОВІДОМЛЕННЯ">
+                      <p className="text-xs text-foreground/80 leading-relaxed">{selectedLead.customer_data.message}</p>
+                    </InfoSection>
+                  )}
+
+                  {/* Notes */}
+                  {selectedLead.notes && (
+                    <InfoSection label="НОТАТКИ">
+                      <p className="text-xs text-foreground/80 leading-relaxed">{selectedLead.notes}</p>
+                    </InfoSection>
+                  )}
+
+                  {/* Order items with full print details */}
+                  {selectedLead.order_items && selectedLead.order_items.length > 0 && (
+                    <InfoSection label={`ТОВАРИ (${selectedLead.order_items.length})`}>
+                      <div className="space-y-3">
+                        {selectedLead.order_items.map((item) => (
+                          <div key={item.id} className="rounded-xl border border-border/60 bg-background overflow-hidden">
+                            {item.mockup_url && (
+                              <button onClick={() => setViewerUrl(item.mockup_url!)} className="block w-full aspect-video bg-muted/30">
+                                <img src={item.mockup_url} alt="Макет" className="w-full h-full object-cover hover:opacity-90 transition-opacity" />
+                              </button>
+                            )}
+                            <div className="px-3 py-2.5">
+                              <div className="flex items-center justify-between gap-2">
+                                <p className="text-xs font-semibold text-foreground">{item.color} / {item.size}</p>
+                                <span className="text-[10px] font-medium text-muted-foreground">×{item.quantity}</span>
+                              </div>
+                              {item.custom_print_url && (
+                                <a href={item.custom_print_url} target="_blank" rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 text-[10px] text-primary hover:underline mt-1.5">
+                                  <ExternalLink className="size-2.5" /> Переглянути принт
+                                </a>
+                              )}
+                              {!item.mockup_url && !item.custom_print_url && (
+                                <div className="flex items-center gap-2 mt-1">
+                                  <ImageIcon className="size-3 text-muted-foreground/40" />
+                                  <span className="text-[10px] text-muted-foreground">Без макету</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </InfoSection>
+                  )}
+
+                  {/* Attachments */}
+                  {selectedLead.customer_data?.attachments?.length ? (
+                    <InfoSection label={`ВКЛАДЕННЯ (${selectedLead.customer_data.attachments.length})`}>
+                      <div className="grid grid-cols-2 gap-2">
+                        {selectedLead.customer_data.attachments.map((url, i) =>
+                          isImage(url) ? (
+                            <button key={i} onClick={() => setViewerUrl(url)} className="aspect-square rounded-lg overflow-hidden border border-border/60">
+                              <img src={url} alt="" className="w-full h-full object-cover hover:opacity-80 transition-opacity" />
+                            </button>
+                          ) : (
+                            <a key={i} href={url} target="_blank" rel="noopener noreferrer"
+                              className="flex items-center gap-2 p-2.5 rounded-lg border border-border/60 hover:bg-muted transition-colors text-xs text-primary">
+                              <FileText className="size-3.5 shrink-0" />
+                              <span className="truncate">Файл {i + 1}</span>
+                            </a>
+                          )
+                        )}
+                      </div>
+                    </InfoSection>
+                  ) : null}
+                </div>
+              </aside>
+            )}
+          </div>
+        ) : (
+          <div className="hidden md:flex flex-1 items-center justify-center bg-muted/10">
+            <EmptyState icon={MessageCircle} title="Оберіть розмову" description="Натисніть на контакт зліва, щоб відкрити чат" />
+          </div>
+        )}
+      </div>
+    </DashboardPage>
+  );
+}
+
+function InfoSection({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="px-4 py-3 border-b border-border/40">
+      <p className="text-[9px] font-semibold uppercase tracking-[0.1em] text-muted-foreground/50 mb-2.5">{label}</p>
+      {children}
+    </div>
+  );
+}
+
+function InfoDetailRow({ icon: Icon, value, label, href }: { icon: React.ComponentType<{ className?: string }>; value: string; label?: string; href?: string }) {
+  return (
+    <div className="flex items-start gap-2.5 py-0.5">
+      <Icon className="size-3.5 text-muted-foreground/50 shrink-0 mt-0.5" />
+      <div className="min-w-0 flex-1">
+        {href ? (
+          <a href={href} className="text-xs text-primary hover:underline truncate block">{value}</a>
+        ) : (
+          <p className="text-xs text-foreground/90 truncate">{value}</p>
+        )}
+        {label && <p className="text-[10px] text-muted-foreground/60 mt-0.5">{label}</p>}
       </div>
     </div>
   );

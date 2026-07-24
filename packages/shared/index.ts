@@ -478,26 +478,37 @@ export type PrintTypeId = typeof PRINT_TYPES[number]["id"];
  * Google Fonts with full Cyrillic support — visually distinct families.
  */
 export const TEXT_FONTS = [
-  { id: "Montserrat",       label: "Montserrat",       style: "sans-serif", category: "Гротеск"       },
-  { id: "PT Sans",          label: "PT Sans",          style: "sans-serif", category: "Гротеск"       },
-  { id: "PT Serif",         label: "PT Serif",         style: "serif",      category: "Антиква"       },
-  { id: "Playfair Display", label: "Playfair Display", style: "serif",      category: "Антиква"       },
-  { id: "Oswald",           label: "Oswald",           style: "sans-serif", category: "Конденсований" },
-  { id: "Raleway",          label: "Raleway",          style: "sans-serif", category: "Гротеск"       },
-  { id: "Comfortaa",        label: "Comfortaa",        style: "cursive",    category: "Декоративний"  },
-  { id: "Exo 2",            label: "Exo 2",            style: "sans-serif", category: "Технічний"     },
-  { id: "Nunito",           label: "Nunito",           style: "sans-serif", category: "Гротеск"       },
-  { id: "Merriweather",     label: "Merriweather",     style: "serif",      category: "Антиква"       },
-  { id: "Unbounded",        label: "Unbounded",        style: "sans-serif", category: "Дисплейний"    },
-  { id: "Jost",             label: "Jost",             style: "sans-serif", category: "Гротеск"       },
-  { id: "Philosopher",      label: "Philosopher",      style: "serif",      category: "Антиква"       },
-  { id: "Russo One",        label: "Russo One",        style: "sans-serif", category: "Дисплейний"    },
-  { id: "Marck Script",     label: "Marck Script",     style: "cursive",    category: "Рукописний"    },
-  { id: "Pacifico",         label: "Pacifico",         style: "cursive",    category: "Декоративний"  },
-  { id: "Caveat",           label: "Caveat",           style: "cursive",    category: "Рукописний"    },
-  { id: "Neucha",           label: "Neucha",           style: "cursive",    category: "Рукописний"    },
-  { id: "Stalinist One",    label: "Stalinist One",    style: "display",    category: "Дисплейний"    },
-  { id: "Press Start 2P",   label: "Press Start 2P",   style: "monospace",  category: "Технічний"     },
+  // ── Гротеск (Sans-serif) ──────────────────────────────────────────────
+  { id: "Inter",             label: "Inter",             style: "sans-serif", category: "Гротеск"       },
+  { id: "Montserrat",        label: "Montserrat",        style: "sans-serif", category: "Гротеск"       },
+  { id: "Nunito",            label: "Nunito",            style: "sans-serif", category: "Гротеск"       },
+  { id: "Arimo",             label: "Arimo",             style: "sans-serif", category: "Гротеск"       },
+  { id: "Rubik",             label: "Rubik",             style: "sans-serif", category: "Гротеск"       },
+  { id: "Didact Gothic",     label: "Didact Gothic",     style: "sans-serif", category: "Гротеск"       },
+  // ── Конденсований ─────────────────────────────────────────────────────
+  { id: "Oswald",            label: "Oswald",            style: "sans-serif", category: "Конденсований" },
+  // ── Антиква (Serif) ───────────────────────────────────────────────────
+  { id: "Playfair Display",  label: "Playfair Display",  style: "serif",      category: "Антиква"       },
+  { id: "Cormorant Garamond",label: "Cormorant Garamond",style: "serif",      category: "Антиква"       },
+  { id: "Alice",             label: "Alice",             style: "serif",      category: "Антиква"       },
+  { id: "Tenor Sans",        label: "Tenor Sans",        style: "serif",      category: "Антиква"       },
+  { id: "Yeseva One",        label: "Yeseva One",        style: "serif",      category: "Антиква"       },
+  // ── Дисплейний ────────────────────────────────────────────────────────
+  { id: "Unbounded",         label: "Unbounded",         style: "sans-serif", category: "Дисплейний"    },
+  { id: "Dela Gothic One",   label: "Dela Gothic One",   style: "display",    category: "Дисплейний"    },
+  { id: "Oi",                label: "Oi",                style: "display",    category: "Дисплейний"    },
+  // ── Декоративний ──────────────────────────────────────────────────────
+  { id: "Comfortaa",         label: "Comfortaa",         style: "cursive",    category: "Декоративний"  },
+  { id: "Amatic SC",         label: "Amatic SC",         style: "display",    category: "Декоративний"  },
+  // ── Рукописний ────────────────────────────────────────────────────────
+  { id: "Caveat",            label: "Caveat",            style: "cursive",    category: "Рукописний"    },
+  { id: "Balsamiq Sans",     label: "Balsamiq Sans",     style: "cursive",    category: "Рукописний"    },
+  { id: "Shantell Sans",     label: "Shantell Sans",     style: "cursive",    category: "Рукописний"    },
+  { id: "Comforter",         label: "Comforter",         style: "cursive",    category: "Рукописний"    },
+  { id: "Great Vibes",       label: "Great Vibes",       style: "cursive",    category: "Рукописний"    },
+  // ── Технічний ─────────────────────────────────────────────────────────
+  { id: "Jura",              label: "Jura",              style: "sans-serif", category: "Технічний"     },
+  { id: "Press Start 2P",    label: "Press Start 2P",    style: "monospace",  category: "Технічний"     },
 ] as const;
 
 export type TextFontId = typeof TEXT_FONTS[number]["id"];
@@ -619,13 +630,13 @@ export type ShapeCategory = typeof SHAPE_CATEGORIES[number];
 // ── Font combo presets ──────────────────────────────────────────────────────
 
 export const FONT_COMBO_PRESETS = [
-  { id: "classic",   name: "Classic",   headingFont: "Playfair Display", bodyFont: "PT Sans"      },
-  { id: "modern",    name: "Modern",    headingFont: "Montserrat",       bodyFont: "Jost"         },
-  { id: "editorial", name: "Editorial", headingFont: "Philosopher",      bodyFont: "Raleway"      },
-  { id: "bold",      name: "Bold",      headingFont: "Unbounded",        bodyFont: "Exo 2"        },
-  { id: "elegant",   name: "Elegant",   headingFont: "Philosopher",      bodyFont: "Merriweather" },
-  { id: "playful",   name: "Playful",   headingFont: "Pacifico",         bodyFont: "Comfortaa"    },
-  { id: "condensed", name: "Condensed", headingFont: "Oswald",           bodyFont: "Nunito"       },
+  { id: "classic",   name: "Classic",   headingFont: "Playfair Display",  bodyFont: "Inter"              },
+  { id: "modern",    name: "Modern",    headingFont: "Montserrat",        bodyFont: "Inter"              },
+  { id: "editorial", name: "Editorial", headingFont: "Cormorant Garamond",bodyFont: "Nunito"             },
+  { id: "bold",      name: "Bold",      headingFont: "Unbounded",         bodyFont: "Rubik"              },
+  { id: "elegant",   name: "Elegant",   headingFont: "Alice",             bodyFont: "Cormorant Garamond" },
+  { id: "playful",   name: "Playful",   headingFont: "Comfortaa",         bodyFont: "Caveat"             },
+  { id: "condensed", name: "Condensed", headingFont: "Oswald",            bodyFont: "Nunito"             },
 ] as const satisfies ReadonlyArray<{ id: string; name: string; headingFont: TextFontId; bodyFont: TextFontId }>;
 
 export type FontComboPreset = typeof FONT_COMBO_PRESETS[number];
@@ -664,18 +675,18 @@ export const TEXT_COMPOSITIONS: TextComposition[] = [
     label: "Корпоративний",
     layers: [
       { textContent: "НАЗВА КОМПАНІЇ", textFont: "Montserrat", textFontSize: 40, textColor: "#000000", textAlign: "center", textBold: true, offsetY: -30 },
-      { textContent: "з 2005 року", textFont: "PT Sans", textFontSize: 22, textColor: "#666666", textAlign: "center", offsetY: 30 },
+      { textContent: "з 2005 року", textFont: "Inter", textFontSize: 22, textColor: "#666666", textAlign: "center", offsetY: 30 },
     ],
   },
   {
     id: "retro-display",
     label: "Ретро",
-    layers: [{ textContent: "РЕТРО СТИЛЬ", textFont: "Russo One", textFontSize: 48, textColor: "#c0392b", textAlign: "center" }],
+    layers: [{ textContent: "РЕТРО СТИЛЬ", textFont: "Dela Gothic One", textFontSize: 48, textColor: "#c0392b", textAlign: "center" }],
   },
   {
     id: "script-accent",
     label: "Рукописний акцент",
-    layers: [{ textContent: "Ваш текст", textFont: "Marck Script", textFontSize: 56, textColor: "#2c3e50", textAlign: "center" }],
+    layers: [{ textContent: "Ваш текст", textFont: "Great Vibes", textFontSize: 56, textColor: "#2c3e50", textAlign: "center" }],
   },
   {
     id: "curved-arc",
@@ -691,14 +702,14 @@ export const TEXT_COMPOSITIONS: TextComposition[] = [
     id: "playful-combo",
     label: "Ігровий",
     layers: [
-      { textContent: "ГРАЙ", textFont: "Pacifico", textFontSize: 52, textColor: "#8e44ad", textAlign: "center", offsetY: -25 },
-      { textContent: "з нами", textFont: "Comfortaa", textFontSize: 28, textColor: "#2980b9", textAlign: "center", offsetY: 35 },
+      { textContent: "ГРАЙ", textFont: "Comfortaa", textFontSize: 52, textColor: "#8e44ad", textAlign: "center", offsetY: -25 },
+      { textContent: "з нами", textFont: "Caveat", textFontSize: 28, textColor: "#2980b9", textAlign: "center", offsetY: 35 },
     ],
   },
   {
     id: "minimal-caps",
     label: "Мінімалістичний",
-    layers: [{ textContent: "МІНІМАЛІЗМ", textFont: "Jost", textFontSize: 44, textColor: "#000000", textAlign: "center", textBold: false }],
+    layers: [{ textContent: "МІНІМАЛІЗМ", textFont: "Didact Gothic", textFontSize: 44, textColor: "#000000", textAlign: "center", textBold: false }],
   },
   {
     id: "handwritten-note",

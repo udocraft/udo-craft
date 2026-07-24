@@ -1,26 +1,36 @@
+import createIntlMiddleware from "next-intl/middleware";
 import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "./lib/supabase/middleware";
 import { rateLimit } from "./lib/rate-limit";
+import { routing } from "@/i18n/routing";
+
+const intlMiddleware = createIntlMiddleware(routing);
 
 export async function middleware(request: NextRequest) {
-  // 1. Rate Limit Public APIs
-  if (request.nextUrl.pathname.startsWith("/api")) {
+  const { pathname } = request.nextUrl;
+
+  // 1. Rate-limit public APIs
+  if (pathname.startsWith("/api")) {
     const result = await rateLimit(request, { limit: 100, window: 60 });
     if (!result.success) {
       return NextResponse.json({ error: "Too many requests" }, { status: 429 });
     }
+    return NextResponse.next();
   }
 
-  // 2. Protect /cabinet routes
-  if (request.nextUrl.pathname.startsWith("/cabinet")) {
+  // 2. Protect /cabinet routes (strip potential locale prefix first)
+  const strippedPath = pathname.replace(/^\/(de|fr|es|it|pl|nl|pt|cs|sv)/, "");
+  if (strippedPath.startsWith("/cabinet") || pathname.startsWith("/cabinet")) {
     return await updateSession(request);
   }
 
-  return NextResponse.next();
+  // 3. Apply i18n routing for all other routes
+  return intlMiddleware(request);
 }
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    // Match all paths except static files & Next internals
+    "/((?!_next/static|_next/image|favicon\\.ico|logo\\.png|.*\\.(?:svg|png|jpg|jpeg|gif|webp|mp4|ico)$).*)",
   ],
 };

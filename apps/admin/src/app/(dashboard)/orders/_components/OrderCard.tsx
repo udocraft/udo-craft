@@ -2,7 +2,6 @@
 
 import { GripVertical } from "lucide-react";
 import { PREDEFINED_TAGS } from "@udo-craft/shared";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { Lead } from "./useKanbanDrag";
 
@@ -38,6 +37,7 @@ export function OrderCard({
 }: OrderCardProps) {
   const subtitle = order.customer_data?.company || order.customer_data?.email;
   const itemCount = order.order_items?.reduce((s, i) => s + i.quantity, 0) ?? 0;
+  const tags = order.tags ?? [];
 
   return (
     <div
@@ -54,78 +54,73 @@ export function OrderCard({
       aria-label={`Замовлення від ${order.customer_data?.name}`}
       aria-pressed={isSelected}
       className={cn(
-        "group relative cursor-pointer select-none rounded-md border bg-card p-4 transition-colors animate-in",
-        "hover:border-primary/30 focus-visible:ring-2 focus-visible:ring-ring outline-none touch-none",
-        isDragging ? "opacity-40" : "",
-        isSelected ? "border-primary bg-primary/[0.03] ring-2 ring-primary/20" : "border-border"
+        "group relative cursor-pointer select-none rounded-lg border bg-background p-3.5 transition-all",
+        "hover:border-border hover:shadow-sm focus-visible:ring-2 focus-visible:ring-ring outline-none touch-none",
+        isDragging && "opacity-40 shadow-lg scale-[0.98]",
+        isSelected
+          ? "border-primary/40 bg-primary/[0.02] ring-1 ring-primary/20 shadow-sm"
+          : "border-border/60"
       )}
     >
-      <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-        <GripVertical className="w-4 h-4 text-muted-foreground/50 cursor-grab active:cursor-grabbing" />
+      {/* Drag handle */}
+      <div className="absolute right-2.5 top-3 opacity-0 group-hover:opacity-100 transition-opacity">
+        <GripVertical className="size-3.5 text-muted-foreground/40 cursor-grab active:cursor-grabbing" />
       </div>
 
-      {/* Client name + subtitle */}
-      <div className="flex flex-col gap-0.5 mb-3">
-        <p className="font-bold text-sm tracking-tight text-foreground group-hover:text-primary transition-colors">
-          {order.customer_data?.name}
-        </p>
-        {subtitle && (
-          <p className="text-xs text-muted-foreground truncate max-w-[90%] font-medium">
-            {subtitle}
-          </p>
-        )}
-      </div>
+      {/* Client name */}
+      <p className={cn(
+        "text-sm font-semibold tracking-tight truncate pr-5 transition-colors",
+        isSelected ? "text-primary" : "text-foreground group-hover:text-primary"
+      )}>
+        {order.customer_data?.name}
+      </p>
+
+      {subtitle && (
+        <p className="mt-0.5 text-xs text-muted-foreground truncate">{subtitle}</p>
+      )}
 
       {/* Tags */}
-      {(order.tags ?? []).length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mb-4">
-          {(order.tags ?? []).map((tagId) => {
+      {tags.length > 0 && (
+        <div className="flex flex-wrap gap-1 mt-2.5">
+          {tags.slice(0, 3).map((tagId) => {
             const tag = PREDEFINED_TAGS.find((t) => t.id === tagId);
             return tag ? (
-              <Badge
+              <span
                 key={tagId}
-                variant="outline"
-                className="gap-1.5 px-2 py-0 h-6 border-primary/10 bg-primary/5 text-foreground hover:bg-primary/10 transition-colors"
-                style={{
-                  color: tag.color,
-                  backgroundColor: `${tag.bg}30`,
-                  borderColor: `${tag.color}20`,
-                }}
+                className="inline-flex h-4.5 items-center gap-1 px-1.5 text-[10px] font-medium rounded-full"
+                style={{ color: tag.color, backgroundColor: `${tag.bg}50` }}
               >
-                <span
-                  className="size-1.5 rounded-full shrink-0"
-                  style={{ backgroundColor: tag.color }}
-                />
+                <span className="size-1 rounded-full shrink-0" style={{ backgroundColor: tag.color }} />
                 {tag.label}
-              </Badge>
+              </span>
             ) : (
-              <Badge
+              <span
                 key={tagId}
-                variant="secondary"
-                className="h-6 px-2 text-[9px] font-bold"
+                className="inline-flex h-4.5 items-center px-1.5 text-[10px] font-medium rounded-full bg-muted text-muted-foreground"
               >
                 {tagId}
-              </Badge>
+              </span>
             );
           })}
+          {tags.length > 3 && (
+            <span className="text-[10px] text-muted-foreground">+{tags.length - 3}</span>
+          )}
         </div>
       )}
 
-      {/* Amount + item count + Date */}
-      <div className="flex items-center justify-between mt-auto pt-3 border-t border-border/40">
-        <div className="flex items-center gap-3">
+      {/* Footer: date + qty + amount */}
+      <div className="mt-3 flex items-center justify-between border-t border-border/40 pt-2.5">
+        <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+          <span>{formatDate(order.created_at)}</span>
           {itemCount > 0 && (
-            <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-semibold bg-muted/50 px-2 py-0.5 rounded-full">
-              <span className="text-foreground">{itemCount}</span> шт.
-            </div>
+            <>
+              <span className="opacity-30">·</span>
+              <span>{itemCount} шт.</span>
+            </>
           )}
-          <span className="text-[10px] text-muted-foreground/70 font-medium">
-            {formatDate(order.created_at)}
-          </span>
         </div>
-        
         {order.total_amount_cents > 0 && (
-          <span className="text-sm font-bold tracking-tight text-primary">
+          <span className="text-xs font-bold text-foreground">
             {(order.total_amount_cents / 100).toLocaleString("uk-UA")} ₴
           </span>
         )}

@@ -2,6 +2,8 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
 
 interface DashboardHeaderProps {
   title: string;
@@ -19,39 +21,42 @@ export function DashboardHeader({
   title,
   titleAccessory,
   eyebrow,
-  subtitle,
-  description,
   actions,
   beforeTitle,
   className,
   sticky = true,
 }: DashboardHeaderProps) {
-  // Description/subtitle is removed from the primary header to maintain consistency as per user request
-  // but kept as a prop for compatibility if needed for a different layout in the future.
-  // The user explicitly asked for "header(no description)".
-
   return (
     <header
       className={cn(
-        "z-30 flex h-16 shrink-0 items-center justify-between border-b border-border bg-background px-4 md:px-6",
+        "z-30 flex h-14 shrink-0 items-center justify-between border-b border-border bg-background px-3 md:px-4",
         sticky && "sticky top-0",
         className
       )}
     >
       <div className="flex min-w-0 items-center gap-2">
+        {/* Sidebar trigger always present on the left */}
+        <SidebarTrigger className="shrink-0 text-muted-foreground hover:text-foreground" />
+        <Separator orientation="vertical" className="h-4 mx-1 shrink-0" />
+
         {beforeTitle}
+
         {eyebrow && (
-          <p className="mr-2 truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          <p className="hidden sm:block mr-1.5 truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground/70">
             {eyebrow}
           </p>
         )}
-        <div className="flex min-w-0 items-center gap-3">
-          <h1 className="truncate text-base font-semibold leading-none tracking-tight text-foreground md:text-lg">{title}</h1>
+
+        <div className="flex min-w-0 items-center gap-2.5">
+          <h1 className="truncate text-sm font-semibold leading-none tracking-tight text-foreground md:text-base">
+            {title}
+          </h1>
           {titleAccessory && <div className="min-w-0 shrink">{titleAccessory}</div>}
         </div>
       </div>
+
       {actions && (
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 shrink-0 ml-4">
           {actions}
         </div>
       )}
