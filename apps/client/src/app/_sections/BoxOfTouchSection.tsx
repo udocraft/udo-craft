@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { motion, useInView } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { HighlightText } from "@/app/_components/HighlightText";

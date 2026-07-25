@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { generateInvoicePDF } from "@/lib/generate-invoice";
 import { enableNotificationAudio, playNotificationTone } from "@/lib/notifications";

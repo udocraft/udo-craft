@@ -5,7 +5,7 @@
 
 import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { BrandLogoFull } from "@/components/brand-logo";
 import { AuthModal } from "@/components/AuthModal";
 

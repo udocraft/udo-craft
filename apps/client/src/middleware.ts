@@ -19,8 +19,9 @@ export async function middleware(request: NextRequest) {
   }
 
   // 2. Protect /cabinet routes (strip potential locale prefix first)
-  const strippedPath = pathname.replace(/^\/(de|fr|es|it|pl|nl|pt|cs|sv)/, "");
-  if (strippedPath.startsWith("/cabinet") || pathname.startsWith("/cabinet")) {
+  const localePattern = new RegExp(`^\\/(${routing.locales.join("|")})`);
+  const strippedPath = pathname.replace(localePattern, "");
+  if (strippedPath.startsWith("/cabinet")) {
     return await updateSession(request);
   }
 

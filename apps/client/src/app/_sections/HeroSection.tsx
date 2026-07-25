@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Play, X } from "lucide-react";
 import { RoughHighlight } from "@/app/_components/HighlightText";

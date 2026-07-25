@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale } from "next-intl";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname } from "@/i18n/navigation";
 import { locales, type Locale } from "@/i18n/routing";
 
 const LABELS: Record<Locale, string> = {
@@ -23,10 +23,7 @@ export function LanguageSwitcher() {
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const next = e.target.value as Locale;
-    // Strip current locale prefix if present, then prepend new one
-    const base = pathname.replace(new RegExp(`^/(${locales.join("|")})`), "") || "/";
-    const newPath = next === "en" ? base : `/${next}${base}`;
-    router.push(newPath);
+    router.replace(pathname, { locale: next });
   };
 
   return (

@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Product, Material, ProductColorVariant, ProductMarketingMeta } from "@udo-craft/shared";
 import { DEFAULT_PRODUCT_FEATURE_GROUPS, getAllImages, normalizeProductMarketingMeta, resolveProductImages } from "@udo-craft/shared";

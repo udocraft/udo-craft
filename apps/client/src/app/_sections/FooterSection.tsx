@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { Instagram, Send, ArrowRight } from "lucide-react";
 import { BrandLogoFull } from "@/components/brand-logo";
 import { useTranslations } from "next-intl";

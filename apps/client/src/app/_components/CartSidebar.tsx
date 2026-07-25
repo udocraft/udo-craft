@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { X, ShoppingBag, ArrowRight } from "lucide-react";
 import { MockupViewer } from "@/components/MockupViewer";
 import type { CartItem } from "@/hooks/useCart";
