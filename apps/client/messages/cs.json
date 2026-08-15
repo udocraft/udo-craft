@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "U:DO CRAFT — Firemní merch",
-    "description": "B2B platforma pro merch. Vytváříme oblečení, které se stane součástí firemní DNA."
+    "title": "U:DO CRAFT — Corporate merch",
+    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA."
   },
   "nav": {
     "catalog": "Katalog",
@@ -23,7 +23,8 @@
     "watchVideo": "Přehrát video",
     "closeVideo": "Zavřít video",
     "mainSection": "Hero section",
-    "fullscreenVideo": "Video in fullscreen mode"
+    "fullscreenVideo": "Video in fullscreen mode",
+    "contactCta": "Contacts"
   },
   "socialProof": {
     "trustedBy": "Důvěra týmů po celém světě"
@@ -87,7 +88,12 @@
     "empty": "V této kategorii nejsou žádné produkty",
     "prevPage": "Předchozí",
     "nextPage": "Další",
-    "page": "Strana {n}"
+    "page": "Strana {n}",
+    "fromPrice": "from ₴{price}",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "addPrint": "Add print",
+    "withoutPrint": "Without print"
   },
   "process": {
     "heading": "Od nápadu k merchi — ve 4 krocích",

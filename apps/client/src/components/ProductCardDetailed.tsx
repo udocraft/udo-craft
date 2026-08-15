@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight, CircleSlash, ToolCase } from "lucide-react";
 import { Product, ProductColorVariant, Material, resolveProductImages, getAllImages } from "@udo-craft/shared";
 
@@ -15,12 +16,12 @@ interface ProductCardDetailedProps {
 }
 
 const FALLBACK_COLORS = [
-  { name: "Чорний",      hex: "#1a1a1a", border: false },
-  { name: "Білий",       hex: "#f0f0f0", border: true  },
-  { name: "Сірий",       hex: "#9ca3af", border: false },
-  { name: "Темно-синій", hex: "#1e3a5f", border: false },
-  { name: "Синій",       hex: "#2563eb", border: false },
-  { name: "Червоний",    hex: "#dc2626", border: false },
+  { name: "Black",       hex: "#1a1a1a", border: false },
+  { name: "White",       hex: "#f0f0f0", border: true  },
+  { name: "Gray",        hex: "#9ca3af", border: false },
+  { name: "Navy",        hex: "#1e3a5f", border: false },
+  { name: "Blue",        hex: "#2563eb", border: false },
+  { name: "Red",         hex: "#dc2626", border: false },
 ];
 
 function pickMiddleSize(sizes: string[]): string | null {
@@ -31,6 +32,7 @@ function pickMiddleSize(sizes: string[]): string | null {
 export function ProductCardDetailed({
   product, colorVariants, materials, onCustomize, onAddWithoutPrint,
 }: ProductCardDetailedProps) {
+  const t = useTranslations("collections");
   const router = useRouter();
   const isOutOfStock = !product.is_active;
   const hasVariants = colorVariants && colorVariants.length > 0;
@@ -65,7 +67,7 @@ export function ProductCardDetailed({
       ? colorVariants.map((v) => {
           const mat = materials.find((m) => m.id === v.material_id);
           const hex = mat?.hex_code || "#ccc";
-          return { id: v.id, name: mat?.name || "Невідомий", hex, border: hex.toLowerCase() === "#f0f0f0" || hex.toLowerCase() === "#ffffff" };
+          return { id: v.id, name: mat?.name || "Standard", hex, border: hex.toLowerCase() === "#f0f0f0" || hex.toLowerCase() === "#ffffff" };
         })
       : FALLBACK_COLORS.map((c) => ({ id: c.name, name: c.name, hex: c.hex, border: c.border }));
 
@@ -79,12 +81,10 @@ export function ProductCardDetailed({
     return materials?.find((m) => m.id === colorVariants?.find((v) => v.id === activeVariantId)?.material_id)?.name ?? null;
   };
 
-  // Resolve size to use — selected or auto-pick middle
   const resolveSize = () => selectedSize ?? pickMiddleSize(sizes);
 
   const handleCardClick = () => {
     if (isOutOfStock) return;
-    // Navigate to product detail page
     router.push(`/products/${product.slug || product.id}`);
   };
 
@@ -118,7 +118,7 @@ export function ProductCardDetailed({
     <div
       role="button"
       tabIndex={isOutOfStock ? -1 : 0}
-      aria-label={`Переглянути ${product.name}`}
+      aria-label={product.name}
       aria-disabled={isOutOfStock}
       onClick={handleCardClick}
       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleCardClick(); }}
@@ -135,7 +135,7 @@ export function ProductCardDetailed({
                   type="button"
                   onClick={(e) => { e.stopPropagation(); setImgIndex((prev) => (prev - 1 + availableImages.length) % availableImages.length); }}
                   className="size-7 rounded-full bg-background/80 hover:bg-background text-foreground flex items-center justify-center shadow-md backdrop-blur-sm transition-transform hover:scale-105 active:scale-95 pointer-events-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                  aria-label="Попереднє зображення"
+                  aria-label={t("prevPage")}
                 >
                   <ChevronLeft className="size-4" />
                 </button>
@@ -143,7 +143,7 @@ export function ProductCardDetailed({
                   type="button"
                   onClick={(e) => { e.stopPropagation(); setImgIndex((prev) => (prev + 1) % availableImages.length); }}
                   className="size-7 rounded-full bg-background/80 hover:bg-background text-foreground flex items-center justify-center shadow-md backdrop-blur-sm transition-transform hover:scale-105 active:scale-95 pointer-events-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                  aria-label="Наступне зображення"
+                  aria-label={t("nextPage")}
                 >
                   <ChevronRight className="size-4" />
                 </button>
@@ -166,7 +166,7 @@ export function ProductCardDetailed({
         <div className="flex flex-col gap-1">
           <div className="flex items-start justify-between gap-2">
             <p className="text-sm font-semibold text-foreground leading-tight">{product.name}</p>
-            <p className="text-sm font-bold text-primary shrink-0">від ₴{(product.base_price_cents / 100).toFixed(0)}</p>
+            <p className="text-sm font-bold text-primary shrink-0">{t("fromPrice", { price: (product.base_price_cents / 100).toFixed(0) })}</p>
           </div>
           {product.description && (
             <div className="mt-1">
@@ -179,7 +179,7 @@ export function ProductCardDetailed({
                   onClick={(e) => { e.stopPropagation(); setDescExpanded(!descExpanded); }}
                   className="text-[11px] text-primary font-semibold hover:underline mt-0.5 touch-manipulation cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
                 >
-                  {descExpanded ? "Згорнути" : "Розгорнути"}
+                  {descExpanded ? t("collapse") : t("expand")}
                 </button>
               )}
             </div>
@@ -195,7 +195,7 @@ export function ProductCardDetailed({
                   key={size}
                   type="button"
                   aria-pressed={selectedSize === size}
-                  aria-label={`Розмір ${size}`}
+                  aria-label={size}
                   onClick={(e) => { e.stopPropagation(); setSelectedSize(selectedSize === size ? null : size); }}
                   className={`h-8 min-w-0 rounded-md border px-1 text-[11px] font-semibold transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${
                     selectedSize === size
@@ -236,7 +236,7 @@ export function ProductCardDetailed({
           </div>
         </div>
 
-        {/* Action buttons — always visible (card click auto-selects middle size) */}
+        {/* Action buttons */}
         <div
           className={`grid grid-cols-1 gap-2 overflow-hidden transition-all duration-200 ease-out ${
             actionsVisible ? "max-h-28 opacity-100 mt-1" : "max-h-0 opacity-0 pointer-events-none"
@@ -249,7 +249,7 @@ export function ProductCardDetailed({
             className="w-full py-2.5 rounded-full bg-primary text-white text-xs font-bold hover:bg-primary/90 active:scale-[0.98] transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
           >
             <ToolCase className="mr-2 inline size-5 align-[-5px]" />
-            Додати принт
+            {t("addPrint")}
           </button>
           <button
             type="button"
@@ -258,7 +258,7 @@ export function ProductCardDetailed({
             className="w-full py-2.5 rounded-full border border-border bg-background text-foreground text-xs font-bold hover:border-foreground/40 hover:bg-muted active:scale-[0.98] transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
           >
             <CircleSlash className="mr-2 inline size-5 align-[-5px]" />
-            Без принту
+            {t("withoutPrint")}
           </button>
         </div>
       </div>

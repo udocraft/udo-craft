@@ -9,4 +9,5 @@ export const routing = defineRouting({
   locales,
   defaultLocale,
   localePrefix: "as-needed", // English = /, German = /de, etc.
+  localeDetection: false, // Disable automatic locale detection
 });

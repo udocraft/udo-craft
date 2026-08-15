@@ -19,612 +19,619 @@
     "logoLink": "U:DO CRAFT — повернутися на головну"
   },
   "hero": {
-    "skipToCatalog": "Skip to catalog",
-    "watchVideo": "Watch video",
-    "closeVideo": "Close video",
-    "mainSection": "Hero section",
-    "fullscreenVideo": "Video in fullscreen mode"
+    "skipToCatalog": "Перейти до каталогу",
+    "watchVideo": "Дивитись відео",
+    "closeVideo": "Закрити відео",
+    "mainSection": "Головна секція",
+    "fullscreenVideo": "Відео у повноекранному режимі",
+    "contactCta": "Контакти"
   },
   "socialProof": {
-    "trustedBy": "Trusted by teams across Ukraine"
+    "trustedBy": "Нам довіряють команди по всій Україні"
   },
   "about": {
-    "label": "About Us",
-    "heading": "Ukrainian Platform for",
-    "headingHighlight": "Corporate Merch",
-    "desc1": "From startups to large corporations — we help teams create merch they're proud of.",
-    "desc2": "From 10 units, no hidden fees, with delivery across Ukraine. Own production, personal manager, quality guarantee.",
+    "label": "Про нас",
+    "heading": "Українська платформа для",
+    "headingHighlight": "корпоративного мерчу",
+    "desc1": "Від стартапів до великих корпорацій — ми допомагаємо командам створювати мерч, яким пишаються.",
+    "desc2": "Від 10 одиниць, без прихованих платежів, з доставкою по всій Україні. Власне виробництво, персональний менеджер, гарантія якості.",
     "features": {
-      "editor": { "title": "Online Editor", "desc": "Upload your logo, place it on the product and see the result immediately. No extra emails or approvals." },
-      "minOrder": { "title": "From 10 Units", "desc": "Perfect for startups and teams. No surcharges for small runs." },
-      "pricing": { "title": "Transparent Pricing", "desc": "Invoice right away. No hidden charges." },
-      "timeline": { "title": "7–14 Days", "desc": "From confirmation to delivery. Deadline is not a problem." },
-      "quality": { "title": "Quality Control", "desc": "Every batch is inspected before shipping." },
-      "manager": { "title": "Personal Manager", "desc": "Available from first request to order delivery." }
+      "editor": { "title": "Онлайн-конструктор", "desc": "Завантажте логотип, розмістіть на виробі та побачте результат одразу. Без зайвих листів." },
+      "minOrder": { "title": "Від 10 одиниць", "desc": "Ідеально для стартапів та команд. Без націнки за малі тиражі." },
+      "pricing": { "title": "Прозорі ціни", "desc": "Рахунок-фактура одразу. Жодних прихованих доплат." },
+      "timeline": { "title": "7–14 днів", "desc": "Від підтвердження до доставки. Дедлайн не проблема." },
+      "quality": { "title": "Контроль якості", "desc": "Кожна партія перевіряється перед відправкою." },
+      "manager": { "title": "Персональний менеджер", "desc": "На зв'язку від першого запиту до отримання замовлення." }
     }
   },
   "problemSolution": {
-    "problemHeading": "The market is flooded with cheap merch nobody wears",
-    "problemsLabel": "Common problems",
+    "problemHeading": "Ринок переповнений дешевим мерчем, який ніхто не носить",
+    "problemsLabel": "Часті проблеми",
     "problems": {
-      "minOrder": "Minimum run of 500+ units",
-      "approvals": "Weeks of design approvals",
-      "quality": "Quality doesn't meet expectations",
-      "hidden": "Hidden costs after ordering"
+      "minOrder": "Мінімальний тираж від 500+ шт",
+      "approvals": "Тижні узгоджень дизайну",
+      "quality": "Якість не відповідає очікуванням",
+      "hidden": "Приховані витрати після замовлення"
     },
-    "solutionHeading": "Merch that becomes part of your brand",
-    "solutionsLabel": "U:DO advantages",
+    "solutionHeading": "Мерч, який стає частиною вашого бренду",
+    "solutionsLabel": "Переваги U:DO",
     "solutions": {
-      "minOrder": "From 10 units with no extra fees",
-      "editor": "Online editor — see the result instantly",
-      "samples": "Samples before production (Box of Touch)",
-      "price": "Fixed price in the invoice"
+      "minOrder": "Від 10 одиниць без доплат",
+      "editor": "Онлайн-редактор — миттєвий результат",
+      "samples": "Зразки до виробництва (Box of Touch)",
+      "price": "Фіксована ціна в рахунку"
     },
-    "ctaLabel": "Browse catalog"
+    "ctaLabel": "Дивитися каталог"
   },
   "collections": {
-    "heading": "Catalog",
-    "allProducts": "All Products",
-    "all": "All",
-    "empty": "No products in this category yet",
-    "prevPage": "Previous",
-    "nextPage": "Next",
-    "page": "Page {n}"
+    "heading": "Каталог",
+    "allProducts": "Всі товари",
+    "all": "Всі",
+    "empty": "У цій категорії поки немає товарів",
+    "prevPage": "Попередня",
+    "nextPage": "Наступна",
+    "page": "Сторінка {n}",
+    "fromPrice": "від ₴{price}",
+    "expand": "Розгорнути",
+    "collapse": "Згорнути",
+    "addPrint": "Додати принт",
+    "withoutPrint": "Без принту"
   },
   "process": {
-    "heading": "From Idea to Merch — in 4 Steps",
-    "subtext": "The entire process takes less than 15 minutes of your time. Prices are visible immediately — no calls or negotiations.",
-    "estimatedTime": "Estimated time",
-    "stepLabel": "Step {n}: {title}",
-    "stepsLabel": "Process steps",
+    "heading": "Від ідеї до мерчу — за 4 кроки",
+    "subtext": "Весь процес займає менше 15 хвилин вашого часу. Ціни видно одразу — без дзвінків та переговорів.",
+    "estimatedTime": "Орієнтовний час",
+    "stepLabel": "Крок {n}: {title}",
+    "stepsLabel": "Кроки процесу",
     "steps": {
       "1": {
-        "title": "Choose a Product",
-        "body": "Browse the catalog with real prices. The price updates immediately when you change quantity and print type. No calls needed to find out the cost.",
-        "cta": "Open catalog",
-        "time": "~5 min"
+        "title": "Оберіть виріб",
+        "body": "Переглядайте каталог з реальними цінами. Ціна оновлюється миттєво при зміні кількості та типу нанесення.",
+        "cta": "Відкрити каталог",
+        "time": "~5 хв"
       },
       "2": {
-        "title": "Customize Online",
-        "body": "Upload your logo, place it on the product, choose the print zone. The editor shows the exact cost for each zone in real time.",
-        "cta": "Try editor",
-        "time": "~10 min"
+        "title": "Кастомізуйте онлайн",
+        "body": "Завантажте логотип, розмістіть на виробі, оберіть зону нанесення. Редактор покаже точну вартість.",
+        "cta": "Спробувати редактор",
+        "time": "~10 хв"
       },
       "3": {
-        "title": "Get a Quote",
-        "body": "Fill out the form — a manager will contact you within 2 hours. Fixed price with no hidden fees. Invoice immediately after confirmation.",
-        "cta": "Contact us",
-        "time": "~2 hrs"
+        "title": "Отримайте пропозицію",
+        "body": "Заповніть форму — менеджер зв'яжеться з вами протягом 2 годин. Фіксована ціна без прихованих платежів.",
+        "cta": "Зв'язатися з нами",
+        "time": "~2 год"
       },
       "4": {
-        "title": "Receive Your Merch",
-        "body": "Production 7–14 business days. Delivery by Nova Poshta across Ukraine. If something is wrong — we redo it for free.",
-        "cta": "Read FAQ",
-        "time": "7–14 days"
+        "title": "Отримайте мерч",
+        "body": "Виробництво 7–14 робочих днів. Доставка Новою Поштою по всій Україні. Якщо щось не так — переробимо безкоштовно.",
+        "cta": "Читати FAQ",
+        "time": "7–14 днів"
       }
     }
   },
   "boxOfTouch": {
     "label": "Box of Touch",
-    "heading": "Feel the quality",
-    "headingHighlight": "before you order",
-    "desc": "Most companies order a run blindly — and get something different than expected. Box of Touch solves this: a physical set of fabric samples, colors and print types.",
-    "contentsLabel": "Contents of Box of Touch",
+    "heading": "Відчуйте якість",
+    "headingHighlight": "до замовлення",
+    "desc": "Більшість компаній замовляють тираж наосліп. Box of Touch вирішує це: фізичний набір зразків тканин, кольорів та типів принту.",
+    "contentsLabel": "Вміст Box of Touch",
     "contents": {
-      "products": { "label": "Product samples", "desc": "T-shirts, hoodies, long sleeves — feel the cut and fit" },
-      "fabrics": { "label": "Fabric samples", "desc": "Different compositions and weights — from 180 to 320 g/m²" },
-      "palette": { "label": "Color palette", "desc": "All available colors with real samples" },
-      "printing": { "label": "Print types", "desc": "Silk-screen, embroidery, DTF — compare by touch" }
+      "products": { "label": "Зразки виробів", "desc": "Футболки, худі, лонгсліви — оцініть крій та посадку" },
+      "fabrics": { "label": "Зразки тканин", "desc": "Різні склади та щільності — від 180 до 320 г/м²" },
+      "palette": { "label": "Палітра кольорів", "desc": "Усі доступні кольори з реальними зразками" },
+      "printing": { "label": "Види нанесення", "desc": "Шовкодрук, вишивка, DTF — порівняйте на дотик" }
     },
-    "cta": "Order Box of Touch",
-    "freeDelivery": "Free delivery · No obligations"
+    "cta": "Замовити Box of Touch",
+    "freeDelivery": "Безкоштовна доставка · Без зобов'язань"
   },
   "popupStand": {
     "label": "U:DO Popup",
-    "heading": "Pop-up stand — merch right at the event",
+    "heading": "Поп-ап стенд — мерч просто на івенті",
     "slides": {
-      "0": { "title": "Choose a package", "desc": "Sticker packs or print packages — find the right format for your event" },
-      "1": { "title": "Choose a product", "desc": "T-shirts, hoodies, accessories — guests choose on-site" },
-      "2": { "title": "We come to you", "desc": "We bring equipment and apply prints right at the event" }
+      "0": { "title": "Оберіть пакет", "desc": "Стікерпаки або пакети нанесення — підберіть формат під подію" },
+      "1": { "title": "Оберіть виріб", "desc": "Футболки, худі, аксесуари — гості обирають на місці" },
+      "2": { "title": "Ми приїжджаємо", "desc": "Привозимо обладнання та наносимо принти прямо на івенті" }
     },
-    "cta": "Learn more",
-    "slideLabel": "Slide {n}",
-    "photosLabel": "Pop-up stand photos"
+    "cta": "Дізнатися більше",
+    "slideLabel": "Слайд {n}",
+    "photosLabel": "Фото поп-ап стенду"
   },
   "subscription": {
-    "label": "Merch subscription",
-    "heading": "Merch by subscription.",
-    "headingMuted": "No boxes in the office.",
-    "desc": "We store your items, assemble kits and ship them on a schedule: new employee, seasonal replacement, event or regular team need.",
+    "label": "Підписка на мерч",
+    "heading": "Мерч за підпискою.",
+    "headingMuted": "Без коробок у офісі.",
+    "desc": "Зберігаємо ваші вироби, комплектуємо набори та відправляємо за графіком: новий співробітник, сезонна заміна, івент.",
     "steps": {
-      "warehouse": "Warehouse",
-      "packing": "Packing",
-      "shipping": "Shipping"
+      "warehouse": "Склад",
+      "packing": "Пакування",
+      "shipping": "Доставка"
     },
     "plans": {
       "welcome": {
-        "title": "Welcome kits",
-        "desc": "For onboarding, HR processes and growing teams.",
-        "features": ["storage", "personalization", "delivery to employee"]
+        "title": "Welcome набори",
+        "desc": "Для онбордингу, HR-процесів та зростаючих команд.",
+        "features": ["зберігання", "персоналізація", "доставка співробітнику"]
       },
       "uniform": {
-        "title": "Regular uniforms",
-        "desc": "For HoReCa, retail and teams with regular uniform replacement.",
-        "features": ["size tracking", "repeat shipments", "stock management"]
+        "title": "Регулярна форма",
+        "desc": "Для HoReCa, ритейлу та команд з регулярною заміною уніформи.",
+        "features": ["облік розмірів", "повторні відправки", "управління залишками"]
       }
     },
-    "cta": "Discuss subscription"
+    "cta": "Обговорити підписку"
   },
   "designer": {
-    "label": "Design service",
-    "heading": "No logo? We'll help",
-    "desc": "Our designer will adapt your logo for printing or create a brand identity from scratch. Result — in 2 days.",
+    "label": "Послуги дизайнера",
+    "heading": "Немає логотипу? Допоможемо",
+    "desc": "Наш дизайнер адаптує ваше лого для друку або створить фірмовий стиль з нуля. Результат — за 2 дні.",
     "steps": {
       "0": {
         "emoji": "💬",
-        "title": "Tell us about your brand",
-        "body": "Send your logo, brand colors and style description. If you have nothing — just tell us about the company. The brief takes 10–15 minutes online or by phone."
+        "title": "Розкажіть про бренд",
+        "body": "Надішліть логотип, фірмові кольори та опис стилю. Бриф займає 10–15 хвилин."
       },
       "1": {
         "emoji": "✨",
-        "title": "Get a concept",
-        "body": "The designer will prepare 2–3 adaptation options for printing on clothing. Deadline — 2 business days. Includes adaptation for silk-screen, embroidery and DTF."
+        "title": "Отримайте концепт",
+        "body": "Дизайнер підготує 2–3 варіанти адаптації для друку на одязі. Термін — 2 робочі дні."
       },
       "2": {
         "emoji": "✅",
-        "title": "Approve and order",
-        "body": "Choose an option, make edits (up to 2 rounds included), receive final files. All files stay with you — for any future orders."
+        "title": "Затвердіть та замовте",
+        "body": "Оберіть варіант, внесіть правки, отримайте фінальні файли. Усі файли залишаються у вас."
       }
     },
-    "cta": "Discuss project"
+    "cta": "Обговорити проект"
   },
   "customizer": {
-    "label": "Online constructor",
-    "heading": "Build your merch right in the interface",
-    "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
-    "openEditor": "Open constructor",
-    "productLabel": "Product",
-    "colorLabel": "Color",
-    "printsLabel": "Prints",
-    "textLabel": "Text",
-    "fileLabel": "File",
-    "volumeLabel": "Volume & price",
-    "totalLabel": "Total",
-    "saved": "Draft saved",
-    "layersReady": "Layers ready",
-    "priceUpdated": "Price updated",
-    "sizeLabel": "Size"
+    "label": "Онлайн конструктор",
+    "heading": "Зберіть мерч просто в інтерфейсі",
+    "desc": "Реальний робочий простір для вибору виробу, кольору, принтів, шарів та оптових цін перед замовленням.",
+    "openEditor": "Відкрити конструктор",
+    "productLabel": "Виріб",
+    "colorLabel": "Колір",
+    "printsLabel": "Принти",
+    "textLabel": "Текст",
+    "fileLabel": "Файл",
+    "volumeLabel": "Тираж та ціна",
+    "totalLabel": "Разом",
+    "saved": "Чернетку збережено",
+    "layersReady": "Шари готові",
+    "priceUpdated": "Ціну оновлено",
+    "sizeLabel": "Розмір"
   },
   "trust": {
-    "heading": "Why they trust us",
-    "subtext": "Not just words — specific guarantees we uphold every day.",
+    "heading": "Чому нам довіряють",
+    "subtext": "Не просто слова — конкретні гарантії, які ми дотримуємося щодня.",
     "guarantees": {
       "0": {
-        "title": "Quality guarantee",
-        "body": "If the product doesn't match the approved design — we redo it for free. No arguments, no bureaucracy."
+        "title": "Гарантія якості",
+        "body": "Якщо виріб не відповідає затвердженому макету — переробимо безкоштовно."
       },
       "1": {
-        "title": "Own production",
-        "body": "We control every stage — from material selection to printing. No intermediaries, no surprises."
+        "title": "Власне виробництво",
+        "body": "Контролюємо кожен етап — від вибору матеріалу до нанесення принту."
       },
       "2": {
-        "title": "Fixed price",
-        "body": "Invoice immediately after confirmation. Price doesn't change after production starts."
+        "title": "Фіксована ціна",
+        "body": "Рахунок-фактура одразу після підтвердження. Ціна не змінюється в процесі."
       },
       "3": {
-        "title": "Personal manager",
-        "body": "One contact from first request to order delivery. We respond within 2 hours during business hours."
+        "title": "Персональний менеджер",
+        "body": "Один контакт від першого запиту до отримання замовлення."
       }
     }
   },
   "comparison": {
-    "heading": "U:DO vs the rest of the market",
-    "subtext": "Compare the conditions — and understand why 500+ teams choose us.",
-    "featureLabel": "Feature",
-    "yourChoice": "Your choice",
-    "yes": "Yes",
-    "no": "No",
-    "partial": "Partial",
-    "selectProvider": "Select provider",
-    "goTo": "Go to: {name}",
+    "heading": "U:DO проти решти ринку",
+    "subtext": "Порівняйте умови — та зрозумійте, чому 500+ команд обирають нас.",
+    "featureLabel": "Параметр",
+    "yourChoice": "Ваш вибір",
+    "yes": "Так",
+    "no": "Ні",
+    "partial": "Частково",
+    "selectProvider": "Оберіть постачальника",
+    "goTo": "Перейти до: {name}",
     "features": {
-      "minOrder": { "name": "Minimum run", "desc": "Minimum quantity for an order" },
-      "editor": { "name": "Online editor", "desc": "Ability to create a design 24/7 independently" },
-      "samples": { "name": "Samples before run", "desc": "Getting a test sample before launching the batch" },
-      "manager": { "name": "Personal manager", "desc": "Direct contact for quick problem solving" },
-      "fixedPrice": { "name": "Fixed price", "desc": "No hidden fees after approval" },
-      "timeline": { "name": "Production time", "desc": "Time from design approval to shipping" },
-      "quality": { "name": "Quality guarantee", "desc": "Free replacement if defects are found" },
-      "popup": { "name": "Mobile pop-up stand", "desc": "Organizing an offline point at your event" },
-      "design": { "name": "Designer help", "desc": "Logo adaptation and design for printing" },
-      "logistics": { "name": "Logistics", "desc": "Packing and delivery to each employee separately" }
+      "minOrder": { "name": "Мінімальний тираж", "desc": "Мінімальна кількість для замовлення" },
+      "editor": { "name": "Онлайн-редактор", "desc": "Можливість створити дизайн 24/7 самостійно" },
+      "samples": { "name": "Зразки до тиражу", "desc": "Отримання тестового зразка до запуску партії" },
+      "manager": { "name": "Персональний менеджер", "desc": "Прямий контакт для швидкого вирішення питань" },
+      "fixedPrice": { "name": "Фіксована ціна", "desc": "Без прихованих доплат після узгодження" },
+      "timeline": { "name": "Термін виробництва", "desc": "Час від затвердження дизайну до відправки" },
+      "quality": { "name": "Гарантія якості", "desc": "Безкоштовна заміна при виявленні браку" },
+      "popup": { "name": "Мобільний поп-ап стенд", "desc": "Організація офлайн точки на вашій події" },
+      "design": { "name": "Допомога дизайнера", "desc": "Адаптація логотипу та розробка дизайну під друк" },
+      "logistics": { "name": "Логістика", "desc": "Пакування та доставка кожному співробітнику окремо" }
     },
     "columns": {
-      "typical": "Typical supplier",
+      "typical": "Типовий постачальник",
       "udo": "U:DO Craft",
-      "printer": "Print shop"
+      "printer": "Друкарня"
     }
   },
   "faq": {
-    "heading": "Frequently Asked Questions",
-    "noAnswer": "Didn't find an answer?",
-    "contactUs": "Contact us",
-    "replyTime": "— we'll respond within an hour.",
-    "questionsLabel": "Questions and answers",
+    "heading": "Поширені запитання",
+    "noAnswer": "Не знайшли відповіді?",
+    "contactUs": "Зв'яжіться з нами",
+    "replyTime": "— відповімо протягом години.",
+    "questionsLabel": "Питання та відповіді",
     "items": {
       "0": {
-        "question": "What is the minimum order quantity?",
-        "answer": "From 10 units. No need to overpay for a large run if you're just testing merch or need a small batch for your team."
+        "question": "Яка мінімальна кількість для замовлення?",
+        "answer": "Від 10 одиниць. Не потрібно переплачувати за великий тираж."
       },
       "1": {
-        "question": "How much does printing cost?",
-        "answer": "The price depends on the print type (silk-screen, embroidery, DTF, heat transfer) and quantity. The larger the run, the lower the price per unit. The exact cost is shown immediately in the online editor."
+        "question": "Скільки коштує нанесення принту?",
+        "answer": "Ціна залежить від типу нанесення та тиражу. Чим більший тираж, тим нижча ціна за одиницю."
       },
       "2": {
-        "question": "How long does an order take?",
-        "answer": "Standard lead time — 7–14 business days from design approval and payment. For urgent orders, rush production is available — ask your manager."
+        "question": "Який термін виконання замовлення?",
+        "answer": "Стандартний термін — 7–14 робочих днів від підтвердження дизайну та оплати."
       },
       "3": {
-        "question": "Can I see the quality before ordering a run?",
-        "answer": "Yes. That's what Box of Touch is for — a set of physical fabric, color and product samples. You'll feel the quality before placing a large order."
+        "question": "Чи можна побачити якість до замовлення тиражу?",
+        "answer": "Так. Для цього є Box of Touch — набір фізичних зразків тканин та кольорів."
       },
       "4": {
-        "question": "What if I don't like the result?",
-        "answer": "We approve the design before starting production. If the finished product doesn't match the approved design — we redo it at our expense. Your manager is in touch at every stage."
+        "question": "Що робити, якщо результат не сподобається?",
+        "answer": "Якщо готовий виріб не відповідає затвердженому макету — ми переробимо його за наш рахунок."
       },
       "5": {
-        "question": "Are there discounts for large orders?",
-        "answer": "Yes. 10–49 units — base price. 50–99 units — 12% discount. 100+ units — 15% discount. Discounts are applied automatically in the editor."
+        "question": "Чи є знижки на великі замовлення?",
+        "answer": "Так. Від 50 шт — 12% знижки, від 100 шт — 15% знижки."
       }
     }
   },
   "finalCta": {
-    "ready": "Ready to start?",
-    "heading": "Your merch — in 14 days",
-    "desc": "From idea to finished product. Online editor, personal manager, quality guarantee.",
-    "cta": "Start project",
-    "footer": "From 10 units · No hidden fees · Delivery across Ukraine"
+    "ready": "Готові розпочати?",
+    "heading": "Ваш мерч — за 14 днів",
+    "desc": "Від ідеї до готового продукту. Онлайн-редактор, персональний менеджер, гарантія якості.",
+    "cta": "Почати проект",
+    "footer": "Від 10 одиниць · Без прихованих платежів · Доставка по всій Україні"
   },
   "contact": {
-    "phone": "Phone",
-    "address": "Address"
+    "phone": "Телефон",
+    "address": "Адреса"
   },
   "footer": {
-    "readyToStart": "Ready to start?",
-    "readyDesc": "From 10 units · 7–14 days · Delivery across Ukraine",
-    "startProject": "Start project",
-    "ariaLabel": "Footer",
-    "homeLink": "U:DO CRAFT — back to home",
+    "readyToStart": "Готові розпочати?",
+    "readyDesc": "Від 10 одиниць · 7–14 днів · Доставка по всій Україні",
+    "startProject": "Почати проект",
+    "ariaLabel": "Підвальний блок",
+    "homeLink": "U:DO CRAFT — повернутися на головну",
     "columns": {
       "products": {
-        "title": "Products",
+        "title": "Продукти",
         "links": {
-          "constructor": "Merch constructor",
-          "catalog": "Catalog",
-          "popup": "Popup stand",
+          "constructor": "Конструктор мерчу",
+          "catalog": "Каталог",
+          "popup": "Поп-ап стенд",
           "box": "Box of Touch",
-          "designer": "Hire a designer"
+          "designer": "Послуги дизайнера"
         }
       },
       "company": {
-        "title": "Company",
+        "title": "Компанія",
         "links": {
-          "about": "About Us",
-          "how": "How it works",
-          "career": "Careers",
-          "blog": "Blog"
+          "about": "Про нас",
+          "how": "Як це працює",
+          "career": "Кар'єра",
+          "blog": "Блог"
         }
       },
       "support": {
-        "title": "Support",
+        "title": "Підтримка",
         "links": {
           "faq": "FAQ",
-          "contact": "Contact",
-          "cabinet": "Account",
-          "delivery": "Shipping & payment"
+          "contact": "Контакти",
+          "cabinet": "Кабінет",
+          "delivery": "Доставка та оплата"
         }
       }
     },
-    "privacy": "Privacy",
-    "terms": "Terms",
-    "cookies": "Cookies"
+    "privacy": "Політика конфіденційності",
+    "terms": "Умови та правила",
+    "cookies": "Файли cookie"
   },
   "cart": {
-    "title": "Cart",
-    "titleWithCount": "Cart ({count})",
-    "empty": "Cart is empty",
-    "emptyDesc": "Choose a product and set up a print",
-    "toCatalog": "To catalog",
-    "ariaLabel": "Cart",
-    "quantity": "{qty} pcs · {size}",
-    "total": "Total:",
-    "cartItem": "Cart item"
+    "title": "Кошик",
+    "titleWithCount": "Кошик ({count})",
+    "empty": "Кошик порожній",
+    "emptyDesc": "Оберіть товар та налаштуйте принт",
+    "toCatalog": "До каталогу",
+    "ariaLabel": "Кошик",
+    "quantity": "{qty} шт · {size}",
+    "total": "Разом:",
+    "cartItem": "Елемент кошика"
   },
   "services": {
-    "heading": "Three ways to get",
-    "headingAccent": "perfect merch",
-    "desc": "From physical samples to a pop-up stand — choose the format that suits you.",
+    "heading": "Три шляхи до",
+    "headingAccent": "ідеального мерчу",
+    "desc": "Від фізичних зразків до мобільного стенду — оберіть зручний формат.",
     "popup": {
       "title": "U:DO Popup",
-      "desc": "Mobile stand with live customization. Guests create unique merch and take it away immediately.",
+      "desc": "Мобільний стенд з живим нанесенням на події.",
       "stats": {
-        "events": "events",
-        "product": "per product"
+        "events": "подій",
+        "product": "на виріб"
       },
-      "learnMore": "Learn more",
-      "discuss": "Discuss →"
+      "learnMore": "Дізнатися більше",
+      "discuss": "Обговорити →"
     },
     "ctaStrip": {
-      "title": "Mobile pop-up stand for your event",
-      "desc": "500+ events · 50k+ guests · 5 min per product",
-      "learnMore": "Learn more",
-      "discuss": "Discuss →"
+      "title": "Мобільний поп-ап стенд для вашого івенту",
+      "desc": "500+ подій · 50k+ гостей · 5 хв на виріб",
+      "learnMore": "Дізнатися більше",
+      "discuss": "Обговорити →"
     },
-    "stepLabel": "Step {n}",
-    "prevStep": "Previous",
-    "nextStep": "Next"
+    "stepLabel": "Крок {n}",
+    "prevStep": "Попередня",
+    "nextStep": "Наступна"
   },
   "checkout": {
-    "title": "Cart",
-    "orderTitle": "Place order",
-    "stepCart": "Cart",
-    "stepForm": "Company details",
-    "emptyCart": "Cart is empty",
-    "toCatalog": "Go to catalog",
-    "total": "Total",
-    "finalPriceNote": "Final price is agreed with the manager",
-    "placeOrder": "Place order",
-    "edit": "Edit",
-    "discount": "-{pct}% discount",
+    "title": "Кошик",
+    "orderTitle": "Нове замовлення",
+    "stepCart": "Товари",
+    "stepForm": "Контакти",
+    "stepReview": "Перевірка",
+    "emptyCart": "Кошик порожній",
+    "toCatalog": "До каталогу",
+    "total": "Загалом до сплати",
+    "finalPriceNote": "Фіксована ціна узгоджується з менеджером",
+    "placeOrder": "Оформити замовлення",
+    "edit": "Редагувати",
+    "discount": "-{pct}% знижка",
     "company": {
-      "title": "Company details",
-      "name": "Company name *",
-      "namePlaceholder": "LLC «Name»",
-      "taxId": "Tax ID / Details",
+      "title": "Дані компанії",
+      "name": "Назва компанії *",
+      "namePlaceholder": "ТОВ «Назва»",
+      "taxId": "ЄДРПОУ / Реквізити",
       "taxIdPlaceholder": "12345678"
     },
     "contact": {
-      "title": "Contact person",
-      "fullName": "Full name *",
-      "fullNamePlaceholder": "John Smith",
+      "title": "Контактні дані",
+      "fullName": "Ім'я та прізвище *",
+      "fullNamePlaceholder": "Олександр Іванов",
       "email": "Email *",
       "emailPlaceholder": "hr@company.com",
-      "phone": "Phone",
-      "phonePlaceholder": "+1 XXX XXX XXXX",
+      "phone": "Телефон *",
+      "phonePlaceholder": "+380 XX XXX XX XX",
       "social": "Telegram / Instagram",
-      "socialPlaceholder": "@username or link"
+      "socialPlaceholder": "@username"
     },
     "delivery": {
-      "title": "Delivery & deadlines",
+      "title": "Доставка та дедлайн",
       "options": {
-        "nova_poshta": { "label": "Nova Poshta", "desc": "2–3 business days" },
-        "ukrposhta": { "label": "Ukrposhta", "desc": "5–7 business days" },
-        "pickup": { "label": "Pickup", "desc": "Kyiv, Khreshchatyk 1" }
+        "nova_poshta": { "label": "Нова Пошта", "desc": "2–3 робочих дні" },
+        "ukrposhta": { "label": "Укрпошта", "desc": "5–7 робочих днів" },
+        "pickup": { "label": "Самовивіз", "desc": "Львів, Джерельна, 69, офіс 10" }
       },
-      "deadline": "Desired deadline",
-      "comment": "Order comment",
-      "commentPlaceholder": "Additional wishes, printing details..."
+      "deadline": "Бажаний дедлайн",
+      "comment": "Коментар до замовлення",
+      "commentPlaceholder": "Додаткові побажання..."
     },
-    "submit": "Confirm order",
-    "submitting": "Submitting...",
-    "finalPriceManager": "Final price and invoice will be sent by manager after confirmation",
+    "submit": "Відправити замовлення",
+    "submitting": "Відправляємо...",
+    "finalPriceManager": "Менеджер надішле фінальний рахунок після підтвердження",
     "success": {
-      "title": "Order accepted!",
-      "desc": "Our manager will contact you within 24 hours.",
-      "createAccount": "Create personal account",
-      "loginAccount": "Log in to account",
-      "createAccountDesc": "Track order status, chat with manager and view invoices — all in one place.",
-      "emailExists": "This email is already registered. Enter your password to log in and view your orders.",
+      "title": "Замовлення прийнято!",
+      "desc": "Менеджер зв'яжеться з вами протягом 24 годин.",
+      "createAccount": "Створити особистий кабінет",
+      "loginAccount": "Увійти до кабінету",
+      "createAccountDesc": "Відстежуйте статус, спілкуйтесь з менеджером, завантажуйте рахунки.",
+      "emailExists": "Акаунт для цього email вже існує. Увійдіть до кабінету.",
       "emailLabel": "Email",
-      "passwordLabel": "Password",
-      "newPasswordLabel": "Create a password",
-      "passwordPlaceholder": "Minimum 6 characters",
-      "enterPasswordPlaceholder": "Enter password",
-      "creating": "Creating...",
-      "create": "Create account",
-      "loggingIn": "Logging in...",
-      "login": "Log in",
-      "passwordError": "Password must be at least 6 characters",
-      "enterPasswordError": "Enter password",
-      "wrongPassword": "Incorrect password",
-      "registrationError": "Registration error. Try again later.",
-      "skip": "Skip, return to home",
+      "passwordLabel": "Пароль",
+      "newPasswordLabel": "Створіть пароль",
+      "passwordPlaceholder": "Мінімум 6 символів",
+      "enterPasswordPlaceholder": "Введіть пароль",
+      "creating": "Створюємо...",
+      "create": "Створити кабінет",
+      "loggingIn": "Входимо...",
+      "login": "Увійти до кабінету",
+      "passwordError": "Мінімум 6 символів",
+      "enterPasswordError": "Введіть пароль",
+      "wrongPassword": "Невірний пароль",
+      "registrationError": "Помилка реєстрації. Спробуйте пізніше.",
+      "skip": "Пропустити, повернутись на головну",
       "accountCreated": {
-        "title": "Account created!",
-        "desc": "We sent a confirmation email to {email}. Confirm your email to log in.",
-        "loginBtn": "Log in to account",
-        "homeLink": "Return to home"
+        "title": "Акаунт створено!",
+        "desc": "Підтвердіть email {email}, щоб увійти до кабінету.",
+        "loginBtn": "Увійти до кабінету",
+        "homeLink": "На головну"
       }
     },
-    "back": "Back",
+    "back": "Назад",
     "header": "U:DO",
-    "backAriaLabel": "Back"
+    "backAriaLabel": "Назад"
   },
   "cabinet": {
-    "breadcrumb": "/ Account",
-    "settings": "Settings",
-    "logout": "Log out",
-    "noOrders": "No orders yet",
-    "toCatalog": "To catalog",
-    "writeTo": "Write to manager",
+    "breadcrumb": "/ Кабінет",
+    "settings": "Налаштування",
+    "logout": "Вийти",
+    "noOrders": "Замовлень ще немає",
+    "toCatalog": "До каталогу",
+    "writeTo": "Написати менеджеру",
     "tabs": {
-      "details": "Details",
-      "chat": "Chat",
-      "files": "Files"
+      "details": "Деталі",
+      "chat": "Чат",
+      "files": "Файли"
     },
     "status": {
-      "new": "New request",
-      "in_progress": "In progress",
-      "production": "Production",
-      "completed": "Completed",
-      "archived": "Archived"
+      "new": "Нова заявка",
+      "in_progress": "В роботі",
+      "production": "Виробництво",
+      "completed": "Завершено",
+      "archived": "Архів"
     },
     "delivery": {
-      "nova_poshta": "Nova Poshta",
-      "ukrposhta": "Ukrposhta",
-      "pickup": "Pickup"
+      "nova_poshta": "Нова Пошта",
+      "ukrposhta": "Укрпошта",
+      "pickup": "Самовивіз"
     },
     "details": {
-      "phone": "Phone",
+      "phone": "Телефон",
       "email": "Email",
-      "company": "Company",
-      "orderDate": "Order date",
-      "orderAmount": "Order amount",
-      "delivery": "Delivery",
-      "deadline": "Deadline",
-      "positions": "Positions ({n})",
-      "attachments": "Attachments ({n})",
-      "invoice": "Download invoice",
-      "print": "Print"
+      "company": "Компанія",
+      "orderDate": "Дата замовлення",
+      "orderAmount": "Сума замовлення",
+      "delivery": "Доставка",
+      "deadline": "Дедлайн",
+      "positions": "Позиції ({n})",
+      "attachments": "Вкладення ({n})",
+      "invoice": "Завантажити рахунок (PDF)",
+      "print": "Принт"
     },
     "chat": {
-      "placeholder": "Message...",
-      "sendLabel": "Send message",
-      "attachLabel": "Attach file",
-      "loading": "Loading messages...",
-      "empty": "No messages yet",
-      "fileTooLarge": "\"{name}\" exceeds 10 MB"
+      "placeholder": "Напишіть повідомлення...",
+      "sendLabel": "Надіслати повідомлення",
+      "attachLabel": "Прикріпити файл",
+      "loading": "Завантаження повідомлень...",
+      "empty": "Повідомлень ще немає",
+      "fileTooLarge": "\"{name}\" перевищує 10 МБ"
     },
     "files": {
-      "empty": "No files yet",
-      "openFile": "Open file"
+      "empty": "Файлів ще немає",
+      "openFile": "Відкрити файл"
     }
   },
   "popup": {
-    "badge": "Mobile pop-up service",
-    "heroHeading": "Merch pop-up at your event —",
-    "heroSubheading": "live experience they remember",
-    "heroDesc": "We come to you. Guests choose clothing, customize a print on-site and leave with ready merch in hand. No logistics on your side — just a wow effect.",
-    "bookBtn": "Book a pop-up",
-    "howItWorks": "How it works",
+    "badge": "Мобільний поп-ап сервіс",
+    "heroHeading": "Мерч поп-ап на вашій події —",
+    "heroSubheading": "живий досвід, який запам'ятовується",
+    "heroDesc": "Ми приїжджаємо до вас. Гості обирають одяг, кастомізують принт на місці та забирають готовий мерч.",
+    "bookBtn": "Забронювати поп-ап",
+    "howItWorks": "Як це працює",
     "stats": {
-      "events": "Pop-ups held",
-      "time": "Customization time",
-      "guests": "Guests at one event",
-      "satisfaction": "Satisfied organizers"
+      "events": "Проведено поп-апів",
+      "time": "Час кастомізації",
+      "guests": "Гостей на події",
+      "satisfaction": "Задоволених організаторів"
     },
     "useCases": {
-      "label": "Who it's for",
-      "heading": "Suitable for any event",
+      "label": "Для кого",
+      "heading": "Підходить для будь-якої події",
       "items": {
-        "corporate": { "title": "Corporate events", "desc": "Make the corporate event unforgettable — guests go home with personalized company merch." },
-        "conferences": { "title": "Conferences & forums", "desc": "Branded merch on-site — the best networking tool and memory of the event." },
-        "festivals": { "title": "Festivals & markets", "desc": "A pop-up stand that attracts attention and generates a queue. Live customization — it's a show." },
-        "launches": { "title": "Product launches", "desc": "Product launch with merch that guests made themselves — maximum audience engagement." },
-        "universities": { "title": "Universities & schools", "desc": "Graduations, open days, student events — merch that unites the community." },
-        "b2b": { "title": "B2B events", "desc": "Partner meetings, exhibitions, presentations — leave an impression they wear." }
+        "corporate": { "title": "Корпоративні події", "desc": "Зробіть корпоратив незабутнім — гості заберуть фірмовий мерч." },
+        "conferences": { "title": "Конференції та форуми", "desc": "Брендований мерч на місці — найкращий інструмент нетворкінгу." },
+        "festivals": { "title": "Фестивалі та маркети", "desc": "Поп-ап стенд, який привертає увагу та збирає черги." },
+        "launches": { "title": "Запуски продуктів", "desc": "Запуск продукту з мерчем, який гості створили самі." },
+        "universities": { "title": "Університети та школи", "desc": "Випускні, дні відкритих дверей, студентські івенти." },
+        "b2b": { "title": "B2B зустрічі", "desc": "Зустрічі з партнерами, виставки, презентації." }
       }
     },
     "process": {
-      "label": "Process",
-      "heading": "Three steps to the perfect pop-up",
+      "label": "Процес",
+      "heading": "Три кроки до ідеального поп-апу",
       "steps": {
-        "0": { "step": "01", "title": "Choose the format", "desc": "Tell us about the event — number of guests, location, date. We'll choose the optimal pop-up format." },
-        "1": { "step": "02", "title": "We prepare the stand", "desc": "We bring equipment, clothing and everything needed for customization. We set up the stand before the event starts." },
-        "2": { "step": "03", "title": "Guests customize", "desc": "Each guest chooses a product, places a print and receives ready merch on-site — in minutes." }
+        "0": { "step": "01", "title": "Оберіть формат", "desc": "Розкажіть про подію — кількість гостей, локація, дата." },
+        "1": { "step": "02", "title": "Готуємо стенд", "desc": "Привозимо обладнання, одяг та все необхідне для кастомізації." },
+        "2": { "step": "03", "title": "Гості кастомізують", "desc": "Кожен гість обирає виріб та отримує готовий мерч на місці." }
       }
     },
     "faq": {
       "label": "FAQ",
-      "heading": "Frequently asked questions",
+      "heading": "Поширені запитання",
       "items": {
-        "0": { "q": "What is the minimum number of participants?", "a": "From 50 people. For smaller events we can offer an alternative format — write to us." },
-        "1": { "q": "How long does customization of one product take?", "a": "From 3 to 10 minutes depending on print complexity. For large events we set up multiple workstations." },
-        "2": { "q": "What products are available at the pop-up?", "a": "T-shirts, hoodies, long sleeves, caps and accessories. The final range is agreed for your event and budget." },
-        "3": { "q": "Who pays for the merch — organizer or guests?", "a": "Both options. Merch can be included in the ticket price, given as a company gift, or sold on-site." },
-        "4": { "q": "How far in advance should I book?", "a": "We recommend 2–3 weeks before the event. For large events (500+ people) — a month in advance." }
+        "0": { "q": "Яка мінімальна кількість учасників?", "a": "Від 50 осіб." },
+        "1": { "q": "Скільки часу займає кастомізація одного виробу?", "a": "Від 3 до 10 хвилин." },
+        "2": { "q": "Які вироби доступні на поп-апі?", "a": "Футболки, худі, лонгсліви, кепки та аксесуари." },
+        "3": { "q": "Хто оплачує мерч — організатор чи гості?", "a": "Обидва варіанти можливі." },
+        "4": { "q": "За скільки часу потрібно бронювати?", "a": "Рекомендуємо за 2–3 тижні до події." }
       }
     },
     "contact": {
-      "label": "Book",
-      "heading": "Tell us about your event",
-      "desc": "Leave a request — a manager will contact you within one business day to discuss details and calculate the cost.",
+      "label": "Забронювати",
+      "heading": "Розкажіть про вашу подію",
+      "desc": "Залиште заявку — менеджер зв'яжеться з вами для розрахунку вартості.",
       "benefits": {
-        "0": "Free consultation",
-        "1": "Individual estimate for your event",
-        "2": "Reply within 24 hours"
+        "0": "Безкоштовна консультація",
+        "1": "Індивідуальний кошторис",
+        "2": "Відповідь протягом 24 годин"
       }
     },
     "nav": {
-      "useCases": "Who it's for",
-      "how": "How it works",
+      "useCases": "Для кого",
+      "how": "Як це працює",
       "faq": "FAQ",
-      "contacts": "Contacts"
+      "contacts": "Контакти"
     },
-    "book": "Book",
-    "footerCopyright": "U:DO CRAFT. All rights reserved.",
-    "menuOpen": "Open menu",
-    "menuClose": "Close menu",
-    "homeLink": "Home"
+    "book": "Забронювати",
+    "footerCopyright": "U:DO CRAFT. Усі права захищено.",
+    "menuOpen": "Відкрити меню",
+    "menuClose": "Закрити меню",
+    "homeLink": "Головна"
   },
   "contactForm": {
-    "nameLabel": "Your name *",
-    "namePlaceholder": "John Smith",
+    "nameLabel": "Ваше ім'я *",
+    "namePlaceholder": "Олександр Іванов",
     "emailLabel": "Email *",
     "emailPlaceholder": "hr@company.com",
-    "phoneLabel": "Phone *",
-    "phonePlaceholder": "+1 XXX XXX XXXX",
-    "companyLabel": "Company",
-    "companyPlaceholder": "Company name",
-    "topicLabel": "Subject *",
-    "messageLabel": "Tell us about your project",
-    "messagePlaceholder": "Quantity, product type, deadlines...",
-    "filesLabel": "Upload files (designs, logos, etc.)",
-    "filesClick": "Click or drag files here",
-    "filesDesc": "Designs, logos, images...",
-    "submit": "Send",
-    "submitting": "Sending...",
-    "error": "An error occurred. Please try again or contact us directly.",
-    "success": "Thank you for reaching out!",
-    "successDesc": "We received your request and will contact you shortly.",
-    "deleteFile": "Delete file {name}",
+    "phoneLabel": "Телефон *",
+    "phonePlaceholder": "+380 XX XXX XX XX",
+    "companyLabel": "Компанія",
+    "companyPlaceholder": "Назва компанії",
+    "topicLabel": "Тема *",
+    "messageLabel": "Розкажіть про ваш проект",
+    "messagePlaceholder": "Кількість, тип виробу, дедлайни...",
+    "filesLabel": "Завантажити файли (макети, логотипи)",
+    "filesClick": "Натисніть або перетягніть файли",
+    "filesDesc": "Макети, логотипи, зображення...",
+    "submit": "Надіслати",
+    "submitting": "Надсилаємо...",
+    "error": "Виникла помилка. Спробуйте ще раз.",
+    "success": "Дякуємо за звернення!",
+    "successDesc": "Ми отримали ваші дані та зв'яжемося найближчим часом.",
+    "deleteFile": "Видалити файл {name}",
     "topics": {
-      "merch": { "label": "Corporate merch", "desc": "T-shirts, hoodies, accessories for your team or brand" },
-      "popup": { "label": "Pop-up stand for event", "desc": "Mobile merch customization right at your event" },
-      "box": { "label": "Box of Touch", "desc": "Set of fabric and product samples before production" },
-      "designer": { "label": "Designer services", "desc": "Logo development or adaptation for printing" },
-      "bulk": { "label": "Large order (500+)", "desc": "Wholesale orders with individual terms" },
-      "other": { "label": "Other", "desc": "Any other question or suggestion" }
+      "merch": { "label": "Корпоративний мерч", "desc": "Футболки, худі, аксесуари для команди" },
+      "popup": { "label": "Поп-ап стенд на івент", "desc": "Мобільний стенд кастомізації мерчу" },
+      "box": { "label": "Box of Touch", "desc": "Набір зразків тканин та виробів" },
+      "designer": { "label": "Послуги дизайнера", "desc": "Розробка логотипу або адаптація під друк" },
+      "bulk": { "label": "Велике замовлення (500+)", "desc": "Оптові замовлення з індивідуальними умовами" },
+      "other": { "label": "Інше", "desc": "Будь-яке інше питання" }
     }
   },
   "privacy": {
-    "title": "Privacy Policy",
-    "noContent": "Content not yet added."
+    "title": "Політика конфіденційності",
+    "noContent": "Вміст ще не додано."
   },
   "terms": {
-    "title": "Terms and Conditions",
-    "noContent": "Content not yet added."
+    "title": "Умови та правила",
+    "noContent": "Вміст ще не додано."
   },
   "order": {
-    "loadError": "Failed to load catalog. Please refresh the page."
+    "loadError": "Не вдалося завантажити каталог. Оновіть сторінку."
   },
   "leadMagnet": {
-    "badge": "Free",
-    "heading": "Get a free mockup of your merch",
-    "desc": "Upload your logo — we'll apply it to a real product and send a mockup to your email. No registration, no obligations.",
-    "emailLabel": "Your email",
-    "cta": "Get mockup",
-    "loading": "Sending...",
-    "emailError": "Enter a valid email",
-    "success": "Thank you!",
-    "successDesc": "Mockup will arrive in your inbox within 24 hours",
-    "formLabel": "Mockup request form",
-    "orCalculate": "Want to know the price right now?",
-    "openCalculator": "Open price calculator →"
+    "badge": "Безкоштовно",
+    "heading": "Отримайте безкоштовний макет мерчу",
+    "desc": "Завантажте логотип — ми нанесемо його на реальний виріб та надішлемо макет на email.",
+    "emailLabel": "Ваш email",
+    "cta": "Отримати макет",
+    "loading": "Надсилаємо...",
+    "emailError": "Введіть коректний email",
+    "success": "Дякуємо!",
+    "successDesc": "Макет надійде на email протягом 24 годин",
+    "formLabel": "Форма запиту макету",
+    "orCalculate": "Бажаєте дізнатися ціну зараз?",
+    "openCalculator": "Відкрити калькулятор ціни →"
   },
   "howItWorks": {
-    "label": "How it works",
-    "heading": "Customize for your goals",
+    "label": "Як це працює",
+    "heading": "Кастомізуйте під свої цілі",
     "steps": {
-      "0": { "title": "Choose products", "desc": "Browse the catalog, filter by categories. Choose the base for your merch — hoodies, t-shirts, accessories.", "cta": "To catalog" },
-      "1": { "title": "Customize clothing", "desc": "Upload logo, choose print zone, size and color. Preview in real time.", "cta": "Try it" },
-      "2": { "title": "Get a proposal", "desc": "Fill out the order form. A manager will contact you to confirm details and send an invoice.", "cta": "Order" }
+      "0": { "title": "Оберіть вироби", "desc": "Переглядайте каталог, фільтруйте за категоріями.", "cta": "До каталогу" },
+      "1": { "title": "Кастомізуйте одяг", "desc": "Завантажте логотип, оберіть зону нанесення.", "cta": "Спробувати" },
+      "2": { "title": "Отримайте пропозицію", "desc": "Заповніть форму замовлення.", "cta": "Замовити" }
     }
   },
   "stats": {
-    "ariaLabel": "Key metrics"
+    "ariaLabel": "Ключові показники"
   },
   "langSwitcher": {
-    "label": "Language"
+    "label": "Мова"
   }
 }

@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "U:DO CRAFT — Merch firmowy",
-    "description": "Platforma B2B merchandisingu. Tworzymy odzież, która staje się częścią DNA firmowego."
+    "title": "U:DO CRAFT — Corporate merch",
+    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA."
   },
   "nav": {
     "catalog": "Katalog",
@@ -23,7 +23,8 @@
     "watchVideo": "Obejrzyj wideo",
     "closeVideo": "Zamknij wideo",
     "mainSection": "Hero section",
-    "fullscreenVideo": "Video in fullscreen mode"
+    "fullscreenVideo": "Video in fullscreen mode",
+    "contactCta": "Contacts"
   },
   "socialProof": {
     "trustedBy": "Zaufanie zespołów z całego świata"
@@ -87,7 +88,12 @@
     "empty": "Brak produktów w tej kategorii",
     "prevPage": "Poprzednia",
     "nextPage": "Następna",
-    "page": "Strona {n}"
+    "page": "Strona {n}",
+    "fromPrice": "from ₴{price}",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "addPrint": "Add print",
+    "withoutPrint": "Without print"
   },
   "process": {
     "heading": "Od pomysłu do merchu — w 4 krokach",

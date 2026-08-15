@@ -15,7 +15,14 @@ import { DesktopCartPanel } from "./_components/DesktopCartPanel";
 import { ProductGrid } from "./_components/ProductGrid";
 import { StepHeader } from "./_components/StepHeader";
 import { useCipherText } from "./_components/useCipherText";
-import { LogoLoader } from "@udo-craft/ui";
+// Simple inline loader to avoid hydration issues
+function SimpleLoader() {
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+}
 import { createClient } from "@/lib/supabase/client";
 import { useAiQuota } from "@/hooks/useAiQuota";
 import type { LoadedCustomizerShare } from "./_lib/customizerShare";
@@ -225,7 +232,7 @@ export function OrderPageInner({
   const stepIdx = (["select", "contact", "review"] as const).indexOf(step);
 
   if (loading) {
-    return <LogoLoader />;
+    return <SimpleLoader />;
   }
 
   if (loadError && products.length === 0) {

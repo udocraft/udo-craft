@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "U:DO CRAFT — Företagsmerch",
-    "description": "B2B-merchplattform. Vi skapar kläder som blir en del av ert företags-DNA."
+    "title": "U:DO CRAFT — Corporate merch",
+    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA."
   },
   "nav": {
     "catalog": "Katalog",
@@ -23,7 +23,8 @@
     "watchVideo": "Se video",
     "closeVideo": "Stäng video",
     "mainSection": "Hero section",
-    "fullscreenVideo": "Video in fullscreen mode"
+    "fullscreenVideo": "Video in fullscreen mode",
+    "contactCta": "Contacts"
   },
   "socialProof": {
     "trustedBy": "Förtroendet från team runt om i världen"
@@ -87,7 +88,12 @@
     "empty": "Inga produkter i den här kategorin",
     "prevPage": "Föregående",
     "nextPage": "Nästa",
-    "page": "Sida {n}"
+    "page": "Sida {n}",
+    "fromPrice": "from ₴{price}",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "addPrint": "Add print",
+    "withoutPrint": "Without print"
   },
   "process": {
     "heading": "Från idé till merch — i 4 steg",

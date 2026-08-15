@@ -23,6 +23,7 @@ interface CollectionsSectionProps {
 }
 
 export function CollectionsSection({ products, categories, materials, colorVariants }: CollectionsSectionProps) {
+  const t = useTranslations("collections");
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [collPage, setCollPage] = useState(0);
@@ -56,10 +57,10 @@ export function CollectionsSection({ products, categories, materials, colorVaria
         <div className="w-full px-5 sm:px-8 lg:px-16">
           <div className="flex items-center justify-between py-5">
             <div className="flex items-center gap-4">
-              <h2 className="text-xl font-black tracking-tight">Каталог</h2>
+              <h2 className="text-xl font-black tracking-tight">{t("heading")}</h2>
             </div>
             <Link href="/order" className="group flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors duration-200 underline underline-offset-4">
-              Всі товари
+              {t("allProducts")}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
             </Link>
           </div>
@@ -74,7 +75,7 @@ export function CollectionsSection({ products, categories, materials, colorVaria
                     : "border-border text-muted-foreground hover:border-foreground/30 hover:text-foreground"
                 }`}
               >
-                Всі
+                {t("all")}
               </button>
               {categories.map((cat) => (
                 <button
@@ -102,7 +103,7 @@ export function CollectionsSection({ products, categories, materials, colorVaria
             activeItems.length === 0 ? (
               <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-center py-24">
                 <p className="text-5xl mb-4">🧺</p>
-                <p className="text-muted-foreground text-sm font-medium">У цій категорії поки немає товарів</p>
+                <p className="text-muted-foreground text-sm font-medium">{t("empty")}</p>
               </motion.div>
             ) : (
               <motion.div key={activeCategory ?? "all"} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
@@ -135,19 +136,19 @@ export function CollectionsSection({ products, categories, materials, colorVaria
                   <div className="flex items-center justify-center gap-3 mt-12">
                     <button onClick={() => setCollPage((p) => Math.max(0, p - 1))} disabled={collPage === 0}
                       className="w-9 h-9 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/40 disabled:opacity-25 disabled:cursor-not-allowed transition-all"
-                      aria-label="Попередня">
+                      aria-label={t("prevPage")}>
                       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7l4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     </button>
                     <div className="flex items-center gap-1.5">
                       {Array.from({ length: totalPages }).map((_, i) => (
-                        <button key={i} onClick={() => setCollPage(i)} aria-label={`Сторінка ${i + 1}`}
+                        <button key={i} onClick={() => setCollPage(i)} aria-label={t("page", { n: i + 1 })}
                           className="rounded-full transition-all duration-300"
                           style={{ width: i === collPage ? 24 : 8, height: 8, backgroundColor: i === collPage ? "var(--color-foreground)" : "var(--color-border)" }} />
                       ))}
                     </div>
                     <button onClick={() => setCollPage((p) => Math.min(totalPages - 1, p + 1))} disabled={collPage === totalPages - 1}
                       className="w-9 h-9 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/40 disabled:opacity-25 disabled:cursor-not-allowed transition-all"
-                      aria-label="Наступна">
+                      aria-label={t("nextPage")}>
                       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     </button>
                   </div>

@@ -3,46 +3,59 @@
 import { useRef, useEffect, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
-import { useTranslations } from "next-intl";
 import { Check, X, Minus } from "lucide-react";
 
-const FEATURE_KEYS = [
-  "minOrder", "editor", "samples", "manager", "fixedPrice",
-  "timeline", "quality", "popup", "design", "logistics",
-] as const;
+const FEATURES = [
+  { name: "Мінімальне замовлення", desc: "Кількість штук в одному замовленні" },
+  { name: "Онлайн-редактор", desc: "Швидкий дизайн прямо на сайті" },
+  { name: "Безкоштовні зразки", desc: "Тестування перед замовленням" },
+  { name: "Особистий менеджер", desc: "Індивідуальна підтримка 24/7" },
+  { name: "Фіксована ціна", desc: "При старті без прихованих платежів" },
+  { name: "Терміни", desc: "Час від замовлення до доставки" },
+  { name: "Якість", desc: "Матеріали та контроль якості" },
+  { name: "Попап", desc: "Концепція для просування бренду" },
+  { name: "Дизайн", desc: "Допомога з макетом та брендингом" },
+  { name: "Логістика", desc: "Доставка та обробка замовлень" },
+];
 
 type CellValue = "check" | "cross" | "partial" | string;
 
-interface CellProps { value: CellValue; highlight: boolean; t: (key: string) => string }
+interface CellProps { value: CellValue; highlight: boolean }
 
-function Cell({ value, highlight, t }: CellProps) {
+function Cell({ value, highlight }: CellProps) {
   if (value === "check")
     return (
-      <span className="inline-flex items-center justify-center" aria-label={t("yes")}>
+      <span className="inline-flex items-center justify-center" aria-label="Yes">
         <Check className={`w-6 h-6 ${highlight ? "text-white" : "text-green-500"}`} strokeWidth={3} />
       </span>
     );
   if (value === "cross")
     return (
-      <span className="inline-flex items-center justify-center" aria-label={t("no")}>
+      <span className="inline-flex items-center justify-center" aria-label="No">
         <X className={`w-5 h-5 ${highlight ? "text-white/40" : "text-red-500/60"}`} strokeWidth={2.5} />
       </span>
     );
   if (value === "partial")
     return (
-      <span className="inline-flex items-center justify-center" aria-label={t("partial")}>
+      <span className="inline-flex items-center justify-center" aria-label="Partial">
         <Minus className={`w-5 h-5 ${highlight ? "text-white/80" : "text-amber-500"}`} strokeWidth={3} />
       </span>
     );
   return <span className={`text-sm font-bold ${highlight ? "text-white" : "text-foreground"}`}>{value}</span>;
 }
 
-const COLUMN_NAMES = ["typical", "udo", "printer"] as const;
+const COLUMN_NAMES = ["Типові друкарні", "U:DO CRAFT", "Мерч-продакшн"] as const;
 const COLUMN_VALUES: CellValue[][] = [
   ["500+ шт", "cross", "cross", "cross", "cross", "30+ днів", "partial", "cross", "partial", "cross"],
   ["від 10 шт", "check", "check", "check", "check", "7–14 днів", "check", "check", "check", "check"],
   ["100+ шт", "cross", "partial", "cross", "partial", "14–21 днів", "partial", "cross", "partial", "cross"],
 ];
+
+const COLUMNS = COLUMN_NAMES.map((name, index) => ({
+  name,
+  values: COLUMN_VALUES[index],
+  highlight: index === 1,
+}));
 
 // ── Section ───────────────────────────────────────────────────────────────
 

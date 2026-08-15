@@ -9,10 +9,12 @@ export function createClient() {
   }
 
   const { url, anonKey } = getSupabasePublicEnv();
+  const safeUrl = url && url.startsWith("http") ? url : "https://placeholder.supabase.co";
+  const safeAnonKey = anonKey || "placeholder";
 
   supabaseClient = createBrowserClient(
-    url,
-    anonKey
+    safeUrl,
+    safeAnonKey
   );
 
   return supabaseClient;

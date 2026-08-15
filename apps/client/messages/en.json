@@ -23,7 +23,8 @@
     "watchVideo": "Watch video",
     "closeVideo": "Close video",
     "mainSection": "Hero section",
-    "fullscreenVideo": "Video in fullscreen mode"
+    "fullscreenVideo": "Video in fullscreen mode",
+    "contactCta": "Contacts"
   },
   "socialProof": {
     "trustedBy": "Trusted by teams across Ukraine"
@@ -69,7 +70,12 @@
     "empty": "No products in this category yet",
     "prevPage": "Previous",
     "nextPage": "Next",
-    "page": "Page {n}"
+    "page": "Page {n}",
+    "fromPrice": "from ₴{price}",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "addPrint": "Add print",
+    "withoutPrint": "Without print"
   },
   "process": {
     "heading": "From Idea to Merch — in 4 Steps",

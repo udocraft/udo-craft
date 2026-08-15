@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 import { ArrowLeft, Check } from "lucide-react";
 
 type Step = "select" | "contact" | "review";
@@ -13,22 +14,26 @@ interface StepHeaderProps {
 }
 
 const STEPS: Step[] = ["select", "contact", "review"];
-const STEP_LABELS: Record<Step, string> = {
-  select: "Товари",
-  contact: "Контакти",
-  review: "Перевірка",
-};
 
 export function StepHeader({ step, stepIdx, cartLength, onNavigate }: StepHeaderProps) {
+  const t = useTranslations("checkout");
+
+  const stepLabels: Record<Step, string> = {
+    select: t("stepCart"),
+    contact: t("stepForm"),
+    review: t("stepReview"),
+  };
+
   return (
     <div className="h-12 px-4 border-b border-border shrink-0 flex items-center overflow-hidden relative sticky top-0 z-30 bg-background">
       <button
         onClick={() => { window.location.href = "/"; }}
         className="size-7 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors shrink-0 z-10"
+        aria-label={t("backAriaLabel")}
       >
         <ArrowLeft className="size-3.5" />
       </button>
-      <p className="font-semibold text-sm shrink-0 hidden md:block ml-2 z-10">Нове замовлення</p>
+      <p className="font-semibold text-sm shrink-0 hidden md:block ml-2 z-10">{t("orderTitle")}</p>
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="flex items-center gap-1.5 pointer-events-auto">
           {STEPS.map((s, i) => {
@@ -46,7 +51,7 @@ export function StepHeader({ step, stepIdx, cartLength, onNavigate }: StepHeader
                     {i < stepIdx ? <Check className="size-3" /> : i + 1}
                   </div>
                   <span className={`text-xs font-medium hidden sm:block ${isCurrent ? "text-foreground" : isVisited ? "text-foreground/70" : "text-muted-foreground"}`}>
-                    {STEP_LABELS[s]}
+                    {stepLabels[s]}
                   </span>
                 </button>
                 {i < 2 && <div className="w-4 h-px bg-border" />}

@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { generateInvoicePDF } from "@/lib/generate-invoice";
@@ -20,8 +21,15 @@ import {
   FolderOpen,
 } from "lucide-react";
 import { FileViewer, isImage, isVideo } from "@/components/file-viewer";
-import { LogoLoader } from "@udo-craft/ui";
 import { aggregateOrderFiles } from "@/lib/aggregateOrderFiles";
+
+function SimpleLoader() {
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+}
 
 interface OrderItem {
   id: string;
@@ -81,9 +89,24 @@ const DELIVERY_LABELS: Record<string, string> = {
 };
 
 export default function CabinetPage() {
+  const t = useTranslations("cabinet");
   const router = useRouter();
   const supabase = createClient();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const statusLabels: Record<string, { label: string; color: string; icon: React.ElementType }> = {
+    new:         { label: t("status.new"),         color: "bg-blue-100 text-blue-700",    icon: Clock },
+    in_progress: { label: t("status.in_progress"), color: "bg-amber-100 text-amber-700",  icon: Clock },
+    production:  { label: t("status.production"),  color: "bg-violet-100 text-violet-700", icon: Package },
+    completed:   { label: t("status.completed"),   color: "bg-emerald-100 text-emerald-700", icon: CheckCircle2 },
+    archived:    { label: t("status.archived"),    color: "bg-gray-100 text-gray-600",    icon: Package },
+  };
+
+  const deliveryLabels: Record<string, string> = {
+    nova_poshta: t("delivery.nova_poshta"),
+    ukrposhta: t("delivery.ukrposhta"),
+    pickup: t("delivery.pickup"),
+  };
   const leadsRef = useRef<Lead[]>([]);
   const selectedLeadRef = useRef<Lead | null>(null);
   const activeTabRef = useRef<"details" | "chat" | "files">("details");
@@ -443,10 +466,10 @@ export default function CabinetPage() {
   };
 
   if (loading || !user) {
-    return <LogoLoader />;
+    return <SimpleLoader />;
   }
 
-  const statusCfg = selectedLead ? STATUS_CONFIG[selectedLead.status] ?? STATUS_CONFIG.new : null;
+  const statusCfg = selectedLead ? statusLabels[selectedLead.status] ?? statusLabels.new : null;
   const StatusIcon = statusCfg?.icon ?? Clock;
   const unreadCurrentLead = selectedLead ? (unreadByLead[selectedLead.id] || 0) : 0;
 
@@ -465,17 +488,17 @@ export default function CabinetPage() {
           <Link href="/" aria-label="U:DO CRAFT">
             <BrandLogoFull className="h-6 w-auto text-primary" color="var(--color-primary, #1B18AC)" />
           </Link>
-          <span className="text-muted-foreground text-sm hidden sm:block">/ Кабінет</span>
+          <span className="text-muted-foreground text-sm hidden sm:block">{t("breadcrumb")}</span>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-xs text-muted-foreground hidden sm:block truncate max-w-[180px]">{user.email}</span>
           <Link href="/cabinet/settings" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
             <Settings className="size-4" />
-            <span className="hidden sm:block">Налаштування</span>
+            <span className="hidden sm:block">{t("settings")}</span>
           </Link>
           <button onClick={handleLogout} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
             <LogOut className="size-4" />
-            <span className="hidden sm:block">Вийти</span>
+            <span className="hidden sm:block">{t("logout")}</span>
           </button>
         </div>
       </header>
@@ -487,11 +510,11 @@ export default function CabinetPage() {
             {leads.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 px-4 text-center gap-3">
                 <Package className="size-8 text-muted-foreground" />
-                <p className="text-sm text-muted-foreground">Замовлень ще немає</p>
-                <Link href="/"><Button variant="outline" size="sm">До каталогу</Button></Link>
+                <p className="text-sm text-muted-foreground">{t("noOrders")}</p>
+                <Link href="/"><Button variant="outline" size="sm">{t("toCatalog")}</Button></Link>
               </div>
             ) : leads.map((lead) => {
-              const cfg = STATUS_CONFIG[lead.status] ?? STATUS_CONFIG.new;
+              const cfg = statusLabels[lead.status] ?? statusLabels.new;
               const isActive = selectedLead?.id === lead.id;
               const unread = unreadByLead[lead.id] || 0;
               return (
@@ -504,19 +527,19 @@ export default function CabinetPage() {
                       {lead.customer_data.company || lead.customer_data.name}
                     </p>
                     <span className="text-[10px] text-muted-foreground shrink-0 mt-0.5">
-                      {new Date(lead.created_at).toLocaleDateString("uk-UA", { day: "numeric", month: "short" })}
+                      {new Date(lead.created_at).toLocaleDateString(undefined, { day: "numeric", month: "short" })}
                     </span>
                   </div>
                   <div className="flex items-center justify-between mt-1 gap-2">
                     <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${cfg.color}`}>{cfg.label}</span>
                     <div className="flex items-center gap-1.5">
                       {unread > 0 && <span className="text-[10px] bg-red-100 text-red-700 font-semibold px-1.5 py-0.5 rounded-full">+{unread}</span>}
-                      {lead.total_amount_cents > 0 && <span className="text-xs font-semibold">{(lead.total_amount_cents / 100).toFixed(0)} грн</span>}
+                      {lead.total_amount_cents > 0 && <span className="text-xs font-semibold">{(lead.total_amount_cents / 100).toFixed(0)} ₴</span>}
                       <button
                         type="button"
                         onClick={(e) => { e.stopPropagation(); handleChatShortcut(lead); }}
-                        aria-label="Написати менеджеру"
-                        title="Написати менеджеру"
+                        aria-label={t("writeTo")}
+                        title={t("writeTo")}
                         className="relative flex items-center justify-center size-6 rounded-full hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       >
                         <MessageCircle className="size-3.5" />
@@ -561,7 +584,7 @@ export default function CabinetPage() {
               {/* Tab bar */}
               <div className="flex border-b border-border shrink-0 bg-card">
                 {(["details", "chat", "files"] as const).map((tab) => {
-                  const labels = { details: "Деталі", chat: "Чат", files: "Файли" };
+                  const labels = { details: t("tabs.details"), chat: t("tabs.chat"), files: t("tabs.files") };
                   const isActive = activeTab === tab;
                   return (
                     <button
@@ -598,26 +621,26 @@ export default function CabinetPage() {
                   </div>
                   <div className="px-4 py-4 space-y-3 border-b border-border">
                     {selectedLead.customer_data.phone && (
-                      <div className="flex items-start gap-3"><Phone className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" /><div><p className="text-sm">{selectedLead.customer_data.phone}</p><p className="text-xs text-muted-foreground">Телефон</p></div></div>
+                      <div className="flex items-start gap-3"><Phone className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" /><div><p className="text-sm">{selectedLead.customer_data.phone}</p><p className="text-xs text-muted-foreground">{t("details.phone")}</p></div></div>
                     )}
-                    <div className="flex items-start gap-3"><Mail className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" /><div><p className="text-sm break-all">{selectedLead.customer_data.email}</p><p className="text-xs text-muted-foreground">Email</p></div></div>
+                    <div className="flex items-start gap-3"><Mail className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" /><div><p className="text-sm break-all">{selectedLead.customer_data.email}</p><p className="text-xs text-muted-foreground">{t("details.email")}</p></div></div>
                     {selectedLead.customer_data.company && (
-                      <div className="flex items-start gap-3"><Building2 className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" /><div><p className="text-sm">{selectedLead.customer_data.company}</p><p className="text-xs text-muted-foreground">Компанія</p></div></div>
+                      <div className="flex items-start gap-3"><Building2 className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" /><div><p className="text-sm">{selectedLead.customer_data.company}</p><p className="text-xs text-muted-foreground">{t("details.company")}</p></div></div>
                     )}
-                    <div className="flex items-start gap-3"><Calendar className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" /><div><p className="text-sm">{new Date(selectedLead.created_at).toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" })}</p><p className="text-xs text-muted-foreground">Дата замовлення</p></div></div>
+                    <div className="flex items-start gap-3"><Calendar className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" /><div><p className="text-sm">{new Date(selectedLead.created_at).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" })}</p><p className="text-xs text-muted-foreground">{t("details.orderDate")}</p></div></div>
                     {selectedLead.total_amount_cents > 0 && (
-                      <div className="flex items-start gap-3"><FileText className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" /><div><p className="text-sm font-medium">₴{(selectedLead.total_amount_cents / 100).toFixed(0)}</p><p className="text-xs text-muted-foreground">Сума замовлення</p></div></div>
+                      <div className="flex items-start gap-3"><FileText className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" /><div><p className="text-sm font-medium">₴{(selectedLead.total_amount_cents / 100).toFixed(0)}</p><p className="text-xs text-muted-foreground">{t("details.orderAmount")}</p></div></div>
                     )}
                     {selectedLead.customer_data.delivery && (
-                      <div className="flex items-start gap-3"><Package className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" /><div><p className="text-sm">{DELIVERY_LABELS[selectedLead.customer_data.delivery] ?? selectedLead.customer_data.delivery}</p><p className="text-xs text-muted-foreground">Доставка</p></div></div>
+                      <div className="flex items-start gap-3"><Package className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" /><div><p className="text-sm">{deliveryLabels[selectedLead.customer_data.delivery] ?? selectedLead.customer_data.delivery}</p><p className="text-xs text-muted-foreground">{t("details.delivery")}</p></div></div>
                     )}
                     {selectedLead.customer_data.deadline && (
-                      <div className="flex items-start gap-3"><Clock className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" /><div><p className="text-sm">{new Date(selectedLead.customer_data.deadline).toLocaleDateString("uk-UA")}</p><p className="text-xs text-muted-foreground">Дедлайн</p></div></div>
+                      <div className="flex items-start gap-3"><Clock className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" /><div><p className="text-sm">{new Date(selectedLead.customer_data.deadline).toLocaleDateString()}</p><p className="text-xs text-muted-foreground">{t("details.deadline")}</p></div></div>
                     )}
                   </div>
                   {selectedLead.order_items && selectedLead.order_items.length > 0 && (
                     <div className="px-4 py-4 border-b border-border">
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Позиції ({selectedLead.order_items.length})</p>
+                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">{t("details.positions", { n: selectedLead.order_items.length })}</p>
                       <div className="space-y-3">
                         {selectedLead.order_items.map((item) => (
                           <div key={item.id} className="flex gap-3 items-start">
@@ -629,7 +652,7 @@ export default function CabinetPage() {
                               <p className="text-xs text-muted-foreground">×{item.quantity}</p>
                               {item.custom_print_url && (
                                 <button onClick={() => setViewerUrl(item.custom_print_url!)} className="text-xs text-primary hover:underline flex items-center gap-1 mt-0.5">
-                                  <ExternalLink className="w-3 h-3" /> Принт
+                                  <ExternalLink className="w-3 h-3" /> {t("details.print")}
                                 </button>
                               )}
                             </div>
@@ -640,13 +663,13 @@ export default function CabinetPage() {
                   )}
                   {selectedLead.customer_data.attachments?.length ? (
                     <div className="px-4 py-4 border-b border-border">
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Вкладення ({selectedLead.customer_data.attachments.length})</p>
+                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">{t("details.attachments", { n: selectedLead.customer_data.attachments.length })}</p>
                       <div className="grid grid-cols-2 gap-2">
                         {selectedLead.customer_data.attachments.map((url, i) =>
                           isImage(url) ? (
                             <button key={i} onClick={() => setViewerUrl(url)}><img src={url} alt="" className="w-full aspect-square object-cover rounded-md border border-border hover:opacity-80 transition-opacity" /></button>
                           ) : (
-                            <button key={i} onClick={() => setViewerUrl(url)} className="flex items-center gap-2 p-2 rounded-md border border-border hover:bg-muted transition-colors text-xs text-primary truncate"><FileText className="w-4 h-4 shrink-0" /><span className="truncate">Файл {i + 1}</span></button>
+                            <button key={i} onClick={() => setViewerUrl(url)} className="flex items-center gap-2 p-2 rounded-md border border-border hover:bg-muted transition-colors text-xs text-primary truncate"><FileText className="w-4 h-4 shrink-0" /><span className="truncate">File {i + 1}</span></button>
                           )
                         )}
                       </div>
@@ -655,7 +678,7 @@ export default function CabinetPage() {
                   <div className="px-4 py-4">
                     <Button variant="outline" className="w-full" onClick={handleDownloadInvoice} disabled={generatingPdf}>
                       {generatingPdf ? <Loader2 className="size-4 animate-spin mr-2" /> : <Download className="size-4 mr-2" />}
-                      {generatingPdf ? "Генеруємо..." : "Завантажити рахунок (PDF)"}
+                      {generatingPdf ? t("details.positions", { n: "" }) : t("details.invoice")}
                     </Button>
                   </div>
                 </div>
@@ -673,17 +696,16 @@ export default function CabinetPage() {
                     {selectedLead.customer_data?.message && (
                       <div className="flex justify-start">
                         <div className="max-w-sm bg-muted rounded-2xl rounded-bl-sm p-3">
-                          <p className="text-xs font-semibold text-muted-foreground mb-1">Початкове повідомлення</p>
+                          <p className="text-xs font-semibold text-muted-foreground mb-1">{t("chat.empty")}</p>
                           <p className="text-sm">{selectedLead.customer_data.message}</p>
-                          <p className="text-xs text-muted-foreground mt-1">{new Date(selectedLead.created_at).toLocaleString("uk-UA")}</p>
+                          <p className="text-xs text-muted-foreground mt-1">{new Date(selectedLead.created_at).toLocaleString()}</p>
                         </div>
                       </div>
                     )}
                     {messages.length === 0 && !selectedLead.customer_data?.message && (
                       <div className="flex flex-col items-center justify-center py-12 text-center">
                         <MessageCircle className="size-8 text-muted-foreground mb-2" />
-                        <p className="text-sm text-muted-foreground">Повідомлень ще немає</p>
-                        <p className="text-xs text-muted-foreground mt-1">Напишіть менеджеру — він відповість найближчим часом</p>
+                        <p className="text-sm text-muted-foreground">{t("chat.empty")}</p>
                       </div>
                     )}
                     {messages.map((msg) => {

@@ -5,10 +5,12 @@ import { getSupabasePublicEnv } from "@/lib/supabase/env";
 export async function createClient() {
   const cookieStore = await cookies();
   const { url, anonKey } = getSupabasePublicEnv();
+  const safeUrl = url && url.startsWith("http") ? url : "https://placeholder.supabase.co";
+  const safeAnonKey = anonKey || "placeholder";
 
   return createServerClient(
-    url,
-    anonKey,
+    safeUrl,
+    safeAnonKey,
     {
       cookies: {
         getAll() {

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Play, X } from "lucide-react";
 import { RoughHighlight } from "@/app/_components/HighlightText";
@@ -52,6 +53,7 @@ export function HeroSection({
   ctaPrimaryUrl,
   ctaSecondaryText,
 }: HeroSectionProps) {
+  const t = useTranslations("hero");
   const bgVideoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -62,7 +64,6 @@ export function HeroSection({
     };
 
     playVideo();
-    // Safari/iOS require a user gesture if Low Power Mode is on
     window.addEventListener("touchstart", playVideo, { once: true });
     window.addEventListener("mousedown", playVideo, { once: true });
     window.addEventListener("scroll", playVideo, { once: true });
@@ -77,14 +78,14 @@ export function HeroSection({
   return (
     <section
       className="relative min-h-[100svh] bg-[#060812] overflow-hidden flex flex-col"
-      aria-label="Головна секція"
+      aria-label={t("mainSection")}
     >
       {/* Skip link */}
       <a
         href="#catalog"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:bg-primary focus:text-white focus:px-6 focus:py-3 focus:rounded-full focus:text-sm focus:font-semibold"
       >
-        Перейти до каталогу
+        {t("skipToCatalog")}
       </a>
 
       {/* Video */}
@@ -108,13 +109,12 @@ export function HeroSection({
         aria-hidden="true"
       />
 
-      {/* Bottom fade only — video fully visible */}
       <div
         className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#060812]/80 pointer-events-none"
         aria-hidden="true"
       />
 
-      {/* Cinema overlay — video unmuted on user gesture */}
+      {/* Cinema overlay */}
       <AnimatePresence>
         {cinemaMode && (
           <motion.div
@@ -125,16 +125,14 @@ export function HeroSection({
             className="fixed inset-0 z-[9998] bg-black"
             role="dialog"
             aria-modal="true"
-            aria-label="Відео у повноекранному режимі"
+            aria-label={t("fullscreenVideo")}
           >
             <video
               ref={(el) => {
                 if (el) {
-                  // Unmute after user gesture — browsers allow this
                   el.muted = false;
                   el.volume = 0.8;
                   el.play().catch(() => {
-                    // Fallback: keep muted if browser blocks
                     el.muted = true;
                     el.play().catch(() => {});
                   });
@@ -149,12 +147,11 @@ export function HeroSection({
               disableRemotePlayback
               aria-hidden="true"
             />
-            {/* Close is handled by the bottom-right circle button */}
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Main content — padded to clear the fixed nav (~64px) + breathing room */}
+      {/* Main content */}
       <motion.div
         animate={{ opacity: cinemaMode ? 0 : 1 }}
         transition={{ duration: 0.4 }}
@@ -162,7 +159,6 @@ export function HeroSection({
         className="relative flex-1 flex flex-col items-center justify-center px-5 sm:px-10 pt-24 pb-20 text-center"
         aria-hidden={cinemaMode}
       >
-        {/* Headline — clamped so it never overflows or touches nav */}
         <h1
           className="text-white font-black leading-[0.92] tracking-[-0.025em] mb-6 max-w-4xl"
           style={{ fontSize: "clamp(2.2rem, 6.5vw, 6rem)" }}
@@ -208,16 +204,15 @@ export function HeroSection({
             }}
             className="inline-flex items-center justify-center gap-2 border border-white/20 text-white/70 font-semibold text-sm px-8 py-4 rounded-full hover:border-white/40 hover:text-white active:scale-[0.97] transition-all duration-200 w-full sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2"
           >
-            {ctaSecondaryText}
+            {ctaSecondaryText || t("contactCta")}
           </a>
         </motion.div>
-
       </motion.div>
 
-      {/* Video reel button — fixed circle, icon toggles Play ↔ X */}
+      {/* Video reel button */}
       <motion.button
         onClick={cinemaMode ? onCinemaExit : onCinemaEnter}
-        aria-label={cinemaMode ? "Закрити відео" : "Дивитись відео"}
+        aria-label={cinemaMode ? t("closeVideo") : t("watchVideo")}
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -227,6 +222,30 @@ export function HeroSection({
             : "absolute bottom-8 right-6 sm:right-8"
         }`}
       >
+        <AnimatePresence mode="wait" initial={false}>
+          {cinemaMode ? (
+            <motion.span key="close"
+              initial={{ opacity: 0, rotate: -90, scale: 0.5 }}
+              animate={{ opacity: 1, rotate: 0, scale: 1 }}
+              exit={{ opacity: 0, rotate: 90, scale: 0.5 }}
+              transition={{ duration: 0.2 }}
+              className="flex items-center justify-center"
+            >
+              <X className="w-4 h-4" aria-hidden="true" />
+            </motion.span>
+          ) : (
+            <motion.span key="play"
+              initial={{ opacity: 0, rotate: 90, scale: 0.5 }}
+              animate={{ opacity: 1, rotate: 0, scale: 1 }}
+              exit={{ opacity: 0, rotate: -90, scale: 0.5 }}
+              transition={{ duration: 0.2 }}
+              className="flex items-center justify-center"
+            >
+              <Play className="w-4 h-4 fill-current" aria-hidden="true" />
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </motion.button>
         <AnimatePresence mode="wait" initial={false}>
           {cinemaMode ? (
             <motion.span key="close"

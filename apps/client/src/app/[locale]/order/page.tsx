@@ -5,6 +5,15 @@ import { useSearchParams } from "next/navigation";
 import type { Product, PrintZone, Material, ProductColorVariant } from "@udo-craft/shared";
 import { resolveProductImages, getCustomizableImages } from "@udo-craft/shared";
 import { LogoLoader } from "@udo-craft/ui";
+
+// Simple inline loader to avoid hydration issues
+function SimpleLoader() {
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+}
 import { OrderPageInner } from "./_main";
 
 interface ProductWithConfig extends Product {
@@ -102,7 +111,7 @@ function OrderPageLoader() {
 
 export default function OrderPage() {
   return (
-    <Suspense fallback={<LogoLoader />}>
+    <Suspense fallback={<SimpleLoader />}>
       <OrderPageLoader />
     </Suspense>
   );

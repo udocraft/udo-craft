@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 
 export const metadata: Metadata = {
   title: "Політика конфіденційності — U:DO CRAFT",
@@ -7,14 +7,17 @@ export const metadata: Metadata = {
 
 async function getContent() {
   try {
-    const service = await createClient();
+    const service = createServiceClient();
     const { data } = await service
       .from("cms_content")
       .select("body")
       .eq("slug", "page_privacy")
       .single();
     return data?.body as { title?: string; html?: string } | null;
-  } catch {
+  } catch (err: any) {
+    if (err?.digest === 'DYNAMIC_SERVER_USAGE' || err?.message?.includes('DYNAMIC_SERVER_USAGE')) {
+      throw err;
+    }
     return null;
   }
 }

@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "U:DO CRAFT — Bedrijfsmerch",
-    "description": "B2B-merchandiseplatform. Wij maken kleding die onderdeel wordt van uw bedrijfs-DNA."
+    "title": "U:DO CRAFT — Corporate merch",
+    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA."
   },
   "nav": {
     "catalog": "Catalogus",
@@ -23,7 +23,8 @@
     "watchVideo": "Video bekijken",
     "closeVideo": "Video sluiten",
     "mainSection": "Hero section",
-    "fullscreenVideo": "Video in fullscreen mode"
+    "fullscreenVideo": "Video in fullscreen mode",
+    "contactCta": "Contacts"
   },
   "socialProof": {
     "trustedBy": "Vertrouwd door teams wereldwijd"
@@ -87,7 +88,12 @@
     "empty": "Geen producten in deze categorie",
     "prevPage": "Vorige",
     "nextPage": "Volgende",
-    "page": "Pagina {n}"
+    "page": "Pagina {n}",
+    "fromPrice": "from ₴{price}",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "addPrint": "Add print",
+    "withoutPrint": "Without print"
   },
   "process": {
     "heading": "Van idee naar merch — in 4 stappen",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 import { motion, useInView } from "framer-motion";
 import { CountUp } from "@/app/_components/CountUp";
 
@@ -12,6 +13,7 @@ interface StatsSectionProps {
 }
 
 export function StatsSection(p: StatsSectionProps) {
+  const t = useTranslations("stats");
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
 
@@ -23,7 +25,7 @@ export function StatsSection(p: StatsSectionProps) {
   ];
 
   return (
-    <section ref={ref} className="bg-background border-y border-border" aria-label="Ключові показники">
+    <section ref={ref} className="bg-background border-y border-border" aria-label={t("ariaLabel")}>
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4">
           {stats.map((s, i) => (

@@ -81,28 +81,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. Protect /cabinet routes (strip potential locale prefix first)
+  // 2. Apply i18n routing first
+  const response = intlMiddleware(request);
+
+  // 3. Protect /cabinet routes (strip potential locale prefix first)
   const localePattern = new RegExp(`^\\/(${routing.locales.join("|")})`);
   const strippedPath = pathname.replace(localePattern, "");
   if (strippedPath.startsWith("/cabinet")) {
-    return await updateSession(request);
+    return await updateSession(request, response);
   }
 
-  // 3. Apply i18n routing with IP-based locale detection for root path
-  if (pathname === "/" || pathname === "") {
-    const clientIP = getClientIP(request);
-    const detectedLocale = await getLocaleFromIP(clientIP);
-    
-    // Redirect to detected locale if it's not the default (English)
-    if (detectedLocale !== routing.defaultLocale) {
-      const url = request.nextUrl.clone();
-      url.pathname = `/${detectedLocale}`;
-      return NextResponse.redirect(url);
-    }
-  }
-
-  // 4. Apply i18n routing for all other routes
-  return intlMiddleware(request);
+  return response;
 }
 
 export const config = {
