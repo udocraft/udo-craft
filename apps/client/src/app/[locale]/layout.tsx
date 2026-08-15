@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { cn } from "@/lib/utils";
 import { PageTracker } from "@/components/PageTracker";
@@ -7,7 +8,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { ClarityInit } from "@/components/clarity";
 import { Analytics } from "@vercel/analytics/next";
 import { SoundProvider } from "@/app/_components/SoundProvider";
-import { MessagesProvider } from "@/components/MessagesProvider";
 import { locales } from "@/i18n/routing";
 import "../globals.css";
 
@@ -69,14 +69,14 @@ export default async function LocaleLayout({
         />
       </head>
       <body className="min-h-screen bg-background text-foreground antialiased" suppressHydrationWarning>
-        <MessagesProvider messages={messages}>
+        <NextIntlClientProvider messages={messages}>
           <ClarityInit clarityId="w7kk9avzfh" />
           <PageTracker />
           <SoundProvider />
           {children}
           <Toaster richColors position="top-right" />
           <Analytics />
-        </MessagesProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );
