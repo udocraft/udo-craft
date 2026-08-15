@@ -246,30 +246,6 @@ export function HeroSection({
           )}
         </AnimatePresence>
       </motion.button>
-        <AnimatePresence mode="wait" initial={false}>
-          {cinemaMode ? (
-            <motion.span key="close"
-              initial={{ opacity: 0, rotate: -90, scale: 0.5 }}
-              animate={{ opacity: 1, rotate: 0, scale: 1 }}
-              exit={{ opacity: 0, rotate: 90, scale: 0.5 }}
-              transition={{ duration: 0.2 }}
-              className="flex items-center justify-center"
-            >
-              <X className="w-4 h-4" aria-hidden="true" />
-            </motion.span>
-          ) : (
-            <motion.span key="play"
-              initial={{ opacity: 0, rotate: 90, scale: 0.5 }}
-              animate={{ opacity: 1, rotate: 0, scale: 1 }}
-              exit={{ opacity: 0, rotate: -90, scale: 0.5 }}
-              transition={{ duration: 0.2 }}
-              className="flex items-center justify-center"
-            >
-              <Play className="w-4 h-4 fill-current" aria-hidden="true" />
-            </motion.span>
-          )}
-        </AnimatePresence>
-      </motion.button>
 
       {/* Scroll chevron — bottom center */}
       <motion.div
