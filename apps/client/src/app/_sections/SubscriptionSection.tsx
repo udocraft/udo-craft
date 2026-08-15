@@ -4,25 +4,39 @@ import { useRef } from "react";
 import { Link } from "@/i18n/navigation";
 import { motion, useInView } from "framer-motion";
 import { ArrowRight, Check } from "lucide-react";
-
-const PLANS = [
-  {
-    title: "Welcome-паки",
-    desc: "Для онбордингу, HR-процесів і команд, що ростуть.",
-    features: ["зберігання", "персоналізація", "доставка співробітнику"],
-  },
-  {
-    title: "Регулярна уніформа",
-    desc: "Для HoReCa, retail і команд з постійною заміною форми.",
-    features: ["облік розмірів", "повторні відправки", "контроль залишків"],
-  },
-];
-
-const STEPS = ["Склад", "Комплектація", "Відправка"];
+import { useTranslations } from "next-intl";
 
 export function SubscriptionSection() {
+  const t = useTranslations("subscription");
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
+
+  const PLANS = [
+    {
+      title: t("plans.welcome.title"),
+      desc: t("plans.welcome.desc"),
+      features: [
+        t("plans.welcome.features.0"),
+        t("plans.welcome.features.1"),
+        t("plans.welcome.features.2"),
+      ],
+    },
+    {
+      title: t("plans.uniform.title"),
+      desc: t("plans.uniform.desc"),
+      features: [
+        t("plans.uniform.features.0"),
+        t("plans.uniform.features.1"),
+        t("plans.uniform.features.2"),
+      ],
+    },
+  ];
+
+  const STEPS = [
+    t("steps.warehouse"),
+    t("steps.packing"),
+    t("steps.shipping"),
+  ];
 
   return (
     <section className="relative overflow-hidden border-y border-border bg-white py-24 sm:py-32" aria-labelledby="subscription-heading">
@@ -35,14 +49,14 @@ export function SubscriptionSection() {
           className="mx-auto max-w-3xl text-center"
         >
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            Підписка на мерч
+            {t("label")}
           </p>
           <h2 id="subscription-heading" className="mt-5 text-4xl font-semibold leading-[1.03] tracking-tight text-foreground sm:text-6xl">
-            Мерч за підпискою.
-            <span className="block text-foreground/45">Без коробок в офісі.</span>
+            {t("heading")}
+            <span className="block text-foreground/45">{t("headingMuted")}</span>
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
-            Зберігаємо ваші речі, збираємо набори й відправляємо їх за сценарієм: новий співробітник, сезонна заміна, подія або регулярна потреба команди.
+            {t("desc")}
           </p>
         </motion.div>
 
@@ -84,7 +98,7 @@ export function SubscriptionSection() {
                 href="#contact"
                 className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-foreground px-6 text-sm font-semibold text-background transition-all duration-200 hover:bg-foreground/90 active:scale-[0.98]"
               >
-                Обговорити підписку
+                {t("cta")}
                 <ArrowRight className="size-4" />
               </Link>
             </div>

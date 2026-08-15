@@ -3,6 +3,7 @@
 import { Link } from "@/i18n/navigation";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Product, Material, ProductColorVariant } from "@udo-craft/shared";

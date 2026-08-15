@@ -1,24 +1,38 @@
 {
-  "heading": "Three ways to get",
-  "headingAccent": "perfect merch",
-  "desc": "From physical samples to a pop-up stand — choose the format that suits you.",
+  "heading": "Три способи отримати",
+  "headingAccent": "ідеальний мерч",
+  "desc": "Від фізичних зразків до виїзного стенду — обирай формат, який підходить саме тобі.",
   "popup": {
     "title": "U:DO Popup",
-    "desc": "Mobile stand with live customization. Guests create unique merch and take it away immediately.",
+    "desc": "Виїзний стенд з живою кастомізацією. Гості створюють унікальний мерч і забирають одразу.",
     "stats": {
-      "events": "events",
-      "product": "per product"
+      "events": "заходів",
+      "product": "виріб"
     },
-    "learnMore": "Learn more",
-    "discuss": "Discuss →"
+    "learnMore": "Детальніше",
+    "discuss": "Обговорити →"
   },
   "ctaStrip": {
-    "title": "Mobile pop-up stand for your event",
-    "desc": "500+ events · 50k+ guests · 5 min per product",
-    "learnMore": "Learn more",
-    "discuss": "Discuss →"
+    "title": "Виїзний Popup-стенд для вашого заходу",
+    "desc": "500+ заходів · 50k+ гостей · 5 хв на виріб",
+    "learnMore": "Дізнатись більше",
+    "discuss": "Обговорити →"
   },
-  "stepLabel": "Step {n}",
-  "prevStep": "Previous",
-  "nextStep": "Next"
+  "stepLabel": "Крок {n}",
+  "prevStep": "Попередній",
+  "nextStep": "Наступний",
+  "slides": {
+    "0": {
+      "title": "Обери пакет",
+      "desc": "Стікер-паки або пакети принтів — підбери під формат заходу"
+    },
+    "1": {
+      "title": "Обери товар",
+      "desc": "Футболки, худі, аксесуари — гості обирають на місці"
+    },
+    "2": {
+      "title": "Ми приїжджаємо",
+      "desc": "Привозимо обладнання та наносимо принти прямо на заході"
+    }
+  }
 }

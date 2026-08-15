@@ -15,14 +15,7 @@ import {
   Type,
   Upload,
 } from "lucide-react";
-
-const TOOLS = [
-  { label: "Товар", icon: PackageOpen, active: false },
-  { label: "Колір", icon: Palette, active: false },
-  { label: "Принти", icon: Layers, active: true },
-  { label: "Текст", icon: Type, active: false },
-  { label: "Файл", icon: Upload, active: false },
-];
+import { useTranslations } from "next-intl";
 
 const LAYERS = [
   { name: "Front logo", meta: "DTF · 120 мм" },
@@ -31,8 +24,17 @@ const LAYERS = [
 ];
 
 export function CustomizerPreviewSection() {
+  const t = useTranslations("customizer");
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
+
+  const TOOLS = [
+    { label: t("productLabel"), icon: PackageOpen, active: false },
+    { label: t("colorLabel"), icon: Palette, active: false },
+    { label: t("printsLabel"), icon: Layers, active: true },
+    { label: t("textLabel"), icon: Type, active: false },
+    { label: t("fileLabel"), icon: Upload, active: false },
+  ];
 
   return (
     <section className="relative overflow-hidden border-t border-border bg-white py-24 sm:py-32" aria-labelledby="customizer-preview-heading">
@@ -45,13 +47,13 @@ export function CustomizerPreviewSection() {
           className="mx-auto max-w-3xl text-center"
         >
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            Онлайн-конструктор
+            {t("label")}
           </p>
           <h2 id="customizer-preview-heading" className="mt-5 text-4xl font-semibold leading-[1.03] tracking-tight text-foreground sm:text-6xl">
-            Зберіть мерч прямо в інтерфейсі
+            {t("heading")}
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
-            Реальний робочий простір для вибору товару, кольору, принтів, шарів і тиражної ціни перед оформленням замовлення.
+            {t("desc")}
           </p>
         </motion.div>
 
@@ -94,7 +96,7 @@ export function CustomizerPreviewSection() {
               </aside>
 
               <aside className="hidden border-r border-border bg-white p-4 lg:block">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Товар</p>
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{t("productLabel")}</p>
                 <div className="mt-4 rounded-2xl border border-border bg-[#f7f7f7] p-3">
                   <div className="flex items-center gap-3">
                     <div className="flex size-14 items-center justify-center rounded-xl bg-white">
@@ -107,14 +109,14 @@ export function CustomizerPreviewSection() {
                   </div>
                 </div>
 
-                <p className="mt-6 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Колір</p>
+                <p className="mt-6 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{t("colorLabel")}</p>
                 <div className="mt-3 flex gap-2">
                   {["bg-[#101114]", "bg-[#f4f4f1]", "bg-[#c7d1d7]", "bg-[#6f7f68]"].map((color, index) => (
                     <span key={color} className={`size-8 rounded-full border ${index === 0 ? "border-foreground ring-2 ring-foreground/15" : "border-border"} ${color}`} />
                   ))}
                 </div>
 
-                <p className="mt-6 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Принти</p>
+                <p className="mt-6 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{t("printsLabel")}</p>
                 <div className="mt-3 grid grid-cols-2 gap-2">
                   {["U:DO", "TEAM", "DROP", "2026"].map((item, index) => (
                     <div key={item} className={`aspect-square rounded-2xl border p-3 ${index === 0 ? "border-foreground bg-foreground text-background" : "border-border bg-white text-foreground"}`}>
@@ -142,14 +144,14 @@ export function CustomizerPreviewSection() {
                   </div>
 
                   <div className="absolute right-2 top-8 rounded-2xl border border-border bg-white px-3 py-2 shadow-lg">
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Розмір</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">{t("sizeLabel")}</p>
                     <p className="text-sm font-semibold text-foreground">120 x 84 мм</p>
                   </div>
                 </div>
               </div>
 
               <aside className="border-t border-border bg-white p-4 lg:border-l lg:border-t-0">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Тираж та ціна</p>
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{t("volumeLabel")}</p>
 
                 <div className="mt-4 flex items-center gap-2">
                   <button type="button" disabled className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground">
@@ -184,14 +186,14 @@ export function CustomizerPreviewSection() {
                   ))}
                   <div className="border-t border-border pt-3">
                     <div className="flex items-end justify-between">
-                      <span className="text-sm font-semibold text-foreground">Разом</span>
+                      <span className="text-sm font-semibold text-foreground">{t("totalLabel")}</span>
                       <span className="text-2xl font-semibold tracking-tight text-foreground">65 320 ₴</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="mt-5 grid gap-2">
-                  {["Макет збережено", "Шари готові", "Ціна оновлена"].map((item) => (
+                  {[t("saved"), t("layersReady"), t("priceUpdated")].map((item) => (
                     <div key={item} className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
                       <span className="flex size-5 items-center justify-center rounded-full bg-white text-foreground">
                         <Check className="size-3" />
@@ -217,7 +219,7 @@ export function CustomizerPreviewSection() {
                 href="/order"
                 className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-foreground px-6 text-sm font-semibold text-background shadow-[0_18px_50px_rgba(15,23,42,0.18)] transition-all duration-200 hover:bg-foreground/90 active:scale-[0.98]"
               >
-                Відкрити конструктор
+                {t("openEditor")}
                 <ArrowRight className="size-4" />
               </Link>
             </div>

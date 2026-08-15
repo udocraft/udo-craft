@@ -1,22 +1,28 @@
 {
-  "heading": "Why they trust us",
-  "subtext": "Not just words — specific guarantees we uphold every day.",
+  "heading": "Чому нам довіряють",
+  "subtext": "Не просто слова — конкретні гарантії, які ми дотримуємось щодня.",
   "guarantees": {
     "0": {
-      "title": "Quality guarantee",
-      "body": "If the product doesn't match the approved design — we redo it for free. No arguments, no bureaucracy."
+      "title": "Гарантія якості",
+      "body": "Якщо виріб не відповідає погодженому макету — переробляємо безкоштовно. Без суперечок, без бюрократії."
     },
     "1": {
-      "title": "Own production",
-      "body": "We control every stage — from material selection to printing. No intermediaries, no surprises."
+      "title": "Власне виробництво",
+      "body": "Контролюємо кожен етап — від вибору матеріалу до нанесення. Жодних посередників, жодних сюрпризів."
     },
     "2": {
-      "title": "Fixed price",
-      "body": "Invoice immediately after confirmation. Price doesn't change after production starts."
+      "title": "Фіксована ціна",
+      "body": "Рахунок-фактура одразу після підтвердження. Ціна не змінюється після старту виробництва."
     },
     "3": {
-      "title": "Personal manager",
-      "body": "One contact from first request to order delivery. We respond within 2 hours during business hours."
+      "title": "Особистий менеджер",
+      "body": "Один контакт від першого запиту до отримання замовлення. Відповідаємо протягом 2 годин у робочий час."
     }
+  },
+  "numbers": {
+    "0": { "value": "500+", "label": "задоволених клієнтів" },
+    "1": { "value": "5 років", "label": "на ринку" },
+    "2": { "value": "10k+", "label": "виробів щороку" },
+    "3": { "value": "4.9 / 5", "label": "середня оцінка" }
   }
 }

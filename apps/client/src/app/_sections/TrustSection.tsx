@@ -4,38 +4,40 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { HighlightText, RoughHighlight } from "@/app/_components/HighlightText";
 import { useCms } from "@/hooks/useCms";
+import { useTranslations } from "next-intl";
 
 export function TrustSection() {
+  const t = useTranslations("trust");
   const { cms } = useCms();
   const data = cms.home_trust || {};
   
-  const heading = (data.heading as string) || "Чому нам довіряють";
-  const subtext = (data.subtext as string) || "Не просто слова — конкретні гарантії, які ми дотримуємось щодня.";
+  const heading = (data.heading as string) || t("heading");
+  const subtext = (data.subtext as string) || t("subtext");
   
   const guarantees = (data.guarantees as unknown as any[]) || [
     {
-      title: "Гарантія якості",
-      body: "Якщо виріб не відповідає погодженому макету — переробляємо безкоштовно. Без суперечок, без бюрократії.",
+      title: t("guarantees.0.title"),
+      body: t("guarantees.0.body"),
     },
     {
-      title: "Власне виробництво",
-      body: "Контролюємо кожен етап — від вибору матеріалу до нанесення. Жодних посередників, жодних сюрпризів.",
+      title: t("guarantees.1.title"),
+      body: t("guarantees.1.body"),
     },
     {
-      title: "Фіксована ціна",
-      body: "Рахунок-фактура одразу після підтвердження. Ціна не змінюється після старту виробництва.",
+      title: t("guarantees.2.title"),
+      body: t("guarantees.2.body"),
     },
     {
-      title: "Особистий менеджер",
-      body: "Один контакт від першого запиту до отримання замовлення. Відповідаємо протягом 2 годин у робочий час.",
+      title: t("guarantees.3.title"),
+      body: t("guarantees.3.body"),
     },
   ];
 
   const numbers = (data.numbers as unknown as any[]) || [
-    { value: "500+", label: "задоволених клієнтів" },
-    { value: "5 років", label: "на ринку" },
-    { value: "10k+", label: "виробів щороку" },
-    { value: "4.9 / 5", label: "середня оцінка" },
+    { value: t("numbers.0.value"), label: t("numbers.0.label") },
+    { value: t("numbers.1.value"), label: t("numbers.1.label") },
+    { value: t("numbers.2.value"), label: t("numbers.2.label") },
+    { value: t("numbers.3.value"), label: t("numbers.3.label") },
   ];
 
   const ref = useRef(null);

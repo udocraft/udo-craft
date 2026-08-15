@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Check, Globe } from "lucide-react";
+import { Check, Globe, ChevronDown } from "lucide-react";
 
 const FLAGS: Record<Locale, string> = {
   en: "🇬🇧", uk: "🇺🇦", de: "🇩🇪", fr: "🇫🇷", es: "🇪🇸",
@@ -52,6 +52,7 @@ export function LanguageSwitcher() {
       >
         <span className="text-sm">{FLAGS[locale] || "🌐"}</span>
         <span>{(locale || "EN").toUpperCase()}</span>
+        <ChevronDown className="w-3 h-3" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48 p-2">
         <div className="mb-2">

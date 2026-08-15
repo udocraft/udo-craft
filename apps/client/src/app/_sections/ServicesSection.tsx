@@ -5,19 +5,22 @@ import Image from "next/image";
 import { useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { ArrowRight, Package, Palette, Zap } from "lucide-react";
-
-const POPUP_STEPS = [
-  { step: "01", title: "Обери пакет", desc: "Стікер-паки або пакети принтів — підбери під формат заходу", img: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80" },
-  { step: "02", title: "Обери товар", desc: "Футболки, худі, аксесуари — гості обирають на місці", img: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=600&q=80" },
-  { step: "03", title: "Ми приїжджаємо", desc: "Привозимо обладнання та наносимо принти прямо на заході", img: "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=600&q=80" },
-];
+import { useTranslations } from "next-intl";
 
 function PopupCarousel() {
+  const t = useTranslations("services");
   const [active, setActive] = useState(0);
   const [direction, setDirection] = useState(1);
   const [dragX, setDragX] = useState(0);
   const dragStartX = useRef(0);
   const isDragging = useRef(false);
+  
+  const POPUP_STEPS = [
+    { step: "01", title: t("slides.0.title"), desc: t("slides.0.desc"), img: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80" },
+    { step: "02", title: t("slides.1.title"), desc: t("slides.1.desc"), img: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=600&q=80" },
+    { step: "03", title: t("slides.2.title"), desc: t("slides.2.desc"), img: "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=600&q=80" },
+  ];
+  
   const n = POPUP_STEPS.length;
   const goTo = useCallback((idx: number, dir: number) => { setDirection(dir); setActive(((idx % n) + n) % n); }, [n]);
   const next = useCallback(() => goTo(active + 1, 1), [active, goTo]);
@@ -57,13 +60,13 @@ function PopupCarousel() {
       <div className="flex items-center justify-between">
         <div className="flex gap-1.5">
           {POPUP_STEPS.map((_, i) => (
-            <button key={i} onClick={() => goTo(i, i > active ? 1 : -1)} aria-label={`Крок ${i + 1}`}
+            <button key={i} onClick={() => goTo(i, i > active ? 1 : -1)} aria-label={t("stepLabel", { n: i + 1 })}
               className="rounded-full transition-all duration-300"
               style={{ width: i === active ? 18 : 6, height: 6, backgroundColor: i === active ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.25)" }} />
           ))}
         </div>
         <div className="flex gap-1.5">
-          {[{ fn: prev, d: "M9 11L5 7l4-4", label: "Попередній" }, { fn: next, d: "M5 3l4 4-4 4", label: "Наступний" }].map(({ fn, d, label }) => (
+          {[{ fn: prev, d: "M9 11L5 7l4-4", label: t("prevStep") }, { fn: next, d: "M5 3l4 4-4 4", label: t("nextStep") }].map(({ fn, d, label }) => (
             <button key={label} onClick={fn} aria-label={label}
               className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-white transition-colors">
               <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d={d} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -82,6 +85,7 @@ interface ServicesSectionProps {
 }
 
 export function ServicesSection({ service1Title, service1Desc, service1Cta, service2Title, service2Desc, service2Cta }: ServicesSectionProps) {
+  const t = useTranslations("services");
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
@@ -97,11 +101,11 @@ export function ServicesSection({ service1Title, service1Desc, service1Cta, serv
           className="mb-14"
         >
           <h2 id="services-heading" className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-[1.0] mb-4">
-            Три способи отримати<br />
-            <span className="text-primary">ідеальний мерч</span>
+            {t("heading")}<br />
+            <span className="text-primary">{t("headingAccent")}</span>
           </h2>
           <p className="text-muted-foreground text-base max-w-lg leading-relaxed">
-            Від фізичних зразків до виїзного стенду — обирай формат, який підходить саме тобі.
+            {t("desc")}
           </p>
         </motion.div>
 
@@ -172,14 +176,14 @@ export function ServicesSection({ service1Title, service1Desc, service1Cta, serv
             <div className="w-10 h-10 rounded-xl bg-white/8 border border-white/12 flex items-center justify-center mb-6">
               <Zap className="w-5 h-5 text-white" aria-hidden="true" />
             </div>
-            <h3 className="text-white text-xl font-black tracking-tight mb-2">U:DO Popup</h3>
+            <h3 className="text-white text-xl font-black tracking-tight mb-2">{t("popup.title")}</h3>
             <p className="text-white/75 text-sm leading-relaxed mb-5">
-              Виїзний стенд з живою кастомізацією. Гості створюють унікальний мерч і забирають одразу.
+              {t("popup.desc")}
             </p>
             <PopupCarousel />
             <div className="mt-5 pt-5 border-t border-white/8 flex items-center justify-between">
               <div className="flex gap-5">
-                {[["500+", "заходів"], ["5 хв", "виріб"]].map(([v, l]) => (
+                {[["500+", t("popup.stats.events")], ["5 хв", t("popup.stats.product")]].map(([v, l]) => (
                   <div key={l}>
                     <p className="text-white text-base font-black">{v}</p>
                     <p className="text-white/50 text-[10px]">{l}</p>
@@ -187,7 +191,7 @@ export function ServicesSection({ service1Title, service1Desc, service1Cta, serv
                 ))}
               </div>
               <Link href="/popup" className="text-white/60 hover:text-white text-xs font-semibold transition-colors duration-200 flex items-center gap-1">
-                Детальніше <ArrowRight className="w-3 h-3" aria-hidden="true" />
+                {t("popup.learnMore")} <ArrowRight className="w-3 h-3" aria-hidden="true" />
               </Link>
             </div>
           </motion.div>
@@ -202,17 +206,17 @@ export function ServicesSection({ service1Title, service1Desc, service1Cta, serv
         >
           <div className="flex items-center gap-6">
             <div>
-              <p className="text-white font-bold text-base">Виїзний Popup-стенд для вашого заходу</p>
-              <p className="text-white/50 text-sm mt-0.5">500+ заходів · 50k+ гостей · 5 хв на виріб</p>
+              <p className="text-white font-bold text-base">{t("ctaStrip.title")}</p>
+              <p className="text-white/50 text-sm mt-0.5">{t("ctaStrip.desc")}</p>
             </div>
           </div>
           <div className="flex items-center gap-4 shrink-0">
             <Link href="/popup"
               className="inline-flex items-center gap-2 bg-white text-[#0a0d1a] font-bold text-xs px-5 py-2.5 rounded-full hover:bg-white/90 active:scale-[0.97] transition-all duration-200">
-              Дізнатись більше <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+              {t("ctaStrip.learnMore")} <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
             </Link>
             <Link href="#contact?ref=popup" className="text-white/50 hover:text-white/80 font-medium text-xs transition-colors duration-200 whitespace-nowrap">
-              Обговорити →
+              {t("ctaStrip.discuss")}
             </Link>
           </div>
         </motion.div>

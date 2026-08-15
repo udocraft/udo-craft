@@ -4,19 +4,7 @@ import { useRef, useEffect, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
 import { Check, X, Minus } from "lucide-react";
-
-const FEATURES = [
-  { name: "Мінімальне замовлення", desc: "Кількість штук в одному замовленні" },
-  { name: "Онлайн-редактор", desc: "Швидкий дизайн прямо на сайті" },
-  { name: "Безкоштовні зразки", desc: "Тестування перед замовленням" },
-  { name: "Особистий менеджер", desc: "Індивідуальна підтримка 24/7" },
-  { name: "Фіксована ціна", desc: "При старті без прихованих платежів" },
-  { name: "Терміни", desc: "Час від замовлення до доставки" },
-  { name: "Якість", desc: "Матеріали та контроль якості" },
-  { name: "Попап", desc: "Концепція для просування бренду" },
-  { name: "Дизайн", desc: "Допомога з макетом та брендингом" },
-  { name: "Логістика", desc: "Доставка та обробка замовлень" },
-];
+import { useTranslations } from "next-intl";
 
 type CellValue = "check" | "cross" | "partial" | string;
 
@@ -44,24 +32,39 @@ function Cell({ value, highlight }: CellProps) {
   return <span className={`text-sm font-bold ${highlight ? "text-white" : "text-foreground"}`}>{value}</span>;
 }
 
-const COLUMN_NAMES = ["Типові друкарні", "U:DO CRAFT", "Мерч-продакшн"] as const;
 const COLUMN_VALUES: CellValue[][] = [
   ["500+ шт", "cross", "cross", "cross", "cross", "30+ днів", "partial", "cross", "partial", "cross"],
   ["від 10 шт", "check", "check", "check", "check", "7–14 днів", "check", "check", "check", "check"],
   ["100+ шт", "cross", "partial", "cross", "partial", "14–21 днів", "partial", "cross", "partial", "cross"],
 ];
 
-const COLUMNS = COLUMN_NAMES.map((name, index) => ({
-  name,
-  values: COLUMN_VALUES[index],
-  highlight: index === 1,
-}));
-
 // ── Section ───────────────────────────────────────────────────────────────
 
 export function ComparisonSection() {
+  const t = useTranslations("comparison");
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
+
+  const FEATURES = [
+    { name: t("features.minOrder.name"), desc: t("features.minOrder.desc") },
+    { name: t("features.editor.name"), desc: t("features.editor.desc") },
+    { name: t("features.samples.name"), desc: t("features.samples.desc") },
+    { name: t("features.manager.name"), desc: t("features.manager.desc") },
+    { name: t("features.fixedPrice.name"), desc: t("features.fixedPrice.desc") },
+    { name: t("features.timeline.name"), desc: t("features.timeline.desc") },
+    { name: t("features.quality.name"), desc: t("features.quality.desc") },
+    { name: t("features.popup.name"), desc: t("features.popup.desc") },
+    { name: t("features.design.name"), desc: t("features.design.desc") },
+    { name: t("features.logistics.name"), desc: t("features.logistics.desc") },
+  ];
+
+  const COLUMN_NAMES = [t("columns.typical"), t("columns.udo"), t("columns.printer")] as const;
+
+  const COLUMNS = COLUMN_NAMES.map((name, index) => ({
+    name,
+    values: COLUMN_VALUES[index],
+    highlight: index === 1,
+  }));
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "center",
@@ -98,10 +101,10 @@ export function ComparisonSection() {
             id="comparison-heading"
             className="text-3xl sm:text-4xl font-black tracking-tight mb-4"
           >
-            U:DO проти решти ринку
+            {t("heading")}
           </h2>
           <p className="text-muted-foreground text-base max-w-xl mx-auto leading-relaxed">
-            Порівняй умови — і зрозумій, чому 500+ команд обирають нас.
+            {t("subtext")}
           </p>
         </motion.div>
 
@@ -138,13 +141,13 @@ export function ComparisonSection() {
         </motion.div>
 
         {/* Mobile Pagination Dots */}
-        <div className="flex lg:hidden justify-center gap-3 mt-8 mb-4" role="tablist" aria-label="Вибір постачальника">
+        <div className="flex lg:hidden justify-center gap-3 mt-8 mb-4" role="tablist" aria-label={t("selectProvider")}>
           {scrollSnaps.map((_, index) => (
             <button
               key={index}
               role="tab"
               onClick={() => emblaApi?.scrollTo(index)}
-              aria-label={`Перейти до: ${COLUMNS[index].name}`}
+              aria-label={t("goTo", { name: COLUMNS[index].name })}
               aria-selected={index === selectedIndex}
               className={`h-3 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                 index === selectedIndex ? "bg-primary w-10" : "bg-black/15 hover:bg-black/25 w-3"
@@ -164,7 +167,7 @@ export function ComparisonSection() {
             className="w-full text-left"
             style={{ borderCollapse: "separate", borderSpacing: 0 }}
             role="table"
-            aria-label="Порівняння постачальників мерчу"
+            aria-label={t("selectProvider")}
           >
             <thead>
               <tr>
@@ -172,7 +175,7 @@ export function ComparisonSection() {
                   className="py-6 px-4 sm:px-8 text-sm font-semibold text-muted-foreground border-b border-border/60 w-1/3"
                   scope="col"
                 >
-                  Характеристика
+                  {t("featureLabel")}
                 </th>
                 {COLUMNS.map((col) => (
                   <th
@@ -186,7 +189,7 @@ export function ComparisonSection() {
                   >
                     {col.highlight && (
                       <span className="block text-[10px] uppercase tracking-widest font-bold opacity-80 mb-2">
-                        Ваш вибір
+                        {t("yourChoice")}
                       </span>
                     )}
                     <span className="block text-base font-black">{col.name}</span>

@@ -1,32 +1,32 @@
 {
-  "label": "Merch subscription",
-  "heading": "Merch by subscription.",
-  "headingMuted": "No boxes in the office.",
-  "desc": "We store your items, assemble kits and ship them on a schedule: new employee, seasonal replacement, event or regular team need.",
+  "label": "Підписка на мерч",
+  "heading": "Мерч за підпискою.",
+  "headingMuted": "Без коробок в офісі.",
+  "desc": "Зберігаємо ваші речі, збираємо набори й відправляємо їх за сценарієм: новий співробітник, сезонна заміна, подія або регулярна потреба команди.",
   "steps": {
-    "warehouse": "Warehouse",
-    "packing": "Packing",
-    "shipping": "Shipping"
+    "warehouse": "Склад",
+    "packing": "Комплектація",
+    "shipping": "Відправка"
   },
   "plans": {
     "welcome": {
-      "title": "Welcome kits",
-      "desc": "For onboarding, HR processes and growing teams.",
+      "title": "Welcome-паки",
+      "desc": "Для онбордингу, HR-процесів і команд, що ростуть.",
       "features": [
-        "storage",
-        "personalization",
-        "delivery to employee"
+        "зберігання",
+        "персоналізація",
+        "доставка співробітнику"
       ]
     },
     "uniform": {
-      "title": "Regular uniforms",
-      "desc": "For HoReCa, retail and teams with regular uniform replacement.",
+      "title": "Регулярна уніформа",
+      "desc": "Для HoReCa, retail і команд з постійною заміною форми.",
       "features": [
-        "size tracking",
-        "repeat shipments",
-        "stock management"
+        "облік розмірів",
+        "повторні відправки",
+        "контроль залишків"
       ]
     }
   },
-  "cta": "Discuss subscription"
+  "cta": "Обговорити підписку"
 }

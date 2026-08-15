@@ -1,23 +1,23 @@
 {
-  "label": "Design service",
-  "heading": "No logo? We'll help",
-  "desc": "Our designer will adapt your logo for printing or create a brand identity from scratch. Result — in 2 days.",
+  "label": "Дизайн-сервіс",
+  "heading": "Немає логотипу? Ми допоможемо",
+  "desc": "Наш дизайнер адаптує ваш логотип під нанесення або створить фірмовий стиль з нуля. Результат — за 2 дні.",
   "steps": {
     "0": {
       "emoji": "💬",
-      "title": "Tell us about your brand",
-      "body": "Send your logo, brand colors and style description. If you have nothing — just tell us about the company. The brief takes 10–15 minutes online or by phone."
+      "title": "Розкажи про бренд",
+      "body": "Надішли логотип, фірмові кольори та опис стилю. Якщо нічого немає — просто розкажи про компанію. Брифінг займає 10–15 хвилин онлайн або по телефону."
     },
     "1": {
       "emoji": "✨",
-      "title": "Get a concept",
-      "body": "The designer will prepare 2–3 adaptation options for printing on clothing. Deadline — 2 business days. Includes adaptation for silk-screen, embroidery and DTF."
+      "title": "Отримай концепцію",
+      "body": "Дизайнер підготує 2–3 варіанти адаптації для нанесення на одяг. Термін — 2 робочі дні. Включає адаптацію під шовкодрук, вишивку та DTF."
     },
     "2": {
       "emoji": "✅",
-      "title": "Approve and order",
-      "body": "Choose an option, make edits (up to 2 rounds included), receive final files. All files stay with you — for any future orders."
+      "title": "Затверди і замовляй",
+      "body": "Обери варіант, внеси правки (до 2 раундів включено), отримай фінальні файли. Всі файли залишаються у тебе — для будь-яких майбутніх замовлень."
     }
   },
-  "cta": "Discuss project"
+  "cta": "Обговорити проєкт"
 }
