@@ -1,0 +1,50 @@
+{
+  "breadcrumb": "/ Konto",
+  "settings": "Einstellungen",
+  "logout": "Abmelden",
+  "noOrders": "Noch keine Bestellungen",
+  "toCatalog": "Zum Katalog",
+  "writeTo": "Ansprechpartner schreiben",
+  "tabs": {
+    "details": "Details",
+    "chat": "Chat",
+    "files": "Dateien"
+  },
+  "status": {
+    "new": "Neue Anfrage",
+    "in_progress": "In Bearbeitung",
+    "production": "Produktion",
+    "completed": "Abgeschlossen",
+    "archived": "Archiv"
+  },
+  "delivery": {
+    "nova_poshta": "DHL",
+    "ukrposhta": "DPD",
+    "pickup": "Abholung"
+  },
+  "details": {
+    "phone": "Telefon",
+    "email": "E-Mail",
+    "company": "Unternehmen",
+    "orderDate": "Bestelldatum",
+    "orderAmount": "Bestellbetrag",
+    "delivery": "Lieferung",
+    "deadline": "Frist",
+    "positions": "Positionen ({n})",
+    "attachments": "Anhänge ({n})",
+    "invoice": "Rechnung herunterladen",
+    "print": "Druck"
+  },
+  "chat": {
+    "placeholder": "Nachricht...",
+    "sendLabel": "Nachricht senden",
+    "attachLabel": "Datei anhängen",
+    "loading": "Nachrichten werden geladen...",
+    "empty": "Noch keine Nachrichten",
+    "fileTooLarge": "\"{name}\" überschreitet 10 MB"
+  },
+  "files": {
+    "empty": "Noch keine Dateien",
+    "openFile": "Datei öffnen"
+  }
+}

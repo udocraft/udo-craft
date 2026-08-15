@@ -1,0 +1,33 @@
+{
+  "heading": "Często zadawane pytania",
+  "noAnswer": "Nie znalazłeś odpowiedzi?",
+  "contactUs": "Napisz do nas",
+  "replyTime": "— odpiszemy w ciągu godziny.",
+  "questionsLabel": "Pytania i odpowiedzi",
+  "items": {
+    "0": {
+      "question": "Jaka jest minimalna ilość zamówienia?",
+      "answer": "Od 10 sztuk. Brak dopłaty za małe partie."
+    },
+    "1": {
+      "question": "Ile kosztuje nadruk?",
+      "answer": "Cena zależy od rodzaju (sitodruk, haft, DTF) i ilości. Sprawdź w edytorze online."
+    },
+    "2": {
+      "question": "Jak długo trwa realizacja zamówienia?",
+      "answer": "Standardowy czas — 7–14 dni roboczych od potwierdzenia."
+    },
+    "3": {
+      "question": "Czy mogę zobaczyć jakość przed zamówieniem dużej partii?",
+      "answer": "Tak. Box of Touch — fizyczne próbki tkanin, kolorów i produktów."
+    },
+    "4": {
+      "question": "Co jeśli nie spodoba mi się wynik?",
+      "answer": "Zatwierdzamy projekt przed produkcją. Jeśli produkt nie odpowiada — przerabiamy za darmo."
+    },
+    "5": {
+      "question": "Czy są zniżki przy dużych zamówieniach?",
+      "answer": "Tak. 10–49 sztuk — cena bazowa. 50–99 — rabat 12%. 100+ — rabat 15%."
+    }
+  }
+}

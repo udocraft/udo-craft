@@ -1,0 +1,33 @@
+{
+  "heading": "Od nápadu k merchi — ve 4 krocích",
+  "subtext": "Celý proces trvá méně než 15 minut. Ceny jsou viditelné ihned — žádné telefonáty ani vyjednávání.",
+  "estimatedTime": "Odhadovaný čas",
+  "stepLabel": "Krok {n}: {title}",
+  "stepsLabel": "Kroky procesu",
+  "steps": {
+    "1": {
+      "title": "Vybrat produkt",
+      "body": "Procházej katalog se skutečnými cenami. Cena se okamžitě aktualizuje při změně množství nebo typu tisku.",
+      "cta": "Otevřít katalog",
+      "time": "~5 min"
+    },
+    "2": {
+      "title": "Přizpůsobit online",
+      "body": "Nahraj logo, umísti ho na produkt, zvol tiskovou zónu. Editor zobrazuje přesné náklady v reálném čase.",
+      "cta": "Vyzkoušet editor",
+      "time": "~10 min"
+    },
+    "3": {
+      "title": "Získat nabídku",
+      "body": "Vyplň formulář — account manager se ozve do 2 hodin. Pevná cena bez skrytých poplatků.",
+      "cta": "Kontaktovat nás",
+      "time": "~2 hod"
+    },
+    "4": {
+      "title": "Dostat merch",
+      "body": "Výroba 7–14 pracovních dní. Doručení. Pokud něco nesouhlasí — přepracujeme zdarma.",
+      "cta": "Číst FAQ",
+      "time": "7–14 dní"
+    }
+  }
+}

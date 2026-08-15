@@ -1,0 +1,33 @@
+{
+  "heading": "Från idé till merch — i 4 steg",
+  "subtext": "Hela processen tar mindre än 15 minuter. Priser visas direkt — inga samtal eller förhandlingar.",
+  "estimatedTime": "Uppskattad tid",
+  "stepLabel": "Steg {n}: {title}",
+  "stepsLabel": "Processteg",
+  "steps": {
+    "1": {
+      "title": "Välj en produkt",
+      "body": "Bläddra i katalogen med riktiga priser. Priset uppdateras direkt vid ändring av antal eller trycktyp.",
+      "cta": "Öppna katalog",
+      "time": "~5 min"
+    },
+    "2": {
+      "title": "Anpassa online",
+      "body": "Ladda upp logotypen, placera den på produkten, välj tryckszon. Editorn visar exakta kostnader i realtid.",
+      "cta": "Testa editor",
+      "time": "~10 min"
+    },
+    "3": {
+      "title": "Få offert",
+      "body": "Fyll i formuläret — en account manager kontaktar dig inom 2 timmar. Fast pris utan dolda kostnader.",
+      "cta": "Kontakta oss",
+      "time": "~2 tim"
+    },
+    "4": {
+      "title": "Ta emot merch",
+      "body": "Produktion 7–14 arbetsdagar. Leverans. Om något är fel — gör vi om det gratis.",
+      "cta": "Läs FAQ",
+      "time": "7–14 dagar"
+    }
+  }
+}

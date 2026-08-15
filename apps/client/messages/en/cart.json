@@ -1,0 +1,11 @@
+{
+  "title": "Cart",
+  "titleWithCount": "Cart ({count})",
+  "empty": "Cart is empty",
+  "emptyDesc": "Choose a product and set up a print",
+  "toCatalog": "To catalog",
+  "ariaLabel": "Cart",
+  "quantity": "{qty} pcs · {size}",
+  "total": "Total:",
+  "cartItem": "Cart item"
+}

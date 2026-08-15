@@ -1,0 +1,48 @@
+{
+  "nameLabel": "Uw naam *",
+  "namePlaceholder": "Jan de Vries",
+  "emailLabel": "E-mail *",
+  "emailPlaceholder": "hr@bedrijf.nl",
+  "phoneLabel": "Telefoon *",
+  "phonePlaceholder": "+31 XX XXX XXXX",
+  "companyLabel": "Bedrijf",
+  "companyPlaceholder": "Bedrijfsnaam",
+  "topicLabel": "Onderwerp *",
+  "messageLabel": "Vertel ons over uw project",
+  "messagePlaceholder": "Hoeveelheid, producttype, deadlines...",
+  "filesLabel": "Bestanden uploaden (ontwerpen, logo's enz.)",
+  "filesClick": "Klik of sleep bestanden hier naartoe",
+  "filesDesc": "Ontwerpen, logo's, afbeeldingen...",
+  "submit": "Verzenden",
+  "submitting": "Wordt verzonden...",
+  "error": "Er is een fout opgetreden. Probeer het opnieuw of neem direct contact op.",
+  "success": "Bedankt voor uw bericht!",
+  "successDesc": "We hebben uw verzoek ontvangen en nemen snel contact op.",
+  "deleteFile": "Bestand verwijderen {name}",
+  "topics": {
+    "merch": {
+      "label": "Bedrijfsmerch",
+      "desc": "T-shirts, hoodies, accessoires voor uw team of merk"
+    },
+    "popup": {
+      "label": "Popup-stand voor evenement",
+      "desc": "Live merch-personalisatie op uw evenement"
+    },
+    "box": {
+      "label": "Box of Touch",
+      "desc": "Fysieke stof- en productsamples voor productie"
+    },
+    "designer": {
+      "label": "Ontwerpdiensten",
+      "desc": "Logo-ontwikkeling of -aanpassing voor druk"
+    },
+    "bulk": {
+      "label": "Grote bestelling (500+)",
+      "desc": "Groothandelsbestellingen met individuele voorwaarden"
+    },
+    "other": {
+      "label": "Overig",
+      "desc": "Elke andere vraag of suggestie"
+    }
+  }
+}

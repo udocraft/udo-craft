@@ -1,0 +1,27 @@
+{
+  "label": "Box of Touch",
+  "heading": "Voel de kwaliteit",
+  "headingHighlight": "voor je bestelt",
+  "desc": "De meeste bedrijven bestellen blind. Box of Touch lost dat op: een fysieke set met stof-, kleur- en productsamples.",
+  "contentsLabel": "Inhoud van Box of Touch",
+  "contents": {
+    "products": {
+      "label": "Productsamples",
+      "desc": "T-shirts, hoodies, longsleeves — voel de snit en pasvorm"
+    },
+    "fabrics": {
+      "label": "Stofsamples",
+      "desc": "Verschillende samenstellingen en gewichten — van 180 tot 320 g/m²"
+    },
+    "palette": {
+      "label": "Kleurenpalet",
+      "desc": "Alle beschikbare kleuren met echte samples"
+    },
+    "printing": {
+      "label": "Druksoorten",
+      "desc": "Zeefdruk, borduurwerk, DTF — vergelijk op aanraking"
+    }
+  },
+  "cta": "Box of Touch bestellen",
+  "freeDelivery": "Gratis levering · Geen verplichtingen"
+}

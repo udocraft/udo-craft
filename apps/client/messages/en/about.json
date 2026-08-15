@@ -1,0 +1,33 @@
+{
+  "label": "About Us",
+  "heading": "Ukrainian Platform for",
+  "headingHighlight": "Corporate Merch",
+  "desc1": "From startups to large corporations — we help teams create merch they're proud of.",
+  "desc2": "From 10 units, no hidden fees, with delivery across Ukraine. Own production, personal manager, quality guarantee.",
+  "features": {
+    "editor": {
+      "title": "Online Editor",
+      "desc": "Upload your logo, place it on the product and see the result immediately. No extra emails or approvals."
+    },
+    "minOrder": {
+      "title": "From 10 Units",
+      "desc": "Perfect for startups and teams. No surcharges for small runs."
+    },
+    "pricing": {
+      "title": "Transparent Pricing",
+      "desc": "Invoice right away. No hidden charges."
+    },
+    "timeline": {
+      "title": "7–14 Days",
+      "desc": "From confirmation to delivery. Deadline is not a problem."
+    },
+    "quality": {
+      "title": "Quality Control",
+      "desc": "Every batch is inspected before shipping."
+    },
+    "manager": {
+      "title": "Personal Manager",
+      "desc": "Available from first request to order delivery."
+    }
+  }
+}

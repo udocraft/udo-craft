@@ -1,0 +1,9 @@
+{
+  "heading": "Catalogue",
+  "allProducts": "Tous les produits",
+  "all": "Tous",
+  "empty": "Aucun produit dans cette catégorie",
+  "prevPage": "Précédent",
+  "nextPage": "Suivant",
+  "page": "Page {n}"
+}

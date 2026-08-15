@@ -1,0 +1,33 @@
+{
+  "label": "Om oss",
+  "heading": "Plattform för",
+  "headingHighlight": "företagsmerchandise",
+  "desc1": "Från startups till stora företag — vi hjälper team att skapa merch de är stolta över.",
+  "desc2": "Från 10 exemplar, inga dolda kostnader, egen produktion, personlig account manager, kvalitetsgaranti.",
+  "features": {
+    "editor": {
+      "title": "Online-editor",
+      "desc": "Ladda upp logotypen, placera den på produkten och se resultatet direkt."
+    },
+    "minOrder": {
+      "title": "Från 10 exemplar",
+      "desc": "Perfekt för startups och små team."
+    },
+    "pricing": {
+      "title": "Transparenta priser",
+      "desc": "Faktura direkt. Inga dolda kostnader."
+    },
+    "timeline": {
+      "title": "7–14 dagar",
+      "desc": "Från bekräftelse till leverans."
+    },
+    "quality": {
+      "title": "Kvalitetskontroll",
+      "desc": "Varje batch inspekteras innan leverans."
+    },
+    "manager": {
+      "title": "Personlig account manager",
+      "desc": "Tillgänglig från första förfrågan till leverans."
+    }
+  }
+}

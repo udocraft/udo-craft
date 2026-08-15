@@ -1,0 +1,33 @@
+{
+  "label": "O nás",
+  "heading": "Platforma pro",
+  "headingHighlight": "firemní merchandise",
+  "desc1": "Od startupů po velké korporace — pomáháme týmům vytvářet merch, na který jsou hrdé.",
+  "desc2": "Od 10 kusů, bez skrytých poplatků, vlastní výroba, osobní account manager, záruka kvality.",
+  "features": {
+    "editor": {
+      "title": "Online editor",
+      "desc": "Nahraj logo, umísti ho na produkt a okamžitě uvidíš výsledek."
+    },
+    "minOrder": {
+      "title": "Od 10 kusů",
+      "desc": "Ideální pro startupy a malé týmy."
+    },
+    "pricing": {
+      "title": "Transparentní ceny",
+      "desc": "Faktura ihned. Žádné skryté poplatky."
+    },
+    "timeline": {
+      "title": "7–14 dní",
+      "desc": "Od potvrzení do doručení."
+    },
+    "quality": {
+      "title": "Kontrola kvality",
+      "desc": "Každá šarže je zkontrolována před odesláním."
+    },
+    "manager": {
+      "title": "Osobní account manager",
+      "desc": "K dispozici od první poptávky do doručení."
+    }
+  }
+}

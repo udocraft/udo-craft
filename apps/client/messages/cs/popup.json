@@ -1,0 +1,112 @@
+{
+  "badge": "Mobilní popup služba",
+  "heroHeading": "Merch popup na tvé akci —",
+  "heroSubheading": "živý zážitek, na který se nezapomíná",
+  "heroDesc": "Přijedeme za tebou. Hosté si vybírají oblečení, personalizují tisk na místě a odcházejí s hotovým merchem.",
+  "bookBtn": "Rezervovat popup",
+  "howItWorks": "Jak to funguje",
+  "stats": {
+    "events": "Provedených popupů",
+    "time": "Čas personalizace",
+    "guests": "Hostů na jedné akci",
+    "satisfaction": "Spokojených organizátorů"
+  },
+  "useCases": {
+    "label": "Pro koho",
+    "heading": "Vhodné pro jakoukoli akci",
+    "items": {
+      "corporate": {
+        "title": "Firemní akce",
+        "desc": "Udělejte firemní akci nezapomenutelnou — hosté odcházejí s personalizovaným merchem."
+      },
+      "conferences": {
+        "title": "Konference a fóra",
+        "desc": "Brandovaný merch na místě — nejlepší nástroj pro networking."
+      },
+      "festivals": {
+        "title": "Festivaly a trhy",
+        "desc": "Popup stánek, který přitahuje pozornost. Živá personalizace — to je show."
+      },
+      "launches": {
+        "title": "Produktové launche",
+        "desc": "Launch s merchem, který si hosté vyrobili sami."
+      },
+      "universities": {
+        "title": "Univerzity a školy",
+        "desc": "Promoce, dny otevřených dveří, studentské akce."
+      },
+      "b2b": {
+        "title": "B2B akce",
+        "desc": "Partnerská setkání, veletrhy, prezentace."
+      }
+    }
+  },
+  "process": {
+    "label": "Postup",
+    "heading": "Tři kroky k dokonalému popupu",
+    "steps": {
+      "0": {
+        "step": "01",
+        "title": "Vybrat formát",
+        "desc": "Řekni nám o akci — počet hostů, místo, datum."
+      },
+      "1": {
+        "step": "02",
+        "title": "Připravit stánek",
+        "desc": "Přivezeme vybavení, oblečení a vše potřebné pro personalizaci."
+      },
+      "2": {
+        "step": "03",
+        "title": "Hosté personalizují",
+        "desc": "Každý host si vybere produkt, umístí tisk a odchází s hotovým merchem."
+      }
+    }
+  },
+  "faq": {
+    "label": "FAQ",
+    "heading": "Časté dotazy",
+    "items": {
+      "0": {
+        "q": "Minimální počet účastníků?",
+        "a": "Od 50 osob."
+      },
+      "1": {
+        "q": "Jak dlouho trvá personalizace jednoho produktu?",
+        "a": "3 až 10 minut podle složitosti tisku."
+      },
+      "2": {
+        "q": "Jaké produkty jsou na popupu k dispozici?",
+        "a": "Trička, mikiny, longsleeve, kšiltovky a doplňky."
+      },
+      "3": {
+        "q": "Kdo platí za merch?",
+        "a": "Obě možnosti jsou možné."
+      },
+      "4": {
+        "q": "Jak daleko dopředu rezervovat?",
+        "a": "Doporučujeme 2–3 týdny před akcí."
+      }
+    }
+  },
+  "contact": {
+    "label": "Rezervovat",
+    "heading": "Řekni nám o své akci",
+    "desc": "Zanech poptávku — account manager se ozve do jednoho pracovního dne.",
+    "benefits": {
+      "0": "Bezplatná konzultace",
+      "1": "Individuální odhad",
+      "2": "Odpověď do 24 hodin"
+    }
+  },
+  "nav": {
+    "useCases": "Pro koho",
+    "how": "Jak to funguje",
+    "faq": "FAQ",
+    "contacts": "Kontakt"
+  },
+  "book": "Rezervovat",
+  "footerCopyright": "U:DO CRAFT. Všechna práva vyhrazena.",
+  "menuOpen": "Otevřít menu",
+  "menuClose": "Zavřít menu",
+  "homeLink": "Úvod"
+}

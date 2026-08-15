@@ -1,0 +1,40 @@
+{
+  "readyToStart": "Ready to start?",
+  "readyDesc": "From 10 units · 7–14 days · Delivery across Ukraine",
+  "startProject": "Start project",
+  "ariaLabel": "Footer",
+  "homeLink": "U:DO CRAFT — back to home",
+  "columns": {
+    "products": {
+      "title": "Products",
+      "links": {
+        "constructor": "Merch constructor",
+        "catalog": "Catalog",
+        "popup": "Popup stand",
+        "box": "Box of Touch",
+        "designer": "Hire a designer"
+      }
+    },
+    "company": {
+      "title": "Company",
+      "links": {
+        "about": "About Us",
+        "how": "How it works",
+        "career": "Careers",
+        "blog": "Blog"
+      }
+    },
+    "support": {
+      "title": "Support",
+      "links": {
+        "faq": "FAQ",
+        "contact": "Contact",
+        "cabinet": "Account",
+        "delivery": "Shipping & payment"
+      }
+    }
+  },
+  "privacy": "Privacy",
+  "terms": "Terms",
+  "cookies": "Cookies"
+}

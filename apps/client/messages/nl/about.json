@@ -1,0 +1,33 @@
+{
+  "label": "Over ons",
+  "heading": "Platform voor",
+  "headingHighlight": "bedrijfsmerchandise",
+  "desc1": "Van startups tot grote bedrijven — wij helpen teams merch te maken waar ze trots op zijn.",
+  "desc2": "Vanaf 10 stuks, geen verborgen kosten, eigen productie, persoonlijke accountmanager, kwaliteitsgarantie.",
+  "features": {
+    "editor": {
+      "title": "Online editor",
+      "desc": "Upload je logo, plaats het op het product en zie het resultaat direct."
+    },
+    "minOrder": {
+      "title": "Vanaf 10 stuks",
+      "desc": "Perfect voor startups en kleine teams."
+    },
+    "pricing": {
+      "title": "Transparante prijzen",
+      "desc": "Direct factuur. Geen verborgen kosten."
+    },
+    "timeline": {
+      "title": "7–14 dagen",
+      "desc": "Van bevestiging tot levering."
+    },
+    "quality": {
+      "title": "Kwaliteitscontrole",
+      "desc": "Elke batch wordt gecontroleerd voor verzending."
+    },
+    "manager": {
+      "title": "Persoonlijke accountmanager",
+      "desc": "Beschikbaar van eerste aanvraag tot levering."
+    }
+  }
+}

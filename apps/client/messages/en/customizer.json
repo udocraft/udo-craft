@@ -1,0 +1,17 @@
+{
+  "label": "Online constructor",
+  "heading": "Build your merch right in the interface",
+  "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
+  "openEditor": "Open constructor",
+  "productLabel": "Product",
+  "colorLabel": "Color",
+  "printsLabel": "Prints",
+  "textLabel": "Text",
+  "fileLabel": "File",
+  "volumeLabel": "Volume & price",
+  "totalLabel": "Total",
+  "saved": "Draft saved",
+  "layersReady": "Layers ready",
+  "priceUpdated": "Price updated",
+  "sizeLabel": "Size"
+}

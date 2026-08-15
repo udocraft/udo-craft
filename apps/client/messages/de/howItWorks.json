@@ -1,0 +1,21 @@
+{
+  "label": "So funktioniert's",
+  "heading": "Für Ihre Ziele anpassen",
+  "steps": {
+    "0": {
+      "title": "Produkte wählen",
+      "desc": "Katalog durchsuchen, nach Kategorien filtern. Basis für Ihren Merch wählen.",
+      "cta": "Zum Katalog"
+    },
+    "1": {
+      "title": "Kleidung anpassen",
+      "desc": "Logo hochladen, Druckzone, Größe und Farbe wählen. Echtzeit-Vorschau.",
+      "cta": "Ausprobieren"
+    },
+    "2": {
+      "title": "Angebot erhalten",
+      "desc": "Bestellformular ausfüllen. Ein Ansprechpartner meldet sich zur Bestätigung.",
+      "cta": "Bestellen"
+    }
+  }
+}

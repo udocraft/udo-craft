@@ -1,0 +1,21 @@
+{
+  "label": "Come funziona",
+  "heading": "Personalizza per i tuoi obiettivi",
+  "steps": {
+    "0": {
+      "title": "Scegli i prodotti",
+      "desc": "Sfoglia il catalogo, filtra per categorie. Scegli la base del tuo merch.",
+      "cta": "Al catalogo"
+    },
+    "1": {
+      "title": "Personalizza i capi",
+      "desc": "Carica il logo, scegli la zona di stampa, taglia e colore. Anteprima in tempo reale.",
+      "cta": "Prova"
+    },
+    "2": {
+      "title": "Ottieni una proposta",
+      "desc": "Compila il modulo. Un account manager ti contatta per confermare.",
+      "cta": "Ordina"
+    }
+  }
+}

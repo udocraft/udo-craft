@@ -1,0 +1,112 @@
+{
+  "badge": "Servicio popup móvil",
+  "heroHeading": "Popup de merch en tu evento —",
+  "heroSubheading": "una experiencia en vivo que se recuerda",
+  "heroDesc": "Vamos a tu evento. Los invitados eligen la ropa, personalizan la impresión in situ y se van con su merch.",
+  "bookBtn": "Reservar popup",
+  "howItWorks": "Cómo funciona",
+  "stats": {
+    "events": "Popups realizados",
+    "time": "Tiempo de personalización",
+    "guests": "Invitados por evento",
+    "satisfaction": "Organizadores satisfechos"
+  },
+  "useCases": {
+    "label": "Para quién",
+    "heading": "Adecuado para cualquier evento",
+    "items": {
+      "corporate": {
+        "title": "Eventos corporativos",
+        "desc": "Haz el evento inolvidable — los invitados se van con merch personalizado."
+      },
+      "conferences": {
+        "title": "Conferencias y foros",
+        "desc": "Merch con marca in situ — mejor herramienta de networking."
+      },
+      "festivals": {
+        "title": "Festivales y mercados",
+        "desc": "Stand popup que atrae atención. Personalización en vivo — es un show."
+      },
+      "launches": {
+        "title": "Lanzamientos de producto",
+        "desc": "Lanzamiento con merch que los invitados hicieron ellos mismos."
+      },
+      "universities": {
+        "title": "Universidades y escuelas",
+        "desc": "Graduaciones, jornadas de puertas abiertas, eventos estudiantiles."
+      },
+      "b2b": {
+        "title": "Eventos B2B",
+        "desc": "Reuniones con socios, ferias, presentaciones."
+      }
+    }
+  },
+  "process": {
+    "label": "Proceso",
+    "heading": "Tres pasos hacia el popup perfecto",
+    "steps": {
+      "0": {
+        "step": "01",
+        "title": "Elegir el formato",
+        "desc": "Cuéntanos sobre el evento — número de invitados, lugar, fecha."
+      },
+      "1": {
+        "step": "02",
+        "title": "Preparar el stand",
+        "desc": "Llevamos equipo, ropa y todo lo necesario para la personalización."
+      },
+      "2": {
+        "step": "03",
+        "title": "Los invitados personalizan",
+        "desc": "Cada invitado elige un producto, coloca la impresión y se va con su merch."
+      }
+    }
+  },
+  "faq": {
+    "label": "FAQ",
+    "heading": "Preguntas frecuentes",
+    "items": {
+      "0": {
+        "q": "¿Cuántos participantes mínimo?",
+        "a": "Desde 50 personas."
+      },
+      "1": {
+        "q": "¿Cuánto tarda personalizar un producto?",
+        "a": "De 3 a 10 minutos según la complejidad."
+      },
+      "2": {
+        "q": "¿Qué productos hay disponibles?",
+        "a": "Camisetas, sudaderas, mangas largas, gorras y accesorios."
+      },
+      "3": {
+        "q": "¿Quién paga el merch?",
+        "a": "Ambas opciones son posibles."
+      },
+      "4": {
+        "q": "¿Con cuánta antelación reservar?",
+        "a": "Recomendamos 2–3 semanas antes."
+      }
+    }
+  },
+  "contact": {
+    "label": "Reservar",
+    "heading": "Cuéntanos sobre tu evento",
+    "desc": "Deja una solicitud — un gestor te contactará en un día hábil.",
+    "benefits": {
+      "0": "Consulta gratuita",
+      "1": "Presupuesto individualizado",
+      "2": "Respuesta en 24 horas"
+    }
+  },
+  "nav": {
+    "useCases": "Para quién",
+    "how": "Cómo funciona",
+    "faq": "FAQ",
+    "contacts": "Contacto"
+  },
+  "book": "Reservar",
+  "footerCopyright": "U:DO CRAFT. Todos los derechos reservados.",
+  "menuOpen": "Abrir menú",
+  "menuClose": "Cerrar menú",
+  "homeLink": "Inicio"
+}

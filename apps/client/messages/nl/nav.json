@@ -1,0 +1,15 @@
+{
+  "catalog": "Catalogus",
+  "popup": "Popup",
+  "about": "Over ons",
+  "how": "Hoe het werkt",
+  "contacts": "Contact",
+  "startProject": "Project starten",
+  "openMenu": "Menu openen",
+  "closeMenu": "Menu sluiten",
+  "goToAccount": "Naar account",
+  "signIn": "Inloggen",
+  "cartItems": "Winkelwagen — {count} artikelen",
+  "mainNav": "Hoofdnavigatie",
+  "logoLink": "U:DO CRAFT — terug naar home"
+}

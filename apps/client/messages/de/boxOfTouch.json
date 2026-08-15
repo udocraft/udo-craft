@@ -1,0 +1,27 @@
+{
+  "label": "Box of Touch",
+  "heading": "Qualität erleben",
+  "headingHighlight": "bevor Sie bestellen",
+  "desc": "Die meisten Unternehmen bestellen blind — und erhalten etwas anderes als erwartet. Box of Touch löst das: ein physisches Set aus Stoff-, Farb- und Produktmustern.",
+  "contentsLabel": "Inhalt der Box of Touch",
+  "contents": {
+    "products": {
+      "label": "Produktmuster",
+      "desc": "T-Shirts, Hoodies, Longsleeves — Schnitt und Passform fühlen"
+    },
+    "fabrics": {
+      "label": "Stoffmuster",
+      "desc": "Verschiedene Zusammensetzungen und Gewichte — 180 bis 320 g/m²"
+    },
+    "palette": {
+      "label": "Farbpalette",
+      "desc": "Alle verfügbaren Farben mit echten Mustern"
+    },
+    "printing": {
+      "label": "Druckarten",
+      "desc": "Siebdruck, Stickerei, DTF — zum Vergleich anfassen"
+    }
+  },
+  "cta": "Box of Touch bestellen",
+  "freeDelivery": "Kostenloser Versand · Keine Verpflichtungen"
+}

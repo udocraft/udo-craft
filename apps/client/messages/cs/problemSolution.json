@@ -1,0 +1,19 @@
+{
+  "problemHeading": "Trh je zahlcen levným merchem, který nikdo nenosí",
+  "problemsLabel": "Časté problémy",
+  "problems": {
+    "minOrder": "Minimální objednávka 500+ kusů",
+    "approvals": "Týdny schvalování designů",
+    "quality": "Kvalita nesplňuje očekávání",
+    "hidden": "Skryté náklady po objednávce"
+  },
+  "solutionHeading": "Merch, který se stane součástí tvé značky",
+  "solutionsLabel": "Výhody U:DO",
+  "solutions": {
+    "minOrder": "Od 10 kusů bez příplatku",
+    "editor": "Online editor — výsledek vidíš ihned",
+    "samples": "Vzorky před výrobou (Box of Touch)",
+    "price": "Pevná cena na faktuře"
+  },
+  "ctaLabel": "Zobrazit katalog"
+}

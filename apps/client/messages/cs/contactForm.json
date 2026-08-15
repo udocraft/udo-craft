@@ -1,0 +1,48 @@
+{
+  "nameLabel": "Tvoje jméno *",
+  "namePlaceholder": "Jan Novák",
+  "emailLabel": "E-mail *",
+  "emailPlaceholder": "hr@firma.cz",
+  "phoneLabel": "Telefon *",
+  "phonePlaceholder": "+420 XXX XXX XXX",
+  "companyLabel": "Firma",
+  "companyPlaceholder": "Název firmy",
+  "topicLabel": "Předmět *",
+  "messageLabel": "Řekni nám o svém projektu",
+  "messagePlaceholder": "Množství, typ produktu, termíny...",
+  "filesLabel": "Nahrát soubory (návrhy, loga atd.)",
+  "filesClick": "Klikni nebo přetáhni soubory sem",
+  "filesDesc": "Návrhy, loga, obrázky...",
+  "submit": "Odeslat",
+  "submitting": "Odesílání...",
+  "error": "Došlo k chybě. Zkus to znovu nebo nás kontaktuj přímo.",
+  "success": "Děkujeme za kontakt!",
+  "successDesc": "Přijali jsme tvůj požadavek a brzy se ozveme.",
+  "deleteFile": "Smazat {name}",
+  "topics": {
+    "merch": {
+      "label": "Firemní merch",
+      "desc": "Trička, mikiny, doplňky pro tvůj tým nebo značku"
+    },
+    "popup": {
+      "label": "Popup stánek na akci",
+      "desc": "Živá personalizace merche na tvé akci"
+    },
+    "box": {
+      "label": "Box of Touch",
+      "desc": "Fyzické vzorky látek a produktů před výrobou"
+    },
+    "designer": {
+      "label": "Designérské služby",
+      "desc": "Vývoj nebo úprava loga pro tisk"
+    },
+    "bulk": {
+      "label": "Velká objednávka (500+)",
+      "desc": "Velkoobchodní objednávky s individuálními podmínkami"
+    },
+    "other": {
+      "label": "Ostatní",
+      "desc": "Jakýkoli jiný dotaz nebo návrh"
+    }
+  }
+}

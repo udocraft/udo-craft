@@ -1,0 +1,22 @@
+{
+  "heading": "Why they trust us",
+  "subtext": "Not just words — specific guarantees we uphold every day.",
+  "guarantees": {
+    "0": {
+      "title": "Quality guarantee",
+      "body": "If the product doesn't match the approved design — we redo it for free. No arguments, no bureaucracy."
+    },
+    "1": {
+      "title": "Own production",
+      "body": "We control every stage — from material selection to printing. No intermediaries, no surprises."
+    },
+    "2": {
+      "title": "Fixed price",
+      "body": "Invoice immediately after confirmation. Price doesn't change after production starts."
+    },
+    "3": {
+      "title": "Personal manager",
+      "body": "One contact from first request to order delivery. We respond within 2 hours during business hours."
+    }
+  }
+}

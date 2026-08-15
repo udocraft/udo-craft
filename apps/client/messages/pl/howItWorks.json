@@ -1,0 +1,21 @@
+{
+  "label": "Jak to działa",
+  "heading": "Dopasuj do swoich celów",
+  "steps": {
+    "0": {
+      "title": "Wybierz produkty",
+      "desc": "Przeglądaj katalog, filtruj według kategorii. Wybierz bazę dla swojego merchu.",
+      "cta": "Do katalogu"
+    },
+    "1": {
+      "title": "Dostosuj odzież",
+      "desc": "Prześlij logo, wybierz strefę nadruku, rozmiar i kolor. Podgląd w czasie rzeczywistym.",
+      "cta": "Wypróbuj"
+    },
+    "2": {
+      "title": "Otrzymaj ofertę",
+      "desc": "Wypełnij formularz zamówienia. Opiekun skontaktuje się w celu potwierdzenia.",
+      "cta": "Zamów"
+    }
+  }
+}

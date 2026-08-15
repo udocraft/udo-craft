@@ -1,0 +1,33 @@
+{
+  "heading": "Veelgestelde vragen",
+  "noAnswer": "Geen antwoord gevonden?",
+  "contactUs": "Neem contact op",
+  "replyTime": "— we reageren binnen een uur.",
+  "questionsLabel": "Vragen en antwoorden",
+  "items": {
+    "0": {
+      "question": "Wat is de minimale bestelhoeveelheid?",
+      "answer": "Vanaf 10 stuks. Geen toeslag voor kleine oplagen."
+    },
+    "1": {
+      "question": "Wat kost het drukken?",
+      "answer": "De prijs hangt af van het type (zeefdruk, borduurwerk, DTF) en de hoeveelheid. Zichtbaar in de online editor."
+    },
+    "2": {
+      "question": "Hoe lang duurt een bestelling?",
+      "answer": "Standaard levertijd — 7–14 werkdagen na bevestiging."
+    },
+    "3": {
+      "question": "Kan ik de kwaliteit zien voor een grote bestelling?",
+      "answer": "Ja. Box of Touch — fysieke samples van stoffen, kleuren en producten."
+    },
+    "4": {
+      "question": "Wat als ik het resultaat niet leuk vind?",
+      "answer": "We keuren het ontwerp goed voor productie. Als het product niet overeenkomt — doen we het gratis opnieuw."
+    },
+    "5": {
+      "question": "Zijn er kortingen voor grote bestellingen?",
+      "answer": "Ja. 10–49 stuks — basisprijs. 50–99 — 12% korting. 100+ — 15% korting."
+    }
+  }
+}

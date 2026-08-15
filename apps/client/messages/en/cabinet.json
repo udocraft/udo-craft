@@ -1,0 +1,50 @@
+{
+  "breadcrumb": "/ Account",
+  "settings": "Settings",
+  "logout": "Log out",
+  "noOrders": "No orders yet",
+  "toCatalog": "To catalog",
+  "writeTo": "Write to manager",
+  "tabs": {
+    "details": "Details",
+    "chat": "Chat",
+    "files": "Files"
+  },
+  "status": {
+    "new": "New request",
+    "in_progress": "In progress",
+    "production": "Production",
+    "completed": "Completed",
+    "archived": "Archived"
+  },
+  "delivery": {
+    "nova_poshta": "Nova Poshta",
+    "ukrposhta": "Ukrposhta",
+    "pickup": "Pickup"
+  },
+  "details": {
+    "phone": "Phone",
+    "email": "Email",
+    "company": "Company",
+    "orderDate": "Order date",
+    "orderAmount": "Order amount",
+    "delivery": "Delivery",
+    "deadline": "Deadline",
+    "positions": "Positions ({n})",
+    "attachments": "Attachments ({n})",
+    "invoice": "Download invoice",
+    "print": "Print"
+  },
+  "chat": {
+    "placeholder": "Message...",
+    "sendLabel": "Send message",
+    "attachLabel": "Attach file",
+    "loading": "Loading messages...",
+    "empty": "No messages yet",
+    "fileTooLarge": "\"{name}\" exceeds 10 MB"
+  },
+  "files": {
+    "empty": "No files yet",
+    "openFile": "Open file"
+  }
+}

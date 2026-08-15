@@ -1,0 +1,33 @@
+{
+  "label": "Sobre nós",
+  "heading": "Plataforma de",
+  "headingHighlight": "merchandise empresarial",
+  "desc1": "De startups a grandes empresas — ajudamos equipas a criar merch do qual se orgulham.",
+  "desc2": "A partir de 10 unidades, sem custos ocultos, produção própria, gestor de conta pessoal, garantia de qualidade.",
+  "features": {
+    "editor": {
+      "title": "Editor online",
+      "desc": "Carrega o logótipo, coloca-o no produto e vê o resultado imediatamente."
+    },
+    "minOrder": {
+      "title": "A partir de 10 unidades",
+      "desc": "Perfeito para startups e pequenas equipas."
+    },
+    "pricing": {
+      "title": "Preços transparentes",
+      "desc": "Fatura imediata. Sem custos ocultos."
+    },
+    "timeline": {
+      "title": "7–14 dias",
+      "desc": "Da confirmação à entrega."
+    },
+    "quality": {
+      "title": "Controlo de qualidade",
+      "desc": "Cada lote é inspecionado antes do envio."
+    },
+    "manager": {
+      "title": "Gestor de conta pessoal",
+      "desc": "Disponível do primeiro pedido à entrega."
+    }
+  }
+}

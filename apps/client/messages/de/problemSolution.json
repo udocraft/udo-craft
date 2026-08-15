@@ -1,0 +1,19 @@
+{
+  "problemHeading": "Der Markt ist überschwemmt mit billigem Merch, den niemand trägt",
+  "problemsLabel": "Häufige Probleme",
+  "problems": {
+    "minOrder": "Mindestbestellmenge 500+ Stück",
+    "approvals": "Wochenlange Design-Freigaben",
+    "quality": "Qualität entspricht nicht den Erwartungen",
+    "hidden": "Versteckte Kosten nach der Bestellung"
+  },
+  "solutionHeading": "Merch, der Teil Ihrer Marke wird",
+  "solutionsLabel": "U:DO Vorteile",
+  "solutions": {
+    "minOrder": "Ab 10 Stück ohne Aufschlag",
+    "editor": "Online-Editor — Ergebnis sofort sichtbar",
+    "samples": "Muster vor der Produktion (Box of Touch)",
+    "price": "Festpreis in der Rechnung"
+  },
+  "ctaLabel": "Katalog ansehen"
+}

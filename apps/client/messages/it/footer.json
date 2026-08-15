@@ -1,0 +1,40 @@
+{
+  "readyToStart": "Pronto per iniziare?",
+  "readyDesc": "Da 10 pezzi · 7–14 giorni · Spedizione",
+  "startProject": "Avvia progetto",
+  "ariaLabel": "Piè di pagina",
+  "homeLink": "U:DO CRAFT — torna alla home",
+  "columns": {
+    "products": {
+      "title": "Prodotti",
+      "links": {
+        "constructor": "Configuratore merch",
+        "catalog": "Catalogo",
+        "popup": "Stand popup",
+        "box": "Box of Touch",
+        "designer": "Assumi designer"
+      }
+    },
+    "company": {
+      "title": "Azienda",
+      "links": {
+        "about": "Chi siamo",
+        "how": "Come funziona",
+        "career": "Lavora con noi",
+        "blog": "Blog"
+      }
+    },
+    "support": {
+      "title": "Supporto",
+      "links": {
+        "faq": "FAQ",
+        "contact": "Contatti",
+        "cabinet": "Account",
+        "delivery": "Spedizione e pagamento"
+      }
+    }
+  },
+  "privacy": "Privacy",
+  "terms": "Termini",
+  "cookies": "Cookie"
+}

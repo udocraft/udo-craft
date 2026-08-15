@@ -1,0 +1,27 @@
+{
+  "label": "Box of Touch",
+  "heading": "Sente a qualidade",
+  "headingHighlight": "antes de encomendar",
+  "desc": "A maioria das empresas encomenda às cegas. Box of Touch resolve isso: um conjunto físico de amostras de tecidos, cores e tipos de impressão.",
+  "contentsLabel": "Conteúdo do Box of Touch",
+  "contents": {
+    "products": {
+      "label": "Amostras de produtos",
+      "desc": "T-shirts, hoodies, mangas compridas — sente o corte e o ajuste"
+    },
+    "fabrics": {
+      "label": "Amostras de tecidos",
+      "desc": "Composições e gramaturas variadas — de 180 a 320 g/m²"
+    },
+    "palette": {
+      "label": "Paleta de cores",
+      "desc": "Todas as cores disponíveis com amostras reais"
+    },
+    "printing": {
+      "label": "Tipos de impressão",
+      "desc": "Serigrafia, bordado, DTF — compara ao toque"
+    }
+  },
+  "cta": "Encomendar Box of Touch",
+  "freeDelivery": "Entrega gratuita · Sem compromissos"
+}

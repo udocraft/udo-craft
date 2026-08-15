@@ -1,0 +1,33 @@
+{
+  "label": "Nosotros",
+  "heading": "Plataforma de",
+  "headingHighlight": "merchandising corporativo",
+  "desc1": "De startups a grandes corporaciones — ayudamos a los equipos a crear merch del que se enorgullezcan.",
+  "desc2": "Desde 10 unidades, sin cargos ocultos, producción propia, gestor personal, garantía de calidad.",
+  "features": {
+    "editor": {
+      "title": "Editor online",
+      "desc": "Sube tu logo, colócalo en el producto y ve el resultado al instante."
+    },
+    "minOrder": {
+      "title": "Desde 10 unidades",
+      "desc": "Perfecto para startups y equipos pequeños."
+    },
+    "pricing": {
+      "title": "Precio transparente",
+      "desc": "Factura inmediata. Sin cargos ocultos."
+    },
+    "timeline": {
+      "title": "7–14 días",
+      "desc": "De la confirmación a la entrega."
+    },
+    "quality": {
+      "title": "Control de calidad",
+      "desc": "Cada lote se inspecciona antes del envío."
+    },
+    "manager": {
+      "title": "Gestor personal",
+      "desc": "Disponible desde la primera consulta hasta la entrega."
+    }
+  }
+}

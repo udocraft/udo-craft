@@ -1,0 +1,24 @@
+{
+  "heading": "Three ways to get",
+  "headingAccent": "perfect merch",
+  "desc": "From physical samples to a pop-up stand — choose the format that suits you.",
+  "popup": {
+    "title": "U:DO Popup",
+    "desc": "Mobile stand with live customization. Guests create unique merch and take it away immediately.",
+    "stats": {
+      "events": "events",
+      "product": "per product"
+    },
+    "learnMore": "Learn more",
+    "discuss": "Discuss →"
+  },
+  "ctaStrip": {
+    "title": "Mobile pop-up stand for your event",
+    "desc": "500+ events · 50k+ guests · 5 min per product",
+    "learnMore": "Learn more",
+    "discuss": "Discuss →"
+  },
+  "stepLabel": "Step {n}",
+  "prevStep": "Previous",
+  "nextStep": "Next"
+}

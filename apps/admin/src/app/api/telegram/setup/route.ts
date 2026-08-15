@@ -34,11 +34,25 @@ export async function GET(request: NextRequest) {
 
   // Set bot commands
   const commandsResult = await tg(token, "setMyCommands", {
-    commands: [{ command: "start", description: "Головне меню" }],
+    commands: [
+      { command: "start", description: "Головне меню" },
+      { command: "catalog", description: "Каталог товарів" },
+      { command: "order", description: "Статус замовлення" },
+      { command: "contact", description: "Зв'язатися з менеджером" },
+    ],
   });
 
-  // Get current webhook info for confirmation
+  // Set chat menu button to open Mini App
+  const menuButtonResult = await tg(token, "setChatMenuButton", {
+    menu_button: {
+      type: "web_app",
+      text: "⚡ Каталог",
+      web_app: { url: `${process.env.NEXT_PUBLIC_APP_URL || "https://tg.u-do-craft.store"}` },
+    },
+  });
+
+  // Get current webhook info
   const info = await fetch(`https://api.telegram.org/bot${token}/getWebhookInfo`).then(r => r.json());
 
-  return NextResponse.json({ webhookResult, commandsResult, webhookInfo: info.result });
+  return NextResponse.json({ webhookResult, commandsResult, menuButtonResult, webhookInfo: info.result });
 }

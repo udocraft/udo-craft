@@ -1,0 +1,40 @@
+{
+  "readyToStart": "Redo att börja?",
+  "readyDesc": "Från 10 exemplar · 7–14 dagar · Leverans",
+  "startProject": "Starta projekt",
+  "ariaLabel": "Sidfot",
+  "homeLink": "U:DO CRAFT — tillbaka till startsidan",
+  "columns": {
+    "products": {
+      "title": "Produkter",
+      "links": {
+        "constructor": "Merch-konfigurator",
+        "catalog": "Katalog",
+        "popup": "Popup-stånd",
+        "box": "Box of Touch",
+        "designer": "Anlita designer"
+      }
+    },
+    "company": {
+      "title": "Företag",
+      "links": {
+        "about": "Om oss",
+        "how": "Hur det fungerar",
+        "career": "Karriär",
+        "blog": "Blogg"
+      }
+    },
+    "support": {
+      "title": "Support",
+      "links": {
+        "faq": "FAQ",
+        "contact": "Kontakt",
+        "cabinet": "Konto",
+        "delivery": "Frakt & betalning"
+      }
+    }
+  },
+  "privacy": "Integritet",
+  "terms": "Villkor",
+  "cookies": "Cookies"
+}

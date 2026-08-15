@@ -1,0 +1,40 @@
+{
+  "readyToStart": "Bereit anzufangen?",
+  "readyDesc": "Ab 10 Stück · 7–14 Tage · Lieferung",
+  "startProject": "Projekt starten",
+  "ariaLabel": "Fußzeile",
+  "homeLink": "U:DO CRAFT — zur Startseite",
+  "columns": {
+    "products": {
+      "title": "Produkte",
+      "links": {
+        "constructor": "Merch-Konfigurator",
+        "catalog": "Katalog",
+        "popup": "Popup-Stand",
+        "box": "Box of Touch",
+        "designer": "Designer beauftragen"
+      }
+    },
+    "company": {
+      "title": "Unternehmen",
+      "links": {
+        "about": "Über uns",
+        "how": "So funktioniert's",
+        "career": "Karriere",
+        "blog": "Blog"
+      }
+    },
+    "support": {
+      "title": "Support",
+      "links": {
+        "faq": "FAQ",
+        "contact": "Kontakt",
+        "cabinet": "Konto",
+        "delivery": "Versand & Zahlung"
+      }
+    }
+  },
+  "privacy": "Datenschutz",
+  "terms": "AGB",
+  "cookies": "Cookies"
+}

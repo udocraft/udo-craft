@@ -1,0 +1,11 @@
+{
+  "title": "Koszyk",
+  "titleWithCount": "Koszyk ({count})",
+  "empty": "Koszyk jest pusty",
+  "emptyDesc": "Wybierz produkt i skonfiguruj nadruk",
+  "toCatalog": "Do katalogu",
+  "ariaLabel": "Koszyk",
+  "quantity": "{qty} szt · {size}",
+  "total": "Łącznie:",
+  "cartItem": "Produkt w koszyku"
+}

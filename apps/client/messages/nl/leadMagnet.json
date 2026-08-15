@@ -1,0 +1,14 @@
+{
+  "badge": "Gratis",
+  "heading": "Ontvang een gratis mockup van je merch",
+  "desc": "Upload je logo — wij plaatsen het op een echt product en sturen de mockup naar je e-mail.",
+  "emailLabel": "Jouw e-mail",
+  "cta": "Mockup ontvangen",
+  "loading": "Verzenden...",
+  "emailError": "Voer een geldig e-mailadres in",
+  "success": "Dank je!",
+  "successDesc": "De mockup arriveert binnen 24 uur in je inbox",
+  "formLabel": "Mockup-aanvraagformulier",
+  "orCalculate": "Wil je de prijs nu weten?",
+  "openCalculator": "Prijscalculator openen →"
+}

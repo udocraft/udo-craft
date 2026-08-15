@@ -1,0 +1,33 @@
+{
+  "heading": "Preguntas frecuentes",
+  "noAnswer": "¿No encontraste respuesta?",
+  "contactUs": "Contáctanos",
+  "replyTime": "— respondemos en una hora.",
+  "questionsLabel": "Preguntas y respuestas",
+  "items": {
+    "0": {
+      "question": "¿Cuál es el pedido mínimo?",
+      "answer": "Desde 10 unidades. Sin sobrecargo para tiradas pequeñas."
+    },
+    "1": {
+      "question": "¿Cuánto cuesta la impresión?",
+      "answer": "El precio depende del tipo (serigrafía, bordado, DTF) y la cantidad. Véalo en el editor online."
+    },
+    "2": {
+      "question": "¿Cuánto tarda el pedido?",
+      "answer": "Plazo estándar — 7–14 días hábiles desde la confirmación."
+    },
+    "3": {
+      "question": "¿Puedo ver la calidad antes de hacer un pedido grande?",
+      "answer": "Sí. Box of Touch — muestras físicas de telas, colores y productos."
+    },
+    "4": {
+      "question": "¿Qué pasa si no me gusta el resultado?",
+      "answer": "Aprobamos el diseño antes de la producción. Si no coincide — lo rehacemos gratis."
+    },
+    "5": {
+      "question": "¿Hay descuentos para pedidos grandes?",
+      "answer": "Sí. 10–49 unidades — precio base. 50–99 — 12% dto. 100+ — 15% dto."
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "breadcrumb": "/ Conta",
+  "settings": "Definições",
+  "logout": "Terminar sessão",
+  "noOrders": "Ainda sem encomendas",
+  "toCatalog": "Ao catálogo",
+  "writeTo": "Escrever ao gestor",
+  "tabs": {
+    "details": "Detalhes",
+    "chat": "Chat",
+    "files": "Ficheiros"
+  },
+  "status": {
+    "new": "Novo pedido",
+    "in_progress": "Em curso",
+    "production": "Produção",
+    "completed": "Concluído",
+    "archived": "Arquivo"
+  },
+  "delivery": {
+    "nova_poshta": "CTT",
+    "ukrposhta": "DHL",
+    "pickup": "Levantamento"
+  },
+  "details": {
+    "phone": "Telefone",
+    "email": "E-mail",
+    "company": "Empresa",
+    "orderDate": "Data da encomenda",
+    "orderAmount": "Valor da encomenda",
+    "delivery": "Entrega",
+    "deadline": "Prazo",
+    "positions": "Posições ({n})",
+    "attachments": "Anexos ({n})",
+    "invoice": "Transferir fatura",
+    "print": "Impressão"
+  },
+  "chat": {
+    "placeholder": "Mensagem...",
+    "sendLabel": "Enviar mensagem",
+    "attachLabel": "Anexar ficheiro",
+    "loading": "A carregar mensagens...",
+    "empty": "Ainda sem mensagens",
+    "fileTooLarge": "\"{name}\" excede 10 MB"
+  },
+  "files": {
+    "empty": "Ainda sem ficheiros",
+    "openFile": "Abrir ficheiro"
+  }
+}

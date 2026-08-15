@@ -1,0 +1,85 @@
+{
+  "title": "Cart",
+  "orderTitle": "Place order",
+  "stepCart": "Cart",
+  "stepForm": "Company details",
+  "emptyCart": "Cart is empty",
+  "toCatalog": "Go to catalog",
+  "total": "Total",
+  "finalPriceNote": "Final price is agreed with the manager",
+  "placeOrder": "Place order",
+  "edit": "Edit",
+  "discount": "-{pct}% discount",
+  "company": {
+    "title": "Company details",
+    "name": "Company name *",
+    "namePlaceholder": "LLC «Name»",
+    "taxId": "Tax ID / Details",
+    "taxIdPlaceholder": "12345678"
+  },
+  "contact": {
+    "title": "Contact person",
+    "fullName": "Full name *",
+    "fullNamePlaceholder": "John Smith",
+    "email": "Email *",
+    "emailPlaceholder": "hr@company.com",
+    "phone": "Phone",
+    "phonePlaceholder": "+1 XXX XXX XXXX",
+    "social": "Telegram / Instagram",
+    "socialPlaceholder": "@username or link"
+  },
+  "delivery": {
+    "title": "Delivery & deadlines",
+    "options": {
+      "nova_poshta": {
+        "label": "Nova Poshta",
+        "desc": "2–3 business days"
+      },
+      "ukrposhta": {
+        "label": "Ukrposhta",
+        "desc": "5–7 business days"
+      },
+      "pickup": {
+        "label": "Pickup",
+        "desc": "Kyiv, Khreshchatyk 1"
+      }
+    },
+    "deadline": "Desired deadline",
+    "comment": "Order comment",
+    "commentPlaceholder": "Additional wishes, printing details..."
+  },
+  "submit": "Confirm order",
+  "submitting": "Submitting...",
+  "finalPriceManager": "Final price and invoice will be sent by manager after confirmation",
+  "success": {
+    "title": "Order accepted!",
+    "desc": "Our manager will contact you within 24 hours.",
+    "createAccount": "Create personal account",
+    "loginAccount": "Log in to account",
+    "createAccountDesc": "Track order status, chat with manager and view invoices — all in one place.",
+    "emailExists": "This email is already registered. Enter your password to log in and view your orders.",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "newPasswordLabel": "Create a password",
+    "passwordPlaceholder": "Minimum 6 characters",
+    "enterPasswordPlaceholder": "Enter password",
+    "creating": "Creating...",
+    "create": "Create account",
+    "loggingIn": "Logging in...",
+    "login": "Log in",
+    "passwordError": "Password must be at least 6 characters",
+    "enterPasswordError": "Enter password",
+    "wrongPassword": "Incorrect password",
+    "registrationError": "Registration error. Try again later.",
+    "skip": "Skip, return to home",
+    "accountCreated": {
+      "title": "Account created!",
+      "desc": "We sent a confirmation email to {email}. Confirm your email to log in.",
+      "loginBtn": "Log in to account",
+      "homeLink": "Return to home"
+    }
+  },
+  "back": "Back",
+  "header": "U:DO",
+  "backAriaLabel": "Back"
+}

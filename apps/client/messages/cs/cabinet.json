@@ -1,0 +1,50 @@
+{
+  "breadcrumb": "/ Účet",
+  "settings": "Nastavení",
+  "logout": "Odhlásit se",
+  "noOrders": "Zatím žádné objednávky",
+  "toCatalog": "Do katalogu",
+  "writeTo": "Napsat account managerovi",
+  "tabs": {
+    "details": "Detaily",
+    "chat": "Chat",
+    "files": "Soubory"
+  },
+  "status": {
+    "new": "Nová žádost",
+    "in_progress": "Probíhá",
+    "production": "Výroba",
+    "completed": "Dokončeno",
+    "archived": "Archiv"
+  },
+  "delivery": {
+    "nova_poshta": "Česká pošta",
+    "ukrposhta": "DHL",
+    "pickup": "Osobní odběr"
+  },
+  "details": {
+    "phone": "Telefon",
+    "email": "E-mail",
+    "company": "Firma",
+    "orderDate": "Datum objednávky",
+    "orderAmount": "Částka objednávky",
+    "delivery": "Doprava",
+    "deadline": "Termín",
+    "positions": "Položky ({n})",
+    "attachments": "Přílohy ({n})",
+    "invoice": "Stáhnout fakturu",
+    "print": "Tisk"
+  },
+  "chat": {
+    "placeholder": "Zpráva...",
+    "sendLabel": "Odeslat zprávu",
+    "attachLabel": "Připojit soubor",
+    "loading": "Načítání zpráv...",
+    "empty": "Zatím žádné zprávy",
+    "fileTooLarge": "\"{name}\" překračuje 10 MB"
+  },
+  "files": {
+    "empty": "Zatím žádné soubory",
+    "openFile": "Otevřít soubor"
+  }
+}

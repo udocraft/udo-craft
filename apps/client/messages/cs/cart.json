@@ -1,0 +1,11 @@
+{
+  "title": "Košík",
+  "titleWithCount": "Košík ({count})",
+  "empty": "Košík je prázdný",
+  "emptyDesc": "Vyberte produkt a nastavte tisk",
+  "toCatalog": "Do katalogu",
+  "ariaLabel": "Košík",
+  "quantity": "{qty} ks · {size}",
+  "total": "Celkem:",
+  "cartItem": "Položka košíku"
+}

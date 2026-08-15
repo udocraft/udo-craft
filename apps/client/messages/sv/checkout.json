@@ -1,0 +1,85 @@
+{
+  "title": "Kundvagn",
+  "orderTitle": "Lägg beställning",
+  "stepCart": "Kundvagn",
+  "stepForm": "Företagsuppgifter",
+  "emptyCart": "Kundvagnen är tom",
+  "toCatalog": "Till katalog",
+  "total": "Totalt",
+  "finalPriceNote": "Slutpris överenskommes med account manager",
+  "placeOrder": "Lägg beställning",
+  "edit": "Redigera",
+  "discount": "-{pct}% rabatt",
+  "company": {
+    "title": "Företagsuppgifter",
+    "name": "Företagsnamn *",
+    "namePlaceholder": "AB «Namn»",
+    "taxId": "Organisationsnummer / VAT",
+    "taxIdPlaceholder": "SE556123456701"
+  },
+  "contact": {
+    "title": "Kontaktperson",
+    "fullName": "För- och efternamn *",
+    "fullNamePlaceholder": "Erik Svensson",
+    "email": "E-post *",
+    "emailPlaceholder": "hr@foretag.se",
+    "phone": "Telefon",
+    "phonePlaceholder": "+46 XX XXX XXXX",
+    "social": "Telegram / Instagram",
+    "socialPlaceholder": "@användarnamn eller länk"
+  },
+  "delivery": {
+    "title": "Leverans & deadlines",
+    "options": {
+      "nova_poshta": {
+        "label": "PostNord",
+        "desc": "2–4 arbetsdagar"
+      },
+      "ukrposhta": {
+        "label": "DHL",
+        "desc": "1–2 arbetsdagar"
+      },
+      "pickup": {
+        "label": "Upphämtning",
+        "desc": "Efter överenskommelse"
+      }
+    },
+    "deadline": "Önskat datum",
+    "comment": "Kommentar till beställning",
+    "commentPlaceholder": "Särskilda önskemål, tryckdetaljer..."
+  },
+  "submit": "Bekräfta beställning",
+  "submitting": "Skickar...",
+  "finalPriceManager": "Slutpris och faktura skickas av account manager efter bekräftelse",
+  "success": {
+    "title": "Beställning mottagen!",
+    "desc": "Vår account manager kontaktar dig inom 24 timmar.",
+    "createAccount": "Skapa personligt konto",
+    "loginAccount": "Logga in på konto",
+    "createAccountDesc": "Följ beställningsstatus, chatta med account manager och visa fakturor.",
+    "emailExists": "Den här e-posten är redan registrerad. Ange lösenord för att logga in.",
+    "emailLabel": "E-post",
+    "passwordLabel": "Lösenord",
+    "newPasswordLabel": "Skapa ett lösenord",
+    "passwordPlaceholder": "Minst 6 tecken",
+    "enterPasswordPlaceholder": "Ange lösenord",
+    "creating": "Skapar...",
+    "create": "Skapa konto",
+    "loggingIn": "Loggar in...",
+    "login": "Logga in",
+    "passwordError": "Lösenordet måste ha minst 6 tecken",
+    "enterPasswordError": "Ange lösenord",
+    "wrongPassword": "Fel lösenord",
+    "registrationError": "Registreringsfel. Försök igen senare.",
+    "skip": "Hoppa över, tillbaka till startsidan",
+    "accountCreated": {
+      "title": "Konto skapat!",
+      "desc": "Vi skickade ett bekräftelsemail till {email}.",
+      "loginBtn": "Logga in på konto",
+      "homeLink": "Tillbaka till startsidan"
+    }
+  },
+  "back": "Tillbaka",
+  "header": "U:DO",
+  "backAriaLabel": "Tillbaka"
+}

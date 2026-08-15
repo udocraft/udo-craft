@@ -3,62 +3,46 @@
 import { useRef, useEffect, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
+import { useTranslations } from "next-intl";
 import { Check, X, Minus } from "lucide-react";
 
-const FEATURES = [
-  { name: "Мінімальний тираж", desc: "Від якої кількості можна зробити замовлення" },
-  { name: "Онлайн-редактор", desc: "Можливість самостійно створити дизайн 24/7" },
-  { name: "Зразки перед тиражем", desc: "Отримання тестового зразка до запуску партії" },
-  { name: "Особистий менеджер", desc: "Прямий зв'язок для швидкого вирішення питань" },
-  { name: "Фіксована ціна", desc: "Відсутність прихованих платежів після узгодження" },
-  { name: "Термін виробництва", desc: "Час від погодження макету до відправки мерчу" },
-  { name: "Гарантія якості", desc: "Безкоштовна заміна у разі виявлення браку" },
-  { name: "Виїзний Popup-стенд", desc: "Організація офлайн-точки на вашому івенті" },
-  { name: "Допомога дизайнера", desc: "Адаптація логотипу та макетів під друк" },
-  { name: "Логістика", desc: "Фасування та доставка кожному працівнику окремо" },
-];
+const FEATURE_KEYS = [
+  "minOrder", "editor", "samples", "manager", "fixedPrice",
+  "timeline", "quality", "popup", "design", "logistics",
+] as const;
 
 type CellValue = "check" | "cross" | "partial" | string;
 
-const COLUMNS = [
-  {
-    name: "Типовий постачальник",
-    highlight: false,
-    values: ["500+ шт", "cross", "cross", "cross", "cross", "30+ днів", "partial", "cross", "partial", "cross"],
-  },
-  {
-    name: "U:DO Craft",
-    highlight: true,
-    values: ["від 10 шт", "check", "check", "check", "check", "7–14 днів", "check", "check", "check", "check"],
-  },
-  {
-    name: "Друкарня",
-    highlight: false,
-    values: ["100+ шт", "cross", "partial", "cross", "partial", "14–21 днів", "partial", "cross", "partial", "cross"],
-  },
-];
+interface CellProps { value: CellValue; highlight: boolean; t: (key: string) => string }
 
-function Cell({ value, highlight }: { value: CellValue; highlight: boolean }) {
+function Cell({ value, highlight, t }: CellProps) {
   if (value === "check")
     return (
-      <span className="inline-flex items-center justify-center" aria-label="Так">
+      <span className="inline-flex items-center justify-center" aria-label={t("yes")}>
         <Check className={`w-6 h-6 ${highlight ? "text-white" : "text-green-500"}`} strokeWidth={3} />
       </span>
     );
   if (value === "cross")
     return (
-      <span className="inline-flex items-center justify-center" aria-label="Ні">
+      <span className="inline-flex items-center justify-center" aria-label={t("no")}>
         <X className={`w-5 h-5 ${highlight ? "text-white/40" : "text-red-500/60"}`} strokeWidth={2.5} />
       </span>
     );
   if (value === "partial")
     return (
-      <span className="inline-flex items-center justify-center" aria-label="Частково">
+      <span className="inline-flex items-center justify-center" aria-label={t("partial")}>
         <Minus className={`w-5 h-5 ${highlight ? "text-white/80" : "text-amber-500"}`} strokeWidth={3} />
       </span>
     );
   return <span className={`text-sm font-bold ${highlight ? "text-white" : "text-foreground"}`}>{value}</span>;
 }
+
+const COLUMN_NAMES = ["typical", "udo", "printer"] as const;
+const COLUMN_VALUES: CellValue[][] = [
+  ["500+ шт", "cross", "cross", "cross", "cross", "30+ днів", "partial", "cross", "partial", "cross"],
+  ["від 10 шт", "check", "check", "check", "check", "7–14 днів", "check", "check", "check", "check"],
+  ["100+ шт", "cross", "partial", "cross", "partial", "14–21 днів", "partial", "cross", "partial", "cross"],
+];
 
 // ── Section ───────────────────────────────────────────────────────────────
 

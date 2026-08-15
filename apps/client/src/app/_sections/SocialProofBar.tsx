@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { useRef } from "react";
 
 const BRANDS = [
@@ -10,6 +11,7 @@ const BRANDS = [
 ];
 
 export function SocialProofBar() {
+  const t = useTranslations("socialProof");
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
 
@@ -22,7 +24,7 @@ export function SocialProofBar() {
           transition={{ duration: 0.6 }}
           className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground text-center"
         >
-          Нам довіряють команди з усієї України
+          {t("trustedBy")}
         </motion.p>
       </div>
 

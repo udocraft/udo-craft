@@ -1,0 +1,14 @@
+{
+  "badge": "Gratis",
+  "heading": "Consigue un mockup gratuito de tu merch",
+  "desc": "Sube tu logo — lo aplicamos en un producto real y te enviamos el mockup por correo.",
+  "emailLabel": "Tu correo",
+  "cta": "Obtener mockup",
+  "loading": "Enviando...",
+  "emailError": "Introduce un correo válido",
+  "success": "¡Gracias!",
+  "successDesc": "El mockup llegará a tu bandeja de entrada en 24 h",
+  "formLabel": "Formulario de mockup",
+  "orCalculate": "¿Quieres saber el precio ahora?",
+  "openCalculator": "Abrir calculadora de precios →"
+}

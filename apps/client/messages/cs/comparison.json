@@ -1,0 +1,58 @@
+{
+  "heading": "U:DO vs the rest of the market",
+  "subtext": "Compare the conditions — and understand why 500+ teams choose us.",
+  "featureLabel": "Feature",
+  "yourChoice": "Your choice",
+  "yes": "Yes",
+  "no": "No",
+  "partial": "Partial",
+  "selectProvider": "Select provider",
+  "goTo": "Go to: {name}",
+  "features": {
+    "minOrder": {
+      "name": "Minimum run",
+      "desc": "Minimum quantity for an order"
+    },
+    "editor": {
+      "name": "Online editor",
+      "desc": "Ability to create a design 24/7 independently"
+    },
+    "samples": {
+      "name": "Samples before run",
+      "desc": "Getting a test sample before launching the batch"
+    },
+    "manager": {
+      "name": "Personal manager",
+      "desc": "Direct contact for quick problem solving"
+    },
+    "fixedPrice": {
+      "name": "Fixed price",
+      "desc": "No hidden fees after approval"
+    },
+    "timeline": {
+      "name": "Production time",
+      "desc": "Time from design approval to shipping"
+    },
+    "quality": {
+      "name": "Quality guarantee",
+      "desc": "Free replacement if defects are found"
+    },
+    "popup": {
+      "name": "Mobile pop-up stand",
+      "desc": "Organizing an offline point at your event"
+    },
+    "design": {
+      "name": "Designer help",
+      "desc": "Logo adaptation and design for printing"
+    },
+    "logistics": {
+      "name": "Logistics",
+      "desc": "Packing and delivery to each employee separately"
+    }
+  },
+  "columns": {
+    "typical": "Typical supplier",
+    "udo": "U:DO Craft",
+    "printer": "Print shop"
+  }
+}

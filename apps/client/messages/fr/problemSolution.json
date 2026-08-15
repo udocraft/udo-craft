@@ -1,0 +1,19 @@
+{
+  "problemHeading": "Le marché regorge de merch bon marché que personne ne porte",
+  "problemsLabel": "Problèmes courants",
+  "problems": {
+    "minOrder": "Quantité minimale 500+ unités",
+    "approvals": "Des semaines pour valider les maquettes",
+    "quality": "La qualité ne correspond pas aux attentes",
+    "hidden": "Coûts cachés après la commande"
+  },
+  "solutionHeading": "Du merch qui fait partie de votre marque",
+  "solutionsLabel": "Avantages U:DO",
+  "solutions": {
+    "minOrder": "Dès 10 unités sans surcoût",
+    "editor": "Éditeur en ligne — résultat immédiat",
+    "samples": "Échantillons avant production (Box of Touch)",
+    "price": "Prix fixe dans la facture"
+  },
+  "ctaLabel": "Voir le catalogue"
+}

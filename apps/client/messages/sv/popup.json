@@ -1,0 +1,112 @@
+{
+  "badge": "Mobil popup-tjänst",
+  "heroHeading": "Merch-popup på ditt evenemang —",
+  "heroSubheading": "en liveupplevelse man inte glömmer",
+  "heroDesc": "Vi kommer till dig. Gästerna väljer kläder, personaliserar trycket på plats och går hem med färdig merch.",
+  "bookBtn": "Boka popup",
+  "howItWorks": "Hur det fungerar",
+  "stats": {
+    "events": "Genomförda popups",
+    "time": "Personaliseringstid",
+    "guests": "Gäster vid ett evenemang",
+    "satisfaction": "Nöjda arrangörer"
+  },
+  "useCases": {
+    "label": "För vem",
+    "heading": "Lämpligt för alla evenemang",
+    "items": {
+      "corporate": {
+        "title": "Företagsevenemang",
+        "desc": "Gör företagsevemanget oförglömligt — gästerna går hem med personaliserad merch."
+      },
+      "conferences": {
+        "title": "Konferenser och forum",
+        "desc": "Brandad merch på plats — bästa nätverkingsverktyget."
+      },
+      "festivals": {
+        "title": "Festivaler och marknader",
+        "desc": "Popup-stånd som väcker uppmärksamhet. Livepersonalisering — det är ett show."
+      },
+      "launches": {
+        "title": "Produktlanseringar",
+        "desc": "Lansering med merch som gästerna tillverkade själva."
+      },
+      "universities": {
+        "title": "Universitet och skolor",
+        "desc": "Examina, öppet hus, studentevenemang."
+      },
+      "b2b": {
+        "title": "B2B-evenemang",
+        "desc": "Partnermöten, mässor, presentationer."
+      }
+    }
+  },
+  "process": {
+    "label": "Process",
+    "heading": "Tre steg till den perfekta popupen",
+    "steps": {
+      "0": {
+        "step": "01",
+        "title": "Välj format",
+        "desc": "Berätta om evenemanget — antal gäster, plats, datum."
+      },
+      "1": {
+        "step": "02",
+        "title": "Förbereda stånd",
+        "desc": "Vi tar med utrustning, kläder och allt som behövs för personalisering."
+      },
+      "2": {
+        "step": "03",
+        "title": "Gästerna personaliserar",
+        "desc": "Varje gäst väljer en produkt, placerar trycket och går hem med färdig merch."
+      }
+    }
+  },
+  "faq": {
+    "label": "FAQ",
+    "heading": "Vanliga frågor",
+    "items": {
+      "0": {
+        "q": "Minsta antal deltagare?",
+        "a": "Från 50 personer."
+      },
+      "1": {
+        "q": "Hur lång tid tar personalisering av en produkt?",
+        "a": "3 till 10 minuter beroende på komplexitet."
+      },
+      "2": {
+        "q": "Vilka produkter finns tillgängliga?",
+        "a": "T-shirts, hoodies, longsleeves, kepsar och accessoarer."
+      },
+      "3": {
+        "q": "Vem betalar för merchen?",
+        "a": "Båda alternativen är möjliga."
+      },
+      "4": {
+        "q": "Hur långt i förväg boka?",
+        "a": "Vi rekommenderar 2–3 veckor före evenemanget."
+      }
+    }
+  },
+  "contact": {
+    "label": "Boka",
+    "heading": "Berätta om ditt evenemang",
+    "desc": "Lämna en förfrågan — en account manager kontaktar dig inom en arbetsdag.",
+    "benefits": {
+      "0": "Gratis konsultation",
+      "1": "Individuell uppskattning",
+      "2": "Svar inom 24 timmar"
+    }
+  },
+  "nav": {
+    "useCases": "För vem",
+    "how": "Hur det fungerar",
+    "faq": "FAQ",
+    "contacts": "Kontakt"
+  },
+  "book": "Boka",
+  "footerCopyright": "U:DO CRAFT. Alla rättigheter förbehållna.",
+  "menuOpen": "Öppna meny",
+  "menuClose": "Stäng meny",
+  "homeLink": "Hem"
+}

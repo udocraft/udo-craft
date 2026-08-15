@@ -1,0 +1,21 @@
+{
+  "label": "U:DO Popup",
+  "heading": "Pop-up stand — merch right at the event",
+  "slides": {
+    "0": {
+      "title": "Choose a package",
+      "desc": "Sticker packs or print packages — find the right format for your event"
+    },
+    "1": {
+      "title": "Choose a product",
+      "desc": "T-shirts, hoodies, accessories — guests choose on-site"
+    },
+    "2": {
+      "title": "We come to you",
+      "desc": "We bring equipment and apply prints right at the event"
+    }
+  },
+  "cta": "Learn more",
+  "slideLabel": "Slide {n}",
+  "photosLabel": "Pop-up stand photos"
+}

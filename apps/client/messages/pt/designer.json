@@ -1,0 +1,23 @@
+{
+  "label": "Design service",
+  "heading": "No logo? We'll help",
+  "desc": "Our designer will adapt your logo for printing or create a brand identity from scratch. Result — in 2 days.",
+  "steps": {
+    "0": {
+      "emoji": "💬",
+      "title": "Tell us about your brand",
+      "body": "Send your logo, brand colors and style description. If you have nothing — just tell us about the company. The brief takes 10–15 minutes online or by phone."
+    },
+    "1": {
+      "emoji": "✨",
+      "title": "Get a concept",
+      "body": "The designer will prepare 2–3 adaptation options for printing on clothing. Deadline — 2 business days. Includes adaptation for silk-screen, embroidery and DTF."
+    },
+    "2": {
+      "emoji": "✅",
+      "title": "Approve and order",
+      "body": "Choose an option, make edits (up to 2 rounds included), receive final files. All files stay with you — for any future orders."
+    }
+  },
+  "cta": "Discuss project"
+}

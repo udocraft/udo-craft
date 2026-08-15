@@ -1,0 +1,14 @@
+{
+  "badge": "Grátis",
+  "heading": "Obtém um mockup gratuito do teu merch",
+  "desc": "Carrega o logótipo — aplicamo-lo num produto real e enviamos o mockup para o teu e-mail.",
+  "emailLabel": "O teu e-mail",
+  "cta": "Obter mockup",
+  "loading": "A enviar...",
+  "emailError": "Introduz um e-mail válido",
+  "success": "Obrigado!",
+  "successDesc": "O mockup chegará à tua caixa de entrada em 24 horas",
+  "formLabel": "Formulário de pedido de mockup",
+  "orCalculate": "Queres saber o preço agora?",
+  "openCalculator": "Abrir calculadora de preços →"
+}

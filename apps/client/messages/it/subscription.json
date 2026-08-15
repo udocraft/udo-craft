@@ -1,0 +1,32 @@
+{
+  "label": "Merch subscription",
+  "heading": "Merch by subscription.",
+  "headingMuted": "No boxes in the office.",
+  "desc": "We store your items, assemble kits and ship them on a schedule: new employee, seasonal replacement, event or regular team need.",
+  "steps": {
+    "warehouse": "Warehouse",
+    "packing": "Packing",
+    "shipping": "Shipping"
+  },
+  "plans": {
+    "welcome": {
+      "title": "Welcome kits",
+      "desc": "For onboarding, HR processes and growing teams.",
+      "features": [
+        "storage",
+        "personalization",
+        "delivery to employee"
+      ]
+    },
+    "uniform": {
+      "title": "Regular uniforms",
+      "desc": "For HoReCa, retail and teams with regular uniform replacement.",
+      "features": [
+        "size tracking",
+        "repeat shipments",
+        "stock management"
+      ]
+    }
+  },
+  "cta": "Discuss subscription"
+}

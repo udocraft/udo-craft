@@ -1,0 +1,14 @@
+{
+  "badge": "Zdarma",
+  "heading": "Získej zdarma mockup svého merche",
+  "desc": "Nahraj logo — aplikujeme ho na skutečný produkt a pošleme mockup na tvůj e-mail.",
+  "emailLabel": "Tvůj e-mail",
+  "cta": "Získat mockup",
+  "loading": "Odesílání...",
+  "emailError": "Zadej platný e-mail",
+  "success": "Děkujeme!",
+  "successDesc": "Mockup dorazí do tvé schránky do 24 hodin",
+  "formLabel": "Formulář pro mockup",
+  "orCalculate": "Chceš znát cenu hned?",
+  "openCalculator": "Otevřít kalkulačku cen →"
+}

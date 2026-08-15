@@ -1,0 +1,33 @@
+{
+  "heading": "Da ideia ao merch — em 4 passos",
+  "subtext": "Todo o processo demora menos de 15 minutos. Preços visíveis de imediato — sem chamadas nem negociações.",
+  "estimatedTime": "Tempo estimado",
+  "stepLabel": "Passo {n}: {title}",
+  "stepsLabel": "Passos do processo",
+  "steps": {
+    "1": {
+      "title": "Escolher um produto",
+      "body": "Navega no catálogo com preços reais. O preço atualiza-se instantaneamente ao alterar quantidade ou tipo de impressão.",
+      "cta": "Abrir catálogo",
+      "time": "~5 min"
+    },
+    "2": {
+      "title": "Personalizar online",
+      "body": "Carrega o logótipo, coloca-o no produto, escolhe a zona de impressão. O editor mostra o custo exato em tempo real.",
+      "cta": "Experimentar editor",
+      "time": "~10 min"
+    },
+    "3": {
+      "title": "Receber orçamento",
+      "body": "Preenche o formulário — um gestor entra em contacto em 2 horas. Preço fixo sem custos ocultos.",
+      "cta": "Contactar",
+      "time": "~2 h"
+    },
+    "4": {
+      "title": "Receber o teu merch",
+      "body": "Produção 7–14 dias úteis. Entrega. Se algo não estiver correto — refazemos gratuitamente.",
+      "cta": "Ler FAQ",
+      "time": "7–14 dias"
+    }
+  }
+}

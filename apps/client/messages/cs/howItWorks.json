@@ -1,0 +1,21 @@
+{
+  "label": "Jak to funguje",
+  "heading": "Přizpůsob pro své cíle",
+  "steps": {
+    "0": {
+      "title": "Vybrat produkty",
+      "desc": "Procházej katalog, filtruj podle kategorií. Zvol základ pro svůj merch.",
+      "cta": "Do katalogu"
+    },
+    "1": {
+      "title": "Přizpůsobit oblečení",
+      "desc": "Nahraj logo, zvol zónu tisku, velikost a barvu. Náhled v reálném čase.",
+      "cta": "Vyzkoušet"
+    },
+    "2": {
+      "title": "Získat návrh",
+      "desc": "Vyplň objednávkový formulář. Account manager se ozve k potvrzení.",
+      "cta": "Objednat"
+    }
+  }
+}

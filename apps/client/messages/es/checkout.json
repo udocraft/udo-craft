@@ -1,0 +1,85 @@
+{
+  "title": "Carrito",
+  "orderTitle": "Realizar pedido",
+  "stepCart": "Carrito",
+  "stepForm": "Datos de empresa",
+  "emptyCart": "El carrito está vacío",
+  "toCatalog": "Al catálogo",
+  "total": "Total",
+  "finalPriceNote": "El precio final se acuerda con el gestor",
+  "placeOrder": "Realizar el pedido",
+  "edit": "Editar",
+  "discount": "-{pct}% descuento",
+  "company": {
+    "title": "Datos de empresa",
+    "name": "Nombre de la empresa *",
+    "namePlaceholder": "SL «Nombre»",
+    "taxId": "NIF / CIF",
+    "taxIdPlaceholder": "B12345678"
+  },
+  "contact": {
+    "title": "Persona de contacto",
+    "fullName": "Nombre y apellidos *",
+    "fullNamePlaceholder": "Juan García",
+    "email": "Correo electrónico *",
+    "emailPlaceholder": "rrhh@empresa.es",
+    "phone": "Teléfono",
+    "phonePlaceholder": "+34 XXX XXX XXX",
+    "social": "Telegram / Instagram",
+    "socialPlaceholder": "@usuario o enlace"
+  },
+  "delivery": {
+    "title": "Envío y plazos",
+    "options": {
+      "nova_poshta": {
+        "label": "Correos",
+        "desc": "3–5 días hábiles"
+      },
+      "ukrposhta": {
+        "label": "MRW",
+        "desc": "1–2 días hábiles"
+      },
+      "pickup": {
+        "label": "Recogida",
+        "desc": "Previa cita"
+      }
+    },
+    "deadline": "Fecha deseada",
+    "comment": "Comentario del pedido",
+    "commentPlaceholder": "Deseos especiales, detalles de impresión..."
+  },
+  "submit": "Confirmar pedido",
+  "submitting": "Enviando...",
+  "finalPriceManager": "El precio final y la factura serán enviados por el gestor",
+  "success": {
+    "title": "¡Pedido recibido!",
+    "desc": "Nuestro gestor se pondrá en contacto contigo en 24 horas.",
+    "createAccount": "Crear cuenta personal",
+    "loginAccount": "Acceder a la cuenta",
+    "createAccountDesc": "Sigue el estado de tu pedido, chatea con tu gestor y consulta facturas.",
+    "emailExists": "Este correo ya está registrado. Introduce tu contraseña para acceder.",
+    "emailLabel": "Correo electrónico",
+    "passwordLabel": "Contraseña",
+    "newPasswordLabel": "Crea una contraseña",
+    "passwordPlaceholder": "Mínimo 6 caracteres",
+    "enterPasswordPlaceholder": "Introduce la contraseña",
+    "creating": "Creando...",
+    "create": "Crear cuenta",
+    "loggingIn": "Accediendo...",
+    "login": "Acceder",
+    "passwordError": "La contraseña debe tener al menos 6 caracteres",
+    "enterPasswordError": "Introduce la contraseña",
+    "wrongPassword": "Contraseña incorrecta",
+    "registrationError": "Error de registro. Inténtalo más tarde.",
+    "skip": "Omitir, volver al inicio",
+    "accountCreated": {
+      "title": "¡Cuenta creada!",
+      "desc": "Enviamos un correo de confirmación a {email}.",
+      "loginBtn": "Acceder a la cuenta",
+      "homeLink": "Volver al inicio"
+    }
+  },
+  "back": "Atrás",
+  "header": "U:DO",
+  "backAriaLabel": "Atrás"
+}

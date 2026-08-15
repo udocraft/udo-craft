@@ -1,0 +1,48 @@
+{
+  "nameLabel": "Ditt namn *",
+  "namePlaceholder": "Erik Svensson",
+  "emailLabel": "E-post *",
+  "emailPlaceholder": "hr@foretag.se",
+  "phoneLabel": "Telefon *",
+  "phonePlaceholder": "+46 XX XXX XXXX",
+  "companyLabel": "Företag",
+  "companyPlaceholder": "Företagsnamn",
+  "topicLabel": "Ämne *",
+  "messageLabel": "Berätta om ditt projekt",
+  "messagePlaceholder": "Antal, produkttyp, deadlines...",
+  "filesLabel": "Ladda upp filer (designer, logotyper etc.)",
+  "filesClick": "Klicka eller dra filer hit",
+  "filesDesc": "Designer, logotyper, bilder...",
+  "submit": "Skicka",
+  "submitting": "Skickar...",
+  "error": "Ett fel uppstod. Försök igen eller kontakta oss direkt.",
+  "success": "Tack för ditt meddelande!",
+  "successDesc": "Vi har tagit emot din förfrågan och återkommer snart.",
+  "deleteFile": "Ta bort {name}",
+  "topics": {
+    "merch": {
+      "label": "Företagsmerch",
+      "desc": "T-shirts, hoodies, accessoarer för ditt team eller varumärke"
+    },
+    "popup": {
+      "label": "Popup-stånd för evenemang",
+      "desc": "Live merch-personalisering på ditt evenemang"
+    },
+    "box": {
+      "label": "Box of Touch",
+      "desc": "Fysiska tyg- och produktprover före produktion"
+    },
+    "designer": {
+      "label": "Designertjänster",
+      "desc": "Logotyputveckling eller -anpassning för tryck"
+    },
+    "bulk": {
+      "label": "Stor beställning (500+)",
+      "desc": "Grossistbeställningar med individuella villkor"
+    },
+    "other": {
+      "label": "Övrigt",
+      "desc": "Andra frågor eller förslag"
+    }
+  }
+}

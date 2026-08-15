@@ -1,0 +1,112 @@
+{
+  "badge": "Mobiele popup-service",
+  "heroHeading": "Merch-popup op jouw evenement —",
+  "heroSubheading": "een live ervaring die men niet vergeet",
+  "heroDesc": "Wij komen naar je toe. Gasten kiezen kleding, personaliseren de druk ter plaatse en gaan weg met kant-en-klare merch.",
+  "bookBtn": "Popup boeken",
+  "howItWorks": "Hoe het werkt",
+  "stats": {
+    "events": "Gehouden popups",
+    "time": "Personalisatietijd",
+    "guests": "Gasten per evenement",
+    "satisfaction": "Tevreden organisatoren"
+  },
+  "useCases": {
+    "label": "Voor wie",
+    "heading": "Geschikt voor elk evenement",
+    "items": {
+      "corporate": {
+        "title": "Bedrijfsevenementen",
+        "desc": "Maak het bedrijfsevenement onvergetelijk — gasten gaan naar huis met gepersonaliseerde merch."
+      },
+      "conferences": {
+        "title": "Conferenties & forums",
+        "desc": "Gebrande merch ter plaatse — het beste netwerkinstrument."
+      },
+      "festivals": {
+        "title": "Festivals & markten",
+        "desc": "Popup-stand die de aandacht trekt. Live personalisatie — het is een show."
+      },
+      "launches": {
+        "title": "Productlanceringen",
+        "desc": "Lancering met merch die gasten zelf hebben gemaakt."
+      },
+      "universities": {
+        "title": "Universiteiten & scholen",
+        "desc": "Diploma-uitreikingen, open dagen, studentenevenementen."
+      },
+      "b2b": {
+        "title": "B2B-evenementen",
+        "desc": "Partnerbijeenkomsten, beurzen, presentaties."
+      }
+    }
+  },
+  "process": {
+    "label": "Proces",
+    "heading": "Drie stappen naar de perfecte popup",
+    "steps": {
+      "0": {
+        "step": "01",
+        "title": "Format kiezen",
+        "desc": "Vertel ons over het evenement — aantal gasten, locatie, datum."
+      },
+      "1": {
+        "step": "02",
+        "title": "Stand voorbereiden",
+        "desc": "Wij brengen apparatuur, kleding en alles wat nodig is voor personalisatie."
+      },
+      "2": {
+        "step": "03",
+        "title": "Gasten personaliseren",
+        "desc": "Elke gast kiest een product, plaatst de druk en gaat weg met kant-en-klare merch."
+      }
+    }
+  },
+  "faq": {
+    "label": "FAQ",
+    "heading": "Veelgestelde vragen",
+    "items": {
+      "0": {
+        "q": "Minimum aantal deelnemers?",
+        "a": "Vanaf 50 personen."
+      },
+      "1": {
+        "q": "Hoe lang duurt personalisatie van één product?",
+        "a": "3 tot 10 minuten afhankelijk van de complexiteit."
+      },
+      "2": {
+        "q": "Welke producten zijn beschikbaar?",
+        "a": "T-shirts, hoodies, longsleeves, petjes en accessoires."
+      },
+      "3": {
+        "q": "Wie betaalt voor de merch?",
+        "a": "Beide opties zijn mogelijk."
+      },
+      "4": {
+        "q": "Hoe ver van tevoren boeken?",
+        "a": "We raden 2–3 weken voor het evenement aan."
+      }
+    }
+  },
+  "contact": {
+    "label": "Boeken",
+    "heading": "Vertel ons over jouw evenement",
+    "desc": "Laat een aanvraag achter — een accountmanager neemt binnen één werkdag contact op.",
+    "benefits": {
+      "0": "Gratis adviesgesprek",
+      "1": "Individuele schatting",
+      "2": "Reactie binnen 24 uur"
+    }
+  },
+  "nav": {
+    "useCases": "Voor wie",
+    "how": "Hoe het werkt",
+    "faq": "FAQ",
+    "contacts": "Contact"
+  },
+  "book": "Boeken",
+  "footerCopyright": "U:DO CRAFT. Alle rechten voorbehouden.",
+  "menuOpen": "Menu openen",
+  "menuClose": "Menu sluiten",
+  "homeLink": "Home"
+}

@@ -3,22 +3,27 @@
 import { Link } from "@/i18n/navigation";
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { ArrowRight } from "lucide-react";
 
-const STEPS = [
-  { step: "01", title: "Обери товари", desc: "Переглядай каталог, фільтруй за категоріями. Обирай базу для свого мерчу — худі, футболки, аксесуари.", cta: "До каталогу", href: "#catalog" },
-  { step: "02", title: "Кастомуй одяг", desc: "Завантаж логотип, обери зону нанесення, розмір та колір. Переглянь попередній вигляд у реальному часі.", cta: "Спробувати", href: "/order" },
-  { step: "03", title: "Отримай пропозицію", desc: "Заповни форму замовлення. Менеджер зв'яжеться з тобою для узгодження деталей та надішле рахунок.", cta: "Замовити", href: "#contact" },
-];
+const STEP_KEYS = ["0", "1", "2"] as const;
 
 export function HowItWorksSection() {
+  const t = useTranslations("howItWorks");
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  const steps = STEP_KEYS.map((key) => ({
+    step: `0${Number(key) + 1}`,
+    title: t(`steps.${key}.title`),
+    desc: t(`steps.${key}.desc`),
+    cta: t(`steps.${key}.cta`),
+    href: key === "0" ? "#catalog" : key === "1" ? "/order" : "#contact",
+  }));
 
   return (
     <section id="how" className="bg-[#050508] py-20 sm:py-28 overflow-hidden">
       <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-16">
-        {/* Header */}
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 24 }}
@@ -26,14 +31,14 @@ export function HowItWorksSection() {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="mb-16 text-center"
         >
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary block mb-3">Як це працює</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary block mb-3">{t("label")}</span>
           <h2 className="text-white text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight">
-            Кастомуй під свої цілі
+            {t("heading")}
           </h2>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-12 md:gap-10 lg:gap-16">
-          {STEPS.map((item, i) => (
+          {steps.map((item, i) => (
             <motion.div
               key={item.step}
               initial={{ opacity: 0, y: 32 }}

@@ -1,0 +1,33 @@
+{
+  "label": "Über uns",
+  "heading": "Plattform für",
+  "headingHighlight": "Corporate Merchandise",
+  "desc1": "Von Startups bis zu Großunternehmen — wir helfen Teams, Merch zu erstellen, auf den sie stolz sind.",
+  "desc2": "Ab 10 Stück, keine versteckten Gebühren, eigene Produktion, persönlicher Ansprechpartner, Qualitätsgarantie.",
+  "features": {
+    "editor": {
+      "title": "Online-Editor",
+      "desc": "Logo hochladen, auf dem Produkt platzieren und sofort das Ergebnis sehen. Kein Hin und Her."
+    },
+    "minOrder": {
+      "title": "Ab 10 Stück",
+      "desc": "Ideal für Startups und kleine Teams. Kein Aufschlag für Kleinmengen."
+    },
+    "pricing": {
+      "title": "Transparente Preise",
+      "desc": "Sofortige Rechnung. Keine versteckten Gebühren."
+    },
+    "timeline": {
+      "title": "7–14 Tage",
+      "desc": "Von der Bestätigung bis zur Lieferung. Deadline? Kein Problem."
+    },
+    "quality": {
+      "title": "Qualitätskontrolle",
+      "desc": "Jede Charge wird vor dem Versand geprüft."
+    },
+    "manager": {
+      "title": "Persönlicher Ansprechpartner",
+      "desc": "Von der ersten Anfrage bis zur Lieferung erreichbar."
+    }
+  }
+}

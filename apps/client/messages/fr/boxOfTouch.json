@@ -1,0 +1,27 @@
+{
+  "label": "Box of Touch",
+  "heading": "Ressentez la qualité",
+  "headingHighlight": "avant de commander",
+  "desc": "La plupart des entreprises commandent à l'aveugle. Box of Touch résout ça : un set physique d'échantillons de tissus, couleurs et types d'impression.",
+  "contentsLabel": "Contenu du Box of Touch",
+  "contents": {
+    "products": {
+      "label": "Échantillons de produits",
+      "desc": "T-shirts, sweats, manches longues — touchez la coupe"
+    },
+    "fabrics": {
+      "label": "Échantillons de tissus",
+      "desc": "Compositions et grammages variés — de 180 à 320 g/m²"
+    },
+    "palette": {
+      "label": "Palette de couleurs",
+      "desc": "Toutes les couleurs disponibles avec de vrais échantillons"
+    },
+    "printing": {
+      "label": "Types d'impression",
+      "desc": "Sérigraphie, broderie, DTF — comparez au toucher"
+    }
+  },
+  "cta": "Commander le Box of Touch",
+  "freeDelivery": "Livraison gratuite · Sans engagement"
+}

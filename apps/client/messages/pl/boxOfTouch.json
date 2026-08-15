@@ -1,0 +1,27 @@
+{
+  "label": "Box of Touch",
+  "heading": "Poczuj jakość",
+  "headingHighlight": "zanim zamówisz",
+  "desc": "Większość firm zamawia na ślepo. Box of Touch rozwiązuje ten problem: fizyczny zestaw próbek tkanin, kolorów i rodzajów nadruków.",
+  "contentsLabel": "Zawartość Box of Touch",
+  "contents": {
+    "products": {
+      "label": "Próbki produktów",
+      "desc": "Koszulki, bluzy, longsleeve'y — poczuj krój i dopasowanie"
+    },
+    "fabrics": {
+      "label": "Próbki tkanin",
+      "desc": "Różne składy i gramatury — od 180 do 320 g/m²"
+    },
+    "palette": {
+      "label": "Paleta kolorów",
+      "desc": "Wszystkie dostępne kolory z prawdziwymi próbkami"
+    },
+    "printing": {
+      "label": "Rodzaje nadruków",
+      "desc": "Sitodruk, haft, DTF — porównaj w dotyku"
+    }
+  },
+  "cta": "Zamów Box of Touch",
+  "freeDelivery": "Bezpłatna dostawa · Bez zobowiązań"
+}

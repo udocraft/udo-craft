@@ -1,0 +1,21 @@
+{
+  "label": "Comment ça marche",
+  "heading": "Personnalisez pour vos objectifs",
+  "steps": {
+    "0": {
+      "title": "Choisir des produits",
+      "desc": "Parcourez le catalogue, filtrez par catégories. Choisissez la base de votre merch.",
+      "cta": "Au catalogue"
+    },
+    "1": {
+      "title": "Personnaliser les vêtements",
+      "desc": "Téléchargez le logo, choisissez la zone d'impression, la taille et la couleur. Aperçu en temps réel.",
+      "cta": "Essayer"
+    },
+    "2": {
+      "title": "Obtenir un devis",
+      "desc": "Remplissez le formulaire. Un chargé de compte vous contacte pour confirmer.",
+      "cta": "Commander"
+    }
+  }
+}

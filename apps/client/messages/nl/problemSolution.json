@@ -1,0 +1,19 @@
+{
+  "problemHeading": "De markt staat vol goedkope merch die niemand draagt",
+  "problemsLabel": "Veelvoorkomende problemen",
+  "problems": {
+    "minOrder": "Minimale bestelling 500+ stuks",
+    "approvals": "Weken van ontwerpgoedkeuringen",
+    "quality": "Kwaliteit voldoet niet aan verwachtingen",
+    "hidden": "Verborgen kosten na bestelling"
+  },
+  "solutionHeading": "Merch die deel uitmaakt van je merk",
+  "solutionsLabel": "U:DO voordelen",
+  "solutions": {
+    "minOrder": "Vanaf 10 stuks zonder toeslag",
+    "editor": "Online editor — resultaat direct zichtbaar",
+    "samples": "Samples voor productie (Box of Touch)",
+    "price": "Vaste prijs op factuur"
+  },
+  "ctaLabel": "Bekijk catalogus"
+}

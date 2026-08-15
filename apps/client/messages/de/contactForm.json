@@ -1,0 +1,48 @@
+{
+  "nameLabel": "Ihr Name *",
+  "namePlaceholder": "Hans Müller",
+  "emailLabel": "E-Mail *",
+  "emailPlaceholder": "hr@firma.de",
+  "phoneLabel": "Telefon *",
+  "phonePlaceholder": "+49 XXX XXXXXXX",
+  "companyLabel": "Unternehmen",
+  "companyPlaceholder": "Firmenname",
+  "topicLabel": "Betreff *",
+  "messageLabel": "Erzählen Sie uns von Ihrem Projekt",
+  "messagePlaceholder": "Menge, Produkttyp, Fristen...",
+  "filesLabel": "Dateien hochladen (Designs, Logos usw.)",
+  "filesClick": "Klicken oder Dateien hierher ziehen",
+  "filesDesc": "Designs, Logos, Bilder...",
+  "submit": "Senden",
+  "submitting": "Wird gesendet...",
+  "error": "Ein Fehler ist aufgetreten. Bitte erneut versuchen oder direkt kontaktieren.",
+  "success": "Vielen Dank für Ihre Nachricht!",
+  "successDesc": "Wir haben Ihre Anfrage erhalten und werden uns bald melden.",
+  "deleteFile": "Datei löschen {name}",
+  "topics": {
+    "merch": {
+      "label": "Corporate Merch",
+      "desc": "T-Shirts, Hoodies, Accessoires für Ihr Team oder Ihre Marke"
+    },
+    "popup": {
+      "label": "Popup-Stand für Veranstaltungen",
+      "desc": "Live-Merch-Personalisierung auf Ihrer Veranstaltung"
+    },
+    "box": {
+      "label": "Box of Touch",
+      "desc": "Physische Muster von Stoffen und Produkten vor der Produktion"
+    },
+    "designer": {
+      "label": "Designerleistungen",
+      "desc": "Logo-Entwicklung oder -Anpassung für den Druck"
+    },
+    "bulk": {
+      "label": "Großbestellung (500+)",
+      "desc": "Großhandelsbestellungen mit individuellen Konditionen"
+    },
+    "other": {
+      "label": "Sonstiges",
+      "desc": "Jede andere Frage oder Anregung"
+    }
+  }
+}

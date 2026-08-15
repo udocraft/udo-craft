@@ -1,0 +1,85 @@
+{
+  "title": "Košík",
+  "orderTitle": "Zadat objednávku",
+  "stepCart": "Košík",
+  "stepForm": "Firemní údaje",
+  "emptyCart": "Košík je prázdný",
+  "toCatalog": "Do katalogu",
+  "total": "Celkem",
+  "finalPriceNote": "Konečná cena se dohodne s account managerem",
+  "placeOrder": "Zadat objednávku",
+  "edit": "Upravit",
+  "discount": "-{pct}% sleva",
+  "company": {
+    "title": "Firemní údaje",
+    "name": "Název firmy *",
+    "namePlaceholder": "s.r.o. «Název»",
+    "taxId": "IČO / DIČ",
+    "taxIdPlaceholder": "CZ12345678"
+  },
+  "contact": {
+    "title": "Kontaktní osoba",
+    "fullName": "Jméno a příjmení *",
+    "fullNamePlaceholder": "Jan Novák",
+    "email": "E-mail *",
+    "emailPlaceholder": "hr@firma.cz",
+    "phone": "Telefon",
+    "phonePlaceholder": "+420 XXX XXX XXX",
+    "social": "Telegram / Instagram",
+    "socialPlaceholder": "@uživatel nebo odkaz"
+  },
+  "delivery": {
+    "title": "Doprava a termíny",
+    "options": {
+      "nova_poshta": {
+        "label": "Česká pošta",
+        "desc": "2–4 pracovní dny"
+      },
+      "ukrposhta": {
+        "label": "DHL",
+        "desc": "1–2 pracovní dny"
+      },
+      "pickup": {
+        "label": "Osobní odběr",
+        "desc": "Po domluvě"
+      }
+    },
+    "deadline": "Požadovaný termín",
+    "comment": "Poznámka k objednávce",
+    "commentPlaceholder": "Zvláštní přání, detaily tisku..."
+  },
+  "submit": "Potvrdit objednávku",
+  "submitting": "Odesílání...",
+  "finalPriceManager": "Konečnou cenu a fakturu zašle account manager po potvrzení",
+  "success": {
+    "title": "Objednávka přijata!",
+    "desc": "Náš account manager se ti ozve do 24 hodin.",
+    "createAccount": "Vytvořit osobní účet",
+    "loginAccount": "Přihlásit se k účtu",
+    "createAccountDesc": "Sleduj stav objednávky, chatuj s account managerem a prohlížej faktury.",
+    "emailExists": "Tento e-mail je již registrován. Zadej heslo pro přihlášení.",
+    "emailLabel": "E-mail",
+    "passwordLabel": "Heslo",
+    "newPasswordLabel": "Vytvořit heslo",
+    "passwordPlaceholder": "Minimálně 6 znaků",
+    "enterPasswordPlaceholder": "Zadat heslo",
+    "creating": "Vytváření...",
+    "create": "Vytvořit účet",
+    "loggingIn": "Přihlašování...",
+    "login": "Přihlásit se",
+    "passwordError": "Heslo musí mít alespoň 6 znaků",
+    "enterPasswordError": "Zadat heslo",
+    "wrongPassword": "Nesprávné heslo",
+    "registrationError": "Chyba registrace. Zkus to znovu později.",
+    "skip": "Přeskočit, zpět na úvod",
+    "accountCreated": {
+      "title": "Účet vytvořen!",
+      "desc": "Odeslali jsme potvrzovací e-mail na {email}.",
+      "loginBtn": "Přihlásit se k účtu",
+      "homeLink": "Zpět na úvod"
+    }
+  },
+  "back": "Zpět",
+  "header": "U:DO",
+  "backAriaLabel": "Zpět"
+}

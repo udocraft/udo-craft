@@ -1,0 +1,48 @@
+{
+  "nameLabel": "Il tuo nome *",
+  "namePlaceholder": "Mario Rossi",
+  "emailLabel": "E-mail *",
+  "emailPlaceholder": "hr@azienda.it",
+  "phoneLabel": "Telefono *",
+  "phonePlaceholder": "+39 XXX XXX XXXX",
+  "companyLabel": "Azienda",
+  "companyPlaceholder": "Nome dell'azienda",
+  "topicLabel": "Oggetto *",
+  "messageLabel": "Raccontaci del tuo progetto",
+  "messagePlaceholder": "Quantità, tipo di prodotto, scadenze...",
+  "filesLabel": "Carica file (design, loghi, ecc.)",
+  "filesClick": "Clicca o trascina i file qui",
+  "filesDesc": "Design, loghi, immagini...",
+  "submit": "Invia",
+  "submitting": "Invio in corso...",
+  "error": "Si è verificato un errore. Riprova o contattaci direttamente.",
+  "success": "Grazie per averci contattato!",
+  "successDesc": "Abbiamo ricevuto la tua richiesta e ti risponderemo presto.",
+  "deleteFile": "Elimina {name}",
+  "topics": {
+    "merch": {
+      "label": "Merch aziendale",
+      "desc": "T-shirt, felpe, accessori per il tuo team o marchio"
+    },
+    "popup": {
+      "label": "Stand popup per eventi",
+      "desc": "Personalizzazione merch dal vivo al tuo evento"
+    },
+    "box": {
+      "label": "Box of Touch",
+      "desc": "Campioni fisici di tessuti e prodotti prima della produzione"
+    },
+    "designer": {
+      "label": "Servizi di design",
+      "desc": "Sviluppo o adattamento loghi per la stampa"
+    },
+    "bulk": {
+      "label": "Ordine grande (500+)",
+      "desc": "Ordini all'ingrosso con condizioni individuali"
+    },
+    "other": {
+      "label": "Altro",
+      "desc": "Qualsiasi altra domanda o suggerimento"
+    }
+  }
+}

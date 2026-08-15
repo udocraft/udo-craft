@@ -1,0 +1,50 @@
+{
+  "breadcrumb": "/ Account",
+  "settings": "Instellingen",
+  "logout": "Uitloggen",
+  "noOrders": "Nog geen bestellingen",
+  "toCatalog": "Naar catalogus",
+  "writeTo": "Schrijf naar accountmanager",
+  "tabs": {
+    "details": "Details",
+    "chat": "Chat",
+    "files": "Bestanden"
+  },
+  "status": {
+    "new": "Nieuw verzoek",
+    "in_progress": "In behandeling",
+    "production": "Productie",
+    "completed": "Voltooid",
+    "archived": "Archief"
+  },
+  "delivery": {
+    "nova_poshta": "PostNL",
+    "ukrposhta": "DHL",
+    "pickup": "Afhalen"
+  },
+  "details": {
+    "phone": "Telefoon",
+    "email": "E-mail",
+    "company": "Bedrijf",
+    "orderDate": "Besteldatum",
+    "orderAmount": "Bestelbedrag",
+    "delivery": "Levering",
+    "deadline": "Deadline",
+    "positions": "Posities ({n})",
+    "attachments": "Bijlagen ({n})",
+    "invoice": "Factuur downloaden",
+    "print": "Druk"
+  },
+  "chat": {
+    "placeholder": "Bericht...",
+    "sendLabel": "Bericht verzenden",
+    "attachLabel": "Bestand bijvoegen",
+    "loading": "Berichten worden geladen...",
+    "empty": "Nog geen berichten",
+    "fileTooLarge": "\"{name}\" overschrijdt 10 MB"
+  },
+  "files": {
+    "empty": "Nog geen bestanden",
+    "openFile": "Bestand openen"
+  }
+}

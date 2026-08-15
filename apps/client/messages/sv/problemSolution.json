@@ -1,0 +1,19 @@
+{
+  "problemHeading": "Marknaden är översvämmad av billig merch som ingen bär",
+  "problemsLabel": "Vanliga problem",
+  "problems": {
+    "minOrder": "Minimiorder 500+ exemplar",
+    "approvals": "Veckors designgodkännanden",
+    "quality": "Kvaliteten lever inte upp till förväntningarna",
+    "hidden": "Dolda kostnader efter beställning"
+  },
+  "solutionHeading": "Merch som blir en del av ditt varumärke",
+  "solutionsLabel": "U:DO fördelar",
+  "solutions": {
+    "minOrder": "Från 10 exemplar utan pristillägg",
+    "editor": "Online-editor — resultatet syns direkt",
+    "samples": "Prover före produktion (Box of Touch)",
+    "price": "Fast pris på fakturan"
+  },
+  "ctaLabel": "Bläddra i katalog"
+}

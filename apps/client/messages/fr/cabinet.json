@@ -1,0 +1,50 @@
+{
+  "breadcrumb": "/ Compte",
+  "settings": "Paramètres",
+  "logout": "Se déconnecter",
+  "noOrders": "Aucune commande pour l'instant",
+  "toCatalog": "Au catalogue",
+  "writeTo": "Écrire au chargé de compte",
+  "tabs": {
+    "details": "Détails",
+    "chat": "Chat",
+    "files": "Fichiers"
+  },
+  "status": {
+    "new": "Nouvelle demande",
+    "in_progress": "En cours",
+    "production": "Production",
+    "completed": "Terminé",
+    "archived": "Archivé"
+  },
+  "delivery": {
+    "nova_poshta": "Colissimo",
+    "ukrposhta": "Chronopost",
+    "pickup": "Retrait"
+  },
+  "details": {
+    "phone": "Téléphone",
+    "email": "E-mail",
+    "company": "Entreprise",
+    "orderDate": "Date de commande",
+    "orderAmount": "Montant de la commande",
+    "delivery": "Livraison",
+    "deadline": "Délai",
+    "positions": "Positions ({n})",
+    "attachments": "Pièces jointes ({n})",
+    "invoice": "Télécharger la facture",
+    "print": "Impression"
+  },
+  "chat": {
+    "placeholder": "Message...",
+    "sendLabel": "Envoyer",
+    "attachLabel": "Joindre un fichier",
+    "loading": "Chargement des messages...",
+    "empty": "Pas encore de messages",
+    "fileTooLarge": "\"{name}\" dépasse 10 Mo"
+  },
+  "files": {
+    "empty": "Pas encore de fichiers",
+    "openFile": "Ouvrir le fichier"
+  }
+}

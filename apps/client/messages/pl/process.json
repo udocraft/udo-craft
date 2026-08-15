@@ -1,0 +1,33 @@
+{
+  "heading": "Od pomysłu do merchu — w 4 krokach",
+  "subtext": "Cały proces zajmuje mniej niż 15 minut. Ceny widoczne od razu — bez telefonów ani negocjacji.",
+  "estimatedTime": "Szacowany czas",
+  "stepLabel": "Krok {n}: {title}",
+  "stepsLabel": "Kroki procesu",
+  "steps": {
+    "1": {
+      "title": "Wybierz produkt",
+      "body": "Przeglądaj katalog z prawdziwymi cenami. Cena aktualizuje się natychmiast przy zmianie ilości i typu nadruku.",
+      "cta": "Otwórz katalog",
+      "time": "~5 min"
+    },
+    "2": {
+      "title": "Dostosuj online",
+      "body": "Prześlij logo, umieść na produkcie, wybierz strefę nadruku. Edytor pokazuje dokładny koszt w czasie rzeczywistym.",
+      "cta": "Wypróbuj edytor",
+      "time": "~10 min"
+    },
+    "3": {
+      "title": "Otrzymaj wycenę",
+      "body": "Wypełnij formularz — opiekun skontaktuje się w ciągu 2 godzin. Stała cena bez ukrytych opłat.",
+      "cta": "Skontaktuj się",
+      "time": "~2 godz"
+    },
+    "4": {
+      "title": "Odbierz merch",
+      "body": "Produkcja 7–14 dni roboczych. Dostawa. Jeśli coś nie gra — przerabiamy bezpłatnie.",
+      "cta": "Czytaj FAQ",
+      "time": "7–14 dni"
+    }
+  }
+}

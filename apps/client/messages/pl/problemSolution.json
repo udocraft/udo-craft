@@ -1,0 +1,19 @@
+{
+  "problemHeading": "Rynek jest zalany tanim merchem, którego nikt nie nosi",
+  "problemsLabel": "Typowe problemy",
+  "problems": {
+    "minOrder": "Minimalna ilość 500+ sztuk",
+    "approvals": "Tygodnie zatwierdzeń projektu",
+    "quality": "Jakość nie spełnia oczekiwań",
+    "hidden": "Ukryte koszty po zamówieniu"
+  },
+  "solutionHeading": "Merch, który staje się częścią Twojej marki",
+  "solutionsLabel": "Zalety U:DO",
+  "solutions": {
+    "minOrder": "Od 10 sztuk bez dopłaty",
+    "editor": "Edytor online — efekt widoczny od razu",
+    "samples": "Próbki przed produkcją (Box of Touch)",
+    "price": "Stała cena w fakturze"
+  },
+  "ctaLabel": "Przeglądaj katalog"
+}

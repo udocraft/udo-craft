@@ -1,0 +1,15 @@
+{
+  "catalog": "Catalogue",
+  "popup": "Popup",
+  "about": "À propos",
+  "how": "Comment ça marche",
+  "contacts": "Contact",
+  "startProject": "Démarrer un projet",
+  "openMenu": "Ouvrir le menu",
+  "closeMenu": "Fermer le menu",
+  "goToAccount": "Accéder au compte",
+  "signIn": "Se connecter",
+  "cartItems": "Panier — {count} articles",
+  "mainNav": "Navigation principale",
+  "logoLink": "U:DO CRAFT — retour à l'accueil"
+}

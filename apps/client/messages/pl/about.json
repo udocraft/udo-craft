@@ -1,0 +1,33 @@
+{
+  "label": "O nas",
+  "heading": "Platforma",
+  "headingHighlight": "merchandisingu korporacyjnego",
+  "desc1": "Od startupów po duże korporacje — pomagamy zespołom tworzyć merch, z którego są dumne.",
+  "desc2": "Od 10 sztuk, bez ukrytych opłat, własna produkcja, osobisty opiekun, gwarancja jakości.",
+  "features": {
+    "editor": {
+      "title": "Edytor online",
+      "desc": "Prześlij logo, umieść na produkcie i od razu zobaczysz efekt."
+    },
+    "minOrder": {
+      "title": "Od 10 sztuk",
+      "desc": "Idealne dla startupów i małych zespołów."
+    },
+    "pricing": {
+      "title": "Przejrzyste ceny",
+      "desc": "Faktura od razu. Żadnych ukrytych opłat."
+    },
+    "timeline": {
+      "title": "7–14 dni",
+      "desc": "Od potwierdzenia do dostawy."
+    },
+    "quality": {
+      "title": "Kontrola jakości",
+      "desc": "Każda partia jest sprawdzana przed wysyłką."
+    },
+    "manager": {
+      "title": "Osobisty opiekun",
+      "desc": "Dostępny od pierwszego zapytania do odbioru zamówienia."
+    }
+  }
+}

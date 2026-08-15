@@ -1,0 +1,33 @@
+{
+  "heading": "Domande frequenti",
+  "noAnswer": "Non hai trovato risposta?",
+  "contactUs": "Contattaci",
+  "replyTime": "— rispondiamo entro un'ora.",
+  "questionsLabel": "Domande e risposte",
+  "items": {
+    "0": {
+      "question": "Qual è la quantità minima?",
+      "answer": "Da 10 pezzi. Nessun sovrapprezzo per tirature piccole."
+    },
+    "1": {
+      "question": "Quanto costa la stampa?",
+      "answer": "Il prezzo dipende dal tipo (serigrafia, ricamo, DTF) e dalla quantità. Visibile nell'editor."
+    },
+    "2": {
+      "question": "Quanto tempo richiede un ordine?",
+      "answer": "Tempi standard — 7–14 giorni lavorativi dalla conferma."
+    },
+    "3": {
+      "question": "Posso vedere la qualità prima di ordinare in grande quantità?",
+      "answer": "Sì. Box of Touch — campioni fisici di tessuti, colori e prodotti."
+    },
+    "4": {
+      "question": "E se il risultato non mi piace?",
+      "answer": "Approviamo il design prima della produzione. Se non corrisponde — rifacciamo gratuitamente."
+    },
+    "5": {
+      "question": "Ci sono sconti per ordini grandi?",
+      "answer": "Sì. 10–49 pz — prezzo base. 50–99 — 12%. 100+ — 15%."
+    }
+  }
+}

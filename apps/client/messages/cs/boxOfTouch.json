@@ -1,0 +1,27 @@
+{
+  "label": "Box of Touch",
+  "heading": "Pocit kvality",
+  "headingHighlight": "před objednávkou",
+  "desc": "Většina firem objednává naslepo. Box of Touch to řeší: fyzická sada vzorků látek, barev a tiskových typů.",
+  "contentsLabel": "Obsah Box of Touch",
+  "contents": {
+    "products": {
+      "label": "Vzorky produktů",
+      "desc": "Trička, mikiny, longsleeve — pocit střihu a padnutí"
+    },
+    "fabrics": {
+      "label": "Vzorky látek",
+      "desc": "Různé složení a gramáže — od 180 do 320 g/m²"
+    },
+    "palette": {
+      "label": "Barevná paleta",
+      "desc": "Všechny dostupné barvy se skutečnými vzorky"
+    },
+    "printing": {
+      "label": "Typy tisku",
+      "desc": "Sítotisk, výšivka, DTF — porovnej na dotek"
+    }
+  },
+  "cta": "Objednat Box of Touch",
+  "freeDelivery": "Doprava zdarma · Bez závazků"
+}

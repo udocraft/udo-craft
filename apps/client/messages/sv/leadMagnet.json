@@ -1,0 +1,14 @@
+{
+  "badge": "Gratis",
+  "heading": "Få en gratis mockup av din merch",
+  "desc": "Ladda upp logotypen — vi applicerar den på en riktig produkt och skickar mockupen till din e-post.",
+  "emailLabel": "Din e-post",
+  "cta": "Hämta mockup",
+  "loading": "Skickar...",
+  "emailError": "Ange en giltig e-postadress",
+  "success": "Tack!",
+  "successDesc": "Mockupen anländer till din inkorg inom 24 timmar",
+  "formLabel": "Mockup-förfrågningsformulär",
+  "orCalculate": "Vill du veta priset nu?",
+  "openCalculator": "Öppna priskalkylator →"
+}

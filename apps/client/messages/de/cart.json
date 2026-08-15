@@ -1,0 +1,11 @@
+{
+  "title": "Warenkorb",
+  "titleWithCount": "Warenkorb ({count})",
+  "empty": "Der Warenkorb ist leer",
+  "emptyDesc": "Produkt wählen und Druck konfigurieren",
+  "toCatalog": "Zum Katalog",
+  "ariaLabel": "Warenkorb",
+  "quantity": "{qty} Stk · {size}",
+  "total": "Gesamt:",
+  "cartItem": "Warenkorb-Artikel"
+}

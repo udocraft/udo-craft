@@ -1,0 +1,85 @@
+{
+  "title": "Panier",
+  "orderTitle": "Passer commande",
+  "stepCart": "Panier",
+  "stepForm": "Données entreprise",
+  "emptyCart": "Le panier est vide",
+  "toCatalog": "Au catalogue",
+  "total": "Total",
+  "finalPriceNote": "Le prix final est convenu avec le chargé de compte",
+  "placeOrder": "Passer la commande",
+  "edit": "Modifier",
+  "discount": "-{pct}% remise",
+  "company": {
+    "title": "Données entreprise",
+    "name": "Nom de l'entreprise *",
+    "namePlaceholder": "SARL «Nom»",
+    "taxId": "N° SIRET / TVA",
+    "taxIdPlaceholder": "FR12345678901"
+  },
+  "contact": {
+    "title": "Personne de contact",
+    "fullName": "Prénom et nom *",
+    "fullNamePlaceholder": "Jean Dupont",
+    "email": "E-mail *",
+    "emailPlaceholder": "rh@entreprise.fr",
+    "phone": "Téléphone",
+    "phonePlaceholder": "+33 X XX XX XX XX",
+    "social": "Telegram / Instagram",
+    "socialPlaceholder": "@pseudo ou lien"
+  },
+  "delivery": {
+    "title": "Livraison & délais",
+    "options": {
+      "nova_poshta": {
+        "label": "Colissimo",
+        "desc": "2–3 jours ouvrables"
+      },
+      "ukrposhta": {
+        "label": "Chronopost",
+        "desc": "1–2 jours ouvrables"
+      },
+      "pickup": {
+        "label": "Retrait",
+        "desc": "Sur rendez-vous"
+      }
+    },
+    "deadline": "Date souhaitée",
+    "comment": "Commentaire",
+    "commentPlaceholder": "Souhaits particuliers, détails d'impression..."
+  },
+  "submit": "Confirmer la commande",
+  "submitting": "Envoi en cours...",
+  "finalPriceManager": "Le prix final et la facture seront envoyés par le chargé de compte",
+  "success": {
+    "title": "Commande reçue !",
+    "desc": "Notre chargé de compte vous contactera sous 24 heures.",
+    "createAccount": "Créer un compte personnel",
+    "loginAccount": "Se connecter au compte",
+    "createAccountDesc": "Suivez l'état de votre commande, chattez avec votre chargé de compte et consultez vos factures.",
+    "emailExists": "Cet e-mail est déjà enregistré. Entrez votre mot de passe pour vous connecter.",
+    "emailLabel": "E-mail",
+    "passwordLabel": "Mot de passe",
+    "newPasswordLabel": "Créer un mot de passe",
+    "passwordPlaceholder": "Minimum 6 caractères",
+    "enterPasswordPlaceholder": "Entrez le mot de passe",
+    "creating": "Création...",
+    "create": "Créer le compte",
+    "loggingIn": "Connexion...",
+    "login": "Se connecter",
+    "passwordError": "Le mot de passe doit comporter au moins 6 caractères",
+    "enterPasswordError": "Entrez le mot de passe",
+    "wrongPassword": "Mot de passe incorrect",
+    "registrationError": "Erreur d'inscription. Réessayez plus tard.",
+    "skip": "Ignorer, retour à l'accueil",
+    "accountCreated": {
+      "title": "Compte créé !",
+      "desc": "Nous avons envoyé un e-mail de confirmation à {email}.",
+      "loginBtn": "Se connecter au compte",
+      "homeLink": "Retour à l'accueil"
+    }
+  },
+  "back": "Retour",
+  "header": "U:DO",
+  "backAriaLabel": "Retour"
+}

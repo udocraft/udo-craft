@@ -1,0 +1,85 @@
+{
+  "title": "Winkelwagen",
+  "orderTitle": "Bestelling plaatsen",
+  "stepCart": "Winkelwagen",
+  "stepForm": "Bedrijfsgegevens",
+  "emptyCart": "Winkelwagen is leeg",
+  "toCatalog": "Naar catalogus",
+  "total": "Totaal",
+  "finalPriceNote": "Eindprijs wordt overeengekomen met de accountmanager",
+  "placeOrder": "Bestelling plaatsen",
+  "edit": "Bewerken",
+  "discount": "-{pct}% korting",
+  "company": {
+    "title": "Bedrijfsgegevens",
+    "name": "Bedrijfsnaam *",
+    "namePlaceholder": "BV «Naam»",
+    "taxId": "KVK / BTW-nummer",
+    "taxIdPlaceholder": "NL123456789B01"
+  },
+  "contact": {
+    "title": "Contactpersoon",
+    "fullName": "Voor- en achternaam *",
+    "fullNamePlaceholder": "Jan de Vries",
+    "email": "E-mail *",
+    "emailPlaceholder": "hr@bedrijf.nl",
+    "phone": "Telefoon",
+    "phonePlaceholder": "+31 XX XXX XXXX",
+    "social": "Telegram / Instagram",
+    "socialPlaceholder": "@gebruikersnaam of link"
+  },
+  "delivery": {
+    "title": "Levering & deadlines",
+    "options": {
+      "nova_poshta": {
+        "label": "PostNL",
+        "desc": "2–3 werkdagen"
+      },
+      "ukrposhta": {
+        "label": "DHL",
+        "desc": "1–2 werkdagen"
+      },
+      "pickup": {
+        "label": "Afhalen",
+        "desc": "Op afspraak"
+      }
+    },
+    "deadline": "Gewenste datum",
+    "comment": "Opmerking bij bestelling",
+    "commentPlaceholder": "Speciale wensen, drukdetails..."
+  },
+  "submit": "Bestelling bevestigen",
+  "submitting": "Wordt verzonden...",
+  "finalPriceManager": "Eindprijs en factuur worden door de accountmanager verzonden na bevestiging",
+  "success": {
+    "title": "Bestelling ontvangen!",
+    "desc": "Onze accountmanager neemt binnen 24 uur contact met je op.",
+    "createAccount": "Persoonlijk account aanmaken",
+    "loginAccount": "Inloggen op account",
+    "createAccountDesc": "Volg de bestelstatus, chat met de accountmanager en bekijk facturen.",
+    "emailExists": "Dit e-mailadres is al geregistreerd. Voer je wachtwoord in om in te loggen.",
+    "emailLabel": "E-mail",
+    "passwordLabel": "Wachtwoord",
+    "newPasswordLabel": "Maak een wachtwoord aan",
+    "passwordPlaceholder": "Minimaal 6 tekens",
+    "enterPasswordPlaceholder": "Voer wachtwoord in",
+    "creating": "Aanmaken...",
+    "create": "Account aanmaken",
+    "loggingIn": "Inloggen...",
+    "login": "Inloggen",
+    "passwordError": "Wachtwoord moet minimaal 6 tekens hebben",
+    "enterPasswordError": "Voer wachtwoord in",
+    "wrongPassword": "Onjuist wachtwoord",
+    "registrationError": "Registratiefout. Probeer het later opnieuw.",
+    "skip": "Overslaan, terug naar home",
+    "accountCreated": {
+      "title": "Account aangemaakt!",
+      "desc": "We hebben een bevestigingsmail gestuurd naar {email}.",
+      "loginBtn": "Inloggen op account",
+      "homeLink": "Terug naar home"
+    }
+  },
+  "back": "Terug",
+  "header": "U:DO",
+  "backAriaLabel": "Terug"
+}

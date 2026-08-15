@@ -1,0 +1,11 @@
+{
+  "title": "Kundvagn",
+  "titleWithCount": "Kundvagn ({count})",
+  "empty": "Kundvagnen är tom",
+  "emptyDesc": "Välj en produkt och konfigurera trycket",
+  "toCatalog": "Till katalog",
+  "ariaLabel": "Kundvagn",
+  "quantity": "{qty} st · {size}",
+  "total": "Totalt:",
+  "cartItem": "Kundvagnsartikel"
+}

@@ -11,13 +11,15 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build:shared && npm run build:ui && npm run build:admin && npm run build:client",
+    "build": "npm run build:shared && npm run build:ui && npm run build:admin && npm run build:client && npm run build:bot",
     "build:admin": "npm run build --workspace=admin",
+    "build:bot": "npm run build --workspace=telegram-bot",
     "build:client": "npm run build --workspace=client",
     "build:shared": "npm run build --workspace=@udo-craft/shared",
     "build:ui": "npm run build --workspace=@udo-craft/ui",
-    "dev": "npm run dev:admin & npm run dev:client",
+    "dev": "npm run dev:admin & npm run dev:client & npm run dev:bot",
     "dev:admin": "npm run dev --workspace=admin",
+    "dev:bot": "npm run dev --workspace=telegram-bot",
     "dev:client": "npm run dev --workspace=client",
     "lint": "npm run lint --workspaces --if-present",
     "prepare": "husky",

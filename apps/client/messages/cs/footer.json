@@ -1,0 +1,40 @@
+{
+  "readyToStart": "Připraven začít?",
+  "readyDesc": "Od 10 kusů · 7–14 dní · Doprava",
+  "startProject": "Spustit projekt",
+  "ariaLabel": "Zápatí",
+  "homeLink": "U:DO CRAFT — zpět na úvod",
+  "columns": {
+    "products": {
+      "title": "Produkty",
+      "links": {
+        "constructor": "Konfigurátor merche",
+        "catalog": "Katalog",
+        "popup": "Popup stánek",
+        "box": "Box of Touch",
+        "designer": "Najmout designéra"
+      }
+    },
+    "company": {
+      "title": "Firma",
+      "links": {
+        "about": "O nás",
+        "how": "Jak to funguje",
+        "career": "Kariéra",
+        "blog": "Blog"
+      }
+    },
+    "support": {
+      "title": "Podpora",
+      "links": {
+        "faq": "FAQ",
+        "contact": "Kontakt",
+        "cabinet": "Účet",
+        "delivery": "Doprava a platba"
+      }
+    }
+  },
+  "privacy": "Soukromí",
+  "terms": "Podmínky",
+  "cookies": "Cookies"
+}

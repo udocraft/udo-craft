@@ -1,0 +1,21 @@
+{
+  "label": "Hur det fungerar",
+  "heading": "Anpassa för dina mål",
+  "steps": {
+    "0": {
+      "title": "Välj produkter",
+      "desc": "Bläddra i katalogen, filtrera efter kategorier. Välj basen för din merch.",
+      "cta": "Till katalog"
+    },
+    "1": {
+      "title": "Anpassa kläder",
+      "desc": "Ladda upp logotyp, välj tryckszon, storlek och färg. Förhandsvisning i realtid.",
+      "cta": "Testa"
+    },
+    "2": {
+      "title": "Få förslag",
+      "desc": "Fyll i beställningsformuläret. En account manager kontaktar dig för bekräftelse.",
+      "cta": "Beställ"
+    }
+  }
+}

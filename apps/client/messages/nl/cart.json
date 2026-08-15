@@ -1,0 +1,11 @@
+{
+  "title": "Winkelwagen",
+  "titleWithCount": "Winkelwagen ({count})",
+  "empty": "Winkelwagen is leeg",
+  "emptyDesc": "Kies een product en stel de druk in",
+  "toCatalog": "Naar catalogus",
+  "ariaLabel": "Winkelwagen",
+  "quantity": "{qty} st · {size}",
+  "total": "Totaal:",
+  "cartItem": "Winkelwagenartikel"
+}

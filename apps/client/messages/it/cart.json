@@ -1,0 +1,11 @@
+{
+  "title": "Carrello",
+  "titleWithCount": "Carrello ({count})",
+  "empty": "Il carrello è vuoto",
+  "emptyDesc": "Scegli un prodotto e configura la stampa",
+  "toCatalog": "Al catalogo",
+  "ariaLabel": "Carrello",
+  "quantity": "{qty} pz · {size}",
+  "total": "Totale:",
+  "cartItem": "Articolo nel carrello"
+}

@@ -1,0 +1,48 @@
+{
+  "nameLabel": "Your name *",
+  "namePlaceholder": "John Smith",
+  "emailLabel": "Email *",
+  "emailPlaceholder": "hr@company.com",
+  "phoneLabel": "Phone *",
+  "phonePlaceholder": "+1 XXX XXX XXXX",
+  "companyLabel": "Company",
+  "companyPlaceholder": "Company name",
+  "topicLabel": "Subject *",
+  "messageLabel": "Tell us about your project",
+  "messagePlaceholder": "Quantity, product type, deadlines...",
+  "filesLabel": "Upload files (designs, logos, etc.)",
+  "filesClick": "Click or drag files here",
+  "filesDesc": "Designs, logos, images...",
+  "submit": "Send",
+  "submitting": "Sending...",
+  "error": "An error occurred. Please try again or contact us directly.",
+  "success": "Thank you for reaching out!",
+  "successDesc": "We received your request and will contact you shortly.",
+  "deleteFile": "Delete file {name}",
+  "topics": {
+    "merch": {
+      "label": "Corporate merch",
+      "desc": "T-shirts, hoodies, accessories for your team or brand"
+    },
+    "popup": {
+      "label": "Pop-up stand for event",
+      "desc": "Mobile merch customization right at your event"
+    },
+    "box": {
+      "label": "Box of Touch",
+      "desc": "Set of fabric and product samples before production"
+    },
+    "designer": {
+      "label": "Designer services",
+      "desc": "Logo development or adaptation for printing"
+    },
+    "bulk": {
+      "label": "Large order (500+)",
+      "desc": "Wholesale orders with individual terms"
+    },
+    "other": {
+      "label": "Other",
+      "desc": "Any other question or suggestion"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "catalog": "Katalog",
+  "popup": "Popup",
+  "about": "Om oss",
+  "how": "Hur det fungerar",
+  "contacts": "Kontakt",
+  "startProject": "Starta projekt",
+  "openMenu": "Öppna meny",
+  "closeMenu": "Stäng meny",
+  "goToAccount": "Till kontot",
+  "signIn": "Logga in",
+  "cartItems": "Kundvagn — {count} artiklar",
+  "mainNav": "Huvudnavigation",
+  "logoLink": "U:DO CRAFT — tillbaka till startsidan"
+}

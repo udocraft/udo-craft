@@ -1,0 +1,21 @@
+{
+  "label": "Hoe het werkt",
+  "heading": "Aanpassen voor jouw doelen",
+  "steps": {
+    "0": {
+      "title": "Producten kiezen",
+      "desc": "Blader door de catalogus, filter op categorieën. Kies de basis voor je merch.",
+      "cta": "Naar catalogus"
+    },
+    "1": {
+      "title": "Kleding aanpassen",
+      "desc": "Upload logo, kies drukzone, maat en kleur. Realtime preview.",
+      "cta": "Probeer het"
+    },
+    "2": {
+      "title": "Offerte ontvangen",
+      "desc": "Vul het bestelformulier in. Een accountmanager neemt contact op ter bevestiging.",
+      "cta": "Bestellen"
+    }
+  }
+}

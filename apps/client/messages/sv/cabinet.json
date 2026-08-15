@@ -1,0 +1,50 @@
+{
+  "breadcrumb": "/ Konto",
+  "settings": "Inställningar",
+  "logout": "Logga ut",
+  "noOrders": "Inga beställningar ännu",
+  "toCatalog": "Till katalog",
+  "writeTo": "Skriv till account manager",
+  "tabs": {
+    "details": "Detaljer",
+    "chat": "Chatt",
+    "files": "Filer"
+  },
+  "status": {
+    "new": "Ny förfrågan",
+    "in_progress": "Pågående",
+    "production": "Produktion",
+    "completed": "Slutförd",
+    "archived": "Arkiv"
+  },
+  "delivery": {
+    "nova_poshta": "PostNord",
+    "ukrposhta": "DHL",
+    "pickup": "Upphämtning"
+  },
+  "details": {
+    "phone": "Telefon",
+    "email": "E-post",
+    "company": "Företag",
+    "orderDate": "Beställningsdatum",
+    "orderAmount": "Beställningsbelopp",
+    "delivery": "Leverans",
+    "deadline": "Deadline",
+    "positions": "Positioner ({n})",
+    "attachments": "Bilagor ({n})",
+    "invoice": "Ladda ner faktura",
+    "print": "Tryck"
+  },
+  "chat": {
+    "placeholder": "Meddelande...",
+    "sendLabel": "Skicka meddelande",
+    "attachLabel": "Bifoga fil",
+    "loading": "Laddar meddelanden...",
+    "empty": "Inga meddelanden ännu",
+    "fileTooLarge": "\"{name}\" överstiger 10 MB"
+  },
+  "files": {
+    "empty": "Inga filer ännu",
+    "openFile": "Öppna fil"
+  }
+}

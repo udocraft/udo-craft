@@ -1,0 +1,48 @@
+{
+  "nameLabel": "O teu nome *",
+  "namePlaceholder": "João Silva",
+  "emailLabel": "E-mail *",
+  "emailPlaceholder": "rh@empresa.pt",
+  "phoneLabel": "Telefone *",
+  "phonePlaceholder": "+351 XXX XXX XXX",
+  "companyLabel": "Empresa",
+  "companyPlaceholder": "Nome da empresa",
+  "topicLabel": "Assunto *",
+  "messageLabel": "Conta-nos sobre o teu projeto",
+  "messagePlaceholder": "Quantidade, tipo de produto, prazos...",
+  "filesLabel": "Carregar ficheiros (designs, logos, etc.)",
+  "filesClick": "Clica ou arrasta ficheiros para aqui",
+  "filesDesc": "Designs, logos, imagens...",
+  "submit": "Enviar",
+  "submitting": "A enviar...",
+  "error": "Ocorreu um erro. Tenta novamente ou contacta-nos diretamente.",
+  "success": "Obrigado por entrar em contacto!",
+  "successDesc": "Recebemos o teu pedido e entraremos em contacto em breve.",
+  "deleteFile": "Eliminar {name}",
+  "topics": {
+    "merch": {
+      "label": "Merch empresarial",
+      "desc": "T-shirts, hoodies, acessórios para a tua equipa ou marca"
+    },
+    "popup": {
+      "label": "Stand popup para evento",
+      "desc": "Personalização de merch ao vivo no teu evento"
+    },
+    "box": {
+      "label": "Box of Touch",
+      "desc": "Amostras físicas de tecidos e produtos antes da produção"
+    },
+    "designer": {
+      "label": "Serviços de design",
+      "desc": "Desenvolvimento ou adaptação de logótipos para impressão"
+    },
+    "bulk": {
+      "label": "Grande encomenda (500+)",
+      "desc": "Encomendas por grosso com condições individuais"
+    },
+    "other": {
+      "label": "Outro",
+      "desc": "Qualquer outra pergunta ou sugestão"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "title": "Panier",
+  "titleWithCount": "Panier ({count})",
+  "empty": "Le panier est vide",
+  "emptyDesc": "Choisissez un produit et configurez l'impression",
+  "toCatalog": "Au catalogue",
+  "ariaLabel": "Panier",
+  "quantity": "{qty} pcs · {size}",
+  "total": "Total :",
+  "cartItem": "Article du panier"
+}

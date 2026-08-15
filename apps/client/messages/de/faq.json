@@ -1,0 +1,33 @@
+{
+  "heading": "Häufig gestellte Fragen",
+  "noAnswer": "Keine Antwort gefunden?",
+  "contactUs": "Kontaktieren Sie uns",
+  "replyTime": "— wir antworten innerhalb einer Stunde.",
+  "questionsLabel": "Fragen und Antworten",
+  "items": {
+    "0": {
+      "question": "Was ist die Mindestbestellmenge?",
+      "answer": "Ab 10 Stück. Kein Aufschlag für kleine Auflagen — ideal zum Ausprobieren."
+    },
+    "1": {
+      "question": "Was kostet der Druck?",
+      "answer": "Der Preis hängt von der Druckart (Siebdruck, Stickerei, DTF) und der Menge ab. Je mehr, desto günstiger pro Stück. Im Online-Editor sofort sichtbar."
+    },
+    "2": {
+      "question": "Wie lange dauert eine Bestellung?",
+      "answer": "Standardlieferzeit — 7–14 Werktage nach Bestätigung. Für Eilbestellungen gibt es Expressproduktion."
+    },
+    "3": {
+      "question": "Kann ich die Qualität vor einer großen Bestellung prüfen?",
+      "answer": "Ja. Box of Touch enthält physische Muster von Stoffen, Farben und Produkten."
+    },
+    "4": {
+      "question": "Was, wenn mir das Ergebnis nicht gefällt?",
+      "answer": "Wir genehmigen das Design vor der Produktion. Entspricht das Produkt nicht dem genehmigten Design — machen wir es kostenlos neu."
+    },
+    "5": {
+      "question": "Gibt es Rabatte bei Großbestellungen?",
+      "answer": "Ja. 10–49 Stück — Basispreis. 50–99 — 12% Rabatt. 100+ — 15% Rabatt. Rabatte werden im Editor automatisch berechnet."
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "label": "Box of Touch",
+  "heading": "Senti la qualità",
+  "headingHighlight": "prima di ordinare",
+  "desc": "La maggior parte delle aziende ordina alla cieca. Box of Touch risolve il problema: un set fisico di campioni di tessuti, colori e tipi di stampa.",
+  "contentsLabel": "Contenuto del Box of Touch",
+  "contents": {
+    "products": {
+      "label": "Campioni di prodotti",
+      "desc": "T-shirt, felpe, maniche lunghe — tocca il taglio e la vestibilità"
+    },
+    "fabrics": {
+      "label": "Campioni di tessuti",
+      "desc": "Composizioni e grammature variegate — da 180 a 320 g/m²"
+    },
+    "palette": {
+      "label": "Palette di colori",
+      "desc": "Tutti i colori disponibili con campioni reali"
+    },
+    "printing": {
+      "label": "Tipi di stampa",
+      "desc": "Serigrafia, ricamo, DTF — confronta al tatto"
+    }
+  },
+  "cta": "Ordina Box of Touch",
+  "freeDelivery": "Spedizione gratuita · Senza impegni"
+}

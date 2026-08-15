@@ -1,0 +1,33 @@
+{
+  "heading": "Vanliga frågor",
+  "noAnswer": "Hittade du inget svar?",
+  "contactUs": "Kontakta oss",
+  "replyTime": "— vi svarar inom en timme.",
+  "questionsLabel": "Frågor och svar",
+  "items": {
+    "0": {
+      "question": "Vad är minsta orderkvantitet?",
+      "answer": "Från 10 exemplar. Inget pristillägg för små upplagor."
+    },
+    "1": {
+      "question": "Vad kostar trycket?",
+      "answer": "Priset beror på typ (screentryck, broderi, DTF) och kvantitet. Visas i online-editorn."
+    },
+    "2": {
+      "question": "Hur lång tid tar en beställning?",
+      "answer": "Standardleveranstid — 7–14 arbetsdagar från bekräftelse."
+    },
+    "3": {
+      "question": "Kan jag se kvaliteten innan en stor beställning?",
+      "answer": "Ja. Box of Touch — fysiska prover på tyger, färger och produkter."
+    },
+    "4": {
+      "question": "Vad händer om jag inte gillar resultatet?",
+      "answer": "Vi godkänner designen före produktion. Om produkten inte stämmer — gör vi om det gratis."
+    },
+    "5": {
+      "question": "Finns det rabatter för stora beställningar?",
+      "answer": "Ja. 10–49 exemplar — grundpris. 50–99 — 12 % rabatt. 100+ — 15 % rabatt."
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "readyToStart": "Pronto para começar?",
+  "readyDesc": "A partir de 10 unidades · 7–14 dias · Entrega",
+  "startProject": "Iniciar projeto",
+  "ariaLabel": "Rodapé",
+  "homeLink": "U:DO CRAFT — voltar ao início",
+  "columns": {
+    "products": {
+      "title": "Produtos",
+      "links": {
+        "constructor": "Configurador de merch",
+        "catalog": "Catálogo",
+        "popup": "Stand popup",
+        "box": "Box of Touch",
+        "designer": "Contratar designer"
+      }
+    },
+    "company": {
+      "title": "Empresa",
+      "links": {
+        "about": "Sobre nós",
+        "how": "Como funciona",
+        "career": "Carreiras",
+        "blog": "Blog"
+      }
+    },
+    "support": {
+      "title": "Suporte",
+      "links": {
+        "faq": "FAQ",
+        "contact": "Contacto",
+        "cabinet": "Conta",
+        "delivery": "Envio e pagamento"
+      }
+    }
+  },
+  "privacy": "Privacidade",
+  "terms": "Termos",
+  "cookies": "Cookies"
+}

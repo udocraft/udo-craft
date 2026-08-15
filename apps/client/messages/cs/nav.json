@@ -1,0 +1,15 @@
+{
+  "catalog": "Katalog",
+  "popup": "Popup",
+  "about": "O nás",
+  "how": "Jak to funguje",
+  "contacts": "Kontakt",
+  "startProject": "Spustit projekt",
+  "openMenu": "Otevřít menu",
+  "closeMenu": "Zavřít menu",
+  "goToAccount": "Přejít na účet",
+  "signIn": "Přihlásit se",
+  "cartItems": "Košík — {count} položek",
+  "mainNav": "Hlavní navigace",
+  "logoLink": "U:DO CRAFT — zpět na úvod"
+}

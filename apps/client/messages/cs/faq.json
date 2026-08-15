@@ -1,0 +1,33 @@
+{
+  "heading": "Časté dotazy",
+  "noAnswer": "Nenašel jsi odpověď?",
+  "contactUs": "Kontaktuj nás",
+  "replyTime": "— odpovíme do hodiny.",
+  "questionsLabel": "Otázky a odpovědi",
+  "items": {
+    "0": {
+      "question": "Jaké je minimální množství objednávky?",
+      "answer": "Od 10 kusů. Žádný příplatek za malé náklady."
+    },
+    "1": {
+      "question": "Kolik stojí tisk?",
+      "answer": "Cena závisí na typu (sítotisk, výšivka, DTF) a množství. Viditelná v online editoru."
+    },
+    "2": {
+      "question": "Jak dlouho trvá objednávka?",
+      "answer": "Standardní lhůta — 7–14 pracovních dní od potvrzení."
+    },
+    "3": {
+      "question": "Mohu vidět kvalitu před velkou objednávkou?",
+      "answer": "Ano. Box of Touch — fyzické vzorky látek, barev a produktů."
+    },
+    "4": {
+      "question": "Co když se mi výsledek nelíbí?",
+      "answer": "Před výrobou schvalujeme design. Pokud produkt neodpovídá — přepracujeme zdarma."
+    },
+    "5": {
+      "question": "Existují slevy na velké objednávky?",
+      "answer": "Ano. 10–49 ks — základní cena. 50–99 — sleva 12 %. 100+ — sleva 15 %."
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "heading": "Von der Idee zum Merch — in 4 Schritten",
+  "subtext": "Der gesamte Prozess dauert weniger als 15 Minuten. Preise sind sofort sichtbar — keine Anrufe, keine Verhandlungen.",
+  "estimatedTime": "Geschätzte Zeit",
+  "stepLabel": "Schritt {n}: {title}",
+  "stepsLabel": "Prozessschritte",
+  "steps": {
+    "1": {
+      "title": "Produkt wählen",
+      "body": "Katalog mit echten Preisen durchsuchen. Preis aktualisiert sich sofort bei Mengen-/Drucktyp-Änderung.",
+      "cta": "Katalog öffnen",
+      "time": "~5 Min"
+    },
+    "2": {
+      "title": "Online anpassen",
+      "body": "Logo hochladen, auf dem Produkt platzieren, Druckzone wählen. Editor zeigt genaue Kosten in Echtzeit.",
+      "cta": "Editor testen",
+      "time": "~10 Min"
+    },
+    "3": {
+      "title": "Angebot erhalten",
+      "body": "Formular ausfüllen — ein Ansprechpartner meldet sich innerhalb von 2 Stunden. Festpreis ohne versteckte Gebühren.",
+      "cta": "Kontakt aufnehmen",
+      "time": "~2 Std"
+    },
+    "4": {
+      "title": "Merch empfangen",
+      "body": "Produktion 7–14 Werktage. Versand deutschlandweit. Falls etwas nicht stimmt — kostenlose Nachbesserung.",
+      "cta": "FAQ lesen",
+      "time": "7–14 Tage"
+    }
+  }
+}

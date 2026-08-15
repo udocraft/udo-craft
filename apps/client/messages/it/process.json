@@ -1,0 +1,33 @@
+{
+  "heading": "Dall'idea al merch — in 4 passaggi",
+  "subtext": "L'intero processo richiede meno di 15 minuti. I prezzi sono visibili subito — nessuna chiamata, nessuna trattativa.",
+  "estimatedTime": "Tempo stimato",
+  "stepLabel": "Passo {n}: {title}",
+  "stepsLabel": "Fasi del processo",
+  "steps": {
+    "1": {
+      "title": "Scegli un prodotto",
+      "body": "Sfoglia il catalogo con prezzi reali. Il prezzo si aggiorna istantaneamente al variare di quantità e tipo di stampa.",
+      "cta": "Apri catalogo",
+      "time": "~5 min"
+    },
+    "2": {
+      "title": "Personalizza online",
+      "body": "Carica il logo, posizionalo sul prodotto, scegli la zona di stampa. L'editor mostra il costo esatto in tempo reale.",
+      "cta": "Prova l'editor",
+      "time": "~10 min"
+    },
+    "3": {
+      "title": "Ottieni un preventivo",
+      "body": "Compila il modulo — un account manager ti contatta entro 2 ore. Prezzo fisso senza costi nascosti.",
+      "cta": "Contattaci",
+      "time": "~2 ore"
+    },
+    "4": {
+      "title": "Ricevi il tuo merch",
+      "body": "Produzione 7–14 giorni lavorativi. Spedizione. Se qualcosa non va — rifacciamo gratuitamente.",
+      "cta": "Leggi le FAQ",
+      "time": "7–14 giorni"
+    }
+  }
+}

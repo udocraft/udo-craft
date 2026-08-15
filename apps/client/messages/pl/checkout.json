@@ -1,0 +1,85 @@
+{
+  "title": "Koszyk",
+  "orderTitle": "Złóż zamówienie",
+  "stepCart": "Koszyk",
+  "stepForm": "Dane firmy",
+  "emptyCart": "Koszyk jest pusty",
+  "toCatalog": "Do katalogu",
+  "total": "Łącznie",
+  "finalPriceNote": "Cena finalna jest ustalana z opiekunem",
+  "placeOrder": "Złóż zamówienie",
+  "edit": "Edytuj",
+  "discount": "-{pct}% rabat",
+  "company": {
+    "title": "Dane firmy",
+    "name": "Nazwa firmy *",
+    "namePlaceholder": "Sp. z o.o. «Nazwa»",
+    "taxId": "NIP / REGON",
+    "taxIdPlaceholder": "1234567890"
+  },
+  "contact": {
+    "title": "Osoba kontaktowa",
+    "fullName": "Imię i nazwisko *",
+    "fullNamePlaceholder": "Jan Kowalski",
+    "email": "E-mail *",
+    "emailPlaceholder": "hr@firma.pl",
+    "phone": "Telefon",
+    "phonePlaceholder": "+48 XXX XXX XXX",
+    "social": "Telegram / Instagram",
+    "socialPlaceholder": "@użytkownik lub link"
+  },
+  "delivery": {
+    "title": "Dostawa i terminy",
+    "options": {
+      "nova_poshta": {
+        "label": "DPD",
+        "desc": "2–3 dni robocze"
+      },
+      "ukrposhta": {
+        "label": "Poczta Polska",
+        "desc": "3–5 dni roboczych"
+      },
+      "pickup": {
+        "label": "Odbiór własny",
+        "desc": "Po uzgodnieniu"
+      }
+    },
+    "deadline": "Pożądana data",
+    "comment": "Komentarz do zamówienia",
+    "commentPlaceholder": "Szczególne życzenia, szczegóły nadruku..."
+  },
+  "submit": "Potwierdź zamówienie",
+  "submitting": "Wysyłanie...",
+  "finalPriceManager": "Cena finalna i faktura zostaną przesłane przez opiekuna",
+  "success": {
+    "title": "Zamówienie przyjęte!",
+    "desc": "Nasz opiekun skontaktuje się z Tobą w ciągu 24 godzin.",
+    "createAccount": "Utwórz konto osobiste",
+    "loginAccount": "Zaloguj się do konta",
+    "createAccountDesc": "Śledź status zamówienia, rozmawiaj z opiekunem i przeglądaj faktury.",
+    "emailExists": "Ten e-mail jest już zarejestrowany. Podaj hasło, aby się zalogować.",
+    "emailLabel": "E-mail",
+    "passwordLabel": "Hasło",
+    "newPasswordLabel": "Utwórz hasło",
+    "passwordPlaceholder": "Minimum 6 znaków",
+    "enterPasswordPlaceholder": "Podaj hasło",
+    "creating": "Tworzenie...",
+    "create": "Utwórz konto",
+    "loggingIn": "Logowanie...",
+    "login": "Zaloguj się",
+    "passwordError": "Hasło musi mieć co najmniej 6 znaków",
+    "enterPasswordError": "Podaj hasło",
+    "wrongPassword": "Nieprawidłowe hasło",
+    "registrationError": "Błąd rejestracji. Spróbuj później.",
+    "skip": "Pomiń, wróć na stronę główną",
+    "accountCreated": {
+      "title": "Konto utworzone!",
+      "desc": "Wysłaliśmy e-mail potwierdzający na adres {email}.",
+      "loginBtn": "Zaloguj się do konta",
+      "homeLink": "Wróć na stronę główną"
+    }
+  },
+  "back": "Wstecz",
+  "header": "U:DO",
+  "backAriaLabel": "Wstecz"
+}

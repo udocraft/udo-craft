@@ -1,0 +1,21 @@
+{
+  "label": "Como funciona",
+  "heading": "Personaliza para os teus objetivos",
+  "steps": {
+    "0": {
+      "title": "Escolher produtos",
+      "desc": "Navega no catálogo, filtra por categorias. Escolhe a base para o teu merch.",
+      "cta": "Ao catálogo"
+    },
+    "1": {
+      "title": "Personalizar roupa",
+      "desc": "Carrega o logótipo, escolhe zona de impressão, tamanho e cor. Pré-visualização em tempo real.",
+      "cta": "Experimentar"
+    },
+    "2": {
+      "title": "Receber proposta",
+      "desc": "Preenche o formulário. Um gestor entra em contacto para confirmar.",
+      "cta": "Encomendar"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "heading": "Van idee naar merch — in 4 stappen",
+  "subtext": "Het hele proces duurt minder dan 15 minuten. Prijzen zijn direct zichtbaar — geen telefoontjes of onderhandelingen.",
+  "estimatedTime": "Geschatte tijd",
+  "stepLabel": "Stap {n}: {title}",
+  "stepsLabel": "Processtappen",
+  "steps": {
+    "1": {
+      "title": "Kies een product",
+      "body": "Blader door de catalogus met echte prijzen. De prijs wordt direct bijgewerkt bij wijziging van aantal of druktype.",
+      "cta": "Catalogus openen",
+      "time": "~5 min"
+    },
+    "2": {
+      "title": "Online aanpassen",
+      "body": "Upload je logo, plaats het op het product, kies de drukzone. De editor toont de exacte kosten in realtime.",
+      "cta": "Editor proberen",
+      "time": "~10 min"
+    },
+    "3": {
+      "title": "Offerte ontvangen",
+      "body": "Vul het formulier in — een accountmanager neemt binnen 2 uur contact op. Vaste prijs zonder verborgen kosten.",
+      "cta": "Contact opnemen",
+      "time": "~2 uur"
+    },
+    "4": {
+      "title": "Merch ontvangen",
+      "body": "Productie 7–14 werkdagen. Levering. Als er iets niet klopt — doen we het gratis opnieuw.",
+      "cta": "FAQ lezen",
+      "time": "7–14 dagen"
+    }
+  }
+}

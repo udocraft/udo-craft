@@ -3,10 +3,12 @@
 import { Link } from "@/i18n/navigation";
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { ArrowRight } from "lucide-react";
 import { HighlightText, RoughHighlight } from "@/app/_components/HighlightText";
 
 export function FinalCtaSection() {
+  const t = useTranslations("finalCta");
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
@@ -15,7 +17,6 @@ export function FinalCtaSection() {
       className="bg-primary py-24 sm:py-32 overflow-hidden relative"
       aria-labelledby="final-cta-heading"
     >
-      {/* Background texture */}
       <div
         className="absolute inset-0 opacity-[0.04] pointer-events-none"
         style={{
@@ -33,17 +34,17 @@ export function FinalCtaSection() {
           transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         >
           <p className="text-white/50 text-[11px] font-bold uppercase tracking-[0.22em] mb-6">
-            Готові почати?
+            {t("ready")}
           </p>
           <h2
             id="final-cta-heading"
             className="text-white font-black tracking-tight leading-[0.95] mb-8"
             style={{ fontSize: "clamp(2.5rem, 7vw, 6rem)" }}
           >
-            Ваш мерч — за 14 днів
+            {t("heading")}
           </h2>
           <p className="text-white/50 text-base leading-relaxed max-w-md mx-auto mb-10">
-            Від ідеї до готового виробу. Онлайн-редактор, особистий менеджер, гарантія якості.
+            {t("desc")}
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4">
@@ -51,12 +52,12 @@ export function FinalCtaSection() {
               href="/order"
               className="inline-flex items-center gap-2.5 bg-white text-primary font-bold text-sm px-8 py-4 rounded-full hover:bg-white/90 active:scale-[0.97] transition-all duration-200 shadow-xl shadow-black/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
             >
-              Почати проєкт <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              {t("cta")} <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </Link>
           </div>
 
           <p className="text-white/30 text-xs mt-8">
-            Від 10 одиниць · Без прихованих доплат · Доставка по Україні
+            {t("footer")}
           </p>
         </motion.div>
       </div>

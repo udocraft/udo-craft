@@ -1,0 +1,48 @@
+{
+  "nameLabel": "Votre nom *",
+  "namePlaceholder": "Jean Dupont",
+  "emailLabel": "E-mail *",
+  "emailPlaceholder": "rh@entreprise.fr",
+  "phoneLabel": "Téléphone *",
+  "phonePlaceholder": "+33 X XX XX XX XX",
+  "companyLabel": "Entreprise",
+  "companyPlaceholder": "Nom de l'entreprise",
+  "topicLabel": "Sujet *",
+  "messageLabel": "Parlez-nous de votre projet",
+  "messagePlaceholder": "Quantité, type de produit, délais...",
+  "filesLabel": "Télécharger des fichiers (maquettes, logos, etc.)",
+  "filesClick": "Cliquez ou faites glisser des fichiers ici",
+  "filesDesc": "Maquettes, logos, images...",
+  "submit": "Envoyer",
+  "submitting": "Envoi en cours...",
+  "error": "Une erreur s'est produite. Réessayez ou contactez-nous directement.",
+  "success": "Merci de nous avoir contactés !",
+  "successDesc": "Nous avons reçu votre demande et vous contacterons bientôt.",
+  "deleteFile": "Supprimer {name}",
+  "topics": {
+    "merch": {
+      "label": "Merch d'entreprise",
+      "desc": "T-shirts, sweats, accessoires pour votre équipe ou marque"
+    },
+    "popup": {
+      "label": "Stand popup pour événement",
+      "desc": "Personnalisation live de merch lors de votre événement"
+    },
+    "box": {
+      "label": "Box of Touch",
+      "desc": "Échantillons physiques de tissus et produits avant production"
+    },
+    "designer": {
+      "label": "Services de design",
+      "desc": "Développement ou adaptation de logo pour l'impression"
+    },
+    "bulk": {
+      "label": "Grande commande (500+)",
+      "desc": "Commandes en gros avec conditions individuelles"
+    },
+    "other": {
+      "label": "Autre",
+      "desc": "Toute autre question ou suggestion"
+    }
+  }
+}

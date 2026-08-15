@@ -1,0 +1,27 @@
+{
+  "label": "Box of Touch",
+  "heading": "Känn kvaliteten",
+  "headingHighlight": "innan du beställer",
+  "desc": "De flesta företag beställer i blindo. Box of Touch löser det: ett fysiskt set med tygprover, färger och trycktyper.",
+  "contentsLabel": "Innehåll i Box of Touch",
+  "contents": {
+    "products": {
+      "label": "Produktprover",
+      "desc": "T-shirts, hoodies, longsleeves — känn snitt och passform"
+    },
+    "fabrics": {
+      "label": "Tygprover",
+      "desc": "Olika sammansättningar och vikter — från 180 till 320 g/m²"
+    },
+    "palette": {
+      "label": "Färgpalett",
+      "desc": "Alla tillgängliga färger med riktiga prover"
+    },
+    "printing": {
+      "label": "Trycktyper",
+      "desc": "Screentryck, broderi, DTF — jämför med handen"
+    }
+  },
+  "cta": "Beställ Box of Touch",
+  "freeDelivery": "Gratis frakt · Inga förpliktelser"
+}

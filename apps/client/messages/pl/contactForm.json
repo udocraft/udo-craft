@@ -1,0 +1,48 @@
+{
+  "nameLabel": "Twoje imię i nazwisko *",
+  "namePlaceholder": "Jan Kowalski",
+  "emailLabel": "E-mail *",
+  "emailPlaceholder": "hr@firma.pl",
+  "phoneLabel": "Telefon *",
+  "phonePlaceholder": "+48 XXX XXX XXX",
+  "companyLabel": "Firma",
+  "companyPlaceholder": "Nazwa firmy",
+  "topicLabel": "Temat *",
+  "messageLabel": "Opowiedz nam o swoim projekcie",
+  "messagePlaceholder": "Ilość, rodzaj produktu, terminy...",
+  "filesLabel": "Prześlij pliki (projekty, logo itp.)",
+  "filesClick": "Kliknij lub przeciągnij pliki tutaj",
+  "filesDesc": "Projekty, logo, obrazy...",
+  "submit": "Wyślij",
+  "submitting": "Wysyłanie...",
+  "error": "Wystąpił błąd. Spróbuj ponownie lub skontaktuj się z nami.",
+  "success": "Dziękujemy za kontakt!",
+  "successDesc": "Otrzymaliśmy Twoje zgłoszenie i wkrótce się odezwiemy.",
+  "deleteFile": "Usuń {name}",
+  "topics": {
+    "merch": {
+      "label": "Merch korporacyjny",
+      "desc": "Koszulki, bluzy, akcesoria dla zespołu lub marki"
+    },
+    "popup": {
+      "label": "Stoisko popup na wydarzenie",
+      "desc": "Personalizacja merchu na żywo na Twoim wydarzeniu"
+    },
+    "box": {
+      "label": "Box of Touch",
+      "desc": "Fizyczne próbki tkanin i produktów przed produkcją"
+    },
+    "designer": {
+      "label": "Usługi projektowe",
+      "desc": "Opracowanie lub adaptacja logo do druku"
+    },
+    "bulk": {
+      "label": "Duże zamówienie (500+)",
+      "desc": "Zamówienia hurtowe z indywidualnymi warunkami"
+    },
+    "other": {
+      "label": "Inne",
+      "desc": "Każde inne pytanie lub sugestia"
+    }
+  }
+}

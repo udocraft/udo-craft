@@ -1,0 +1,33 @@
+{
+  "label": "À propos",
+  "heading": "Plateforme de",
+  "headingHighlight": "merchandising d'entreprise",
+  "desc1": "Des startups aux grandes entreprises — nous aidons les équipes à créer du merch dont elles sont fières.",
+  "desc2": "Dès 10 unités, sans frais cachés, production propre, chargé de compte personnel, garantie qualité.",
+  "features": {
+    "editor": {
+      "title": "Éditeur en ligne",
+      "desc": "Téléchargez votre logo, placez-le sur le produit et voyez le résultat immédiatement."
+    },
+    "minOrder": {
+      "title": "Dès 10 unités",
+      "desc": "Parfait pour les startups et les petites équipes."
+    },
+    "pricing": {
+      "title": "Tarification transparente",
+      "desc": "Facture immédiate. Aucun frais caché."
+    },
+    "timeline": {
+      "title": "7–14 jours",
+      "desc": "De la confirmation à la livraison."
+    },
+    "quality": {
+      "title": "Contrôle qualité",
+      "desc": "Chaque lot est inspecté avant expédition."
+    },
+    "manager": {
+      "title": "Chargé de compte",
+      "desc": "Disponible de la première demande à la livraison."
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "nameLabel": "Tu nombre *",
+  "namePlaceholder": "Juan García",
+  "emailLabel": "Correo electrónico *",
+  "emailPlaceholder": "rrhh@empresa.es",
+  "phoneLabel": "Teléfono *",
+  "phonePlaceholder": "+34 XXX XXX XXX",
+  "companyLabel": "Empresa",
+  "companyPlaceholder": "Nombre de la empresa",
+  "topicLabel": "Asunto *",
+  "messageLabel": "Cuéntanos sobre tu proyecto",
+  "messagePlaceholder": "Cantidad, tipo de producto, plazos...",
+  "filesLabel": "Subir archivos (diseños, logos, etc.)",
+  "filesClick": "Haz clic o arrastra archivos aquí",
+  "filesDesc": "Diseños, logos, imágenes...",
+  "submit": "Enviar",
+  "submitting": "Enviando...",
+  "error": "Ocurrió un error. Inténtalo de nuevo o contáctanos directamente.",
+  "success": "¡Gracias por contactarnos!",
+  "successDesc": "Recibimos tu solicitud y nos pondremos en contacto pronto.",
+  "deleteFile": "Eliminar {name}",
+  "topics": {
+    "merch": {
+      "label": "Merch corporativo",
+      "desc": "Camisetas, sudaderas, accesorios para tu equipo o marca"
+    },
+    "popup": {
+      "label": "Expositor popup para evento",
+      "desc": "Personalización de merch en vivo en tu evento"
+    },
+    "box": {
+      "label": "Box of Touch",
+      "desc": "Muestras físicas de telas y productos antes de la producción"
+    },
+    "designer": {
+      "label": "Servicios de diseño",
+      "desc": "Desarrollo o adaptación de logotipos para impresión"
+    },
+    "bulk": {
+      "label": "Pedido grande (500+)",
+      "desc": "Pedidos al por mayor con condiciones individuales"
+    },
+    "other": {
+      "label": "Otro",
+      "desc": "Cualquier otra pregunta o sugerencia"
+    }
+  }
+}

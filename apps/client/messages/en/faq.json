@@ -1,0 +1,33 @@
+{
+  "heading": "Frequently Asked Questions",
+  "noAnswer": "Didn't find an answer?",
+  "contactUs": "Contact us",
+  "replyTime": "— we'll respond within an hour.",
+  "questionsLabel": "Questions and answers",
+  "items": {
+    "0": {
+      "question": "What is the minimum order quantity?",
+      "answer": "From 10 units. No need to overpay for a large run if you're just testing merch or need a small batch for your team."
+    },
+    "1": {
+      "question": "How much does printing cost?",
+      "answer": "The price depends on the print type (silk-screen, embroidery, DTF, heat transfer) and quantity. The larger the run, the lower the price per unit. The exact cost is shown immediately in the online editor."
+    },
+    "2": {
+      "question": "How long does an order take?",
+      "answer": "Standard lead time — 7–14 business days from design approval and payment. For urgent orders, rush production is available — ask your manager."
+    },
+    "3": {
+      "question": "Can I see the quality before ordering a run?",
+      "answer": "Yes. That's what Box of Touch is for — a set of physical fabric, color and product samples. You'll feel the quality before placing a large order."
+    },
+    "4": {
+      "question": "What if I don't like the result?",
+      "answer": "We approve the design before starting production. If the finished product doesn't match the approved design — we redo it at our expense. Your manager is in touch at every stage."
+    },
+    "5": {
+      "question": "Are there discounts for large orders?",
+      "answer": "Yes. 10–49 units — base price. 50–99 units — 12% discount. 100+ units — 15% discount. Discounts are applied automatically in the editor."
+    }
+  }
+}

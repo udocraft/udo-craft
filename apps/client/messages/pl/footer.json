@@ -1,0 +1,40 @@
+{
+  "readyToStart": "Gotowy do startu?",
+  "readyDesc": "Od 10 sztuk · 7–14 dni · Dostawa",
+  "startProject": "Rozpocznij projekt",
+  "ariaLabel": "Stopka",
+  "homeLink": "U:DO CRAFT — powrót na stronę główną",
+  "columns": {
+    "products": {
+      "title": "Produkty",
+      "links": {
+        "constructor": "Konfigurator merchu",
+        "catalog": "Katalog",
+        "popup": "Stoisko popup",
+        "box": "Box of Touch",
+        "designer": "Zatrudnij projektanta"
+      }
+    },
+    "company": {
+      "title": "Firma",
+      "links": {
+        "about": "O nas",
+        "how": "Jak to działa",
+        "career": "Kariera",
+        "blog": "Blog"
+      }
+    },
+    "support": {
+      "title": "Wsparcie",
+      "links": {
+        "faq": "FAQ",
+        "contact": "Kontakt",
+        "cabinet": "Konto",
+        "delivery": "Wysyłka i płatność"
+      }
+    }
+  },
+  "privacy": "Prywatność",
+  "terms": "Regulamin",
+  "cookies": "Pliki cookie"
+}

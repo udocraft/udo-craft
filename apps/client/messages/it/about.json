@@ -1,0 +1,33 @@
+{
+  "label": "Chi siamo",
+  "heading": "Piattaforma di",
+  "headingHighlight": "merchandising aziendale",
+  "desc1": "Da startup a grandi aziende — aiutiamo i team a creare merch di cui andare fieri.",
+  "desc2": "Da 10 pezzi, senza costi nascosti, produzione propria, account manager personale, garanzia qualità.",
+  "features": {
+    "editor": {
+      "title": "Editor online",
+      "desc": "Carica il logo, posizionalo sul prodotto e vedi subito il risultato."
+    },
+    "minOrder": {
+      "title": "Da 10 pezzi",
+      "desc": "Perfetto per startup e piccoli team."
+    },
+    "pricing": {
+      "title": "Prezzi trasparenti",
+      "desc": "Fattura immediata. Nessun costo nascosto."
+    },
+    "timeline": {
+      "title": "7–14 giorni",
+      "desc": "Dalla conferma alla consegna."
+    },
+    "quality": {
+      "title": "Controllo qualità",
+      "desc": "Ogni lotto viene ispezionato prima della spedizione."
+    },
+    "manager": {
+      "title": "Account manager",
+      "desc": "Disponibile dalla prima richiesta alla consegna."
+    }
+  }
+}

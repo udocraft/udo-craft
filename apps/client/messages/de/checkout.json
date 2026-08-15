@@ -1,0 +1,85 @@
+{
+  "title": "Warenkorb",
+  "orderTitle": "Bestellung aufgeben",
+  "stepCart": "Warenkorb",
+  "stepForm": "Unternehmensdaten",
+  "emptyCart": "Warenkorb ist leer",
+  "toCatalog": "Zum Katalog",
+  "total": "Gesamt",
+  "finalPriceNote": "Endpreis wird mit dem Ansprechpartner vereinbart",
+  "placeOrder": "Bestellung aufgeben",
+  "edit": "Bearbeiten",
+  "discount": "-{pct}% Rabatt",
+  "company": {
+    "title": "Unternehmensdaten",
+    "name": "Firmenname *",
+    "namePlaceholder": "GmbH «Name»",
+    "taxId": "Steuernummer / USt-IdNr.",
+    "taxIdPlaceholder": "DE123456789"
+  },
+  "contact": {
+    "title": "Ansprechpartner",
+    "fullName": "Vor- und Nachname *",
+    "fullNamePlaceholder": "Hans Müller",
+    "email": "E-Mail *",
+    "emailPlaceholder": "hr@firma.de",
+    "phone": "Telefon",
+    "phonePlaceholder": "+49 XXX XXXXXXX",
+    "social": "Telegram / Instagram",
+    "socialPlaceholder": "@benutzername oder Link"
+  },
+  "delivery": {
+    "title": "Lieferung & Fristen",
+    "options": {
+      "nova_poshta": {
+        "label": "DHL",
+        "desc": "2–3 Werktage"
+      },
+      "ukrposhta": {
+        "label": "DPD",
+        "desc": "4–6 Werktage"
+      },
+      "pickup": {
+        "label": "Abholung",
+        "desc": "Nach Vereinbarung"
+      }
+    },
+    "deadline": "Gewünschter Termin",
+    "comment": "Anmerkung zur Bestellung",
+    "commentPlaceholder": "Besondere Wünsche, Druckdetails..."
+  },
+  "submit": "Bestellung bestätigen",
+  "submitting": "Wird gesendet...",
+  "finalPriceManager": "Endpreis und Rechnung werden vom Ansprechpartner nach Bestätigung gesendet",
+  "success": {
+    "title": "Bestellung eingegangen!",
+    "desc": "Unser Ansprechpartner meldet sich innerhalb von 24 Stunden.",
+    "createAccount": "Persönliches Konto erstellen",
+    "loginAccount": "Im Konto anmelden",
+    "createAccountDesc": "Bestellstatus verfolgen, mit dem Ansprechpartner chatten und Rechnungen einsehen.",
+    "emailExists": "Diese E-Mail ist bereits registriert. Passwort eingeben, um sich anzumelden.",
+    "emailLabel": "E-Mail",
+    "passwordLabel": "Passwort",
+    "newPasswordLabel": "Passwort erstellen",
+    "passwordPlaceholder": "Mindestens 6 Zeichen",
+    "enterPasswordPlaceholder": "Passwort eingeben",
+    "creating": "Wird erstellt...",
+    "create": "Konto erstellen",
+    "loggingIn": "Anmeldung...",
+    "login": "Anmelden",
+    "passwordError": "Passwort muss mindestens 6 Zeichen haben",
+    "enterPasswordError": "Passwort eingeben",
+    "wrongPassword": "Falsches Passwort",
+    "registrationError": "Registrierungsfehler. Später erneut versuchen.",
+    "skip": "Überspringen, zur Startseite",
+    "accountCreated": {
+      "title": "Konto erstellt!",
+      "desc": "Wir haben eine Bestätigungs-E-Mail an {email} gesendet. E-Mail bestätigen, um sich anzumelden.",
+      "loginBtn": "Im Konto anmelden",
+      "homeLink": "Zur Startseite"
+    }
+  },
+  "back": "Zurück",
+  "header": "U:DO",
+  "backAriaLabel": "Zurück"
+}

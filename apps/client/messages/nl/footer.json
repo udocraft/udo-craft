@@ -1,0 +1,40 @@
+{
+  "readyToStart": "Klaar om te beginnen?",
+  "readyDesc": "Vanaf 10 stuks · 7–14 dagen · Levering",
+  "startProject": "Project starten",
+  "ariaLabel": "Voettekst",
+  "homeLink": "U:DO CRAFT — terug naar home",
+  "columns": {
+    "products": {
+      "title": "Producten",
+      "links": {
+        "constructor": "Merch-configurator",
+        "catalog": "Catalogus",
+        "popup": "Popup-stand",
+        "box": "Box of Touch",
+        "designer": "Designer inhuren"
+      }
+    },
+    "company": {
+      "title": "Bedrijf",
+      "links": {
+        "about": "Over ons",
+        "how": "Hoe het werkt",
+        "career": "Vacatures",
+        "blog": "Blog"
+      }
+    },
+    "support": {
+      "title": "Ondersteuning",
+      "links": {
+        "faq": "FAQ",
+        "contact": "Contact",
+        "cabinet": "Account",
+        "delivery": "Verzending & betaling"
+      }
+    }
+  },
+  "privacy": "Privacy",
+  "terms": "Voorwaarden",
+  "cookies": "Cookies"
+}
