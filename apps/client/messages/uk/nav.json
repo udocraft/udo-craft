@@ -1,0 +1,15 @@
+{
+  "catalog": "Каталог",
+  "popup": "Popup",
+  "about": "Про нас",
+  "how": "Як це працює",
+  "contacts": "Контакти",
+  "startProject": "Почати проект",
+  "openMenu": "Відкрити головне меню",
+  "closeMenu": "Закрити головне меню",
+  "goToAccount": "Перейти до кабінету",
+  "signIn": "Увійти",
+  "cartItems": "Кошик — {count} товарів",
+  "mainNav": "Головна навігація",
+  "logoLink": "U:DO CRAFT — повернутися на головну"
+}

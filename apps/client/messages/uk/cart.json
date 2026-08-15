@@ -1,0 +1,11 @@
+{
+  "title": "Кошик",
+  "titleWithCount": "Кошик ({count})",
+  "empty": "Кошик порожній",
+  "emptyDesc": "Оберіть продукт і налаштуйте друк",
+  "toCatalog": "До каталогу",
+  "ariaLabel": "Кошик",
+  "quantity": "{qty} шт · {size}",
+  "total": "Всього:",
+  "cartItem": "Товар кошика"
+}

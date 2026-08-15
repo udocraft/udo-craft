@@ -1,0 +1,27 @@
+{
+  "label": "Box of Touch",
+  "heading": "Feel the quality",
+  "headingHighlight": "before you order",
+  "desc": "Most companies order a run blindly — and get something different than expected. Box of Touch solves this: a physical set of fabric samples, colors and print types.",
+  "contentsLabel": "Contents of Box of Touch",
+  "contents": {
+    "products": {
+      "label": "Product samples",
+      "desc": "T-shirts, hoodies, long sleeves — feel the cut and fit"
+    },
+    "fabrics": {
+      "label": "Fabric samples",
+      "desc": "Different compositions and weights — from 180 to 320 g/m²"
+    },
+    "palette": {
+      "label": "Color palette",
+      "desc": "All available colors with real samples"
+    },
+    "printing": {
+      "label": "Print types",
+      "desc": "Silk-screen, embroidery, DTF — compare by touch"
+    }
+  },
+  "cta": "Order Box of Touch",
+  "freeDelivery": "Free delivery · No obligations"
+}

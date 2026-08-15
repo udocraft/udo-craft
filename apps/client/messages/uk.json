@@ -1,22 +1,22 @@
 {
   "meta": {
-    "title": "U:DO CRAFT — Corporate merch",
-    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA."
+    "title": "U:DO CRAFT — Корпоративний мерч",
+    "description": "B2B платформа мерчандайзингу. Ми створюємо одяг, який стає частиною корпоративної ДНК."
   },
   "nav": {
-    "catalog": "Catalog",
+    "catalog": "Каталог",
     "popup": "Popup",
-    "about": "About Us",
-    "how": "How It Works",
-    "contacts": "Contacts",
-    "startProject": "Start Project",
-    "openMenu": "Open main menu",
-    "closeMenu": "Close main menu",
-    "goToAccount": "Go to account",
-    "signIn": "Sign In",
-    "cartItems": "Cart — {count} items",
-    "mainNav": "Main navigation",
-    "logoLink": "U:DO CRAFT — back to home"
+    "about": "Про нас",
+    "how": "Як це працює",
+    "contacts": "Контакти",
+    "startProject": "Почати проект",
+    "openMenu": "Відкрити головне меню",
+    "closeMenu": "Закрити головне меню",
+    "goToAccount": "Перейти до кабінету",
+    "signIn": "Увійти",
+    "cartItems": "Кошик — {count} товарів",
+    "mainNav": "Головна навігація",
+    "logoLink": "U:DO CRAFT — повернутися на головну"
   },
   "hero": {
     "skipToCatalog": "Skip to catalog",

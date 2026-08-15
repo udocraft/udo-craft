@@ -1,0 +1,21 @@
+{
+  "label": "How it works",
+  "heading": "Customize for your goals",
+  "steps": {
+    "0": {
+      "title": "Choose products",
+      "desc": "Browse the catalog, filter by categories. Choose the base for your merch — hoodies, t-shirts, accessories.",
+      "cta": "To catalog"
+    },
+    "1": {
+      "title": "Customize clothing",
+      "desc": "Upload logo, choose print zone, size and color. Preview in real time.",
+      "cta": "Try it"
+    },
+    "2": {
+      "title": "Get a proposal",
+      "desc": "Fill out the order form. A manager will contact you to confirm details and send an invoice.",
+      "cta": "Order"
+    }
+  }
+}

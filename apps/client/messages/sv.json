@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "title": "U:DO CRAFT — Företagsmerch",
+    "description": "B2B-merchplattform. Vi skapar kläder som blir en del av ert företags-DNA."
+  },
   "nav": {
     "catalog": "Katalog",
     "popup": "Popup",

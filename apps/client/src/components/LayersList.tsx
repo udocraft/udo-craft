@@ -109,21 +109,30 @@ export default function LayersList({
   const handleDragEnd = () => { setDraggingId(null); setDropTarget(null); dragItem.current = null; };
 
   const touchDragIdx = useRef<number | null>(null);
-  const touchGhost = useRef<HTMLDivElement | null>(null);
+  const touchGhost = useRef<{ x: number; y: number; text: string } | null>(null);
   const touchMoved = useRef(false);
+  const [touchGhostState, setTouchGhostState] = useState<{ x: number; y: number; text: string } | null>(null);
 
   const onTouchStart = (e: React.TouchEvent, idx: number) => {
     touchDragIdx.current = idx; touchMoved.current = false; setDraggingId(sideLayers[idx].id);
-    const ghost = document.createElement("div");
-    ghost.style.cssText = `position:fixed;z-index:9999;pointer-events:none;opacity:0.9;background:white;border:2px solid var(--color-primary);border-radius:10px;padding:8px 12px;font-size:12px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.18);transform:translate(-50%,-50%);left:${e.touches[0].clientX}px;top:${e.touches[0].clientY}px;`;
-    const l = sideLayers[idx]; ghost.textContent = l.kind === "text" ? (l.textContent ?? "Текст") : (l.file?.name ?? "Шар");
-    document.body.appendChild(ghost); touchGhost.current = ghost;
+    const l = sideLayers[idx]; 
+    const ghost = {
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY,
+      text: l.kind === "text" ? (l.textContent ?? "Текст") : (l.file?.name ?? "Шар")
+    };
+    touchGhost.current = ghost;
+    setTouchGhostState(ghost);
   };
   const onTouchMove = (e: React.TouchEvent) => {
     if (touchDragIdx.current === null) return;
     touchMoved.current = true; e.preventDefault();
     const touch = e.touches[0];
-    if (touchGhost.current) { touchGhost.current.style.left = `${touch.clientX}px`; touchGhost.current.style.top = `${touch.clientY}px`; }
+    if (touchGhost.current) { 
+      touchGhost.current.x = touch.clientX; 
+      touchGhost.current.y = touch.clientY; 
+      setTouchGhostState({ ...touchGhost.current });
+    }
     const el = document.elementFromPoint(touch.clientX, touch.clientY);
     const item = el?.closest("[data-layer-idx]");
     if (item) {
@@ -133,7 +142,8 @@ export default function LayersList({
     }
   };
   const onTouchEnd = () => {
-    if (touchGhost.current) { document.body.removeChild(touchGhost.current); touchGhost.current = null; }
+    touchGhost.current = null;
+    setTouchGhostState(null);
     const from = touchDragIdx.current; const to = dropTarget;
     touchDragIdx.current = null; setDraggingId(null); setDropTarget(null);
     if (touchMoved.current && from !== null && to !== null && from !== to && from !== to - 1) doReorder(from, to);
@@ -150,7 +160,20 @@ export default function LayersList({
   if (sideLayers.length === 0) return null;
 
   return (
-    <div onDrop={handleDrop} className="space-y-1">
+    <>
+      {touchGhostState && (
+        <div 
+          className="fixed z-[9999] pointer-events-none opacity-90 bg-white border-2 border-primary rounded-xl px-3 py-2 text-xs font-semibold shadow-lg"
+          style={{
+            transform: 'translate(-50%, -50%)',
+            left: `${touchGhostState.x}px`,
+            top: `${touchGhostState.y}px`,
+          }}
+        >
+          {touchGhostState.text}
+        </div>
+      )}
+      <div onDrop={handleDrop} className="space-y-1">
       {dropTarget === 0 && <div className="h-0.5 bg-primary rounded-full mx-1" />}
       {sideLayers.map((layer, idx) => {
         const isActive = activeLayerId === layer.id;
@@ -310,5 +333,6 @@ export default function LayersList({
       })}
       <div className="h-3" onDragOver={(e) => { e.preventDefault(); setDropTarget(sideLayers.length); }} />
     </div>
+    </>
   );
 }

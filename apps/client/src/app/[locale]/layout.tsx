@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { cn } from "@/lib/utils";
 import { PageTracker } from "@/components/PageTracker";
@@ -8,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { ClarityInit } from "@/components/clarity";
 import { Analytics } from "@vercel/analytics/next";
 import { SoundProvider } from "@/app/_components/SoundProvider";
+import { MessagesProvider } from "@/components/MessagesProvider";
 import { locales } from "@/i18n/routing";
 import "../globals.css";
 
@@ -61,22 +61,22 @@ export default async function LocaleLayout({
   };
 
   return (
-    <html lang={locale} className={cn()}>
+    <html lang={locale} className={cn()} suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
       </head>
-      <body className="min-h-screen bg-background text-foreground antialiased">
-        <NextIntlClientProvider messages={messages}>
+      <body className="min-h-screen bg-background text-foreground antialiased" suppressHydrationWarning>
+        <MessagesProvider messages={messages}>
           <ClarityInit clarityId="w7kk9avzfh" />
           <PageTracker />
           <SoundProvider />
           {children}
           <Toaster richColors position="top-right" />
           <Analytics />
-        </NextIntlClientProvider>
+        </MessagesProvider>
       </body>
     </html>
   );

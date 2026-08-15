@@ -1,0 +1,112 @@
+{
+  "badge": "Mobile pop-up service",
+  "heroHeading": "Merch pop-up at your event —",
+  "heroSubheading": "live experience they remember",
+  "heroDesc": "We come to you. Guests choose clothing, customize a print on-site and leave with ready merch in hand. No logistics on your side — just a wow effect.",
+  "bookBtn": "Book a pop-up",
+  "howItWorks": "How it works",
+  "stats": {
+    "events": "Pop-ups held",
+    "time": "Customization time",
+    "guests": "Guests at one event",
+    "satisfaction": "Satisfied organizers"
+  },
+  "useCases": {
+    "label": "Who it's for",
+    "heading": "Suitable for any event",
+    "items": {
+      "corporate": {
+        "title": "Corporate events",
+        "desc": "Make the corporate event unforgettable — guests go home with personalized company merch."
+      },
+      "conferences": {
+        "title": "Conferences & forums",
+        "desc": "Branded merch on-site — the best networking tool and memory of the event."
+      },
+      "festivals": {
+        "title": "Festivals & markets",
+        "desc": "A pop-up stand that attracts attention and generates a queue. Live customization — it's a show."
+      },
+      "launches": {
+        "title": "Product launches",
+        "desc": "Product launch with merch that guests made themselves — maximum audience engagement."
+      },
+      "universities": {
+        "title": "Universities & schools",
+        "desc": "Graduations, open days, student events — merch that unites the community."
+      },
+      "b2b": {
+        "title": "B2B events",
+        "desc": "Partner meetings, exhibitions, presentations — leave an impression they wear."
+      }
+    }
+  },
+  "process": {
+    "label": "Process",
+    "heading": "Three steps to the perfect pop-up",
+    "steps": {
+      "0": {
+        "step": "01",
+        "title": "Choose the format",
+        "desc": "Tell us about the event — number of guests, location, date. We'll choose the optimal pop-up format."
+      },
+      "1": {
+        "step": "02",
+        "title": "We prepare the stand",
+        "desc": "We bring equipment, clothing and everything needed for customization. We set up the stand before the event starts."
+      },
+      "2": {
+        "step": "03",
+        "title": "Guests customize",
+        "desc": "Each guest chooses a product, places a print and receives ready merch on-site — in minutes."
+      }
+    }
+  },
+  "faq": {
+    "label": "FAQ",
+    "heading": "Frequently asked questions",
+    "items": {
+      "0": {
+        "q": "What is the minimum number of participants?",
+        "a": "From 50 people. For smaller events we can offer an alternative format — write to us."
+      },
+      "1": {
+        "q": "How long does customization of one product take?",
+        "a": "From 3 to 10 minutes depending on print complexity. For large events we set up multiple workstations."
+      },
+      "2": {
+        "q": "What products are available at the pop-up?",
+        "a": "T-shirts, hoodies, long sleeves, caps and accessories. The final range is agreed for your event and budget."
+      },
+      "3": {
+        "q": "Who pays for the merch — organizer or guests?",
+        "a": "Both options. Merch can be included in the ticket price, given as a company gift, or sold on-site."
+      },
+      "4": {
+        "q": "How far in advance should I book?",
+        "a": "We recommend 2–3 weeks before the event. For large events (500+ people) — a month in advance."
+      }
+    }
+  },
+  "contact": {
+    "label": "Book",
+    "heading": "Tell us about your event",
+    "desc": "Leave a request — a manager will contact you within one business day to discuss details and calculate the cost.",
+    "benefits": {
+      "0": "Free consultation",
+      "1": "Individual estimate for your event",
+      "2": "Reply within 24 hours"
+    }
+  },
+  "nav": {
+    "useCases": "Who it's for",
+    "how": "How it works",
+    "faq": "FAQ",
+    "contacts": "Contacts"
+  },
+  "book": "Book",
+  "footerCopyright": "U:DO CRAFT. All rights reserved.",
+  "menuOpen": "Open menu",
+  "menuClose": "Close menu",
+  "homeLink": "Home"
+}

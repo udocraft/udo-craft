@@ -1,0 +1,14 @@
+{
+  "badge": "Free",
+  "heading": "Get a free mockup of your merch",
+  "desc": "Upload your logo — we'll apply it to a real product and send a mockup to your email. No registration, no obligations.",
+  "emailLabel": "Your email",
+  "cta": "Get mockup",
+  "loading": "Sending...",
+  "emailError": "Enter a valid email",
+  "success": "Thank you!",
+  "successDesc": "Mockup will arrive in your inbox within 24 hours",
+  "formLabel": "Mockup request form",
+  "orCalculate": "Want to know the price right now?",
+  "openCalculator": "Open price calculator →"
+}

@@ -1,0 +1,19 @@
+{
+  "problemHeading": "The market is flooded with cheap merch nobody wears",
+  "problemsLabel": "Common problems",
+  "problems": {
+    "minOrder": "Minimum run of 500+ units",
+    "approvals": "Weeks of design approvals",
+    "quality": "Quality doesn't meet expectations",
+    "hidden": "Hidden costs after ordering"
+  },
+  "solutionHeading": "Merch that becomes part of your brand",
+  "solutionsLabel": "U:DO advantages",
+  "solutions": {
+    "minOrder": "From 10 units with no extra fees",
+    "editor": "Online editor — see the result instantly",
+    "samples": "Samples before production (Box of Touch)",
+    "price": "Fixed price in the invoice"
+  },
+  "ctaLabel": "Browse catalog"
+}

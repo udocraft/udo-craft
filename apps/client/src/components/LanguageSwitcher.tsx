@@ -5,13 +5,13 @@ import { useRouter, usePathname } from "@/i18n/navigation";
 import { locales, type Locale } from "@/i18n/routing";
 
 const LABELS: Record<Locale, string> = {
-  en: "EN", de: "DE", fr: "FR", es: "ES",
+  en: "EN", uk: "UA", de: "DE", fr: "FR", es: "ES",
   it: "IT", pl: "PL", nl: "NL", pt: "PT",
   cs: "CS", sv: "SV",
 };
 
 const NAMES: Record<Locale, string> = {
-  en: "English", de: "Deutsch", fr: "Français", es: "Español",
+  en: "English", uk: "Українська", de: "Deutsch", fr: "Français", es: "Español",
   it: "Italiano", pl: "Polski", nl: "Nederlands", pt: "Português",
   cs: "Čeština", sv: "Svenska",
 };

@@ -1,0 +1,40 @@
+{
+  "readyToStart": "Готові почати?",
+  "readyDesc": "Від 10 одиниць · 7–14 днів · Доставка по Україні",
+  "startProject": "Почати проект",
+  "ariaLabel": "Футер",
+  "homeLink": "U:DO CRAFT — повернутися на головну",
+  "columns": {
+    "products": {
+      "title": "Продукти",
+      "links": {
+        "constructor": "Конструктор мерчу",
+        "catalog": "Каталог",
+        "popup": "Popup стенд",
+        "box": "Box of Touch",
+        "designer": "Найняти дизайнера"
+      }
+    },
+    "company": {
+      "title": "Компанія",
+      "links": {
+        "about": "Про нас",
+        "how": "Як це працює",
+        "career": "Кар'єра",
+        "blog": "Блог"
+      }
+    },
+    "support": {
+      "title": "Підтримка",
+      "links": {
+        "faq": "FAQ",
+        "contact": "Контакти",
+        "cabinet": "Кабінет",
+        "delivery": "Доставка та оплата"
+      }
+    }
+  },
+  "privacy": "Конфіденційність",
+  "terms": "Умови",
+  "cookies": "Cookies"
+}
