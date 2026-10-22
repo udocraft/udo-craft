@@ -1,5 +1,11 @@
 import { createServiceClient } from "@/lib/supabase/service";
 import { HomeClient } from "@/app/_components/HomeClient";
+import { pageAlternates } from "@/lib/seo";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return { alternates: pageAlternates(locale, "") };
+}
 
 export default async function LocaleHomePage() {
   try {

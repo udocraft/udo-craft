@@ -1,9 +1,11 @@
 import { Metadata } from "next";
 import { createServiceClient } from "@/lib/supabase/service";
+import { pageAlternates } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Умови та правила — U:DO CRAFT",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  return { title: "Умови та правила — U:DO CRAFT", alternates: pageAlternates(locale, "/terms") };
+}
 
 async function getContent() {
   try {
