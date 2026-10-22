@@ -19,6 +19,13 @@ const nextConfig = {
       },
     ];
   },
+  webpack: (config, { isServer }) => {
+    // fabric pulls in the native "canvas" addon; keep it out of server bundles
+    if (isServer) {
+      config.externals = [...(config.externals || []), "canvas", "fabric"];
+    }
+    return config;
+  },
   typescript: { ignoreBuildErrors: true },
   eslint: { ignoreDuringBuilds: true },
   images: {
