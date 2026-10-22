@@ -149,10 +149,16 @@ export function ComparisonSection() {
               onClick={() => emblaApi?.scrollTo(index)}
               aria-label={t("goTo", { name: COLUMNS[index].name })}
               aria-selected={index === selectedIndex}
-              className={`h-3 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
-                index === selectedIndex ? "bg-primary w-10" : "bg-black/15 hover:bg-black/25 w-3"
-              }`}
-            />
+              className="flex size-6 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            >
+              {/* 24px hit area (WCAG 2.2 target size); the pill is the visual */}
+              <span
+                aria-hidden="true"
+                className={`block h-3 rounded-full transition-all duration-300 ${
+                  index === selectedIndex ? "bg-primary w-10" : "bg-black/15 hover:bg-black/25 w-3"
+                }`}
+              />
+            </button>
           ))}
         </div>
 
