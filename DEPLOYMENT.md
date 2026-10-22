@@ -131,6 +131,7 @@ Use "Production" environment for `main` branch values, "Preview" for staging (`u
 | `TELEGRAM_WEBHOOK_SECRET` | Any random string |
 | `RESEND_WEBHOOK_SECRET` | Required in production. Svix signing secret from Resend; inbound email is rejected without it |
 | `OTP_PEPPER` | Required. Random 32+ byte secret used to hash password-reset codes |
+| `IMAGE_PROXY_ALLOWED_HOSTS` | Required for the image proxy. Comma-separated hosts (`*.supabase.co` allowed). Empty means no images load |
 | `ADMIN_BOOTSTRAP_EMAILS` | Optional. Comma-separated emails granted admin once verified |
 | `NEXT_PUBLIC_SENTRY_DSN` | Optional — from sentry.io |
 
