@@ -1,36 +1,40 @@
 "use client";
 
 // SND UI Sound Library — https://snd.dev
-// Kit SND01 "sine" — clean, minimal, fits the brand
-import Snd from "snd-lib";
+// Kit SND01 "sine" — clean, minimal, fits the brand.
+// Loaded on first play so the library stays out of the initial page bundle.
+type SndClass = (typeof import("snd-lib"))["default"];
+type SoundKey = keyof SndClass["SOUNDS"];
 
-let snd: Snd | null = null;
-let loaded = false;
-let loading = false;
+let instance: Promise<{ snd: InstanceType<SndClass>; Snd: SndClass }> | null = null;
 
-async function getSnd(): Promise<Snd> {
-  if (snd && loaded) return snd;
-  if (!snd) snd = new Snd();
-  if (!loading) {
-    loading = true;
-    await snd.load(Snd.KITS.SND01);
-    loaded = true;
+function getSnd() {
+  if (!instance) {
+    instance = import("snd-lib").then(async ({ default: Snd }) => {
+      const snd = new Snd();
+      await snd.load(Snd.KITS.SND01);
+      return { snd, Snd };
+    });
   }
-  return snd;
+  return instance;
+}
+
+function play(key: SoundKey): Promise<void> {
+  return getSnd()
+    .then(({ snd, Snd }) => snd.play(Snd.SOUNDS[key]))
+    .then(() => undefined)
+    .catch(() => {});
 }
 
 export const sound = {
-  tap: () => getSnd().then((s) => s.play(Snd.SOUNDS.TAP)).catch(() => {}),
-  button: () => getSnd().then((s) => s.play(Snd.SOUNDS.BUTTON)).catch(() => {}),
-  toggle: (on: boolean) =>
-    getSnd()
-      .then((s) => s.play(on ? Snd.SOUNDS.TOGGLE_ON : Snd.SOUNDS.TOGGLE_OFF))
-      .catch(() => {}),
-  select: () => getSnd().then((s) => s.play(Snd.SOUNDS.SELECT)).catch(() => {}),
-  open: () => getSnd().then((s) => s.play(Snd.SOUNDS.TRANSITION_UP)).catch(() => {}),
-  close: () => getSnd().then((s) => s.play(Snd.SOUNDS.TRANSITION_DOWN)).catch(() => {}),
-  type: () => getSnd().then((s) => s.play(Snd.SOUNDS.TYPE)).catch(() => {}),
-  notification: () => getSnd().then((s) => s.play(Snd.SOUNDS.NOTIFICATION)).catch(() => {}),
-  caution: () => getSnd().then((s) => s.play(Snd.SOUNDS.CAUTION)).catch(() => {}),
-  celebration: () => getSnd().then((s) => s.play(Snd.SOUNDS.CELEBRATION)).catch(() => {}),
+  tap: () => play("TAP"),
+  button: () => play("BUTTON"),
+  toggle: (on: boolean) => play(on ? "TOGGLE_ON" : "TOGGLE_OFF"),
+  select: () => play("SELECT"),
+  open: () => play("TRANSITION_UP"),
+  close: () => play("TRANSITION_DOWN"),
+  type: () => play("TYPE"),
+  notification: () => play("NOTIFICATION"),
+  caution: () => play("CAUTION"),
+  celebration: () => play("CELEBRATION"),
 };
