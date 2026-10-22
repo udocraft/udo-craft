@@ -11,7 +11,6 @@ export function permissionForAdminApi(request: NextRequest): AdminPermission | n
   if (pathname.startsWith("/api/auth/")) return null;
   if (pathname === "/api/email/inbound") return null;
   if (pathname === "/api/telegram/webhook") return null;
-  if (pathname === "/api/users/set-role") return null;
 
   if (pathname.startsWith("/api/users")) return "users.manage";
   if (pathname === "/api/admin/hard-reset") return "system.hard_reset";
