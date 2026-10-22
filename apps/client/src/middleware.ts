@@ -4,69 +4,6 @@ import { updateSession } from "./lib/supabase/middleware";
 import { rateLimit } from "./lib/rate-limit";
 import { routing } from "@/i18n/routing";
 
-// Country to locale mapping
-const countryToLocale: Record<string, string> = {
-  // French-speaking countries
-  FR: "fr", BE: "fr", LU: "fr", CH: "fr", MC: "fr", CD: "fr", CI: "fr", MG: "fr", ML: "fr", SN: "fr",
-  // German-speaking countries
-  DE: "de", AT: "de", LI: "de",
-  // Spanish-speaking countries
-  ES: "es", AR: "es", MX: "es", CO: "es", PE: "es", VE: "es", CL: "es", EC: "es", GT: "es", CU: "es",
-  // Italian-speaking countries
-  IT: "it", SM: "it", VA: "it",
-  // Polish-speaking countries
-  PL: "pl",
-  // Dutch-speaking countries (BE stays "nl" as the effective runtime value; see audit note)
-  NL: "nl",
-  // Portuguese-speaking countries
-  PT: "pt", BR: "pt",
-  // Czech-speaking countries
-  CZ: "cs",
-  // Swedish-speaking countries
-  SE: "sv",
-  // Ukrainian-speaking
-  UA: "uk",
-};
-
-async function getLocaleFromIP(ip: string): Promise<string> {
-  try {
-    const response = await fetch(`https://ipapi.co/${ip}/country/`, {
-      headers: { "User-Agent": "next-intl-middleware" },
-      signal: AbortSignal.timeout(1000), // 1 second timeout
-    });
-    if (!response.ok) return routing.defaultLocale;
-    
-    const country = await response.text();
-    const locale = countryToLocale[country.trim()];
-    return locale || routing.defaultLocale;
-  } catch {
-    return routing.defaultLocale;
-  }
-}
-
-function getClientIP(request: NextRequest): string {
-  // Check various headers for the real client IP
-  const headers = [
-    "x-forwarded-for",
-    "x-real-ip",
-    "cf-connecting-ip",
-    "x-client-ip",
-    "forwarded",
-  ];
-  
-  for (const header of headers) {
-    const value = request.headers.get(header);
-    if (value) {
-      // x-forwarded-for can contain multiple IPs, take the first one
-      const ip = value.split(",")[0].trim();
-      if (ip && ip !== "unknown") return ip;
-    }
-  }
-  
-  // Fallback to remote address
-  return request.ip || "unknown";
-}
-
 const intlMiddleware = createIntlMiddleware(routing);
 
 export async function middleware(request: NextRequest) {
