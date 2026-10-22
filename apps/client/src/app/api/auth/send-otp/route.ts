@@ -1,8 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { createServiceClient } from "@/lib/supabase/service";
+import { generateOtp, hashOtp, OTP_TTL_MS } from "@/lib/auth/otp";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resendClient: Resend | null = null;
+
+/** Created on first use so builds and imports work without RESEND_API_KEY. */
+function getResend(): Resend {
+  if (!resendClient) resendClient = new Resend(process.env.RESEND_API_KEY);
+  return resendClient;
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,6 +29,7 @@ export async function POST(req: NextRequest) {
     }
 
     const isReset = type === "reset";
+    const safeName = escapeHtml(String(name ?? ""));
     let otp = clientOtp;
 
     // For password reset, generate OTP on the server securely
@@ -27,16 +44,14 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: true });
       }
 
-      // Generate 6-digit OTP
-      otp = String(Math.floor(100000 + Math.random() * 900000));
-      const expiresAt = Date.now() + 15 * 60 * 1000; // 15 min
-
-      // Store OTP hash in user metadata
+      otp = generateOtp();
       await service.auth.admin.updateUserById(user.id, {
         user_metadata: {
           ...user.user_metadata,
-          reset_otp: otp,
-          reset_otp_expires: expiresAt,
+          reset_otp: null,
+          reset_otp_hash: hashOtp(otp, email),
+          reset_otp_expires: Date.now() + OTP_TTL_MS,
+          reset_otp_attempts: 0,
         },
       });
     } else if (!otp) {
@@ -48,7 +63,7 @@ export async function POST(req: NextRequest) {
     const heading = isReset ? "Відновлення паролю" : "Підтвердіть ваш email";
     const bodyText = isReset
       ? "Ви запросили відновлення паролю. Введіть код нижче:"
-      : `Вітаємо${name ? `, ${name}` : ""}! Для завершення реєстрації введіть код підтвердження:`;
+      : `Вітаємо${safeName ? `, ${safeName}` : ""}! Для завершення реєстрації введіть код підтвердження:`;
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://u-do-craft.store";
     const logoUrl = `${appUrl}/logo.png`;
@@ -104,7 +119,7 @@ export async function POST(req: NextRequest) {
 </body>
 </html>`;
 
-    const { error } = await resend.emails.send({
+    const { error } = await getResend().emails.send({
       from: "U:DO CRAFT <noreply@u-do-craft.store>",
       to: email,
       subject,

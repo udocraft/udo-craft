@@ -143,6 +143,7 @@ Use "Production" environment for `main` branch values, "Preview" for staging (`u
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key (public) |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-only) |
 | `NEXT_PUBLIC_APP_URL` | `https://u-do-craft.store` |
+| `OTP_PEPPER` | Required. Same role as in admin: hashes password-reset codes |
 | `NEXT_PUBLIC_SENTRY_DSN` | Optional — from sentry.io |
 
 ---
