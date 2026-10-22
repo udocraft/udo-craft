@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service";
+import { rateLimit } from "@/lib/rate-limit";
 
 const EVENT_TYPES = new Set([
   "pageview",
@@ -21,6 +22,10 @@ function clientIp(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  if (!(await rateLimit(request, { scope: "analytics", limit: 120, window: 60 })).success) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   try {
     const body = await request.json();
     const eventType = String(body.event_type || "");
@@ -33,6 +38,9 @@ export async function POST(request: NextRequest) {
     const sessionId = String(body.session_id || "");
     if (!visitorId || !sessionId) {
       return NextResponse.json({ error: "visitor_id and session_id required" }, { status: 400 });
+    }
+    if (visitorId.length > 100 || sessionId.length > 100) {
+      return NextResponse.json({ error: "visitor_id or session_id too long" }, { status: 400 });
     }
 
     const metadata = {

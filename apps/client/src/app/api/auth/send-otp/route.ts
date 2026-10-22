@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { createServiceClient } from "@/lib/supabase/service";
 import { findUserByEmail } from "@/lib/supabase/users";
-import { generateOtp, hashOtp, OTP_TTL_MS } from "@/lib/auth/otp";
+import { emailLimitKey, generateOtp, hashOtp, OTP_TTL_MS } from "@/lib/auth/otp";
+import { consumeLimit } from "@/lib/rate-limit";
 
 let resendClient: Resend | null = null;
 
@@ -21,12 +22,23 @@ function escapeHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
 export async function POST(req: NextRequest) {
   try {
     const { email, otp: clientOtp, name, type } = await req.json();
 
     if (!email) {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
+    }
+
+    if (typeof email !== "string" || !EMAIL_PATTERN.test(email) || email.length > 254) {
+      return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+    }
+
+    if (!(await consumeLimit(`otp-send:${emailLimitKey(email)}`, 3, 900))) {
+      return NextResponse.json({ error: "Забагато запитів. Спробуйте пізніше." }, { status: 429 });
     }
 
     const isReset = type === "reset";
@@ -96,8 +108,8 @@ export async function POST(req: NextRequest) {
               <p style="margin:0 0 32px;font-size:14px;color:#666;line-height:1.6;font-family:'Cousine','Courier New',Courier,monospace;">${bodyText}</p>
               <!-- OTP Box -->
               <div style="background:#f8f8ff;border:2px solid #1B18AC;border-radius:12px;padding:24px;text-align:center;margin-bottom:32px;">
-                <div style="font-size:40px;font-weight:700;letter-spacing:0.3em;color:#1B18AC;font-family:'Cousine','Courier New',Courier,monospace;">${otp}</div>
-                <div style="font-size:12px;color:#888;margin-top:8px;font-family:'Cousine','Courier New',Courier,monospace;">Код дійсний 10 хвилин</div>
+                <div style="font-size:40px;font-weight:700;letter-spacing:0.3em;color:#1B18AC;font-family:'Cousine','Courier New',Courier,monospace;">${escapeHtml(String(otp))}</div>
+                <div style="font-size:12px;color:#888;margin-top:8px;font-family:'Cousine','Courier New',Courier,monospace;">Код дійсний 15 хвилин</div>
               </div>
               <p style="margin:0;font-size:13px;color:#999;line-height:1.6;font-family:'Cousine','Courier New',Courier,monospace;">
                 Якщо ви не запитували цей код — просто проігноруйте цей лист.

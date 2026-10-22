@@ -33,17 +33,10 @@ function saveCart(items: CartItem[]) {
 }
 
 export function useCart() {
-  const [items, setItems] = useState<CartItem[]>([]);
-  const [loaded, setLoaded] = useState(false);
-
+  const [items, setItems] = useState<CartItem[]>(loadCart);
   useEffect(() => {
-    setItems(loadCart());
-    setLoaded(true);
-  }, []);
-
-  useEffect(() => {
-    if (loaded) saveCart(items);
-  }, [items, loaded]);
+    saveCart(items);
+  }, [items]);
 
   const addItem = useCallback((item: CartItem) => {
     setItems(prev => {
@@ -90,7 +83,6 @@ export function useCart() {
 
   return {
     items,
-    loaded,
     addItem,
     updateQuantity,
     removeItem,

@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
 
   // 1. Rate-limit public APIs
   if (pathname.startsWith("/api")) {
-    const result = await rateLimit(request, { limit: 100, window: 60 });
+    const result = await rateLimit(request, { scope: "api", limit: 100, window: 60 });
     if (!result.success) {
       return NextResponse.json({ error: "Too many requests" }, { status: 429 });
     }

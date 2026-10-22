@@ -44,11 +44,7 @@ export default function OrdersPage() {
   }, [showBackButton]);
 
   useEffect(() => {
-    if (!initDataRaw) {
-      setLoading(false);
-      setError('Необхідна авторизація Telegram');
-      return;
-    }
+    if (!initDataRaw) return;
 
     fetch('/api/orders', {
       method: 'POST',
@@ -67,6 +63,7 @@ export default function OrdersPage() {
       });
   }, [initDataRaw]);
 
+  if (!initDataRaw) return <ErrorState message="Необхідна авторизація Telegram" onRetry={() => window.location.reload()} />;
   if (loading) return <LoadingScreen />;
   if (error) return <ErrorState message={error} onRetry={() => window.location.reload()} />;
 

@@ -3,6 +3,7 @@
 export const dynamic = 'force-dynamic';
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useTelegram } from "@/hooks/use-telegram";
 import { useCart } from "@/hooks/use-cart";
 import { ShoppingBag, Package, MessageCircle, ShoppingCart, Shirt, Sparkles, ArrowRight } from "lucide-react";
@@ -66,36 +67,35 @@ export default function Home() {
       <main className="flex-1 px-4 pb-4 space-y-4">
         {/* Quick Actions */}
         <div className="grid grid-cols-2 gap-2">
-          <a href="/products"
+          <Link href="/products"
             className="flex flex-col items-center gap-1.5 p-4 rounded-xl transition-opacity hover:opacity-80"
             style={{ backgroundColor: 'var(--tg-theme-secondary-bg-color)' }}
           >
             <Package className="w-7 h-7" style={{ color: 'var(--tg-theme-button-color)' }} />
             <span className="text-sm font-medium">Каталог</span>
-          </a>
-          <a href="/products"
+          </Link>
+          <Link href="/products"
             className="flex flex-col items-center gap-1.5 p-4 rounded-xl transition-opacity hover:opacity-80"
             style={{ backgroundColor: 'var(--tg-theme-secondary-bg-color)' }}
           >
             <Sparkles className="w-7 h-7" style={{ color: 'var(--tg-theme-button-color)' }} />
             <span className="text-sm font-medium">Замовити</span>
-          </a>
-          <a href="/cart"
+          </Link>
+          <Link href="/cart"
             className="flex flex-col items-center gap-1.5 p-4 rounded-xl transition-opacity hover:opacity-80"
             style={{ backgroundColor: 'var(--tg-theme-secondary-bg-color)' }}
           >
             <ShoppingBag className="w-7 h-7" style={{ color: 'var(--tg-theme-button-color)' }} />
             <span className="text-sm font-medium">Кошик</span>
-          </a>
-          <a
-            href="#"
-            onClick={(e) => { e.preventDefault(); if (tg) tg.close(); }}
+          </Link>
+          <button
+            type="button"            onClick={() => tg?.close()}
             className="flex flex-col items-center gap-1.5 p-4 rounded-xl transition-opacity hover:opacity-80"
             style={{ backgroundColor: 'var(--tg-theme-secondary-bg-color)' }}
           >
             <MessageCircle className="w-7 h-7" style={{ color: 'var(--tg-theme-button-color)' }} />
             <span className="text-sm font-medium">Чат</span>
-          </a>
+          </button>
         </div>
 
         {/* Featured Products */}
@@ -103,14 +103,13 @@ export default function Home() {
           <section>
             <div className="flex items-center justify-between mb-2">
               <h2 className="font-semibold">Популярні товари</h2>
-              <a href="/products" className="text-xs flex items-center gap-0.5" style={{ color: 'var(--tg-theme-button-color)' }}>
+              <Link href="/products" className="text-xs flex items-center gap-0.5" style={{ color: 'var(--tg-theme-button-color)' }}>
                 Всі <ArrowRight className="w-3 h-3" />
-              </a>
+              </Link>
             </div>
             <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 snap-x snap-mandatory scrollbar-none">
               {featured.map(p => (
-                <a
-                  key={p.id}
+                <Link                  key={p.id}
                   href={`/products/${p.slug}`}
                   className="snap-start shrink-0 w-36 rounded-xl overflow-hidden transition-opacity hover:opacity-80"
                   style={{ backgroundColor: 'var(--tg-theme-secondary-bg-color)' }}
@@ -130,7 +129,7 @@ export default function Home() {
                       {fmtPrice(p.base_price_cents)}
                     </p>
                   </div>
-                </a>
+                </Link>
               ))}
             </div>
           </section>

@@ -3,6 +3,7 @@ import { createServiceClient } from "@/lib/supabase/service";
 import { getSupabasePublicEnv, getSupabaseServiceEnv } from "@/lib/supabase/env";
 import { sendOrderConfirmation, sendContactNotification } from "@/lib/email";
 import { rateLimit } from "@/lib/rate-limit";
+import { lineTotalCents } from "@/lib/order-pricing";
 import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -14,7 +15,7 @@ import { NextRequest, NextResponse } from "next/server";
 // The honeypot check and rate limiting below mitigate abuse of this open endpoint.
 
 export async function POST(request: NextRequest) {
-  const { success } = await rateLimit(request, { limit: 5, window: 60 });
+  const { success } = await rateLimit(request, { scope: "leads", limit: 5, window: 60 });
   if (!success) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }
@@ -32,7 +33,7 @@ export async function POST(request: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
     }
-    const { status, total_amount_cents } = parsed.data;
+    const { status } = parsed.data;
     const customer_data = {
       ...(body.customer_data ?? {}),
       name: parsed.data.customer_data.name,
@@ -50,12 +51,39 @@ export async function POST(request: NextRequest) {
     // attachments is an extra field not covered by CreateLeadSchema — read from raw body
     const attachments: string[] = body.customer_data?.attachments ?? [];
 
+    // Prices are recalculated from the catalogue; client-sent amounts and unit prices are ignored.
+    const orderItemsInput = Array.isArray(order_items) ? order_items : [];
+    const basePriceById = new Map<string, number>();
+    if (orderItemsInput.length > 0) {
+      const { data: products, error: productsError } = await supabase
+        .from("products")
+        .select("id, base_price_cents")
+        .in("id", [...new Set(orderItemsInput.map((item: { product_id: string }) => item.product_id))]);
+      if (productsError) {
+        console.error("Product price lookup error:", productsError);
+        return NextResponse.json({ error: "Не вдалося перевірити ціни" }, { status: 500 });
+      }
+      for (const product of products ?? []) basePriceById.set(product.id, product.base_price_cents);
+    }
+    for (const item of orderItemsInput) {
+      if (!basePriceById.has(item.product_id) || !Number.isInteger(item.quantity) || item.quantity < 1) {
+        return NextResponse.json({ error: "Некоректна позиція замовлення" }, { status: 400 });
+      }
+    }
+    const serverTotalCents = Math.round(
+      orderItemsInput.reduce(
+        (sum: number, item: { product_id: string; quantity: number }) =>
+          sum + lineTotalCents(basePriceById.get(item.product_id)!, item.quantity),
+        0,
+      ),
+    );
+
     const leadId = crypto.randomUUID();
     const leadPayload = {
       id: leadId,
       status,
       customer_data,
-      total_amount_cents: total_amount_cents || 0,
+      total_amount_cents: serverTotalCents,
       visitor_id,
       session_id,
     };
@@ -73,19 +101,24 @@ export async function POST(request: NextRequest) {
     }
 
     if (Array.isArray(order_items) && order_items.length > 0) {
-      const items = order_items.map((item: {
+      const items = orderItemsInput.map((item: {
         product_id: string;
         quantity: number;
         size: string;
         color: string;
         custom_print_url?: string | null;
-        unit_price_cents?: number | null;
-        print_cost_cents?: number | null;
+        mockup_url?: string | null;
+        technical_metadata?: Record<string, unknown> | null;
       }) => ({
-        ...item,
         lead_id: lead.id,
-        unit_price_cents: item.unit_price_cents ?? null,
-        print_cost_cents: item.print_cost_cents ?? null,
+        product_id: item.product_id,
+        size: String(item.size),
+        color: String(item.color),
+        quantity: item.quantity,
+        custom_print_url: item.custom_print_url ?? null,
+        mockup_url: item.mockup_url ?? null,
+        technical_metadata: item.technical_metadata ?? {},
+        unit_price_cents: basePriceById.get(item.product_id) ?? null,
       }));
 
       const { error: itemsError } = await supabase.from("order_items").insert(items);
