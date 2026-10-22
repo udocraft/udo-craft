@@ -1,6 +1,6 @@
-import { timingSafeEqual } from "node:crypto";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
+import { secretsMatch, webhookSecretUnconfigured } from "@/lib/security/webhook-auth";
 
 function db() {
   return createServiceClient(
@@ -260,17 +260,12 @@ async function upsertLead(
 // ── POST handler ──────────────────────────────────────────────────────
 
 export async function POST(request: NextRequest) {
-  const secret = request.headers.get("x-telegram-bot-api-secret-token");
   const expectedSecret = process.env.TELEGRAM_WEBHOOK_SECRET;
-
-  if (expectedSecret) {
-    if (!secret) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    const secretBuf = Buffer.from(secret, "utf8");
-    const expectedBuf = Buffer.from(expectedSecret, "utf8");
-    const maxLen = Math.max(secretBuf.length, expectedBuf.length);
-    const a = Buffer.alloc(maxLen); secretBuf.copy(a);
-    const b = Buffer.alloc(maxLen); expectedBuf.copy(b);
-    if (!timingSafeEqual(a, b)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (!expectedSecret) {
+    const unconfigured = webhookSecretUnconfigured();
+    if (unconfigured) return unconfigured;
+  } else if (!secretsMatch(request.headers.get("x-telegram-bot-api-secret-token"), expectedSecret)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   let update: Record<string, unknown>;

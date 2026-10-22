@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Webhook } from "svix";
+import { webhookSecretUnconfigured } from "@/lib/security/webhook-auth";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 
 // Resend inbound email webhook — verified with Svix (whsec_... signing secret)
@@ -29,7 +30,10 @@ export async function POST(req: NextRequest) {
 
     // ── Signature verification ──────────────────────────────────────────────
     const secret = process.env.RESEND_WEBHOOK_SECRET;
-    if (secret) {
+    if (!secret) {
+      const unconfigured = webhookSecretUnconfigured();
+      if (unconfigured) return unconfigured;
+    } else {
       const wh = new Webhook(secret);
       try {
         wh.verify(rawBody, {
