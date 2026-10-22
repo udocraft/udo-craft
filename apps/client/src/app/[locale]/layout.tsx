@@ -5,6 +5,7 @@ import { getMessages, getTranslations } from "next-intl/server";
 import { PageTracker } from "@/components/PageTracker";
 import { Toaster } from "@/components/ui/sonner";
 import { ConsentBanner } from "@/components/consent/ConsentBanner";
+import { HtmlLang } from "@/components/HtmlLang";
 import { ConsentScripts } from "@/components/consent/ConsentScripts";
 import { SoundProvider } from "@/app/_components/SoundProvider";
 import { locales } from "@/i18n/routing";
@@ -17,18 +18,22 @@ export async function generateMetadata({
   const resolvedParams = await params;
   const locale = resolvedParams?.locale || "en";
   const t = await getTranslations({ locale, namespace: "meta" });
+  const title = t("title");
+  const description = t("description");
   return {
     metadataBase: new URL("https://u-do-craft.store"),
-    title: "U:DO CRAFT — Corporate merch",
-    description: "B2B merch platform. We create clothing that becomes part of your corporate DNA.",
-    alternates: { canonical: "/" },
+    title,
+    description,
     openGraph: {
-      title: "U:DO CRAFT",
+      title,
+      description,
       url: "https://u-do-craft.store",
       siteName: "U:DO CRAFT",
-      locale: locale,
+      locale,
       type: "website",
+      images: [{ url: "/logo.png", alt: "U:DO CRAFT" }],
     },
+    twitter: { card: "summary", title, description, images: ["/logo.png"] },
   };
 }
 
@@ -58,6 +63,7 @@ export default async function LocaleLayout({
       <SoundProvider />
       {children}
       <Toaster richColors position="top-right" />
+      <HtmlLang />
       <ConsentScripts />
       <ConsentBanner />
     </NextIntlClientProvider>
