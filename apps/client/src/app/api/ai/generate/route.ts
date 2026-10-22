@@ -1,4 +1,8 @@
 import { NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
+
+const AI_QUOTA_LIMIT = 3;
 
 export const maxDuration = 60;
 
@@ -42,6 +46,31 @@ Rules:
 - The image should look like a professional lifestyle product photo.`;
 
 export async function POST(request: Request) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Quota is reserved server-side before the paid call. A failed generation
+  // still consumes an attempt; the client can no longer skip or inflate it.
+  const service = createServiceClient();
+  const { data: quota, error: quotaError } = await service
+    .from("user_ai_quota")
+    .select("attempts_used")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (quotaError) {
+    return NextResponse.json({ error: "Unable to verify AI quota" }, { status: 503 });
+  }
+  if ((quota?.attempts_used ?? 0) >= AI_QUOTA_LIMIT) {
+    return NextResponse.json({ error: "AI quota exceeded" }, { status: 429 });
+  }
+  const { error: reserveError } = await service.rpc("increment_ai_quota", { p_user_id: user.id });
+  if (reserveError) {
+    return NextResponse.json({ error: "Unable to reserve AI quota" }, { status: 503 });
+  }
+
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return NextResponse.json({ error: "AI generation is not configured" }, { status: 500 });

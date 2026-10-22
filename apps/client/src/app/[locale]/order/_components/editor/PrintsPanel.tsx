@@ -72,7 +72,7 @@ function AIIllustrationSection({ onAddLayer, isAuthenticated, aiQuota, onPaywall
     if (!aiPrompt.trim()) return;
     const dataUrl = await ai.generate(aiPrompt.trim());
     if (!dataUrl) return;
-    await aiQuota.increment();
+    await aiQuota.refresh();
     const res = await fetch(dataUrl);
     const blob = await res.blob();
     onAddLayer(new File([blob], `ai-illustration-${Date.now()}.png`, { type: "image/png" }));

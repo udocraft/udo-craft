@@ -8,7 +8,7 @@ export interface AiQuotaState {
   limit: number;
   isExhausted: boolean;
   loading: boolean;
-  increment: () => Promise<void>;
+  refresh: () => Promise<void>;
 }
 
 const LIMIT = 3;
@@ -41,18 +41,15 @@ export function useAiQuota(isAuthenticated: boolean): AiQuotaState {
       });
   }, [isAuthenticated]);
 
-  const increment = useCallback(async () => {
+  // The server reserves quota inside /api/ai/generate; the client only re-reads it.
+  const refresh = useCallback(async () => {
     try {
-      const res = await fetch("/api/ai/quota/increment", { method: "POST" });
-      if (!res.ok) {
-        throw new Error(`POST /api/ai/quota/increment returned ${res.status}`);
-      }
+      const res = await fetch("/api/ai/quota");
+      if (!res.ok) return;
       const data = await res.json();
       setAttemptsUsed(data.attempts_used ?? 0);
     } catch (err) {
-      // Silent failure — generation already succeeded; quota recording is non-critical
-      Sentry.captureException(err, { extra: { context: "useAiQuota increment" } });
-      // Do NOT update local state on failure
+      Sentry.captureException(err, { extra: { context: "useAiQuota refresh" } });
     }
   }, []);
 
@@ -62,7 +59,7 @@ export function useAiQuota(isAuthenticated: boolean): AiQuotaState {
       limit: LIMIT,
       isExhausted: false,
       loading: false,
-      increment: async () => {},
+      refresh: async () => {},
     };
   }
 
@@ -71,6 +68,6 @@ export function useAiQuota(isAuthenticated: boolean): AiQuotaState {
     limit: LIMIT,
     isExhausted: attemptsUsed >= LIMIT,
     loading,
-    increment,
+    refresh,
   };
 }

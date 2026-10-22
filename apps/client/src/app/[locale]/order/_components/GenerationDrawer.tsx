@@ -279,7 +279,7 @@ export function GenerationDrawer({
   const handleSuccess = useCallback((dataUrl: string) => {
     setPreviewImage(dataUrl);
     setGenerated(true);
-    aiQuota.increment();
+    aiQuota.refresh();
   }, [aiQuota]);
 
   const { generate, loading, error, clearError } = useAIGeneration({
