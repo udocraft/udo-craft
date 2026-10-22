@@ -129,6 +129,9 @@ Use "Production" environment for `main` branch values, "Preview" for staging (`u
 | `NEXT_PUBLIC_APP_URL` | `https://admin.u-do-craft.store` |
 | `TELEGRAM_BOT_TOKEN` | From @BotFather |
 | `TELEGRAM_WEBHOOK_SECRET` | Any random string |
+| `RESEND_WEBHOOK_SECRET` | Required in production. Svix signing secret from Resend; inbound email is rejected without it |
+| `OTP_PEPPER` | Required. Random 32+ byte secret used to hash password-reset codes |
+| `ADMIN_BOOTSTRAP_EMAILS` | Optional. Comma-separated emails granted admin once verified |
 | `NEXT_PUBLIC_SENTRY_DSN` | Optional — from sentry.io |
 
 ### Client (`udo-craft-client`)

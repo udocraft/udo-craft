@@ -1,40 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { sendResetPasswordEmail } from "@/lib/email/send";
+import { generateOtp, hashOtp, OTP_TTL_MS } from "@/lib/auth/otp";
 
 // POST /api/auth/send-otp
-// Generates a 6-digit OTP, stores it hashed in user metadata, sends via Resend.
-// Does NOT use Supabase magic links (avoids localhost redirect issues).
+// Issues a 6-digit reset code. Only a keyed hash is stored, with expiry and an
+// attempt counter that verify-otp enforces.
 export async function POST(req: NextRequest) {
   const { email } = await req.json();
   if (!email) return NextResponse.json({ error: "Email required" }, { status: 400 });
 
   const service = createServiceClient();
 
-  // Find user
   const { data: list, error: listErr } = await service.auth.admin.listUsers({ perPage: 1000 });
   if (listErr) return NextResponse.json({ error: listErr.message }, { status: 500 });
 
   const user = list.users.find((u) => u.email === email);
   if (!user) {
-    // Return success anyway to avoid email enumeration
+    // Same response as a real user to avoid email enumeration
     return NextResponse.json({ ok: true });
   }
 
-  // Generate 6-digit OTP
-  const otp = String(Math.floor(100000 + Math.random() * 900000));
-  const expiresAt = Date.now() + 15 * 60 * 1000; // 15 min
+  const otp = generateOtp();
+  let otpHash: string;
+  try {
+    otpHash = hashOtp(otp, email);
+  } catch (e) {
+    console.error("[send-otp] OTP_PEPPER missing", e);
+    return NextResponse.json({ error: "Не вдалося створити код" }, { status: 500 });
+  }
 
-  // Store OTP hash in user metadata (simple — for production use a separate table)
+  // Remove any legacy plaintext code and reset the attempt counter
   await service.auth.admin.updateUserById(user.id, {
     user_metadata: {
       ...user.user_metadata,
-      reset_otp: otp,
-      reset_otp_expires: expiresAt,
+      reset_otp: null,
+      reset_otp_hash: otpHash,
+      reset_otp_expires: Date.now() + OTP_TTL_MS,
+      reset_otp_attempts: 0,
     },
   });
 
-  // Send via Resend
   try {
     await sendResetPasswordEmail({ to: email, otp });
   } catch (e) {
