@@ -51,3 +51,27 @@ jobs:
 
       - name: Test client
         run: npm run test --workspace=client
+
+  build:
+    name: Build admin & client
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build shared packages
+        run: npm run build:shared && npm run build:ui
+
+      - name: Build admin (type and lint checks enabled)
+        run: npm run build --workspace=admin
+
+      - name: Build client (type and lint checks enabled)
+        run: npm run build --workspace=client
