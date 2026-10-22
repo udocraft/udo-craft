@@ -257,6 +257,12 @@ async function upsertLead(
   return { id: newLead.id, isNew: true };
 }
 
+// Stores only the Telegram file id; the bot token is never written to the database.
+function photoAttachments(message: { photo?: Array<{ file_id: string }> }): string[] {
+  const fileId = message.photo?.at(-1)?.file_id;
+  return fileId && /^[\w-]+$/.test(fileId) ? [`/api/telegram/file/${fileId}`] : [];
+}
+
 // ── POST handler ──────────────────────────────────────────────────────
 
 export async function POST(request: NextRequest) {
@@ -336,15 +342,7 @@ export async function POST(request: NextRequest) {
   // If awaiting message from user (contact manager flow)
   if (state.state === "awaiting_message") {
     // Handle photo attachments
-    let attachments: string[] = [];
-    if (message.photo?.length) {
-      const fileId = message.photo[message.photo.length - 1].file_id;
-      const fileInfo = await tg("getFile", { file_id: fileId });
-      if ((fileInfo as { result?: { file_path?: string } }).result?.file_path) {
-        const token = process.env.TELEGRAM_BOT_TOKEN!;
-        attachments = [`https://api.telegram.org/file/bot${token}/${(fileInfo as { result: { file_path: string } }).result.file_path}`];
-      }
-    }
+    const attachments = photoAttachments(message);
 
     const lead = await upsertLead(chatId, from, text);
     if (lead) {
@@ -368,15 +366,7 @@ export async function POST(request: NextRequest) {
   const lead = await upsertLead(chatId, from, text);
   if (!lead) return NextResponse.json({ ok: true });
 
-  let attachments: string[] = [];
-  if (message.photo?.length) {
-    const fileId = message.photo[message.photo.length - 1].file_id;
-    const fileInfo = await tg("getFile", { file_id: fileId });
-    if ((fileInfo as { result?: { file_path?: string } }).result?.file_path) {
-      const token = process.env.TELEGRAM_BOT_TOKEN!;
-      attachments = [`https://api.telegram.org/file/bot${token}/${(fileInfo as { result: { file_path: string } }).result.file_path}`];
-    }
-  }
+  const attachments = photoAttachments(message);
 
   const { error: msgErr } = await db().from("messages").insert({
     lead_id: lead.id, body: text, sender: "client", channel: "telegram", attachments,
