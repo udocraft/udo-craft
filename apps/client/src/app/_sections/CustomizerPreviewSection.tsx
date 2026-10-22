@@ -153,14 +153,15 @@ export function CustomizerPreviewSection() {
               <aside className="border-t border-border bg-white p-4 lg:border-l lg:border-t-0">
                 <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{t("volumeLabel")}</p>
 
-                <div className="mt-4 flex items-center gap-2">
-                  <button type="button" disabled className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground">
+                {/* Decorative preview: controls are disabled, so they are hidden from assistive tech */}
+                <div className="mt-4 flex items-center gap-2" aria-hidden="true">
+                  <button type="button" disabled tabIndex={-1} className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground">
                     <Minus className="size-4" />
                   </button>
                   <div className="flex h-11 flex-1 items-center justify-center rounded-full border border-border text-xl font-semibold tabular-nums">
                     50
                   </div>
-                  <button type="button" disabled className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground">
+                  <button type="button" disabled tabIndex={-1} className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground">
                     <Plus className="size-4" />
                   </button>
                 </div>
