@@ -3,108 +3,80 @@ import { NextResponse, type NextRequest } from "next/server";
 import {
   hasPermission,
   isAdminPermission,
-  permissionsForRoles,
   type AdminPermission,
 } from "@udo-craft/authz";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { getSupabasePublicEnv } from "@/lib/supabase/env";
+import { buildPermissionSet, parseBootstrapEmails } from "./resolve";
 
 type AuthzUser = {
   id: string;
   email?: string | null;
-  userMetadata?: Record<string, unknown>;
+  emailConfirmed: boolean;
 };
 
 type AuthzResult =
   | { ok: true; user: AuthzUser; permissions: Set<AdminPermission> }
   | { ok: false; response: NextResponse };
 
-function bootstrapPermissionsFor(email?: string | null): Set<AdminPermission> {
-  const bootstrapEmails = (process.env.ADMIN_BOOTSTRAP_EMAILS ?? "")
-    .split(",")
-    .map((item) => item.trim().toLowerCase())
-    .filter(Boolean);
+type MembershipRows = Array<{
+  roles?: {
+    name?: string;
+    role_permissions?: Array<{ permissions?: { key?: string } }>;
+  } | null;
+}>;
 
-  if (email && bootstrapEmails.includes(email.toLowerCase())) {
-    return permissionsForRoles(["admin"]);
-  }
-
-  return new Set();
-}
-
-async function loadMembershipPermissions(
-  user: AuthzUser,
-): Promise<Set<AdminPermission>> {
-  let data: unknown[] | null = null;
-  let error: { code?: string; message?: string } | null = null;
-
+async function loadMembershipRows(user: AuthzUser): Promise<MembershipRows | null> {
   try {
     const service = createServiceClient();
-    const result = await service
+    const { data, error } = await service
       .from("memberships")
       .select("roles(name, role_permissions(permissions(key)))")
       .eq("user_id", user.id)
       .eq("status", "active");
 
-    data = result.data;
-    error = result.error;
+    if (error) {
+      console.error("[authz] failed to load memberships", {
+        userId: user.id,
+        code: error.code,
+        message: error.message,
+      });
+      return null;
+    }
+    return (data ?? []) as MembershipRows;
   } catch (err) {
     console.error("[authz] failed to initialize memberships client", {
       userId: user.id,
       message: err instanceof Error ? err.message : "Unknown error",
     });
-    return new Set();
+    return null;
   }
-
-  if (error) {
-    console.error("[authz] failed to load memberships", {
-      userId: user.id,
-      code: error.code,
-      message: error.message,
-    });
-    return new Set();
-  }
-
-  const roles = new Set<string>();
-  const permissions = new Set<AdminPermission>();
-
-  for (const membership of (data ?? []) as Array<{
-    roles?: {
-      name?: string;
-      role_permissions?: Array<{ permissions?: { key?: string } }>;
-    } | null;
-  }>) {
-    if (membership.roles?.name) roles.add(membership.roles.name);
-
-    for (const rolePermission of membership.roles?.role_permissions ?? []) {
-      const key = rolePermission.permissions?.key;
-      if (key && isAdminPermission(key)) permissions.add(key);
-    }
-  }
-
-  for (const permission of permissionsForRoles(roles)) {
-    permissions.add(permission);
-  }
-
-  return permissions;
 }
 
 async function resolvePermissions(user: AuthzUser): Promise<Set<AdminPermission>> {
-  const permissions = await loadMembershipPermissions(user);
+  const rows = await loadMembershipRows(user);
+  // Fail closed: if memberships cannot be read, grant nothing.
+  if (!rows) return new Set();
 
-  for (const permission of bootstrapPermissionsFor(user.email)) {
-    permissions.add(permission);
-  }
+  const membershipRoles = new Set<string>();
+  const directKeys = new Set<string>();
 
-  const metadataRole = user.userMetadata?.role;
-  if (typeof metadataRole === "string") {
-    for (const permission of permissionsForRoles([metadataRole])) {
-      permissions.add(permission);
+  for (const membership of rows) {
+    if (membership.roles?.name) membershipRoles.add(membership.roles.name);
+    for (const rolePermission of membership.roles?.role_permissions ?? []) {
+      const key = rolePermission.permissions?.key;
+      if (key && isAdminPermission(key)) directKeys.add(key);
     }
   }
 
-  return permissions;
+  return buildPermissionSet({
+    membershipRoles,
+    directKeys,
+    email: user.email,
+    emailConfirmed: user.emailConfirmed,
+    bootstrapEmails: parseBootstrapEmails(process.env.ADMIN_BOOTSTRAP_EMAILS),
+  });
 }
 
 function authzError(status: 401 | 403) {
@@ -112,6 +84,14 @@ function authzError(status: 401 | 403) {
     { error: status === 401 ? "Unauthorized" : "Forbidden" },
     { status },
   );
+}
+
+function toAuthzUser(user: { id: string; email?: string | null; email_confirmed_at?: string | null }): AuthzUser {
+  return {
+    id: user.id,
+    email: user.email,
+    emailConfirmed: !!user.email_confirmed_at,
+  };
 }
 
 export async function requireAdminPermission(
@@ -122,17 +102,13 @@ export async function requireAdminPermission(
 
   if (error || !user) return { ok: false, response: authzError(401) };
 
-  const authzUser = { id: user.id, email: user.email, userMetadata: user.user_metadata };
+  const authzUser = toAuthzUser(user);
   const permissions = await resolvePermissions(authzUser);
   if (!hasPermission(permissions, permission)) {
     return { ok: false, response: authzError(403) };
   }
 
-  return {
-    ok: true,
-    user: authzUser,
-    permissions,
-  };
+  return { ok: true, user: authzUser, permissions };
 }
 
 export async function requireAdminPermissionForRequest(
@@ -161,15 +137,11 @@ export async function requireAdminPermissionForRequest(
   const { data: { user }, error } = await supabase.auth.getUser();
   if (error || !user) return { ok: false, response: authzError(401) };
 
-  const authzUser = { id: user.id, email: user.email, userMetadata: user.user_metadata };
+  const authzUser = toAuthzUser(user);
   const permissions = await resolvePermissions(authzUser);
   if (!hasPermission(permissions, permission)) {
     return { ok: false, response: authzError(403) };
   }
 
-  return {
-    ok: true,
-    user: authzUser,
-    permissions,
-  };
+  return { ok: true, user: authzUser, permissions };
 }
