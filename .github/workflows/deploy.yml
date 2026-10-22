@@ -8,8 +8,13 @@ env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
 
 jobs:
+  ci:
+    name: CI gate
+    uses: ./.github/workflows/ci.yml
+
   deploy-admin:
     name: Deploy Admin
+    needs: ci
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -48,6 +53,7 @@ jobs:
 
   deploy-client:
     name: Deploy Client
+    needs: ci
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

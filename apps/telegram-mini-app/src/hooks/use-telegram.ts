@@ -8,16 +8,13 @@ function getTg() {
 }
 
 export function useTelegram() {
-  const [tg, setTg] = useState<typeof window.Telegram.WebApp | null>(null);
+  const [tg] = useState<typeof window.Telegram.WebApp | null>(getTg);
 
   useEffect(() => {
-    const instance = getTg();
-    if (instance) {
-      instance.ready();
-      instance.expand();
-      setTg(instance);
-    }
-  }, []);
+    if (!tg) return;
+    tg.ready();
+    tg.expand();
+  }, [tg]);
 
   const initDataRaw = useMemo(() => tg?.initData, [tg]);
 
@@ -27,10 +24,11 @@ export function useTelegram() {
     if (!tg) return () => {};
     tg.MainButton.setText(text);
     tg.MainButton.onClick(onClick);
-    if (params?.color) tg.MainButton.color = params.color;
-    if (params?.textColor) tg.MainButton.textColor = params.textColor;
-    if (params?.active === false) tg.MainButton.disable();
-    else tg.MainButton.enable();
+    tg.MainButton.setParams({
+      ...(params?.color && { color: params.color }),
+      ...(params?.textColor && { text_color: params.textColor }),
+      is_active: params?.active !== false,
+    });
     tg.MainButton.show();
     return () => {
       tg.MainButton.offClick(onClick);

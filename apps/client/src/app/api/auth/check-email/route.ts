@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service";
+import { rateLimit } from "@/lib/rate-limit";
 import { findUserByEmail } from "@/lib/supabase/users";
 
 // Check if an email is already registered in Supabase Auth.
 // Returns { exists: boolean } — never exposes user data.
 export async function POST(req: NextRequest) {
+  if (!(await rateLimit(req, { scope: "check-email", limit: 10, window: 60 })).success) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   try {
     const { email } = await req.json();
     if (!email || typeof email !== "string") {

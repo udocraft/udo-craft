@@ -714,7 +714,7 @@ export function Customizer({
                   <p className="text-xs text-muted-foreground">Коментарів ще немає.</p>
                 ) : comments.map((comment) => (
                   <div key={comment.id} className="rounded-lg border bg-muted/30 p-2">
-                    <p className="text-xs font-medium">{comment.author_email ?? "Користувач"}</p>
+                    <p className="text-xs font-medium">{comment.author_label}</p>
                     <p className="text-sm">{comment.body}</p>
                   </div>
                 ))}

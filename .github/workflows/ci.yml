@@ -5,6 +5,7 @@ on:
     branches: [main, develop]
   push:
     branches: [develop, main]
+  workflow_call:
 
 jobs:
   check:
@@ -73,5 +74,8 @@ jobs:
       - name: Build admin (type and lint checks enabled)
         run: npm run build --workspace=admin
 
-      - name: Build client (type and lint checks enabled)
+      - name: Build client (type checks run in the Type Check job; the build skips lint)
         run: npm run build --workspace=client
+
+      - name: Build telegram mini-app
+        run: npm run build --workspace=telegram-mini-app

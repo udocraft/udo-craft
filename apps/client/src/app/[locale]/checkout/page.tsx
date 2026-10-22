@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { lineTotalCents } from "@/lib/order-pricing";
 import { useRouter } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -100,10 +101,10 @@ export default function CheckoutPage() {
     sessionStorage.setItem("udo_cart", JSON.stringify(updated));
   };
 
-  const totalCents = cart.reduce((sum, item) => {
-    const discount = item.quantity >= 100 ? 0.15 : item.quantity >= 50 ? 0.12 : item.quantity >= 10 ? 0.05 : 0;
-    return sum + item.product.base_price_cents * item.quantity * (1 - discount);
-  }, 0);
+  const totalCents = cart.reduce(
+    (sum, item) => sum + lineTotalCents(item.product.base_price_cents, item.quantity),
+    0,
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,10 +112,25 @@ export default function CheckoutPage() {
     setSubmitting(true);
 
     try {
-      // 1. Create lead
-      const { data: lead, error: leadError } = await supabase
-        .from("leads")
-        .insert({
+      // 1. Upload mockups before the lead exists; storage keys only need a unique prefix.
+      const mockupRef = crypto.randomUUID();
+      const mockupUrls = await Promise.all(cart.map(async (item) => {
+        if (!item.mockupDataUrl) return undefined;
+        const res = await fetch(item.mockupDataUrl);
+        const blob = await res.blob();
+        const fileName = `mockups/${mockupRef}-${item.product.id}-${Date.now()}.png`;
+        const { data: uploadData } = await supabase.storage
+          .from("product-images")
+          .upload(fileName, blob, { contentType: "image/png" });
+        if (!uploadData) return undefined;
+        return supabase.storage.from("product-images").getPublicUrl(fileName).data.publicUrl;
+      }));
+
+      // 2. Create the lead and its order items on the server (validated, service role).
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
           status: "new",
           customer_data: {
             name: contactName,
@@ -130,45 +146,23 @@ export default function CheckoutPage() {
           total_amount_cents: Math.round(totalCents),
           visitor_id: getVisitorId(),
           session_id: getSessionId(),
-        })
-        .select()
-        .single();
+          order_items: cart.map((item, index) => ({
+            product_id: item.product.id,
+            size: item.size,
+            color: item.color,
+            quantity: item.quantity,
+            mockup_url: mockupUrls[index],
+            unit_price_cents: item.product.base_price_cents,
+            technical_metadata: item.offsetTopMm !== undefined
+              ? { offset_top_mm: item.offsetTopMm, print_size_mm: [200, 150] }
+              : undefined,
+          })),
+        }),
+      });
 
-      if (leadError || !lead) throw leadError;
-
-      // 2. Upload mockups + create order items
-      for (const item of cart) {
-        let mockupUrl: string | undefined;
-
-        if (item.mockupDataUrl) {
-          // Convert dataUrl to blob and upload
-          const res = await fetch(item.mockupDataUrl);
-          const blob = await res.blob();
-          const fileName = `mockups/${lead.id}-${item.product.id}-${Date.now()}.png`;
-          const { data: uploadData } = await supabase.storage
-            .from("product-images")
-            .upload(fileName, blob, { contentType: "image/png" });
-
-          if (uploadData) {
-            const { data: urlData } = supabase.storage
-              .from("product-images")
-              .getPublicUrl(fileName);
-            mockupUrl = urlData.publicUrl;
-          }
-        }
-
-        await supabase.from("order_items").insert({
-          lead_id: lead.id,
-          product_id: item.product.id,
-          size: item.size,
-          color: item.color,
-          quantity: item.quantity,
-          mockup_url: mockupUrl,
-          unit_price_cents: item.product.base_price_cents,
-          technical_metadata: item.offsetTopMm !== undefined
-            ? { offset_top_mm: item.offsetTopMm, print_size_mm: [200, 150] }
-            : undefined,
-        });
+      const lead = await response.json();
+      if (!response.ok || !lead?.id) {
+        throw new Error(lead?.error ?? "Lead creation failed");
       }
 
       track("form_submit", { form: "checkout", lead_id: lead.id });

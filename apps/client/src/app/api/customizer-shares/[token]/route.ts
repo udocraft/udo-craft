@@ -4,6 +4,17 @@ import { createServiceClient } from "@/lib/supabase/service";
 
 const ACCESS = new Set(["view", "comment", "edit"]);
 
+// Comments are shown to anyone with the link, so expose a masked label instead of the address.
+function maskEmail(email: string | null): string {
+  if (!email) return "Користувач";
+  const [local, domain] = email.split("@");
+  return `${local?.[0] ?? ""}***@${domain ?? ""}`;
+}
+
+function toPublicComment(comment: { id: string; body: string; created_at: string; author_email: string | null }) {
+  return { id: comment.id, body: comment.body, created_at: comment.created_at, author_label: maskEmail(comment.author_email) };
+}
+
 async function loadShare(token: string) {
   const service = createServiceClient();
   const { data, error } = await service
@@ -39,9 +50,8 @@ export async function GET(
     token: share.token,
     productId: share.product_id,
     access: share.access,
-    ownerEmail: share.owner_email,
     payload: share.payload,
-    comments: comments ?? [],
+    comments: (comments ?? []).map(toPublicComment),
   });
 }
 
@@ -116,5 +126,5 @@ export async function POST(
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data, { status: 201 });
+  return NextResponse.json(toPublicComment(data), { status: 201 });
 }
