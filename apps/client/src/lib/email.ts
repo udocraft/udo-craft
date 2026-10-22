@@ -1,6 +1,12 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resendClient: Resend | null = null;
+
+/** Created on first use so builds and imports work without RESEND_API_KEY. */
+function getResend(): Resend {
+  if (!resendClient) resendClient = new Resend(process.env.RESEND_API_KEY);
+  return resendClient;
+}
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://u-do-craft.store";
 const LOGO_URL = `${APP_URL}/logo.png`;
@@ -95,7 +101,7 @@ export async function sendOrderConfirmation({
     </a>
   `;
 
-  return resend.emails.send({
+  return getResend().emails.send({
     from: FROM,
     to,
     replyTo: leadReplyTo(leadId),
@@ -143,7 +149,7 @@ export async function sendNewMessageNotification({
     </p>
   `;
 
-  return resend.emails.send({
+  return getResend().emails.send({
     from: FROM,
     to,
     replyTo: leadReplyTo(leadId),
@@ -230,7 +236,7 @@ export async function sendContactNotification({
     </a>
   `;
 
-  return resend.emails.send({
+  return getResend().emails.send({
     from: FROM,
     to: TEAM_EMAIL,
     replyTo: `${email}, lead-${leadId.slice(0, 8)}@${INBOUND_DOMAIN}`,
