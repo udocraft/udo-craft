@@ -11,7 +11,7 @@ const OrderErpPayload = z.object({
 });
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
-  const { service, error } = await requireErpUser();
+  const { service, error } = await requireErpUser("erp.manage");
   if (error) return error;
   try {
     const parsed = OrderErpPayload.parse(await req.json());

@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { service, error } = await requireErpUser();
+  const { service, error } = await requireErpUser("erp.manage");
   if (error) return error;
   try {
     const parsed = VariantSkuPayload.parse(await req.json());

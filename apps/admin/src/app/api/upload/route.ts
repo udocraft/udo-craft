@@ -1,3 +1,4 @@
+import { requireAdminPermission } from "@/lib/authz/guard";
 import { createServiceClient } from "@/lib/supabase/service";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -5,6 +6,8 @@ const BUCKET = "product-images";
 const FALLBACK_BUCKET = "attachments";
 
 export async function POST(request: NextRequest) {
+  const authz = await requireAdminPermission("uploads.manage");
+  if (!authz.ok) return authz.response;
   try {
     const supabase = createServiceClient();
     const formData = await request.formData();

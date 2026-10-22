@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { apiError, requireErpUser } from "../../../_lib";
 
 export async function POST(_req: Request, { params }: { params: { id: string } }) {
-  const { service, error } = await requireErpUser();
+  const { service, error } = await requireErpUser("erp.manage");
   if (error) return error;
   try {
     // Get NovaPoshta settings (api_key + sender refs)

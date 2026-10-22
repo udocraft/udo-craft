@@ -1,3 +1,4 @@
+import { requireAdminPermission } from "@/lib/authz/guard";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { apiError, requireErpUser } from "../../_lib";
@@ -7,7 +8,9 @@ const SyncCatalogPayload = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  const { service, error } = await requireErpUser();
+  const authz = await requireAdminPermission("erp.manage");
+  if (!authz.ok) return authz.response;
+  const { service, error } = await requireErpUser("erp.manage");
   if (error) return error;
 
   try {

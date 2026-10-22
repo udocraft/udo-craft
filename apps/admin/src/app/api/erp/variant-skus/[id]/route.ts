@@ -36,7 +36,7 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
-  const { service, error } = await requireErpUser();
+  const { service, error } = await requireErpUser("erp.manage");
   if (error) return error;
   try {
     const parsed = PatchPayload.parse(await req.json());
@@ -70,7 +70,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 }
 
 export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
-  const { service, error } = await requireErpUser();
+  const { service, error } = await requireErpUser("erp.manage");
   if (error) return error;
   const { error: dbError } = await service!.from("product_variant_skus").delete().eq("id", params.id);
   if (dbError) return apiError(dbError);

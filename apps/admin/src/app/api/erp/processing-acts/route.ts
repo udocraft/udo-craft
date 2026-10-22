@@ -22,7 +22,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const { service, user, error } = await requireErpUser();
+  const { service, user, error } = await requireErpUser("erp.manage");
   if (error) return error;
   try {
     const parsed = ActPayload.parse(await req.json());

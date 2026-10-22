@@ -1,8 +1,11 @@
+import { requireAdminPermission } from "@/lib/authz/guard";
 import { NextResponse } from "next/server";
 import { apiError, requireErpUser } from "../../../_lib";
 
 export async function POST(_req: Request, { params }: { params: { id: string } }) {
-  const { service, error } = await requireErpUser();
+  const authz = await requireAdminPermission("erp.manage");
+  if (!authz.ok) return authz.response;
+  const { service, error } = await requireErpUser("erp.manage");
   if (error) return error;
   try {
     const token = process.env.CHECKBOX_API_TOKEN;

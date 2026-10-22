@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import type { AdminPermission } from "@udo-craft/authz";
+import { requireAdminPermission } from "@/lib/authz/guard";
 import { createServiceClient } from "@/lib/supabase/service";
 
-export async function requireErpUser() {
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getUser();
-  if (!data.user) return { user: null, service: null, error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) };
-  return { user: data.user, service: createServiceClient(), error: null };
+export async function requireErpUser(permission: AdminPermission = "erp.read") {
+  const authz = await requireAdminPermission(permission);
+  if (!authz.ok) return { user: null, service: null, error: authz.response };
+  return { user: authz.user, service: createServiceClient(), error: null };
 }
 
 export function apiError(error: unknown, status = 500) {

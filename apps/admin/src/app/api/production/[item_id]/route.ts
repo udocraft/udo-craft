@@ -1,7 +1,10 @@
+import { requireAdminPermission } from "@/lib/authz/guard";
 import { NextResponse } from "next/server";
 import { OrderItem } from "@udo-craft/shared";
 
 export async function GET(request: Request, { params }: { params: { item_id: string } }) {
+  const authz = await requireAdminPermission("erp.read");
+  if (!authz.ok) return authz.response;
   const itemId = params.item_id;
 
   // In a real application, we would query Supabase for the specific order item and related product details.
