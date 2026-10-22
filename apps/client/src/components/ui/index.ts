@@ -9,7 +9,6 @@ export * from './dialog';
 export * from './dropdown-menu';
 export * from './table';
 export * from './badge';
-export * from './avatar';
 export * from './separator';
 export * from './sheet';
 export * from './command';

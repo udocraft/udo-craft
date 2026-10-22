@@ -14,7 +14,7 @@ import {
 import {
   InputGroup,
   InputGroupAddon,
-} from "./input-group"
+} from "@udo-craft/ui"
 import { Search, Check } from "lucide-react"
 
 function Command({

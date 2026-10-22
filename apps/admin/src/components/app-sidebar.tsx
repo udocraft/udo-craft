@@ -34,7 +34,7 @@ import {
 import {
   Collapsible,
   CollapsibleContent,
-} from "@/components/ui/collapsible";
+} from "@udo-craft/ui";
 import {
   AlertDialog,
   AlertDialogAction,

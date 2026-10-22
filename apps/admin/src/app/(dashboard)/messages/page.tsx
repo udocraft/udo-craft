@@ -18,7 +18,7 @@ import {
 import { toast } from "sonner";
 import { fmtTime, cn } from "@/lib/utils";
 import { DashboardPage } from "@/components/dashboard-page";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@udo-craft/ui";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
