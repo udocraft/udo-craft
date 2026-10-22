@@ -4,8 +4,8 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { PageTracker } from "@/components/PageTracker";
 import { Toaster } from "@/components/ui/sonner";
-import { ClarityInit } from "@/components/clarity";
-import { Analytics } from "@vercel/analytics/next";
+import { ConsentBanner } from "@/components/consent/ConsentBanner";
+import { ConsentScripts } from "@/components/consent/ConsentScripts";
 import { SoundProvider } from "@/app/_components/SoundProvider";
 import { locales } from "@/i18n/routing";
 
@@ -54,12 +54,12 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <ClarityInit clarityId="w7kk9avzfh" />
       <PageTracker />
       <SoundProvider />
       {children}
       <Toaster richColors position="top-right" />
-      <Analytics />
+      <ConsentScripts />
+      <ConsentBanner />
     </NextIntlClientProvider>
   );
 }

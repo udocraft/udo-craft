@@ -1,3 +1,5 @@
+import { readConsent } from "@/lib/consent";
+
 function getOrCreateId(key: string): string {
   if (typeof window === "undefined") return "ssr";
   let id = localStorage.getItem(key);
@@ -44,6 +46,8 @@ export async function track(
   metadata?: Record<string, unknown>
 ) {
   if (typeof window === "undefined") return;
+  // No visitor ids or events without consent
+  if (readConsent() !== "granted") return;
 
   const visitor_id = getOrCreateId("udo_visitor");
   const session_id = getOrCreateSession();

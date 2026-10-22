@@ -793,5 +793,12 @@
   },
   "langSwitcher": {
     "label": "Language"
+  },
+  "consent": {
+    "title": "Consenso ai cookie",
+    "message": "I cookie e tecnologie simili misurano le visite e ci aiutano a migliorare il sito.",
+    "accept": "Accetta",
+    "decline": "Rifiuta",
+    "privacy": "Informativa sulla privacy"
   }
 }

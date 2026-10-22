@@ -793,5 +793,12 @@
   },
   "langSwitcher": {
     "label": "Language"
+  },
+  "consent": {
+    "title": "Souhlas s cookies",
+    "message": "Cookies a podobné technologie měří návštěvy a pomáhají nám zlepšovat web.",
+    "accept": "Přijmout",
+    "decline": "Odmítnout",
+    "privacy": "Zásady ochrany osobních údajů"
   }
 }

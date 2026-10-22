@@ -793,5 +793,12 @@
   },
   "langSwitcher": {
     "label": "Language"
+  },
+  "consent": {
+    "title": "Cookiesamtycke",
+    "message": "Cookies och liknande tekniker mäter besök och hjälper oss att förbättra webbplatsen.",
+    "accept": "Acceptera",
+    "decline": "Neka",
+    "privacy": "Integritetspolicy"
   }
 }
