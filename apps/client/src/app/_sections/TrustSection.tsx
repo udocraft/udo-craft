@@ -33,12 +33,12 @@ export function TrustSection() {
     },
   ];
 
-  const numbers = (data.numbers as unknown as any[]) || [
-    { value: t("numbers.0.value"), label: t("numbers.0.label") },
-    { value: t("numbers.1.value"), label: t("numbers.1.label") },
-    { value: t("numbers.2.value"), label: t("numbers.2.label") },
-    { value: t("numbers.3.value"), label: t("numbers.3.label") },
-  ];
+  // Only render figures that have copy; no placeholder numbers are invented.
+  const numbers = (data.numbers as unknown as any[]) || (
+    t.has("numbers.0.value")
+      ? [0, 1, 2, 3].map((i) => ({ value: t(`numbers.${i}.value`), label: t(`numbers.${i}.label`) }))
+      : []
+  );
 
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
@@ -77,6 +77,7 @@ export function TrustSection() {
         </div>
 
         {/* Numbers — large, editorial */}
+        {numbers.length > 0 && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
@@ -91,6 +92,7 @@ export function TrustSection() {
             </div>
           ))}
         </motion.div>
+        )}
       </div>
     </section>
   );
