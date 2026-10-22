@@ -9,6 +9,8 @@ import { createClient as createServiceClient } from '@supabase/supabase-js';
 import { createApiResponse, handleApiError } from '@/lib/api/errors';
 import { DashboardMetrics } from '@/lib/api/types';
 
+export const dynamic = "force-dynamic";
+
 function startOfDay(date: Date): Date {
   const d = new Date(date);
   d.setHours(0, 0, 0, 0);
