@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { createServiceClient } from "@/lib/supabase/service";
+import { findUserByEmail } from "@/lib/supabase/users";
 import { generateOtp, hashOtp, OTP_TTL_MS } from "@/lib/auth/otp";
 
 let resendClient: Resend | null = null;
@@ -35,10 +36,7 @@ export async function POST(req: NextRequest) {
     // For password reset, generate OTP on the server securely
     if (isReset) {
       const service = createServiceClient();
-      const { data: list, error: listErr } = await service.auth.admin.listUsers({ perPage: 1000 });
-      if (listErr) throw listErr;
-      
-      const user = list.users.find((u) => u.email === email);
+      const user = await findUserByEmail(service, email);
       if (!user) {
         // Return success anyway to avoid email enumeration
         return NextResponse.json({ success: true });

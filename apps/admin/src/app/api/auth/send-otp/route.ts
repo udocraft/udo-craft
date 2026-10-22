@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service";
+import { findUserByEmail } from "@/lib/supabase/users";
 import { sendResetPasswordEmail } from "@/lib/email/send";
 import { generateOtp, hashOtp, OTP_TTL_MS } from "@/lib/auth/otp";
 
@@ -12,10 +13,7 @@ export async function POST(req: NextRequest) {
 
   const service = createServiceClient();
 
-  const { data: list, error: listErr } = await service.auth.admin.listUsers({ perPage: 1000 });
-  if (listErr) return NextResponse.json({ error: listErr.message }, { status: 500 });
-
-  const user = list.users.find((u) => u.email === email);
+  const user = await findUserByEmail(service, email);
   if (!user) {
     // Same response as a real user to avoid email enumeration
     return NextResponse.json({ ok: true });

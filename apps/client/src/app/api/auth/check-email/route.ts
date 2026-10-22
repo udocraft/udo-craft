@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
+import { findUserByEmail } from "@/lib/supabase/users";
 
 // Check if an email is already registered in Supabase Auth.
-// Uses the service role client to query auth.users directly via RPC.
 // Returns { exists: boolean } — never exposes user data.
 export async function POST(req: NextRequest) {
   try {
@@ -11,20 +11,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing email" }, { status: 400 });
     }
 
-    const supabase = await createClient();
-
-    // Query auth.users via the admin API — most reliable approach
-    const { data, error } = await supabase.auth.admin.listUsers({ perPage: 1000 });
-
-    if (error) {
-      // Fail open — don't block registration if the check fails
-      console.error("[check-email] listUsers error:", error);
-      return NextResponse.json({ exists: false });
-    }
-
-    const exists = data.users.some(
-      (u) => u.email?.toLowerCase() === email.toLowerCase()
-    );
+    // auth.admin needs the service role; the anon session client cannot call it
+    // and previously always reported "not registered".
+    const exists = (await findUserByEmail(createServiceClient(), email)) !== null;
 
     return NextResponse.json({ exists });
   } catch (err) {
