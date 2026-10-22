@@ -799,6 +799,8 @@
     "message": "Cookies a podobné technologie měří návštěvy a pomáhají nám zlepšovat web.",
     "accept": "Přijmout",
     "decline": "Odmítnout",
-    "privacy": "Zásady ochrany osobních údajů"
+    "privacy": "Zásady ochrany osobních údajů",
+    "terms": "Podmínky",
+    "cookieSettings": "Nastavení cookies"
   }
 }

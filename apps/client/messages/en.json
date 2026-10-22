@@ -638,6 +638,8 @@
     "message": "Cookies and similar technologies measure visits and help us improve the site.",
     "accept": "Accept",
     "decline": "Decline",
-    "privacy": "Privacy policy"
+    "privacy": "Privacy policy",
+    "terms": "Terms",
+    "cookieSettings": "Cookie settings"
   }
 }

@@ -799,6 +799,8 @@
     "message": "Cookies e tecnologias semelhantes medem as visitas e nos ajudam a melhorar o site.",
     "accept": "Aceitar",
     "decline": "Recusar",
-    "privacy": "Política de privacidade"
+    "privacy": "Política de privacidade",
+    "terms": "Termos",
+    "cookieSettings": "Configurações de cookies"
   }
 }

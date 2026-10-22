@@ -1,8 +1,13 @@
+"use client";
+
 import { Link } from "@/i18n/navigation";
 import { Instagram, Send } from "lucide-react";
 import { BrandLogoFull } from "@/components/brand-logo";
+import { useTranslations } from "next-intl";
+import { resetConsent } from "@/lib/consent";
 
 export function SiteFooter() {
+  const tc = useTranslations("consent");
   const year = new Date().getFullYear();
 
   return (
@@ -113,14 +118,18 @@ export function SiteFooter() {
         </p>
         <div className="flex items-center gap-5">
           {[
-            { href: "/privacy", label: "Конфіденційність" },
-            { href: "/terms",   label: "Умови використання" },
+            { href: "/privacy", label: tc("privacy") },
+            { href: "/terms",   label: tc("terms") },
           ].map((l) => (
             <Link key={l.label} href={l.href}
               className="text-[11px] text-gray-600 hover:text-gray-400 transition-colors duration-200">
               {l.label}
             </Link>
           ))}
+          <button type="button" onClick={resetConsent}
+            className="text-[11px] text-gray-600 hover:text-gray-400 transition-colors duration-200">
+            {tc("cookieSettings")}
+          </button>
         </div>
       </div>
     </footer>

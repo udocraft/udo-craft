@@ -799,6 +799,8 @@
     "message": "Cookies en vergelijkbare technologieën meten bezoeken en helpen ons de site te verbeteren.",
     "accept": "Accepteren",
     "decline": "Weigeren",
-    "privacy": "Privacybeleid"
+    "privacy": "Privacybeleid",
+    "terms": "Voorwaarden",
+    "cookieSettings": "Cookie-instellingen"
   }
 }

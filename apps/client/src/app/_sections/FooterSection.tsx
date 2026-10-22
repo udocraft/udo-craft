@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { Instagram, Send, ArrowRight } from "lucide-react";
 import { BrandLogoFull } from "@/components/brand-logo";
 import { useTranslations } from "next-intl";
+import { resetConsent } from "@/lib/consent";
 
 interface FooterSectionProps {
   tagline: string; copyright: string; instagram: string; telegram: string;
@@ -11,6 +12,7 @@ interface FooterSectionProps {
 
 export function FooterSection({ tagline, copyright, instagram, telegram }: FooterSectionProps) {
   const t = useTranslations("footer");
+  const tc = useTranslations("consent");
 
   const NAV = [
     {
@@ -110,15 +112,18 @@ export function FooterSection({ tagline, copyright, instagram, telegram }: Foote
           <p className="text-[11px] text-white/20">© {new Date().getFullYear()} {copyright}</p>
           <div className="flex gap-5">
             {[
-              { href: "/privacy", label: "Конфіденційність" },
-              { href: "/terms", label: "Умови" },
-              { href: "#", label: "Cookies" },
+              { href: "/privacy", label: tc("privacy") },
+              { href: "/terms", label: tc("terms") },
             ].map((l) => (
               <Link key={l.label} href={l.href}
                 className="text-[11px] text-white/20 hover:text-white/45 transition-colors duration-200">
                 {l.label}
               </Link>
             ))}
+            <button type="button" onClick={resetConsent}
+              className="text-[11px] text-white/20 hover:text-white/45 transition-colors duration-200">
+              {tc("cookieSettings")}
+            </button>
           </div>
         </div>
       </div>

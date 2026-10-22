@@ -38,3 +38,13 @@ function subscribe(onChange: () => void) {
 export function useConsent(): Consent | null {
   return useSyncExternalStore(subscribe, readConsent, () => null);
 }
+
+/** Clears the stored choice so the banner appears again (footer "Cookie settings"). */
+export function resetConsent() {
+  try {
+    window.localStorage.removeItem(CONSENT_KEY);
+  } catch {
+    // Storage blocked: nothing stored to clear
+  }
+  window.dispatchEvent(new Event(CHANGE_EVENT));
+}
