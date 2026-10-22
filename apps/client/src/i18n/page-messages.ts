@@ -1,3 +1,4 @@
+import type { AbstractIntlMessages } from "next-intl";
 export type Namespace = string;
 
 const PAGE_NAMESPACES: Record<string, Namespace[]> = {
@@ -35,10 +36,10 @@ export function getPageNamespaces(pathname: string): Namespace[] {
 }
 
 export function filterMessages(
-  messages: Record<string, unknown>,
+  messages: AbstractIntlMessages,
   namespaces: Namespace[]
-): Record<string, unknown> {
-  const result: Record<string, unknown> = {};
+): AbstractIntlMessages {
+  const result: AbstractIntlMessages = {};
   for (const ns of namespaces) {
     if (messages[ns] !== undefined) {
       result[ns] = messages[ns];

@@ -16,8 +16,8 @@ const countryToLocale: Record<string, string> = {
   IT: "it", SM: "it", VA: "it",
   // Polish-speaking countries
   PL: "pl",
-  // Dutch-speaking countries
-  NL: "nl", BE: "nl",
+  // Dutch-speaking countries (BE stays "nl" as the effective runtime value; see audit note)
+  NL: "nl",
   // Portuguese-speaking countries
   PT: "pt", BR: "pt",
   // Czech-speaking countries

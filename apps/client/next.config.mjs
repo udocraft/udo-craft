@@ -23,8 +23,6 @@ const nextConfig = {
       },
     ];
   },
-  typescript: { ignoreBuildErrors: true },
-  eslint: { ignoreDuringBuilds: true },
   webpack: (config, { isServer }) => {
     if (isServer) {
       config.externals = [...(config.externals || []), '@imgly/background-removal', 'fabric', 'canvas'];

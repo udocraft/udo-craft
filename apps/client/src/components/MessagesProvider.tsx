@@ -1,6 +1,6 @@
 "use client";
 
-import { NextIntlClientProvider } from "next-intl";
+import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
 import { getPageNamespaces, filterMessages } from "@/i18n/page-messages";
 
@@ -8,7 +8,7 @@ export function MessagesProvider({
   messages,
   children,
 }: {
-  messages: Record<string, unknown>;
+  messages: AbstractIntlMessages;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
