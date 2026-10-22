@@ -77,7 +77,8 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
     setSubmitting(true);
     setError(null);
     try {
-      await track("form_submit", { form: "contact", name, email, topic, source });
+      // Analytics gets the form and topic only, never the visitor's name or email
+      await track("form_submit", { form: "contact", topic, source });
       let attachmentUrls: string[] = [];
       if (files.length > 0) {
         const fd = new FormData();
