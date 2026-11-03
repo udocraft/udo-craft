@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { BrandLogoFull } from "@/components/brand-logo";
-import { ArrowLeft, Loader2, Eye, EyeOff, LogOut } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { CabinetPage } from "../_components/CabinetPage";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 // Simple inline loader to avoid hydration issues
 function SimpleLoader() {
@@ -21,6 +21,7 @@ function SimpleLoader() {
 }
 
 export default function SettingsPage() {
+  const t = useTranslations("cabinet");
   const router = useRouter();
   const supabase = createClient();
 
@@ -159,36 +160,14 @@ export default function SettingsPage() {
     }
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push("/");
-  };
-
   if (loading || !user) {
     return <SimpleLoader />;
   }
 
   return (
-    <div className="flex flex-col overflow-hidden" style={{ height: "100dvh" }}>
-      {/* Header */}
-      <header className="h-14 shrink-0 border-b border-border bg-card flex items-center justify-between px-4">
-        <div className="flex items-center gap-3">
-          <button onClick={() => router.back()} className="text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="size-4" />
-          </button>
-          <Link href="/" aria-label="U:DO CRAFT">
-            <BrandLogoFull className="h-6 w-auto text-primary" color="var(--color-primary, #1B18AC)" />
-          </Link>
-          <span className="text-muted-foreground text-sm hidden sm:block">/ Налаштування</span>
-        </div>
-        <button onClick={handleLogout} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
-          <LogOut className="size-4" />
-          <span className="hidden sm:block">Вийти</span>
-        </button>
-      </header>
-
-      <div className="flex-1 overflow-y-auto">
-        <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
+    <CabinetPage title={t("settings")}>
+      <div>
+        <div className="mx-auto max-w-2xl space-y-6 px-4 py-6 md:px-6">
           {/* Profile Section */}
           <div className="bg-card rounded-2xl border border-border p-6 space-y-4">
             <div>
@@ -346,6 +325,6 @@ export default function SettingsPage() {
           </div>
         </div>
       </div>
-    </div>
+    </CabinetPage>
   );
 }

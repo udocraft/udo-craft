@@ -490,6 +490,11 @@
     "backAriaLabel": "Back"
   },
   "cabinet": {
+    "nav": { "orders": "Orders", "messages": "Messages", "menu": "Menu" },
+    "orders": { "title": "My orders", "subtitle": "Track status, files and chat for each order" },
+    "tracking": { "title": "Order progress" },
+    "messages": { "title": "Messages", "subtitle": "Chat with your manager about an order" },
+    "order": { "back": "All orders", "notFound": "Order not found" },
     "breadcrumb": "/ Account",
     "settings": "Settings",
     "logout": "Log out",

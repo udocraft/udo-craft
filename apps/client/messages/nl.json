@@ -623,6 +623,26 @@
     "files": {
       "empty": "Nog geen bestanden",
       "openFile": "Bestand openen"
+    },
+    "nav": {
+      "orders": "Bestellingen",
+      "messages": "Berichten",
+      "menu": "Menu"
+    },
+    "orders": {
+      "title": "Mijn bestellingen",
+      "subtitle": "Volg status, bestanden en chat van elke bestelling"
+    },
+    "tracking": {
+      "title": "Voortgang van de bestelling"
+    },
+    "messages": {
+      "title": "Berichten",
+      "subtitle": "Chat met je manager over een bestelling"
+    },
+    "order": {
+      "back": "Alle bestellingen",
+      "notFound": "Bestelling niet gevonden"
     }
   },
   "popup": {

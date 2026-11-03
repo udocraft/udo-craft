@@ -623,6 +623,26 @@
     "files": {
       "empty": "Inga filer ännu",
       "openFile": "Öppna fil"
+    },
+    "nav": {
+      "orders": "Beställningar",
+      "messages": "Meddelanden",
+      "menu": "Meny"
+    },
+    "orders": {
+      "title": "Mina beställningar",
+      "subtitle": "Följ status, filer och chatt för varje beställning"
+    },
+    "tracking": {
+      "title": "Beställningens förlopp"
+    },
+    "messages": {
+      "title": "Meddelanden",
+      "subtitle": "Chatta med din manager om en beställning"
+    },
+    "order": {
+      "back": "Alla beställningar",
+      "notFound": "Beställningen hittades inte"
     }
   },
   "popup": {

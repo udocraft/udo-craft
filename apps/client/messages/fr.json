@@ -623,6 +623,26 @@
     "files": {
       "empty": "Pas encore de fichiers",
       "openFile": "Ouvrir le fichier"
+    },
+    "nav": {
+      "orders": "Commandes",
+      "messages": "Messages",
+      "menu": "Menu"
+    },
+    "orders": {
+      "title": "Mes commandes",
+      "subtitle": "Suivez le statut, les fichiers et le chat de chaque commande"
+    },
+    "tracking": {
+      "title": "Avancement de la commande"
+    },
+    "messages": {
+      "title": "Messages",
+      "subtitle": "Discutez avec votre manager à propos d'une commande"
+    },
+    "order": {
+      "back": "Toutes les commandes",
+      "notFound": "Commande introuvable"
     }
   },
   "popup": {

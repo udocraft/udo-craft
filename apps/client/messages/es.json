@@ -623,6 +623,26 @@
     "files": {
       "empty": "Aún no hay archivos",
       "openFile": "Abrir archivo"
+    },
+    "nav": {
+      "orders": "Pedidos",
+      "messages": "Mensajes",
+      "menu": "Menú"
+    },
+    "orders": {
+      "title": "Mis pedidos",
+      "subtitle": "Sigue el estado, los archivos y el chat de cada pedido"
+    },
+    "tracking": {
+      "title": "Progreso del pedido"
+    },
+    "messages": {
+      "title": "Mensajes",
+      "subtitle": "Chatea con tu gestor sobre un pedido"
+    },
+    "order": {
+      "back": "Todos los pedidos",
+      "notFound": "Pedido no encontrado"
     }
   },
   "popup": {

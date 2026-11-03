@@ -623,6 +623,26 @@
     "files": {
       "empty": "Zatím žádné soubory",
       "openFile": "Otevřít soubor"
+    },
+    "nav": {
+      "orders": "Objednávky",
+      "messages": "Zprávy",
+      "menu": "Menu"
+    },
+    "orders": {
+      "title": "Moje objednávky",
+      "subtitle": "Sledujte stav, soubory a chat u každé objednávky"
+    },
+    "tracking": {
+      "title": "Průběh objednávky"
+    },
+    "messages": {
+      "title": "Zprávy",
+      "subtitle": "Chat s vaším manažerem o objednávce"
+    },
+    "order": {
+      "back": "Všechny objednávky",
+      "notFound": "Objednávka nenalezena"
     }
   },
   "popup": {

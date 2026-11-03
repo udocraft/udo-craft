@@ -623,6 +623,26 @@
     "files": {
       "empty": "Ainda sem ficheiros",
       "openFile": "Abrir ficheiro"
+    },
+    "nav": {
+      "orders": "Encomendas",
+      "messages": "Mensagens",
+      "menu": "Menu"
+    },
+    "orders": {
+      "title": "As minhas encomendas",
+      "subtitle": "Acompanhe o estado, os ficheiros e o chat de cada encomenda"
+    },
+    "tracking": {
+      "title": "Progresso da encomenda"
+    },
+    "messages": {
+      "title": "Mensagens",
+      "subtitle": "Converse com o seu gestor sobre uma encomenda"
+    },
+    "order": {
+      "back": "Todas as encomendas",
+      "notFound": "Encomenda não encontrada"
     }
   },
   "popup": {
