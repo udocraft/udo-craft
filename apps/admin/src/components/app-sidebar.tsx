@@ -6,7 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   BarChart3, Users, MessageCircle, ShoppingBag, ImagePlus,
   Settings, ChevronRight, UserCog, ShelvingUnit,
-  FileEdit, Globe, Search, Tag, Plus, Boxes,
+  FileEdit, Globe, Search, Tag, Plus,
 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { NavUser } from "@/components/nav-user";
@@ -59,6 +59,8 @@ interface NavItem {
   url: string;
   icon: React.ElementType;
   badgeKey?: "orders" | "messages";
+  /** Extra path prefixes that mark this group as active. */
+  match?: string[];
   children?: NavSubItem[];
 }
 
@@ -108,20 +110,16 @@ const CATALOG_NAV: NavItem[] = [
   },
   {
     title: "Склад",
-    url: "/warehouse",
+    url: "/erp",
+    match: ["/erp", "/warehouse"],
     icon: ShelvingUnit,
     children: [
-      { title: "Залишки", url: "/warehouse?tab=stock" },
-      { title: "Постачання", url: "/warehouse?tab=receipts" },
-      { title: "Виробництво", url: "/warehouse?tab=production" },
-      { title: "Акти пошиття", url: "/warehouse?tab=acts" },
-      { title: "Переміщення", url: "/warehouse?tab=transfers" },
+      { title: "Залишки", url: "/erp/stock" },
+      { title: "Постачання", url: "/erp/receipts" },
+      { title: "Виробництво", url: "/erp/production" },
+      { title: "Акти пошиття", url: "/erp/acts" },
+      { title: "Переміщення", url: "/erp/transfers" },
     ],
-  },
-  {
-    title: "ERP",
-    url: "/erp",
-    icon: Boxes,
   },
 ];
 
@@ -183,7 +181,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
     "/orders": pathname.startsWith("/orders"),
     "/catalog": pathname.startsWith("/catalog"),
     "/prints": pathname.startsWith("/prints"),
-    "/warehouse": pathname.startsWith("/warehouse"),
+    "/erp": pathname.startsWith("/erp") || pathname.startsWith("/warehouse"),
     "/cms": pathname.startsWith("/cms"),
     "/settings": pathname.startsWith("/settings"),
     "/users": pathname.startsWith("/users"),
@@ -293,7 +291,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
   };
 
   const renderCollapsibleItem = (item: NavItem) => {
-    const isGroupActive = pathname.startsWith(item.url);
+    const isGroupActive = (item.match ?? [item.url]).some((prefix) => pathname.startsWith(prefix));
     const isOpen = openGroups[item.url] ?? isGroupActive;
     const firstChildUrl = item.children?.[0]?.url ?? item.url;
 
@@ -346,7 +344,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                   if (pathname === basePath) {
                     const paramName = query.split("=")[0];
                     const paramVal = query.split("=")[1];
-                    const currentVal = searchParams.get(paramName) || item.children?.[0]?.url.split("?")[1].split("=")[1];
+                    const currentVal = searchParams.get(paramName) || item.children?.[0]?.url.split("?")[1]?.split("=")[1];
                     childActive = currentVal === paramVal;
                   }
                 } else {
@@ -460,7 +458,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
               Виробництво
             </SidebarGroupLabel>
             <SidebarMenu className="gap-px">
-              {(isSeamstress ? CATALOG_NAV.filter((item) => item.url === "/warehouse") : CATALOG_NAV).map((item) =>
+              {(isSeamstress ? CATALOG_NAV.filter((item) => item.url === "/erp") : CATALOG_NAV).map((item) =>
                 item.children ? renderCollapsibleItem(item) : renderSimpleItem(item)
               )}
             </SidebarMenu>

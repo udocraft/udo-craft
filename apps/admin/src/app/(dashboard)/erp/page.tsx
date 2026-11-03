@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function ErpPage() {
-  redirect("/warehouse");
+  redirect("/erp/stock");
 }
