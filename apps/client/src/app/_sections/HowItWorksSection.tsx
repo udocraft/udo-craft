@@ -22,7 +22,7 @@ export function HowItWorksSection() {
   }));
 
   return (
-    <section id="how" className="bg-[#050508] py-20 sm:py-28 overflow-hidden">
+    <section id="how" aria-labelledby="how-heading" className="bg-[#050508] py-20 sm:py-28 overflow-hidden">
       <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-16">
         <motion.div
           ref={ref}
@@ -31,8 +31,8 @@ export function HowItWorksSection() {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="mb-16 text-center"
         >
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary block mb-3">{t("label")}</span>
-          <h2 className="text-white text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary block mb-3">{t("label")}</span>
+          <h2 id="how-heading" className="text-white text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight">
             {t("heading")}
           </h2>
         </motion.div>

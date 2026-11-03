@@ -16,13 +16,13 @@ export function SocialProofBar() {
   const isInView = useInView(ref, { once: true });
 
   return (
-    <section ref={ref} className="bg-background border-b border-border py-10 overflow-hidden" aria-label="Клієнти">
+    <section ref={ref} className="bg-background border-b border-border py-10 overflow-hidden" aria-label={t("ariaLabel")}>
       <div className="max-w-6xl mx-auto px-5 sm:px-10 lg:px-20 mb-7">
         <motion.p
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground text-center"
+          className="text-xs font-bold uppercase tracking-[0.22em] text-muted-foreground text-center"
         >
           {t("trustedBy")}
         </motion.p>

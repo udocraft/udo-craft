@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { localizedField } from "@/lib/localized-field";
 import { ChevronLeft, ChevronRight, CircleSlash, ToolCase } from "lucide-react";
 import { Product, ProductColorVariant, Material, resolveProductImages, getAllImages } from "@udo-craft/shared";
 
@@ -33,6 +34,9 @@ export function ProductCardDetailed({
   product, colorVariants, materials, onCustomize, onAddWithoutPrint,
 }: ProductCardDetailedProps) {
   const t = useTranslations("collections");
+  const locale = useLocale();
+  const productName = localizedField(product.name, product.name_en, locale);
+  const productDescription = localizedField(product.description ?? "", product.description_en, locale);
   const router = useRouter();
   const isOutOfStock = !product.is_active;
   const hasVariants = colorVariants && colorVariants.length > 0;
@@ -118,7 +122,7 @@ export function ProductCardDetailed({
     <div
       role="button"
       tabIndex={isOutOfStock ? -1 : 0}
-      aria-label={product.name}
+      aria-label={productName}
       aria-disabled={isOutOfStock}
       onClick={handleCardClick}
       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleCardClick(); }}
@@ -128,7 +132,7 @@ export function ProductCardDetailed({
       <div className="p-3 sm:p-4 w-full flex items-center justify-center aspect-square flex-shrink-0 relative overflow-hidden group/img">
         {imageUrl ? (
           <div className="relative w-full h-full">
-            <Image src={imageUrl} alt={product.name} fill className="object-contain" />
+            <Image src={imageUrl} alt={productName} fill className="object-contain" />
             {availableImages.length > 1 && (
               <div className="absolute inset-y-0 inset-x-1 flex items-center justify-between opacity-0 group-hover/img:opacity-100 transition-opacity pointer-events-none z-10">
                 <button
@@ -165,19 +169,23 @@ export function ProductCardDetailed({
         {/* Name + price + description */}
         <div className="flex flex-col gap-1">
           <div className="flex items-start justify-between gap-2">
-            <p className="text-sm font-semibold text-foreground leading-tight">{product.name}</p>
-            <p className="text-sm font-bold text-primary shrink-0">{t("fromPrice", { price: (product.base_price_cents / 100).toFixed(0) })}</p>
+            <p className="text-sm font-semibold text-foreground leading-tight">{productName}</p>
+            <p className="text-sm font-bold text-primary shrink-0">
+              {product.base_price_cents > 0
+                ? t("fromPrice", { price: (product.base_price_cents / 100).toFixed(0) })
+                : t("priceOnRequest")}
+            </p>
           </div>
-          {product.description && (
+          {productDescription && (
             <div className="mt-1">
               <p className={`text-xs text-muted-foreground ${descExpanded ? "" : "line-clamp-2"}`}>
-                {product.description}
+                {productDescription}
               </p>
-              {product.description.length > 80 && (
+              {productDescription.length > 80 && (
                 <button 
                   type="button"
                   onClick={(e) => { e.stopPropagation(); setDescExpanded(!descExpanded); }}
-                  className="text-[11px] text-primary font-semibold hover:underline mt-0.5 touch-manipulation cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+                  className="hit-44 text-xs text-primary font-semibold hover:underline mt-0.5 touch-manipulation cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
                 >
                   {descExpanded ? t("collapse") : t("expand")}
                 </button>
@@ -197,7 +205,7 @@ export function ProductCardDetailed({
                   aria-pressed={selectedSize === size}
                   aria-label={size}
                   onClick={(e) => { e.stopPropagation(); setSelectedSize(selectedSize === size ? null : size); }}
-                  className={`h-8 min-w-0 rounded-md border px-1 text-[11px] font-semibold transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${
+                  className={`h-11 min-w-0 rounded-md border px-1 text-xs font-semibold transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${
                     selectedSize === size
                       ? "bg-foreground text-background border-foreground"
                       : "bg-background text-muted-foreground border-border hover:border-foreground/40 hover:text-foreground"
@@ -227,7 +235,7 @@ export function ProductCardDetailed({
                 }}
                 onMouseEnter={() => hasVariants && setHoveredVariantId(c.id)}
                 onMouseLeave={() => setHoveredVariantId(null)}
-                className={`w-8 h-8 rounded-full shrink-0 touch-manipulation transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${c.border ? "ring-1 ring-border" : ""} ${
+                className={`hit-44 w-8 h-8 rounded-full shrink-0 touch-manipulation transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${c.border ? "ring-1 ring-border" : ""} ${
                   hasVariants && displayVariantId === c.id ? "ring-2 ring-offset-2 ring-foreground scale-110" : ""
                 }`}
                 style={{ backgroundColor: c.hex }}
@@ -246,7 +254,7 @@ export function ProductCardDetailed({
             type="button"
             onClick={handleAddPrint}
             disabled={isOutOfStock}
-            className="w-full py-2.5 rounded-full bg-primary text-white text-xs font-bold hover:bg-primary/90 active:scale-[0.98] transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
+            className="w-full min-h-11 py-2.5 rounded-full bg-primary text-white text-xs font-bold hover:bg-primary/90 active:scale-[0.98] transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
           >
             <ToolCase className="mr-2 inline size-5 align-[-5px]" />
             {t("addPrint")}
@@ -255,7 +263,7 @@ export function ProductCardDetailed({
             type="button"
             onClick={handleAddWithoutPrint}
             disabled={isOutOfStock}
-            className="w-full py-2.5 rounded-full border border-border bg-background text-foreground text-xs font-bold hover:border-foreground/40 hover:bg-muted active:scale-[0.98] transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
+            className="w-full min-h-11 py-2.5 rounded-full border border-border bg-background text-foreground text-xs font-bold hover:border-foreground/40 hover:bg-muted active:scale-[0.98] transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
           >
             <CircleSlash className="mr-2 inline size-5 align-[-5px]" />
             {t("withoutPrint")}

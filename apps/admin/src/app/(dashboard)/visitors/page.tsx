@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { DashboardPage } from "@/components/dashboard-page";
-import { AdminToolbar, AdminTablePanel } from "@/components/admin-layout";
+import { AdminToolbar, AdminSearch, AdminTablePanel } from "@/components/admin-layout";
 import { Users, Globe, MousePointerClick, CheckCircle2, Clock, ExternalLink, RefreshCw, Search } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -90,15 +90,7 @@ export default function VisitorsPage() {
       }
     >
       <AdminToolbar>
-        <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            className="pl-8 bg-background border-none shadow-none focus-visible:ring-1 focus-visible:ring-primary/20"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Швидкий пошук..."
-          />
-        </div>
+        <AdminSearch value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Швидкий пошук..." />
       </AdminToolbar>
 
       <AdminTablePanel>

@@ -101,7 +101,7 @@ function DesktopTimeline({ isInView, steps }: { isInView: boolean; steps: Step[]
                 aria-selected={isCurrent}
                 aria-label={t("stepLabel", { n: step.number, title: step.title })}
                 onClick={() => handleStepClick(i)}
-                className="flex flex-col items-center gap-3 group"
+                className="hit-44 flex flex-col items-center gap-3 group"
               >
                 <motion.div
                   animate={{
@@ -163,7 +163,7 @@ function DesktopTimeline({ isInView, steps }: { isInView: boolean; steps: Step[]
 
             <div className="flex flex-col sm:flex-row-reverse sm:items-center justify-between gap-6">
               <div className="text-left sm:text-right">
-                <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-1.5">{t("estimatedTime")}</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold mb-1.5">{t("estimatedTime")}</p>
                 <p className="text-xl font-black text-foreground">{steps[active].time}</p>
               </div>
               <Link href={steps[active].href}
@@ -241,7 +241,7 @@ function MobileTimeline({ steps }: { steps: Step[] }) {
                 aria-selected={isCurrent}
                 aria-label={t("stepLabel", { n: step.number, title: step.title })}
                 onClick={() => handleStepClick(i)}
-                className="flex flex-col items-center gap-3 group"
+                className="hit-44 flex flex-col items-center gap-3 group"
               >
                 <motion.div
                   animate={{
@@ -289,7 +289,7 @@ function MobileTimeline({ steps }: { steps: Step[] }) {
 
                 <div className="flex flex-col gap-4 text-left">
                    <div>
-                     <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-1">{t("estimatedTime")}</p>
+                     <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold mb-1">{t("estimatedTime")}</p>
                      <p className="text-lg font-black text-foreground">{step.time}</p>
                    </div>
                    <Link href={step.href}

@@ -383,7 +383,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
     <>
       <Sidebar collapsible="icon" className="border-r border-border/60 bg-sidebar">
         {/* Brand header */}
-        <SidebarHeader className="px-3 py-3 border-b border-border/40">
+        <SidebarHeader className="h-14 shrink-0 justify-center border-b border-border px-3 py-0">
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton

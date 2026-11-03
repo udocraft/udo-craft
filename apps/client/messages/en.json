@@ -18,7 +18,31 @@
     "mainNav": "Main navigation",
     "logoLink": "U:DO CRAFT — back to home"
   },
+  "homeStats": {
+    "stat3Suffix": " days",
+    "stat1Label": "Satisfied clients",
+    "stat2Label": "Discount from 100 pcs",
+    "stat3Label": "Average lead time",
+    "stat4Label": "Quality control"
+  },
+  "popupSection": {
+    "stepDepart": "Departure",
+    "stepCustomize": "Customization",
+    "stepReady": "Ready",
+    "statEvents": "events",
+    "statGuests": "guests",
+    "statPerItem": "per item",
+    "minutes": "5 min"
+  },
+  "homeContact": {
+    "heading": "Get in touch",
+    "subtext": "Tell us about your project — we will send a proposal within 24 hours.",
+    "address": "Lviv, Dzherelna St. 69"
+  },
   "hero": {
+    "heading": "Apparel that becomes part of your corporate DNA",
+    "subheading": "We create pieces people love to wear.",
+    "ctaPrimary": "Browse catalog",
     "skipToCatalog": "Skip to catalog",
     "watchVideo": "Watch video",
     "closeVideo": "Close video",
@@ -27,6 +51,7 @@
     "contactCta": "Contacts"
   },
   "socialProof": {
+    "ariaLabel": "Clients",
     "trustedBy": "Trusted by teams across Ukraine"
   },
   "about": {
@@ -72,6 +97,7 @@
     "nextPage": "Next",
     "page": "Page {n}",
     "fromPrice": "from ₴{price}",
+    "priceOnRequest": "Price on request",
     "expand": "Expand",
     "collapse": "Collapse",
     "addPrint": "Add print",
@@ -185,6 +211,9 @@
     "cta": "Discuss project"
   },
   "customizer": {
+    "discount": "Discount",
+    "mm": "mm",
+    "embroidery": "Embroidery",
     "label": "Online constructor",
     "heading": "Build your merch right in the interface",
     "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
@@ -202,6 +231,7 @@
     "sizeLabel": "Size"
   },
   "trust": {
+    "statsLabel": "Key figures",
     "heading": "Why they trust us",
     "subtext": "Not just words — specific guarantees we uphold every day.",
     "guarantees": {
@@ -224,6 +254,14 @@
     }
   },
   "comparison": {
+    "values": {
+      "min500": "500+ pcs",
+      "minFrom10": "from 10 pcs",
+      "min100": "100+ pcs",
+      "days30": "30+ days",
+      "days7to14": "7–14 days",
+      "days14to21": "14–21 days"
+    },
     "heading": "U:DO vs the rest of the market",
     "subtext": "Compare the conditions — and understand why 500+ teams choose us.",
     "featureLabel": "Feature",
@@ -296,6 +334,8 @@
     "address": "Address"
   },
   "footer": {
+    "tagline": "B2B merch platform for teams, brands and events.",
+    "copyright": "U:DO CRAFT. All rights reserved.",
     "readyToStart": "Ready to start?",
     "readyDesc": "From 10 units · 7–14 days · Delivery across Ukraine",
     "startProject": "Start project",
@@ -371,6 +411,9 @@
     "nextStep": "Next"
   },
   "checkout": {
+    "currency": "UAH",
+    "mockupAlt": "Design mockup",
+    "removeItem": "Remove item",
     "title": "Cart",
     "orderTitle": "Place order",
     "stepCart": "Cart",
@@ -395,7 +438,7 @@
       "fullNamePlaceholder": "John Smith",
       "email": "Email *",
       "emailPlaceholder": "hr@company.com",
-      "phone": "Phone",
+      "phone": "Phone *",
       "phonePlaceholder": "+1 XXX XXX XXXX",
       "social": "Telegram / Instagram",
       "socialPlaceholder": "@username or link"
@@ -605,6 +648,8 @@
     "loadError": "Failed to load catalog. Please refresh the page."
   },
   "leadMagnet": {
+    "orEditor": "Or {link} right away",
+    "editorLink": "try the editor",
     "badge": "Free",
     "heading": "Get a free mockup of your merch",
     "desc": "Upload your logo — we'll apply it to a real product and send a mockup to your email. No registration, no obligations.",

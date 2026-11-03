@@ -33,7 +33,7 @@ export function FinalCtaSection() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         >
-          <p className="text-white/50 text-[11px] font-bold uppercase tracking-[0.22em] mb-6">
+          <p className="text-white/50 text-xs font-bold uppercase tracking-[0.22em] mb-6">
             {t("ready")}
           </p>
           <h2

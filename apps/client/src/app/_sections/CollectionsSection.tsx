@@ -1,9 +1,10 @@
 "use client";
 
+import { localizedField } from "@/lib/localized-field";
 import { Link } from "@/i18n/navigation";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Product, Material, ProductColorVariant } from "@udo-craft/shared";
@@ -11,6 +12,7 @@ import { ProductCardDetailed } from "@/components/ProductCardDetailed";
 import { FadeUp } from "@/app/_components/FadeUp";
 
 interface Category {
+  name_en?: string | null;
   id: string; name: string; slug: string;
   sort_order: number; is_active: boolean; image_url?: string | null;
 }
@@ -24,6 +26,7 @@ interface CollectionsSectionProps {
 }
 
 export function CollectionsSection({ products, categories, materials, colorVariants }: CollectionsSectionProps) {
+  const locale = useLocale();
   const t = useTranslations("collections");
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -60,7 +63,7 @@ export function CollectionsSection({ products, categories, materials, colorVaria
             <div className="flex items-center gap-4">
               <h2 className="text-xl font-black tracking-tight">{t("heading")}</h2>
             </div>
-            <Link href="/order" className="group flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors duration-200 underline underline-offset-4">
+            <Link href="/order" className="group flex min-h-11 items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors duration-200 underline underline-offset-4">
               {t("allProducts")}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
             </Link>
@@ -70,7 +73,7 @@ export function CollectionsSection({ products, categories, materials, colorVaria
             <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-4">
               <button
                 onClick={() => { setActiveCategory(null); setCollPage(0); }}
-                className={`whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 border ${
+                className={`inline-flex items-center min-h-11 whitespace-nowrap px-4 rounded-full text-xs font-semibold transition-all duration-200 border ${
                   activeCategory === null
                     ? "bg-foreground text-background border-foreground"
                     : "border-border text-muted-foreground hover:border-foreground/30 hover:text-foreground"
@@ -82,14 +85,14 @@ export function CollectionsSection({ products, categories, materials, colorVaria
                 <button
                   key={cat.id}
                   onClick={() => { setActiveCategory(cat.id); setCollPage(0); }}
-                  className={`flex items-center gap-1.5 whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                  className={`inline-flex items-center gap-1.5 min-h-11 whitespace-nowrap px-4 rounded-full text-xs font-semibold transition-all duration-200 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                     activeCategory === cat.id
                       ? "bg-foreground text-background border-foreground"
                       : "border-border text-muted-foreground hover:border-foreground/30 hover:text-foreground"
                   }`}
                 >
-                  {cat.image_url && <img src={cat.image_url} alt={cat.name} className="w-3.5 h-3.5 rounded-full object-cover" />}
-                  {cat.name}
+                  {cat.image_url && <img src={cat.image_url} alt={localizedField(cat.name, cat.name_en, locale)} className="w-3.5 h-3.5 rounded-full object-cover" />}
+                  {localizedField(cat.name, cat.name_en, locale)}
                 </button>
               ))}
             </div>
@@ -136,19 +139,19 @@ export function CollectionsSection({ products, categories, materials, colorVaria
                 {totalPages > 1 && (
                   <div className="flex items-center justify-center gap-3 mt-12">
                     <button onClick={() => setCollPage((p) => Math.max(0, p - 1))} disabled={collPage === 0}
-                      className="w-9 h-9 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/40 disabled:opacity-25 disabled:cursor-not-allowed transition-all"
+                      className="w-11 h-11 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/40 disabled:opacity-25 disabled:cursor-not-allowed transition-all"
                       aria-label={t("prevPage")}>
                       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7l4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     </button>
                     <div className="flex items-center gap-1.5">
                       {Array.from({ length: totalPages }).map((_, i) => (
                         <button key={i} onClick={() => setCollPage(i)} aria-label={t("page", { n: i + 1 })}
-                          className="rounded-full transition-all duration-300"
+                          className="hit-44 rounded-full transition-all duration-300"
                           style={{ width: i === collPage ? 24 : 8, height: 8, backgroundColor: i === collPage ? "var(--color-foreground)" : "var(--color-border)" }} />
                       ))}
                     </div>
                     <button onClick={() => setCollPage((p) => Math.min(totalPages - 1, p + 1))} disabled={collPage === totalPages - 1}
-                      className="w-9 h-9 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/40 disabled:opacity-25 disabled:cursor-not-allowed transition-all"
+                      className="w-11 h-11 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/40 disabled:opacity-25 disabled:cursor-not-allowed transition-all"
                       aria-label={t("nextPage")}>
                       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     </button>

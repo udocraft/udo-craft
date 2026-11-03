@@ -3,7 +3,7 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Package, SearchX } from "lucide-react";
-import { AdminTablePanel, AdminToolbar, AdminEmptyState } from "@/components/admin-layout";
+import { AdminTablePanel, AdminToolbar, AdminSearch, AdminEmptyState } from "@/components/admin-layout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -162,11 +162,10 @@ export function ProductsTab({
   return (
     <>
       <AdminToolbar>
-        <Input
-          placeholder="Пошук..."
+        <AdminSearch
           value={searchInput}
           onChange={(e) => handleSearchChange(e.target.value)}
-          className="w-48 text-sm"
+          className="w-48"
         />
 
         <span className="text-xs text-muted-foreground">{productCountLabel}</span>

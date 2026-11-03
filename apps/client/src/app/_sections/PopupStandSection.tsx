@@ -164,7 +164,7 @@ export function PopupStandSection() {
               <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-3">
                 {SLIDES.map((_, i) => (
                   <button key={i} onClick={() => goTo(i, i > active ? 1 : -1)} aria-label={t("slideLabel", { n: i + 1 })}
-                    className={`rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 h-3`}
+                    className={`hit-44 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 h-3`}
                     style={{
                       width: i === active ? 40 : 12,
                       backgroundColor: i === active ? "var(--color-primary)" : "rgba(0,0,0,0.25)",

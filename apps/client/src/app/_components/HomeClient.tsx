@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+import { useLocale, useTranslations } from "next-intl";
 import { Product, Material, ProductColorVariant } from "@udo-craft/shared";
 import { createClient } from "@/lib/supabase/client";
 import { useCms } from "@/hooks/useCms";
@@ -53,6 +54,12 @@ export function HomeClient({
   cmsData: any;
 }) {
   const { get, cms } = useCms(cmsData);
+  const locale = useLocale();
+  // CMS copy is authored in Ukrainian only, so other locales use their translations.
+  const tHero = useTranslations("hero");
+  const tStats = useTranslations("homeStats");
+  const tHomeContact = useTranslations("homeContact");
+  const tFooter = useTranslations("footer");
   const supabase = createClient();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -95,11 +102,11 @@ export function HomeClient({
             cinemaMode={cinemaMode}
             onCinemaEnter={() => setCinemaMode(true)}
             onCinemaExit={() => setCinemaMode(false)}
-            heading={get("home_hero", "heading", "Одяг, який стає частиною вашої корпоративної ДНК")}
-            subheading={get("home_hero", "subheading", "Ми створюємо речі, які стають улюбленими в гардеробі.")}
-            ctaPrimaryText={get("home_hero", "cta_primary_text", "Переглянути каталог")}
+            heading={locale === "uk" ? get("home_hero", "heading", tHero("heading")) : tHero("heading")}
+            subheading={locale === "uk" ? get("home_hero", "subheading", tHero("subheading")) : tHero("subheading")}
+            ctaPrimaryText={locale === "uk" ? get("home_hero", "cta_primary_text", tHero("ctaPrimary")) : tHero("ctaPrimary")}
             ctaPrimaryUrl={get("home_hero", "cta_primary_url", "#catalog")}
-            ctaSecondaryText="Контакти"
+            ctaSecondaryText={tHero("contactCta")}
           />
         );
       case "social": return <SocialProofBar key="social" />;
@@ -110,16 +117,16 @@ export function HomeClient({
             key="stats"
             stat1Value={Number(get("home_stats", "stat1_value", "500"))}
             stat1Suffix={get("home_stats", "stat1_suffix", "+")}
-            stat1Label={get("home_stats", "stat1_label", "Задоволених клієнтів")}
+            stat1Label={locale === "uk" ? get("home_stats", "stat1_label", tStats("stat1Label")) : tStats("stat1Label")}
             stat2Value={Number(get("home_stats", "stat2_value", "15"))}
             stat2Suffix={get("home_stats", "stat2_suffix", "%")}
-            stat2Label={get("home_stats", "stat2_label", "Знижка від 100 шт")}
+            stat2Label={locale === "uk" ? get("home_stats", "stat2_label", tStats("stat2Label")) : tStats("stat2Label")}
             stat3Value={Number(get("home_stats", "stat3_value", "14"))}
-            stat3Suffix={get("home_stats", "stat3_suffix", " дн")}
-            stat3Label={get("home_stats", "stat3_label", "Середній термін")}
+            stat3Suffix={locale === "uk" ? get("home_stats", "stat3_suffix", tStats("stat3Suffix")) : tStats("stat3Suffix")}
+            stat3Label={locale === "uk" ? get("home_stats", "stat3_label", tStats("stat3Label")) : tStats("stat3Label")}
             stat4Value={Number(get("home_stats", "stat4_value", "100"))}
             stat4Suffix={get("home_stats", "stat4_suffix", "%")}
-            stat4Label={get("home_stats", "stat4_label", "Контроль якості")}
+            stat4Label={locale === "uk" ? get("home_stats", "stat4_label", tStats("stat4Label")) : tStats("stat4Label")}
           />
         );
       case "collections": return <CollectionsSection key="collections" products={products} categories={categories} materials={materials} colorVariants={colorVariants} />;
@@ -137,11 +144,11 @@ export function HomeClient({
         return (
           <ContactSection
             key="contact"
-            heading={get("home_contact", "heading", "Зв'яжіться з нами")}
-            subtext={get("home_contact", "subtext", "Розкажіть про ваш проєкт — надішлемо пропозицію протягом 24 годин.")}
+            heading={locale === "uk" ? get("home_contact", "heading", tHomeContact("heading")) : tHomeContact("heading")}
+            subtext={locale === "uk" ? get("home_contact", "subtext", tHomeContact("subtext")) : tHomeContact("subtext")}
             email={get("home_contact", "email", "info@udocraft.com")}
             phone={get("home_contact", "phone", "+380 63 070 33 072")}
-            address={get("home_contact", "address", "м. Львів, вул. Джерельна, 69")}
+            address={locale === "uk" ? get("home_contact", "address", tHomeContact("address")) : tHomeContact("address")}
             instagram={get("home_contact", "instagram", "https://www.instagram.com/u.do.craft/")}
             telegram={get("home_contact", "telegram", "https://t.me/udostore")}
           />
@@ -165,8 +172,8 @@ export function HomeClient({
       </main>
 
       <FooterSection
-        tagline={get("footer", "tagline", "B2B мерч-платформа для команд, брендів та подій.")}
-        copyright={get("footer", "copyright", "U:DO CRAFT. Всі права захищені.")}
+        tagline={locale === "uk" ? get("footer", "tagline", tFooter("tagline")) : tFooter("tagline")}
+        copyright={locale === "uk" ? get("footer", "copyright", tFooter("copyright")) : tFooter("copyright")}
         instagram={get("home_contact", "instagram", "https://www.instagram.com/u.do.craft/")}
         telegram={get("home_contact", "telegram", "https://t.me/udostore")}
       />

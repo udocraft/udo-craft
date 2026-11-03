@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState, useEffect } from "react";
 import { track } from "@/lib/analytics";
 import { Label } from "@/components/ui/label";
@@ -8,12 +9,12 @@ import { Loader2, Upload, X, ChevronDown, Check } from "lucide-react";
 import { sound } from "@/lib/sound";
 
 const TOPICS = [
-  { value: "merch",    label: "Корпоративний мерч",  desc: "Футболки, худi, аксесуари для команди або бренду",  icon: "👕" },
-  { value: "popup",    label: "Popup-стенд на захiд", desc: "Виїзна кастомiзацiя мерчу прямо на вашому заходi", icon: "🎪" },
-  { value: "box",      label: "Box of Touch",         desc: "Набiр зразкiв тканин i виробiв перед тиражем",     icon: "📦" },
-  { value: "designer", label: "Послуги дизайнера",    desc: "Розробка або адаптацiя логотипу для нанесення",    icon: "🎨" },
-  { value: "bulk",     label: "Великий тираж (500+)", desc: "Оптовi замовлення з iндивiдуальними умовами",      icon: "🚀" },
-  { value: "other",    label: "Iнше",                 desc: "Будь-яке iнше питання або пропозицiя",             icon: "💬" },
+  { value: "merch",      icon: "👕" },
+  { value: "popup",     icon: "🎪" },
+  { value: "box",           icon: "📦" },
+  { value: "designer",     icon: "🎨" },
+  { value: "bulk",           icon: "🚀" },
+  { value: "other",                 icon: "💬" },
 ] as const;
 
 type TopicValue = typeof TOPICS[number]["value"];
@@ -45,6 +46,12 @@ function topicFromSource(source: string): TopicValue {
 const inputCls = "w-full h-[52px] bg-white/5 border border-white/10 text-white placeholder:text-white/30 rounded-lg px-4 text-sm focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/30 transition-colors disabled:opacity-50";
 
 export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
+  const tForm = useTranslations("contactForm");
+  const topics = TOPICS.map((tp) => ({
+    ...tp,
+    label: tForm(`topics.${tp.value}.label`),
+    desc: tForm(`topics.${tp.value}.desc`),
+  }));
   const [sent, setSent]             = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError]           = useState<string | null>(null);
@@ -70,7 +77,7 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
     return () => window.removeEventListener("hashchange", apply);
   }, [defaultTopic]);
 
-  const selectedTopic = TOPICS.find((t) => t.value === topic)!;
+  const selectedTopic = topics.find((t) => t.value === topic)!;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -101,7 +108,7 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
       setSent(true);
     } catch (err) {
       console.error(err);
-      setError("Виникла помилка. Спробуйте ще раз або зв'яжiться з нами напряму.");
+      setError(tForm("error"));
       sound.caution();
     } finally {
       setSubmitting(false);
@@ -111,8 +118,8 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
   if (sent) {
     return (
       <div className="max-w-2xl">
-        <p className="text-white/90 text-base font-medium">Дякуємо за звернення!</p>
-        <p className="text-white/70 text-sm mt-2">Ми отримали вашу заявку та зв&apos;яжемося з вами найближчим часом.</p>
+        <p className="text-white/90 text-base font-medium">{tForm("success")}</p>
+        <p className="text-white/70 text-sm mt-2">{tForm("successDesc")}</p>
       </div>
     );
   }
@@ -132,8 +139,8 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
       />
 
       <div className="space-y-1.5">
-        <Label htmlFor="cf-name" className="text-white/60 text-xs font-semibold uppercase tracking-wide">Ваше iм&apos;я *</Label>
-        <input id="cf-name" type="text" placeholder="Iван Петренко" value={name}
+        <Label htmlFor="cf-name" className="text-white/60 text-xs font-semibold uppercase tracking-wide">{tForm("nameLabel")}</Label>
+        <input id="cf-name" type="text" placeholder={tForm("namePlaceholder")} value={name}
           onChange={(e) => setName(e.target.value)} required disabled={submitting}
           onFocus={() => sound.tap()}
           className={inputCls} />
@@ -148,7 +155,7 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="cf-phone" className="text-white/60 text-xs font-semibold uppercase tracking-wide">Телефон *</Label>
+        <Label htmlFor="cf-phone" className="text-white/60 text-xs font-semibold uppercase tracking-wide">{tForm("phoneLabel")}</Label>
         <input id="cf-phone" type="tel" placeholder="+380 XX XXX XX XX" value={phone}
           onChange={(e) => setPhone(e.target.value)} required disabled={submitting}
           onFocus={() => sound.tap()}
@@ -156,8 +163,8 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="cf-company" className="text-white/60 text-xs font-semibold uppercase tracking-wide">Компанiя</Label>
-        <input id="cf-company" type="text" placeholder="Назва компанiї" value={company}
+        <Label htmlFor="cf-company" className="text-white/60 text-xs font-semibold uppercase tracking-wide">{tForm("companyLabel")}</Label>
+        <input id="cf-company" type="text" placeholder={tForm("companyPlaceholder")} value={company}
           onChange={(e) => setCompany(e.target.value)} disabled={submitting}
           onFocus={() => sound.tap()}
           className={inputCls} />
@@ -165,7 +172,7 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
 
       {/* Topic picker */}
       <div className="md:col-span-2 space-y-1.5">
-        <Label className="text-white/60 text-xs font-semibold uppercase tracking-wide">Тема звернення *</Label>
+        <Label className="text-white/60 text-xs font-semibold uppercase tracking-wide">{tForm("topicLabel")}</Label>
         <Popover open={topicOpen} onOpenChange={setTopicOpen}>
           <PopoverTrigger
             disabled={submitting}
@@ -190,7 +197,7 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
             }}
             className="!bg-[#0f172a] p-1.5 shadow-2xl rounded-xl"
           >
-            {TOPICS.map((t) => (
+            {topics.map((t) => (
               <button key={t.value} type="button"
                 onClick={() => { setTopic(t.value); setTopicOpen(false); sound.select(); }}
                 style={{ color: topic === t.value ? "#fff" : "rgba(255,255,255,0.7)" }}
@@ -211,15 +218,15 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
       </div>
 
       <div className="md:col-span-2 space-y-1.5">
-        <Label htmlFor="cf-message" className="text-white/60 text-xs font-semibold uppercase tracking-wide">Розкажiть про ваш проєкт</Label>
-        <textarea id="cf-message" placeholder="Кiлькiсть одиниць, тип товару, термiни..."
+        <Label htmlFor="cf-message" className="text-white/60 text-xs font-semibold uppercase tracking-wide">{tForm("messageLabel")}</Label>
+        <textarea id="cf-message" placeholder={tForm("messagePlaceholder")}
           rows={4} value={message} onChange={(e) => setMessage(e.target.value)} disabled={submitting}
           className="w-full bg-white/5 border border-white/10 text-white placeholder:text-white/30 rounded-lg px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/30 transition-colors resize-none disabled:opacity-50" />
       </div>
 
       <div className="md:col-span-2 space-y-1.5">
         <Label htmlFor="cf-files" className="text-white/60 text-xs font-semibold uppercase tracking-wide">
-          Завантажити файли (макети, логотипи тощо)
+          {tForm("filesLabel")}
         </Label>
         <div className="relative">
           <input id="cf-files" type="file" multiple
@@ -228,8 +235,8 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
           <label htmlFor="cf-files"
             className="flex flex-col items-center justify-center w-full p-6 border-2 border-dashed border-white/20 rounded-lg cursor-pointer hover:border-white/40 hover:bg-white/5 transition-colors">
             <Upload className="w-8 h-8 text-white/40 mb-2" aria-hidden="true" />
-            <p className="text-white/70 text-sm font-medium">Натисніть або перетягніть файли</p>
-            <p className="text-white/50 text-xs mt-1">Макети, логотипи, зображення...</p>
+            <p className="text-white/70 text-sm font-medium">{tForm("filesClick")}</p>
+            <p className="text-white/50 text-xs mt-1">{tForm("filesDesc")}</p>
           </label>
           {files.length > 0 && (
             <div className="mt-3 space-y-2">
@@ -237,7 +244,7 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
                 <div key={i} className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">
                   <span className="text-white/70 text-xs truncate">{f.name}</span>
                   <button type="button" onClick={() => setFiles(files.filter((_, idx) => idx !== i))}
-                    aria-label={`Видалити файл ${f.name}`}
+                    aria-label={tForm("deleteFile", { name: f.name })}
                     className="text-white/50 hover:text-white/70 transition-colors rounded focus:outline-none focus:ring-2 focus:ring-white/20">
                     <X className="w-4 h-4" />
                   </button>
@@ -258,8 +265,8 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
         <button type="submit" disabled={submitting}
           className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold text-sm px-8 py-3.5 rounded-full active:scale-95 transition-all duration-200 disabled:opacity-50">
           {submitting ? (
-            <><Loader2 className="size-4 animate-spin" aria-hidden="true" />Надсилаємо...</>
-          ) : "Надіслати"}
+            <><Loader2 className="size-4 animate-spin" aria-hidden="true" />{tForm("submitting")}</>
+          ) : tForm("submit")}
         </button>
       </div>
     </form>

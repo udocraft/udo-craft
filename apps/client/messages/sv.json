@@ -18,7 +18,31 @@
     "mainNav": "Huvudnavigation",
     "logoLink": "U:DO CRAFT — tillbaka till startsidan"
   },
+  "homeStats": {
+    "stat3Suffix": " dagar",
+    "stat1Label": "Nöjda kunder",
+    "stat2Label": "Rabatt från 100 st",
+    "stat3Label": "Genomsnittlig leveranstid",
+    "stat4Label": "Kvalitetskontroll"
+  },
+  "popupSection": {
+    "stepDepart": "Avresa",
+    "stepCustomize": "Anpassning",
+    "stepReady": "Klart",
+    "statEvents": "evenemang",
+    "statGuests": "gäster",
+    "statPerItem": "per artikel",
+    "minutes": "5 min"
+  },
+  "homeContact": {
+    "heading": "Kontakta oss",
+    "subtext": "Berätta om ditt projekt — vi skickar ett förslag inom 24 timmar.",
+    "address": "Lviv, Dzherelna 69"
+  },
   "hero": {
+    "heading": "Kläder som blir en del av ditt företags DNA",
+    "subheading": "Vi skapar plagg som man gärna bär.",
+    "ctaPrimary": "Bläddra i katalogen",
     "skipToCatalog": "Till katalog",
     "watchVideo": "Se video",
     "closeVideo": "Stäng video",
@@ -27,6 +51,7 @@
     "contactCta": "Contacts"
   },
   "socialProof": {
+    "ariaLabel": "Kunder",
     "trustedBy": "Förtroendet från team runt om i världen"
   },
   "about": {
@@ -90,6 +115,7 @@
     "nextPage": "Nästa",
     "page": "Sida {n}",
     "fromPrice": "from ₴{price}",
+    "priceOnRequest": "Pris på förfrågan",
     "expand": "Expand",
     "collapse": "Collapse",
     "addPrint": "Add print",
@@ -232,6 +258,9 @@
     "cta": "Discuss project"
   },
   "customizer": {
+    "discount": "Rabatt",
+    "mm": "mm",
+    "embroidery": "Broderi",
     "label": "Online constructor",
     "heading": "Build your merch right in the interface",
     "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
@@ -249,6 +278,7 @@
     "sizeLabel": "Size"
   },
   "trust": {
+    "statsLabel": "Nyckeltal",
     "heading": "Why they trust us",
     "subtext": "Not just words — specific guarantees we uphold every day.",
     "guarantees": {
@@ -271,6 +301,14 @@
     }
   },
   "comparison": {
+    "values": {
+      "min500": "500+ st",
+      "minFrom10": "från 10 st",
+      "min100": "100+ st",
+      "days30": "30+ dagar",
+      "days7to14": "7–14 dagar",
+      "days14to21": "14–21 dagar"
+    },
     "heading": "U:DO vs the rest of the market",
     "subtext": "Compare the conditions — and understand why 500+ teams choose us.",
     "featureLabel": "Feature",
@@ -373,6 +411,8 @@
     "address": "Address"
   },
   "footer": {
+    "tagline": "B2B-plattform för merch till team, varumärken och evenemang.",
+    "copyright": "U:DO CRAFT. Alla rättigheter förbehållna.",
     "readyToStart": "Redo att börja?",
     "readyDesc": "Från 10 exemplar · 7–14 dagar · Leverans",
     "startProject": "Starta projekt",
@@ -448,6 +488,9 @@
     "nextStep": "Next"
   },
   "checkout": {
+    "currency": "UAH",
+    "mockupAlt": "Mockup",
+    "removeItem": "Ta bort artikel",
     "title": "Kundvagn",
     "orderTitle": "Lägg beställning",
     "stepCart": "Kundvagn",
@@ -472,7 +515,7 @@
       "fullNamePlaceholder": "Erik Svensson",
       "email": "E-post *",
       "emailPlaceholder": "hr@foretag.se",
-      "phone": "Telefon",
+      "phone": "Telefon *",
       "phonePlaceholder": "+46 XX XXX XXXX",
       "social": "Telegram / Instagram",
       "socialPlaceholder": "@användarnamn eller länk"
@@ -754,6 +797,8 @@
     "loadError": "Det gick inte att ladda katalogen. Uppdatera sidan."
   },
   "leadMagnet": {
+    "orEditor": "Eller {link} direkt",
+    "editorLink": "prova editorn",
     "badge": "Gratis",
     "heading": "Få en gratis mockup av din merch",
     "desc": "Ladda upp logotypen — vi applicerar den på en riktig produkt och skickar mockupen till din e-post.",

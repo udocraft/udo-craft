@@ -30,6 +30,8 @@ interface PrintArea { id: string; name: string; label: string; }
 
 export interface ProductFormData {
   name: string;
+  name_en: string | null;
+  description_en: string | null;
   slug: string;
   description: string;
   base_price_cents: number;
@@ -50,6 +52,8 @@ interface ProductFormProps {
   product?: {
     id: string;
     name: string;
+    name_en?: string | null;
+    description_en?: string | null;
     slug: string;
     description: string;
     base_price_cents: number;
@@ -96,6 +100,8 @@ const DEFAULT_ITEM_SIZES = SIZE_PRESETS[0].sizes;
 
 export function ProductForm({ product, categories, sizeCharts, printAreas, onSave, onChange, saving = false }: ProductFormProps) {
   const [name, setName] = useState(product?.name ?? "");
+  const [nameEn, setNameEn] = useState(product?.name_en ?? "");
+  const [descriptionEn, setDescriptionEn] = useState(product?.description_en ?? "");
   const [slug, setSlug] = useState(product?.slug ?? "");
   const [slugManual, setSlugManual] = useState(false);
   const [description, setDescription] = useState(product?.description ?? "");
@@ -154,8 +160,10 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
     if (!name.trim()) { setNameError("Назва обов'язкова"); return; }
     await onSave({
       name: name.trim(),
+      name_en: nameEn.trim() || null,
       slug: slug || slugify(name.trim()),
       description,
+      description_en: descriptionEn.trim() || null,
       base_price_cents: Math.round(parseFloat(priceStr || "0") * 100),
       is_active: isActive,
       is_customizable: isCustomizable,
@@ -234,6 +242,29 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
                 value={priceStr}
                 onChange={e => { setPriceStr(e.target.value); markDirty(); }}
                 placeholder="0"
+              />
+            </div>
+          </div>
+
+          {/* English copy — shown on the English site; empty falls back to the Ukrainian text */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="product-name-en">Назва (англійською)</Label>
+              <Input
+                id="product-name-en"
+                value={nameEn}
+                onChange={e => { setNameEn(e.target.value); markDirty(); }}
+                placeholder="Product name"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="product-description-en">Опис (англійською)</Label>
+              <Textarea
+                id="product-description-en"
+                value={descriptionEn}
+                onChange={e => { setDescriptionEn(e.target.value); markDirty(); }}
+                placeholder="Product description"
+                rows={3}
               />
             </div>
           </div>

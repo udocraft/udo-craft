@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Instagram, Send } from "lucide-react";
@@ -18,6 +19,7 @@ interface ContactSectionProps {
 export function ContactSection({
   heading, subtext, email, phone, address, instagram, telegram,
 }: ContactSectionProps) {
+  const tContact = useTranslations("contact");
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
@@ -55,14 +57,14 @@ export function ContactSection({
             <div className="space-y-8">
               {[
                 { label: "Email", value: email, href: `mailto:${email}` },
-                { label: "Телефон", value: phone, href: `tel:${phone.replace(/\s/g, "")}` },
-                { label: "Адреса", value: address, href: "#" },
+                { label: tContact("phone"), value: phone, href: `tel:${phone.replace(/\s/g, "")}` },
+                { label: tContact("address"), value: address, href: "#" },
               ].map((c) => (
                 <a key={c.label} href={c.href}
                   className="block group"
                   aria-label={`${c.label}: ${c.value}`}
                 >
-                  <p className="text-white/30 text-[10px] font-bold uppercase tracking-[0.2em] mb-1.5">{c.label}</p>
+                  <p className="text-white/30 text-xs font-bold uppercase tracking-[0.2em] mb-1.5">{c.label}</p>
                   <p className="text-white/70 text-base font-medium group-hover:text-white transition-colors duration-200">{c.value}</p>
                 </a>
               ))}
@@ -80,7 +82,7 @@ export function ContactSection({
                 return (
                   <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
                     aria-label={s.label}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 text-white/40 hover:text-white hover:border-white/25 transition-all duration-200 text-xs font-medium">
+                    className="inline-flex min-h-11 items-center gap-2 px-4 py-2 rounded-full border border-white/10 text-white/40 hover:text-white hover:border-white/25 transition-all duration-200 text-xs font-medium">
                     <Icon className="w-3.5 h-3.5" aria-hidden="true" />{s.label}
                   </a>
                 );

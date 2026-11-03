@@ -186,7 +186,7 @@ export function ServicesSection({ service1Title, service1Desc, service1Cta, serv
                 {[["500+", t("popup.stats.events")], ["5 хв", t("popup.stats.product")]].map(([v, l]) => (
                   <div key={l}>
                     <p className="text-white text-base font-black">{v}</p>
-                    <p className="text-white/50 text-[10px]">{l}</p>
+                    <p className="text-white/50 text-xs">{l}</p>
                   </div>
                 ))}
               </div>

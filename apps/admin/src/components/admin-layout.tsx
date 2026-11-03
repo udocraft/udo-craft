@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { Check, ChevronDown, X } from "lucide-react";
+import { Check, ChevronDown, Search, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import {
   Popover,
@@ -55,11 +56,32 @@ export function AdminToolbar({
   return (
     <div
       className={cn(
-        "flex h-14 shrink-0 items-center gap-2 border-b border-border bg-background px-4 md:px-6",
+        "flex min-h-14 shrink-0 flex-wrap items-center gap-2 px-4 py-3 md:px-6",
         className
       )}
     >
       {children}
+    </div>
+  );
+}
+
+// ── AdminSearch ───────────────────────────────────────────────────────────────
+
+export function AdminSearch({
+  className,
+  placeholder = "Пошук...",
+  ...props
+}: Omit<React.ComponentProps<typeof Input>, "type">) {
+  return (
+    <div className={cn("relative w-full max-w-xs", className)}>
+      <Search className="pointer-events-none absolute left-3.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+      <Input
+        type="search"
+        placeholder={placeholder}
+        aria-label={placeholder}
+        className="h-9 min-h-0 bg-background pl-9 text-sm"
+        {...props}
+      />
     </div>
   );
 }

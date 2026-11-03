@@ -21,7 +21,7 @@ import { EmptyState } from "@/components/empty-state";
 import { StatusBadge, type LeadStatus } from "@/components/status-badge";
 import { fmtMoney, fmtDate, cn } from "@/lib/utils";
 import { DashboardPage } from "@/components/dashboard-page";
-import { AdminToolbar, AdminFilter, AdminTablePanel } from "@/components/admin-layout";
+import { AdminToolbar, AdminSearch, AdminFilter, AdminTablePanel } from "@/components/admin-layout";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -325,15 +325,7 @@ export default function ClientsPage() {
     <div className="flex flex-1 h-full overflow-hidden">
       <div className="flex-1 flex flex-col overflow-hidden">
         <AdminToolbar>
-          <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              className="pl-8 bg-muted/40 border-none shadow-none focus-visible:ring-1 focus-visible:ring-primary/20"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Швидкий пошук..."
-            />
-          </div>
+          <AdminSearch value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Швидкий пошук..." />
 
           <div className="flex items-center gap-1.5">
             <AdminFilter

@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { localizedField } from "@/lib/localized-field";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Product, Material, ProductColorVariant, ProductMarketingMeta } from "@udo-craft/shared";
@@ -102,6 +104,10 @@ export function ProductDetailClient({
   materials,
 }: ProductDetailClientProps) {
   const router = useRouter();
+  const tHero = useTranslations("hero");
+  const tFooter = useTranslations("footer");
+  const locale = useLocale();
+  const productName = localizedField(product.name, product.name_en, locale);
 
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(variants[0]?.id ?? null);
   const [selectedSize, setSelectedSize]           = useState<string | null>(null);
@@ -176,7 +182,7 @@ export function ProductDetailClient({
     const productImage = resolvedImgs.front ?? Object.values(resolvedImgs)[0] ?? "";
 
     const cartItem = {
-      productId: product.id, productName: product.name, productImage,
+      productId: product.id, productName, productImage,
       productPrice: product.base_price_cents, unitPriceCents: discountedCents,
       printCostCents: 0, quantity, size, color, layers: [],
     };
@@ -220,7 +226,7 @@ export function ProductDetailClient({
             <span aria-hidden="true">/</span>
             <Link href="/#catalog" className="hover:text-foreground transition-colors">Каталог</Link>
             <span aria-hidden="true">/</span>
-            <span className="text-foreground font-medium truncate">{product.name}</span>
+            <span className="text-foreground font-medium truncate">{productName}</span>
           </nav>
         </div>
 
@@ -236,7 +242,7 @@ export function ProductDetailClient({
                   <motion.img
                     key={activeImageKey + (selectedVariantId ?? "")}
                     src={activeImageUrl}
-                    alt={product.name}
+                    alt={productName}
                     className="absolute inset-0 w-full h-full object-contain p-2"
                     initial={{ opacity: 0, scale: 1.02 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -287,7 +293,7 @@ export function ProductDetailClient({
 
               {/* Name + price */}
               <div>
-                <h1 className="text-3xl sm:text-4xl font-black tracking-tight leading-tight">{product.name}</h1>
+                <h1 className="text-3xl sm:text-4xl font-black tracking-tight leading-tight">{productName}</h1>
                 <div className="flex flex-wrap items-center gap-3 mt-3">
                   {(meta.badges ?? []).slice(0, 2).map((badge) => {
                     const Icon = FEATURE_ICONS[badge.icon as keyof typeof FEATURE_ICONS] ?? BadgeCheck;
@@ -573,7 +579,7 @@ export function ProductDetailClient({
                   transition={{ duration: 0.18 }}
                   className="max-w-4xl"
                 >
-                  <RichTextBlock text={product.description || `${product.name} для корпоративного мерчу, брендованих подій і командного одягу.`} />
+                  <RichTextBlock text={localizedField(product.description ?? "", product.description_en, locale) || `${productName} для корпоративного мерчу, брендованих подій і командного одягу.`} />
                 </motion.div>
               )}
 
@@ -689,7 +695,7 @@ export function ProductDetailClient({
         )}
       </main>
 
-      <FooterSection tagline="Одяг, який стає частиною вашої корпоративної ДНК" copyright="© 2026 U:DO CRAFT. Всі права захищені." instagram="https://www.instagram.com/u.do.craft/" telegram="https://t.me/udostore" />
+      <FooterSection tagline={tHero("heading")} copyright={tFooter("copyright")} instagram="https://www.instagram.com/u.do.craft/" telegram="https://t.me/udostore" />
     </div>
   );
 }

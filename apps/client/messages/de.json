@@ -18,7 +18,31 @@
     "mainNav": "Hauptnavigation",
     "logoLink": "U:DO CRAFT — zur Startseite"
   },
+  "homeStats": {
+    "stat3Suffix": " Tage",
+    "stat1Label": "Zufriedene Kunden",
+    "stat2Label": "Rabatt ab 100 Stück",
+    "stat3Label": "Durchschnittliche Lieferzeit",
+    "stat4Label": "Qualitätskontrolle"
+  },
+  "popupSection": {
+    "stepDepart": "Anreise",
+    "stepCustomize": "Individualisierung",
+    "stepReady": "Fertig",
+    "statEvents": "Events",
+    "statGuests": "Gäste",
+    "statPerItem": "pro Artikel",
+    "minutes": "5 Min."
+  },
+  "homeContact": {
+    "heading": "Kontaktieren Sie uns",
+    "subtext": "Erzählen Sie uns von Ihrem Projekt — Sie erhalten innerhalb von 24 Stunden ein Angebot.",
+    "address": "Lwiw, Dscherelna-Str. 69"
+  },
   "hero": {
+    "heading": "Kleidung, die Teil Ihrer Unternehmens-DNA wird",
+    "subheading": "Wir gestalten Stücke, die man gerne trägt.",
+    "ctaPrimary": "Katalog ansehen",
     "skipToCatalog": "Zum Katalog",
     "watchVideo": "Video ansehen",
     "closeVideo": "Video schließen",
@@ -27,6 +51,7 @@
     "contactCta": "Contacts"
   },
   "socialProof": {
+    "ariaLabel": "Kunden",
     "trustedBy": "Das Vertrauen von Teams weltweit"
   },
   "about": {
@@ -90,6 +115,7 @@
     "nextPage": "Weiter",
     "page": "Seite {n}",
     "fromPrice": "from ₴{price}",
+    "priceOnRequest": "Preis auf Anfrage",
     "expand": "Expand",
     "collapse": "Collapse",
     "addPrint": "Add print",
@@ -232,6 +258,9 @@
     "cta": "Discuss project"
   },
   "customizer": {
+    "discount": "Rabatt",
+    "mm": "mm",
+    "embroidery": "Stickerei",
     "label": "Online constructor",
     "heading": "Build your merch right in the interface",
     "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
@@ -249,6 +278,7 @@
     "sizeLabel": "Size"
   },
   "trust": {
+    "statsLabel": "Kennzahlen",
     "heading": "Why they trust us",
     "subtext": "Not just words — specific guarantees we uphold every day.",
     "guarantees": {
@@ -271,6 +301,14 @@
     }
   },
   "comparison": {
+    "values": {
+      "min500": "500+ Stk.",
+      "minFrom10": "ab 10 Stk.",
+      "min100": "100+ Stk.",
+      "days30": "30+ Tage",
+      "days7to14": "7–14 Tage",
+      "days14to21": "14–21 Tage"
+    },
     "heading": "U:DO vs the rest of the market",
     "subtext": "Compare the conditions — and understand why 500+ teams choose us.",
     "featureLabel": "Feature",
@@ -373,6 +411,8 @@
     "address": "Address"
   },
   "footer": {
+    "tagline": "B2B-Merch-Plattform für Teams, Marken und Events.",
+    "copyright": "U:DO CRAFT. Alle Rechte vorbehalten.",
     "readyToStart": "Bereit anzufangen?",
     "readyDesc": "Ab 10 Stück · 7–14 Tage · Lieferung",
     "startProject": "Projekt starten",
@@ -448,6 +488,9 @@
     "nextStep": "Next"
   },
   "checkout": {
+    "currency": "UAH",
+    "mockupAlt": "Entwurf",
+    "removeItem": "Artikel entfernen",
     "title": "Warenkorb",
     "orderTitle": "Bestellung aufgeben",
     "stepCart": "Warenkorb",
@@ -472,7 +515,7 @@
       "fullNamePlaceholder": "Hans Müller",
       "email": "E-Mail *",
       "emailPlaceholder": "hr@firma.de",
-      "phone": "Telefon",
+      "phone": "Telefon *",
       "phonePlaceholder": "+49 XXX XXXXXXX",
       "social": "Telegram / Instagram",
       "socialPlaceholder": "@benutzername oder Link"
@@ -754,6 +797,8 @@
     "loadError": "Katalog konnte nicht geladen werden. Bitte Seite neu laden."
   },
   "leadMagnet": {
+    "orEditor": "Oder {link} direkt",
+    "editorLink": "probieren Sie den Editor",
     "badge": "Kostenlos",
     "heading": "Kostenloses Mockup Ihres Merchs erhalten",
     "desc": "Logo hochladen — wir legen es auf ein echtes Produkt und senden das Mockup an Ihre E-Mail.",
