@@ -25,15 +25,20 @@
   --color-accent-foreground: oklch(1 0 0);
   --color-destructive: oklch(0.577 0.245 27.325);
   --color-destructive-foreground: oklch(1 0 0);
-  --color-success: oklch(0.65 0.2 150);
+  /* Darkened from 0.65 so success text reaches 4.5:1 on white (5.6:1) */
+  --color-success: oklch(0.5 0.14 150);
   --color-success-foreground: oklch(1 0 0);
   --color-warning: oklch(0.75 0.15 85);
   --color-warning-foreground: oklch(0.25 0.05 85);
   --color-info: oklch(0.55 0.15 250);
   --color-info-foreground: oklch(1 0 0);
+  /* Page canvas behind white header/cards: neutral slate-gray */
+  --color-surface: oklch(0.965 0.004 260);
   --color-border: oklch(0.91 0 0);
-  --color-input: oklch(0.91 0 0);
-  --color-ring: oklch(0.7 0 0);
+  /* Input boundary: 3:1 on white (WCAG 1.4.11) */
+  --color-input: oklch(0.62 0 0);
+  /* Focus ring: brand primary, 11:1 on white (was gray, 2.67:1) */
+  --color-ring: oklch(0.38 0.22 264);
   --color-sidebar: oklch(1 0 0);
   --color-sidebar-foreground: oklch(0.145 0 0);
   --color-sidebar-primary: oklch(0.38 0.22 264);
@@ -62,6 +67,10 @@
   }
   *, *::before, *::after {
     border-color: var(--color-border);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
   }
   body {
     @apply bg-background text-foreground antialiased selection:bg-primary/10 selection:text-primary;

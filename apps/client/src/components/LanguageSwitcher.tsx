@@ -48,7 +48,7 @@ export function LanguageSwitcher() {
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger
         aria-label="Language"
-        className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors cursor-pointer border-none outline-none focus-visible:ring-2 focus-visible:ring-primary rounded px-1 py-0.5 bg-transparent"
+        className="flex min-h-11 min-w-11 items-center justify-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors cursor-pointer border-none outline-none focus-visible:ring-2 focus-visible:ring-primary rounded px-1 py-0.5 bg-transparent"
       >
         <span className="text-sm">{FLAGS[locale] || "🌐"}</span>
         <span>{(locale || "EN").toUpperCase()}</span>

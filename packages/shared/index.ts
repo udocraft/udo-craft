@@ -209,6 +209,8 @@ export function resolveProductImages(
 
 // Zod Schemas
 export const ProductSchema = z.object({
+  name_en: z.string().nullish(),
+  description_en: z.string().nullish(),
   id: z.string().uuid(),
   name: z.string(),
   slug: z.string(),
@@ -286,6 +288,7 @@ export type PrintZoneSide = z.infer<typeof PrintZoneSideEnum>;
 // ── Catalog hierarchy ───────────────────────────────────────────────────────
 
 export const CategorySchema = z.object({
+  name_en: z.string().nullish(),
   id: z.string().uuid(),
   name: z.string(),
   slug: z.string(),

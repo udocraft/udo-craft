@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createServiceClient } from '@/lib/supabase/server';
 import { isValid } from '@tma.js/init-data-node';
 
 export async function POST(request: NextRequest) {
@@ -21,7 +21,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid Telegram authentication' }, { status: 401 });
     }
 
-    const supabase = await createClient();
+    const tgUser = new URLSearchParams(initData).get('user');
+    const tgChatId = tgUser ? String(JSON.parse(tgUser).id) : null;
+    if (!tgChatId) {
+      return NextResponse.json({ error: 'Could not identify user' }, { status: 400 });
+    }
+
+    const supabase = createServiceClient();
 
     const { data: lead, error } = await supabase
       .from('leads')
@@ -30,8 +36,7 @@ export async function POST(request: NextRequest) {
         source: 'telegram',
         total_amount_cents: leadData.totalAmountCents || 0,
         customer_data: leadData.customerData || {},
-        tg_chat_id: leadData.tgChatId || null,
-        order_items: leadData.orderItems || [],
+        tg_chat_id: tgChatId,
       })
       .select()
       .single();
@@ -39,6 +44,25 @@ export async function POST(request: NextRequest) {
     if (error) {
       console.error('Lead creation error:', error);
       return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    const orderItems = Array.isArray(leadData.orderItems) ? leadData.orderItems : [];
+    if (orderItems.length > 0) {
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .insert(orderItems.map((item: Record<string, unknown>) => ({
+          lead_id: lead.id,
+          product_id: item.product_id,
+          size: String(item.size ?? ''),
+          color: String(item.color ?? ''),
+          quantity: Number(item.quantity),
+          unit_price_cents: Number(item.unit_price_cents),
+        })));
+      if (itemsError) {
+        console.error('Order items insert error:', itemsError);
+        await supabase.from('leads').delete().eq('id', lead.id);
+        return NextResponse.json({ error: itemsError.message }, { status: 500 });
+      }
     }
 
     return NextResponse.json({ lead });

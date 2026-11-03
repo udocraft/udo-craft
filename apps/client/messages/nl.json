@@ -18,7 +18,31 @@
     "mainNav": "Hoofdnavigatie",
     "logoLink": "U:DO CRAFT — terug naar home"
   },
+  "homeStats": {
+    "stat3Suffix": " dagen",
+    "stat1Label": "Tevreden klanten",
+    "stat2Label": "Korting vanaf 100 stuks",
+    "stat3Label": "Gemiddelde levertijd",
+    "stat4Label": "Kwaliteitscontrole"
+  },
+  "popupSection": {
+    "stepDepart": "Aankomst",
+    "stepCustomize": "Personalisatie",
+    "stepReady": "Klaar",
+    "statEvents": "evenementen",
+    "statGuests": "gasten",
+    "statPerItem": "per item",
+    "minutes": "5 min"
+  },
+  "homeContact": {
+    "heading": "Neem contact op",
+    "subtext": "Vertel ons over je project — we sturen binnen 24 uur een voorstel.",
+    "address": "Lviv, Dzherelna 69"
+  },
   "hero": {
+    "heading": "Kleding die deel wordt van het DNA van uw bedrijf",
+    "subheading": "Wij maken kleding die mensen graag dragen.",
+    "ctaPrimary": "Bekijk de catalogus",
     "skipToCatalog": "Naar catalogus",
     "watchVideo": "Video bekijken",
     "closeVideo": "Video sluiten",
@@ -27,6 +51,7 @@
     "contactCta": "Contacts"
   },
   "socialProof": {
+    "ariaLabel": "Klanten",
     "trustedBy": "Vertrouwd door teams wereldwijd"
   },
   "about": {
@@ -90,6 +115,7 @@
     "nextPage": "Volgende",
     "page": "Pagina {n}",
     "fromPrice": "from ₴{price}",
+    "priceOnRequest": "Prijs op aanvraag",
     "expand": "Expand",
     "collapse": "Collapse",
     "addPrint": "Add print",
@@ -232,6 +258,9 @@
     "cta": "Discuss project"
   },
   "customizer": {
+    "discount": "Korting",
+    "mm": "mm",
+    "embroidery": "Borduren",
     "label": "Online constructor",
     "heading": "Build your merch right in the interface",
     "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
@@ -249,6 +278,7 @@
     "sizeLabel": "Size"
   },
   "trust": {
+    "statsLabel": "Kerncijfers",
     "heading": "Why they trust us",
     "subtext": "Not just words — specific guarantees we uphold every day.",
     "guarantees": {
@@ -271,6 +301,14 @@
     }
   },
   "comparison": {
+    "values": {
+      "min500": "500+ st.",
+      "minFrom10": "vanaf 10 st.",
+      "min100": "100+ st.",
+      "days30": "30+ dagen",
+      "days7to14": "7–14 dagen",
+      "days14to21": "14–21 dagen"
+    },
     "heading": "U:DO vs the rest of the market",
     "subtext": "Compare the conditions — and understand why 500+ teams choose us.",
     "featureLabel": "Feature",
@@ -373,6 +411,8 @@
     "address": "Address"
   },
   "footer": {
+    "tagline": "B2B-merchplatform voor teams, merken en evenementen.",
+    "copyright": "U:DO CRAFT. Alle rechten voorbehouden.",
     "readyToStart": "Klaar om te beginnen?",
     "readyDesc": "Vanaf 10 stuks · 7–14 dagen · Levering",
     "startProject": "Project starten",
@@ -448,6 +488,9 @@
     "nextStep": "Next"
   },
   "checkout": {
+    "currency": "UAH",
+    "mockupAlt": "Mockup",
+    "removeItem": "Product verwijderen",
     "title": "Winkelwagen",
     "orderTitle": "Bestelling plaatsen",
     "stepCart": "Winkelwagen",
@@ -472,7 +515,7 @@
       "fullNamePlaceholder": "Jan de Vries",
       "email": "E-mail *",
       "emailPlaceholder": "hr@bedrijf.nl",
-      "phone": "Telefoon",
+      "phone": "Telefoon *",
       "phonePlaceholder": "+31 XX XXX XXXX",
       "social": "Telegram / Instagram",
       "socialPlaceholder": "@gebruikersnaam of link"
@@ -754,6 +797,8 @@
     "loadError": "Catalogus kon niet worden geladen. Ververs de pagina."
   },
   "leadMagnet": {
+    "orEditor": "Of {link} meteen",
+    "editorLink": "probeer de editor",
     "badge": "Gratis",
     "heading": "Ontvang een gratis mockup van je merch",
     "desc": "Upload je logo — wij plaatsen het op een echt product en sturen de mockup naar je e-mail.",

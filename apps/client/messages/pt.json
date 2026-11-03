@@ -18,7 +18,31 @@
     "mainNav": "Navegação principal",
     "logoLink": "U:DO CRAFT — voltar ao início"
   },
+  "homeStats": {
+    "stat3Suffix": " dias",
+    "stat1Label": "Clientes satisfeitos",
+    "stat2Label": "Desconto a partir de 100 un.",
+    "stat3Label": "Prazo médio",
+    "stat4Label": "Controlo de qualidade"
+  },
+  "popupSection": {
+    "stepDepart": "Deslocação",
+    "stepCustomize": "Personalização",
+    "stepReady": "Pronto",
+    "statEvents": "eventos",
+    "statGuests": "convidados",
+    "statPerItem": "por item",
+    "minutes": "5 min"
+  },
+  "homeContact": {
+    "heading": "Entre em contato",
+    "subtext": "Conte-nos sobre o seu projeto — enviaremos uma proposta em 24 horas.",
+    "address": "Lviv, rua Dzherelna 69"
+  },
   "hero": {
+    "heading": "Roupas que se tornam parte do DNA da sua empresa",
+    "subheading": "Criamos peças que as pessoas adoram vestir.",
+    "ctaPrimary": "Ver catálogo",
     "skipToCatalog": "Ir ao catálogo",
     "watchVideo": "Ver vídeo",
     "closeVideo": "Fechar vídeo",
@@ -27,6 +51,7 @@
     "contactCta": "Contacts"
   },
   "socialProof": {
+    "ariaLabel": "Clientes",
     "trustedBy": "A confiança de equipas em todo o mundo"
   },
   "about": {
@@ -90,6 +115,7 @@
     "nextPage": "Seguinte",
     "page": "Página {n}",
     "fromPrice": "from ₴{price}",
+    "priceOnRequest": "Preço sob consulta",
     "expand": "Expand",
     "collapse": "Collapse",
     "addPrint": "Add print",
@@ -232,6 +258,9 @@
     "cta": "Discuss project"
   },
   "customizer": {
+    "discount": "Desconto",
+    "mm": "mm",
+    "embroidery": "Bordado",
     "label": "Online constructor",
     "heading": "Build your merch right in the interface",
     "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
@@ -249,6 +278,7 @@
     "sizeLabel": "Size"
   },
   "trust": {
+    "statsLabel": "Números-chave",
     "heading": "Why they trust us",
     "subtext": "Not just words — specific guarantees we uphold every day.",
     "guarantees": {
@@ -271,6 +301,14 @@
     }
   },
   "comparison": {
+    "values": {
+      "min500": "500+ un.",
+      "minFrom10": "a partir de 10 un.",
+      "min100": "100+ un.",
+      "days30": "30+ dias",
+      "days7to14": "7–14 dias",
+      "days14to21": "14–21 dias"
+    },
     "heading": "U:DO vs the rest of the market",
     "subtext": "Compare the conditions — and understand why 500+ teams choose us.",
     "featureLabel": "Feature",
@@ -373,6 +411,8 @@
     "address": "Address"
   },
   "footer": {
+    "tagline": "Plataforma B2B de merch para equipas, marcas e eventos.",
+    "copyright": "U:DO CRAFT. Todos os direitos reservados.",
     "readyToStart": "Pronto para começar?",
     "readyDesc": "A partir de 10 unidades · 7–14 dias · Entrega",
     "startProject": "Iniciar projeto",
@@ -448,6 +488,9 @@
     "nextStep": "Next"
   },
   "checkout": {
+    "currency": "UAH",
+    "mockupAlt": "Maquete",
+    "removeItem": "Remover item",
     "title": "Carrinho",
     "orderTitle": "Realizar encomenda",
     "stepCart": "Carrinho",
@@ -472,7 +515,7 @@
       "fullNamePlaceholder": "João Silva",
       "email": "E-mail *",
       "emailPlaceholder": "rh@empresa.pt",
-      "phone": "Telefone",
+      "phone": "Telefone *",
       "phonePlaceholder": "+351 XXX XXX XXX",
       "social": "Telegram / Instagram",
       "socialPlaceholder": "@utilizador ou link"
@@ -754,6 +797,8 @@
     "loadError": "Não foi possível carregar o catálogo. Atualiza a página."
   },
   "leadMagnet": {
+    "orEditor": "Ou {link} agora mesmo",
+    "editorLink": "experimente o editor",
     "badge": "Grátis",
     "heading": "Obtém um mockup gratuito do teu merch",
     "desc": "Carrega o logótipo — aplicamo-lo num produto real e enviamos o mockup para o teu e-mail.",

@@ -1,13 +1,34 @@
 import { createServiceClient } from "@/lib/supabase/service";
 import { HomeClient } from "@/app/_components/HomeClient";
-import { pageAlternates } from "@/lib/seo";
+import { getTranslations } from "next-intl/server";
+import { pageAlternates, SITE_URL } from "@/lib/seo";
+
+const FAQ_KEYS = ["0", "1", "2", "3", "4", "5"] as const;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  return { alternates: pageAlternates(locale, "") };
+  const t = await getTranslations({ locale, namespace: "meta" });
+  const alternates = pageAlternates(locale, "");
+  return {
+    title: t("title"),
+    description: t("description"),
+    alternates,
+    openGraph: {
+      title: t("title"),
+      description: t("description"),
+      url: alternates.canonical as string,
+      siteName: "U:DO CRAFT",
+      locale,
+      type: "website",
+      images: [{ url: "/logo.png", alt: "U:DO CRAFT" }],
+    },
+  };
 }
 
-export default async function LocaleHomePage() {
+export default async function LocaleHomePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const tFaq = await getTranslations({ locale, namespace: "faq" });
+  const tMeta = await getTranslations({ locale, namespace: "meta" });
   try {
     const service = createServiceClient();
 
@@ -24,14 +45,57 @@ export default async function LocaleHomePage() {
       return acc;
     }, {} as Record<string, any>);
 
+    const faqItems: { question: string; answer: string }[] =
+      cmsData.home_faq?.items ??
+      FAQ_KEYS.map((key) => ({
+        question: tFaq(`items.${key}.question`),
+        answer: tFaq(`items.${key}.answer`),
+      }));
+    const jsonLd = [
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        name: "U:DO CRAFT",
+        url: SITE_URL,
+        logo: `${SITE_URL}/logo.png`,
+        description: tMeta("description"),
+        sameAs: [
+          cmsData.home_contact?.instagram ?? "https://www.instagram.com/u.do.craft/",
+          cmsData.home_contact?.telegram ?? "https://t.me/udostore",
+        ],
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "U:DO CRAFT",
+        url: SITE_URL,
+        inLanguage: locale,
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqItems.map((i) => ({
+          "@type": "Question",
+          name: i.question,
+          acceptedAnswer: { "@type": "Answer", text: i.answer },
+        })),
+      },
+    ];
+
     return (
-      <HomeClient
-        products={prodRes.data || []}
-        categories={catRes.data || []}
-        materials={matRes.data || []}
-        colorVariants={varRes.data || []}
-        cmsData={cmsData}
-      />
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+        />
+        <HomeClient
+          products={prodRes.data || []}
+          categories={catRes.data || []}
+          materials={matRes.data || []}
+          colorVariants={varRes.data || []}
+          cmsData={cmsData}
+        />
+      </>
     );
   } catch (err: any) {
     if (err?.digest === 'DYNAMIC_SERVER_USAGE' || err?.message?.includes('DYNAMIC_SERVER_USAGE')) {

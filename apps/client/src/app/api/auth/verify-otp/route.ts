@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { findUserByEmail } from "@/lib/supabase/users";
-import { checkOtp, type OtpState } from "@/lib/auth/otp";
+import { checkOtp, emailLimitKey, type OtpState } from "@/lib/auth/otp";
+import { consumeLimit } from "@/lib/rate-limit";
 
 // POST /api/auth/verify-otp
 // Verifies the reset code (hashed, expiring, attempt-limited, single use),
@@ -13,6 +14,10 @@ export async function POST(req: NextRequest) {
   }
   if (newPassword.length < 8) {
     return NextResponse.json({ error: "Пароль має містити щонайменше 8 символів" }, { status: 400 });
+  }
+
+  if (!(await consumeLimit(`otp-verify:${emailLimitKey(email)}`, 5, 900))) {
+    return NextResponse.json({ error: "Забагато спроб. Запросіть новий код." }, { status: 429 });
   }
 
   const service = createServiceClient();

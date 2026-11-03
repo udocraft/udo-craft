@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { findUserByEmail } from "@/lib/supabase/users";
 import { sendResetPasswordEmail } from "@/lib/email/send";
-import { generateOtp, hashOtp, OTP_TTL_MS } from "@/lib/auth/otp";
+import { emailLimitKey, generateOtp, hashOtp, OTP_TTL_MS } from "@/lib/auth/otp";
+import { consumeLimit } from "@/lib/rate-limit";
 
 // POST /api/auth/send-otp
 // Issues a 6-digit reset code. Only a keyed hash is stored, with expiry and an
@@ -10,6 +11,10 @@ import { generateOtp, hashOtp, OTP_TTL_MS } from "@/lib/auth/otp";
 export async function POST(req: NextRequest) {
   const { email } = await req.json();
   if (!email) return NextResponse.json({ error: "Email required" }, { status: 400 });
+
+  if (!(await consumeLimit(`otp-send:${emailLimitKey(email)}`, 3, 900))) {
+    return NextResponse.json({ error: "Забагато запитів. Спробуйте пізніше." }, { status: 429 });
+  }
 
   const service = createServiceClient();
 

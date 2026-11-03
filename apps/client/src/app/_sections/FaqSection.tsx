@@ -89,12 +89,12 @@ export function FaqSection() {
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="lg:sticky lg:top-24 self-start"
           >
-            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-primary mb-4">FAQ</p>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-primary mb-4">FAQ</p>
             <h2 id="faq-heading" className="text-3xl sm:text-4xl font-black tracking-tight leading-tight mb-4">
               {heading}
             </h2>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              {t("noAnswer")} <Link href="#contact" className="text-primary font-medium hover:underline hover:text-primary/80 transition-colors">{t("contactUs")}</Link>{t("replyTime")}
+              {t("noAnswer")} <Link href="#contact" className="hit-44 text-primary font-medium hover:underline hover:text-primary/80 transition-colors">{t("contactUs")}</Link>{t("replyTime")}
             </p>
           </motion.div>
 

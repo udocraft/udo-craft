@@ -20,7 +20,6 @@ export function FooterSection({ tagline, copyright, instagram, telegram }: Foote
       links: [
         { href: "/order",    label: t("columns.products.links.constructor") },
         { href: "#catalog",  label: t("columns.products.links.catalog") },
-        { href: "/popup",    label: t("columns.products.links.popup") },
         { href: "#contact",  label: t("columns.products.links.box") },
         { href: "#contact",  label: t("columns.products.links.designer") },
       ],
@@ -67,7 +66,7 @@ export function FooterSection({ tagline, copyright, instagram, telegram }: Foote
 
             {/* Brand */}
             <div className="col-span-2 md:col-span-1 flex flex-col gap-5">
-              <Link href="/" aria-label={t("homeLink")}>
+              <Link href="/" aria-label={t("homeLink")} className="inline-flex min-h-11 items-center">
                 <BrandLogoFull className="h-10 w-auto" color="white" />
               </Link>
               <p className="text-white/35 text-xs leading-relaxed max-w-[200px]">{tagline}</p>
@@ -80,7 +79,7 @@ export function FooterSection({ tagline, copyright, instagram, telegram }: Foote
                   return (
                     <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
                       aria-label={s.label}
-                      className="w-8 h-8 rounded-full bg-white/5 border border-white/8 flex items-center justify-center text-white/30 hover:text-white hover:bg-white/10 hover:border-white/15 transition-all duration-200">
+                      className="hit-44 w-8 h-8 rounded-full bg-white/5 border border-white/8 flex items-center justify-center text-white/30 hover:text-white hover:bg-white/10 hover:border-white/15 transition-all duration-200">
                       <Icon className="w-3.5 h-3.5" aria-hidden="true" />
                     </a>
                   );
@@ -95,7 +94,7 @@ export function FooterSection({ tagline, copyright, instagram, telegram }: Foote
                 <nav className="flex flex-col gap-2.5" aria-label={col.title}>
                   {col.links.map((l) => (
                     <Link key={l.label} href={l.href}
-                      className="text-xs text-white/30 hover:text-white/60 transition-colors duration-200 w-fit">
+                      className="text-xs text-white/30 hover:text-white/60 transition-colors duration-200 w-fit py-3.5">
                       {l.label}
                     </Link>
                   ))}
@@ -109,19 +108,19 @@ export function FooterSection({ tagline, copyright, instagram, telegram }: Foote
       {/* Bottom bar */}
       <div className="border-t border-white/5">
         <div className="max-w-6xl mx-auto px-5 sm:px-10 lg:px-20 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-[11px] text-white/20">© {new Date().getFullYear()} {copyright}</p>
+          <p className="text-xs text-white/55">© {new Date().getFullYear()} {copyright}</p>
           <div className="flex gap-5">
             {[
               { href: "/privacy", label: tc("privacy") },
               { href: "/terms", label: tc("terms") },
             ].map((l) => (
               <Link key={l.label} href={l.href}
-                className="text-[11px] text-white/20 hover:text-white/45 transition-colors duration-200">
+                className="inline-block py-3.5 text-xs text-white/55 hover:text-white/80 transition-colors duration-200">
                 {l.label}
               </Link>
             ))}
             <button type="button" onClick={resetConsent}
-              className="text-[11px] text-white/20 hover:text-white/45 transition-colors duration-200">
+              className="inline-block py-3.5 text-xs text-white/55 hover:text-white/80 transition-colors duration-200">
               {tc("cookieSettings")}
             </button>
           </div>

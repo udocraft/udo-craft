@@ -7,13 +7,12 @@ import { useRouter } from "next/navigation";
 import { useTelegram } from "@/hooks/use-telegram";
 import { useCart } from "@/hooks/use-cart";
 import { SiteHeader } from "@/components/site-header";
-import { LoadingScreen } from "@/components/loading-screen";
 import { Trash2, Minus, Plus, ShoppingBag } from "lucide-react";
 
 export default function CartPage() {
   const router = useRouter();
   const { tg, initDataRaw, haptic, showBackButton } = useTelegram();
-  const { items, loaded, updateQuantity, removeItem, clearCart, totalCents, totalItems } = useCart();
+  const { items, updateQuantity, removeItem, clearCart, totalCents, totalItems } = useCart();
   const [submitting, setSubmitting] = useState(false);
   const submitted = useRef(false);
 
@@ -74,7 +73,7 @@ export default function CartPage() {
   }, [tg, initDataRaw, items, totalCents, clearCart, haptic, router]);
 
   useEffect(() => {
-    if (!loaded || items.length === 0 || !tg) return;
+    if (items.length === 0 || !tg) return;
     tg.MainButton.setParams({
       text: submitting ? 'Відправлення...' : `Оформити — ₴${(totalCents / 100).toFixed(0)}`,
       is_active: !submitting,
@@ -85,9 +84,8 @@ export default function CartPage() {
       tg.MainButton.offClick(handleSubmit);
       tg.MainButton.hide();
     };
-  }, [loaded, items.length, totalCents, submitting, tg, handleSubmit]);
+  }, [items.length, totalCents, submitting, tg, handleSubmit]);
 
-  if (!loaded) return <LoadingScreen />;
 
   const fmtPrice = (cents: number) => `₴${(cents / 100).toFixed(0)}`;
 

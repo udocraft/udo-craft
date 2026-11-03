@@ -169,7 +169,7 @@ export function HeroSection({
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.4, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           className="text-white/70 text-base sm:text-lg max-w-2xl mb-10 leading-relaxed"
         >
           {subheading}
@@ -179,7 +179,7 @@ export function HeroSection({
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 1.1, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.3, delay: 0, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-center gap-4 w-full sm:w-auto"
         >
           <a

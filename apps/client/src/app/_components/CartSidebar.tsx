@@ -72,7 +72,7 @@ export function CartSidebar({ open, onClose, cart, cartCount, totalCents }: Cart
                       <p className="text-xs font-semibold text-foreground truncate">
                         {item.productName}
                       </p>
-                      <p className="text-[10px] text-muted-foreground mt-0.5">
+                      <p className="text-xs text-muted-foreground mt-0.5">
                         {t("quantity", { qty: item.quantity, size: item.size })}
                       </p>
                       <p className="text-xs font-bold text-primary mt-0.5">

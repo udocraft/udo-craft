@@ -44,6 +44,7 @@ export function CategoryDialog({ category, open, onClose, onSaved }: CategoryDia
 
   const [form, setForm] = useState({
     name: category?.name ?? "",
+    name_en: category?.name_en ?? "",
     slug: category?.slug ?? "",
     sort_order: category?.sort_order ?? 0,
     is_active: category?.is_active ?? true,
@@ -128,6 +129,17 @@ export function CategoryDialog({ category, open, onClose, onSaved }: CategoryDia
               value={form.name}
               onChange={e => handleNameChange(e.target.value)}
               placeholder="Футболка"
+            />
+          </div>
+
+          {/* English name — shown on the English site; empty falls back to the Ukrainian name */}
+          <div className="space-y-1.5">
+            <Label htmlFor="cat-name-en">Назва (англійською)</Label>
+            <Input
+              id="cat-name-en"
+              value={form.name_en}
+              onChange={e => setForm(f => ({ ...f, name_en: e.target.value }))}
+              placeholder="T-shirts"
             />
           </div>
 

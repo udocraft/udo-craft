@@ -12,7 +12,6 @@ import { AuthModal } from "@/components/AuthModal";
 
 const NAV_LINKS = [
   { href: "/#catalog", label: "Каталог" },
-  { href: "/popup",        label: "Popup" },
   { href: "/#how",         label: "Як це працює" },
   { href: "/#contact",     label: "Контакти" },
 ];
@@ -96,21 +95,21 @@ export function SiteHeader() {
           <div className="flex items-center gap-0.5">
             {isLoggedIn ? (
               <Link href="/cabinet" aria-label="Кабінет"
-                className="flex items-center justify-center w-8 h-8 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                className="flex items-center justify-center w-11 h-11 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 <motion.div whileHover={{ y: -1.5 }} transition={{ duration: 0.2 }}>
                   <User className="w-4 h-4" strokeWidth={2} />
                 </motion.div>
               </Link>
             ) : (
               <button onClick={() => setAuthModalOpen(true)} aria-label="Увійти"
-                className="flex items-center justify-center w-8 h-8 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                className="flex items-center justify-center w-11 h-11 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 <motion.div whileHover={{ y: -1.5 }} transition={{ duration: 0.2 }}>
                   <User className="w-4 h-4" strokeWidth={2} />
                 </motion.div>
               </button>
             )}
             <button onClick={() => setCartOpen(true)} aria-label="Кошик"
-              className="relative flex items-center justify-center w-8 h-8 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              className="relative flex items-center justify-center w-11 h-11 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
               <motion.div whileHover={{ y: 1.5, scale: 1.1 }} transition={{ duration: 0.2 }}>
                 <ShoppingBag className="w-4 h-4" strokeWidth={2} />
               </motion.div>
@@ -129,7 +128,7 @@ export function SiteHeader() {
             <button onClick={() => setMenuOpen(!menuOpen)}
               aria-label={menuOpen ? "Закрити меню" : "Відкрити меню"}
               aria-expanded={menuOpen}
-              className="md:hidden flex items-center justify-center w-9 h-9 rounded-full hover:bg-muted transition-colors duration-200 ml-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              className="md:hidden flex items-center justify-center w-11 h-11 rounded-full hover:bg-muted transition-colors duration-200 ml-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
               {menuOpen ? <X className="w-5 h-5" strokeWidth={2} /> : <Menu className="w-5 h-5" strokeWidth={2} />}
             </button>
           </div>
@@ -183,7 +182,7 @@ export function SiteHeader() {
               className="relative bg-background w-80 max-w-full h-full flex flex-col shadow-2xl" role="dialog" aria-modal="true" aria-label="Кошик">
               <div className="flex items-center justify-between px-4 py-3 border-b border-border">
                 <span className="font-semibold text-sm">Кошик {cartCount > 0 ? `(${cartCount})` : ""}</span>
-                <button onClick={() => setCartOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                <button onClick={() => setCartOpen(false)} className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                   <X className="w-4 h-4" strokeWidth={2} />
                 </button>
               </div>

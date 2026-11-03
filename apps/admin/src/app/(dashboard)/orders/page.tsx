@@ -32,7 +32,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { DashboardPage } from "@/components/dashboard-page";
-import { AdminToolbar, AdminFilter, AdminEmptyState } from "@/components/admin-layout";
+import { AdminToolbar, AdminSearch, AdminFilter, AdminEmptyState } from "@/components/admin-layout";
 import { KanbanColumn } from "./_components/KanbanColumn";
 import { OrderQuickSheet } from "./_components/OrderQuickSheet";
 import { useKanbanDrag, type Lead } from "./_components/useKanbanDrag";
@@ -200,7 +200,8 @@ function OrdersBoard() {
     } catch (err) {
       setLeads((p) => p.map((l) => (l.id === lead.id ? lead : l)));
       setSelectedLead((c) => c?.id === lead.id ? lead : c);
-      toast.error(`Помилка: ${err instanceof Error ? err.message : "невідома"}`);
+      console.error("[orders] update lead status failed", err);
+      toast.error("Не вдалося оновити статус. Зміну скасовано, спробуйте ще раз.");
     }
   }, []);
 
@@ -333,8 +334,7 @@ function OrdersBoard() {
       <AdminToolbar>
         {/* Title + view-mode toggle */}
         <div className="flex h-full items-center gap-4">
-          <h1 className="text-base font-semibold text-foreground leading-none">Замовлення</h1>
-          <div className="flex items-center gap-0.5 border-l border-border/60 pl-4">
+          <div className="flex items-center gap-0.5">
             <ViewModeButton
               active={viewMode === "kanban"}
               icon={Columns3}
@@ -351,15 +351,7 @@ function OrdersBoard() {
         </div>
 
         {/* Search */}
-        <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            className="pl-8 bg-background border-none shadow-none focus-visible:ring-1 focus-visible:ring-primary/20"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Швидкий пошук..."
-          />
-        </div>
+        <AdminSearch value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Швидкий пошук..." />
 
         {/* Filters */}
         <div className="flex items-center gap-1.5">

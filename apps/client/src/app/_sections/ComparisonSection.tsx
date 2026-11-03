@@ -33,9 +33,9 @@ function Cell({ value, highlight }: CellProps) {
 }
 
 const COLUMN_VALUES: CellValue[][] = [
-  ["500+ шт", "cross", "cross", "cross", "cross", "30+ днів", "partial", "cross", "partial", "cross"],
-  ["від 10 шт", "check", "check", "check", "check", "7–14 днів", "check", "check", "check", "check"],
-  ["100+ шт", "cross", "partial", "cross", "partial", "14–21 днів", "partial", "cross", "partial", "cross"],
+  ["values.min500", "cross", "cross", "cross", "cross", "values.days30", "partial", "cross", "partial", "cross"],
+  ["values.minFrom10", "check", "check", "check", "check", "values.days7to14", "check", "check", "check", "check"],
+  ["values.min100", "cross", "partial", "cross", "partial", "values.days14to21", "partial", "cross", "partial", "cross"],
 ];
 
 // ── Section ───────────────────────────────────────────────────────────────
@@ -62,7 +62,7 @@ export function ComparisonSection() {
 
   const COLUMNS = COLUMN_NAMES.map((name, index) => ({
     name,
-    values: COLUMN_VALUES[index],
+    values: COLUMN_VALUES[index].map((v) => (v.startsWith("values.") ? t(v) : v)),
     highlight: index === 1,
   }));
 
@@ -126,7 +126,7 @@ export function ComparisonSection() {
                       <div key={feature.name} className={`flex justify-between items-center py-4 border-b ${col.highlight ? 'border-white/10' : 'border-border/60'} last:border-0`}>
                         <div className="flex flex-col pr-4">
                           <span className={`text-sm font-bold ${col.highlight ? 'text-white' : 'text-foreground'}`}>{feature.name}</span>
-                          <span className={`text-[11px] leading-tight mt-1 ${col.highlight ? 'text-white/60' : 'text-muted-foreground'}`}>{feature.desc}</span>
+                          <span className={`text-xs leading-tight mt-1 ${col.highlight ? 'text-white/60' : 'text-muted-foreground'}`}>{feature.desc}</span>
                         </div>
                         <div className="shrink-0 flex items-center justify-end min-w-[70px]">
                           <Cell value={col.values[fi]} highlight={col.highlight} />
@@ -149,7 +149,7 @@ export function ComparisonSection() {
               onClick={() => emblaApi?.scrollTo(index)}
               aria-label={t("goTo", { name: COLUMNS[index].name })}
               aria-selected={index === selectedIndex}
-              className="flex size-6 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              className="hit-44 flex size-6 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             >
               {/* 24px hit area (WCAG 2.2 target size); the pill is the visual */}
               <span
@@ -194,7 +194,7 @@ export function ComparisonSection() {
                     }`}
                   >
                     {col.highlight && (
-                      <span className="block text-[10px] uppercase tracking-widest font-bold opacity-80 mb-2">
+                      <span className="block text-xs uppercase tracking-widest font-bold opacity-80 mb-2">
                         {t("yourChoice")}
                       </span>
                     )}

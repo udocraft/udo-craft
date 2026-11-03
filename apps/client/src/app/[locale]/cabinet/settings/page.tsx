@@ -97,7 +97,8 @@ export default function SettingsPage() {
       if (error) throw error;
       toast.success("Профіль оновлено");
     } catch (error) {
-      toast.error(`Помилка: ${error instanceof Error ? error.message : "невідома"}`);
+      console.error("[cabinet/settings] save profile failed", error);
+      toast.error("Не вдалося зберегти профіль. Перевірте з'єднання і спробуйте ще раз.");
     } finally {
       setSaving(false);
     }
@@ -151,7 +152,8 @@ export default function SettingsPage() {
       setConfirmPassword("");
       toast.success("Пароль змінено");
     } catch (error) {
-      setPasswordError(`Помилка: ${error instanceof Error ? error.message : "невідома"}`);
+      console.error("[cabinet/settings] change password failed", error);
+      setPasswordError("Не вдалося змінити пароль. Перевірте з'єднання і спробуйте ще раз.");
     } finally {
       setChangingPassword(false);
     }

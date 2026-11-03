@@ -18,7 +18,31 @@
     "mainNav": "Hlavní navigace",
     "logoLink": "U:DO CRAFT — zpět na úvod"
   },
+  "homeStats": {
+    "stat3Suffix": " dní",
+    "stat1Label": "Spokojených klientů",
+    "stat2Label": "Sleva od 100 ks",
+    "stat3Label": "Průměrná doba výroby",
+    "stat4Label": "Kontrola kvality"
+  },
+  "popupSection": {
+    "stepDepart": "Výjezd",
+    "stepCustomize": "Úprava",
+    "stepReady": "Hotovo",
+    "statEvents": "akcí",
+    "statGuests": "hostů",
+    "statPerItem": "na kus",
+    "minutes": "5 min"
+  },
+  "homeContact": {
+    "heading": "Kontaktujte nás",
+    "subtext": "Řekněte nám o svém projektu — nabídku pošleme do 24 hodin.",
+    "address": "Lvov, Dzherelna 69"
+  },
   "hero": {
+    "heading": "Oblečení, které se stane součástí DNA vaší firmy",
+    "subheading": "Vytváříme věci, které lidé rádi nosí.",
+    "ctaPrimary": "Prohlédnout katalog",
     "skipToCatalog": "Do katalogu",
     "watchVideo": "Přehrát video",
     "closeVideo": "Zavřít video",
@@ -27,6 +51,7 @@
     "contactCta": "Contacts"
   },
   "socialProof": {
+    "ariaLabel": "Klienti",
     "trustedBy": "Důvěra týmů po celém světě"
   },
   "about": {
@@ -90,6 +115,7 @@
     "nextPage": "Další",
     "page": "Strana {n}",
     "fromPrice": "from ₴{price}",
+    "priceOnRequest": "Cena na vyžádání",
     "expand": "Expand",
     "collapse": "Collapse",
     "addPrint": "Add print",
@@ -232,6 +258,9 @@
     "cta": "Discuss project"
   },
   "customizer": {
+    "discount": "Sleva",
+    "mm": "mm",
+    "embroidery": "Výšivka",
     "label": "Online constructor",
     "heading": "Build your merch right in the interface",
     "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
@@ -249,6 +278,7 @@
     "sizeLabel": "Size"
   },
   "trust": {
+    "statsLabel": "Klíčová čísla",
     "heading": "Why they trust us",
     "subtext": "Not just words — specific guarantees we uphold every day.",
     "guarantees": {
@@ -271,6 +301,14 @@
     }
   },
   "comparison": {
+    "values": {
+      "min500": "500+ ks",
+      "minFrom10": "od 10 ks",
+      "min100": "100+ ks",
+      "days30": "30+ dní",
+      "days7to14": "7–14 dní",
+      "days14to21": "14–21 dní"
+    },
     "heading": "U:DO vs the rest of the market",
     "subtext": "Compare the conditions — and understand why 500+ teams choose us.",
     "featureLabel": "Feature",
@@ -373,6 +411,8 @@
     "address": "Address"
   },
   "footer": {
+    "tagline": "B2B platforma merche pro týmy, značky a akce.",
+    "copyright": "U:DO CRAFT. Všechna práva vyhrazena.",
     "readyToStart": "Připraven začít?",
     "readyDesc": "Od 10 kusů · 7–14 dní · Doprava",
     "startProject": "Spustit projekt",
@@ -448,6 +488,9 @@
     "nextStep": "Next"
   },
   "checkout": {
+    "currency": "UAH",
+    "mockupAlt": "Náhled návrhu",
+    "removeItem": "Odebrat položku",
     "title": "Košík",
     "orderTitle": "Zadat objednávku",
     "stepCart": "Košík",
@@ -472,7 +515,7 @@
       "fullNamePlaceholder": "Jan Novák",
       "email": "E-mail *",
       "emailPlaceholder": "hr@firma.cz",
-      "phone": "Telefon",
+      "phone": "Telefon *",
       "phonePlaceholder": "+420 XXX XXX XXX",
       "social": "Telegram / Instagram",
       "socialPlaceholder": "@uživatel nebo odkaz"
@@ -754,6 +797,8 @@
     "loadError": "Katalog se nepodařilo načíst. Obnovte stránku."
   },
   "leadMagnet": {
+    "orEditor": "Nebo rovnou {link}",
+    "editorLink": "vyzkoušejte editor",
     "badge": "Zdarma",
     "heading": "Získej zdarma mockup svého merche",
     "desc": "Nahraj logo — aplikujeme ho na skutečný produkt a pošleme mockup na tvůj e-mail.",

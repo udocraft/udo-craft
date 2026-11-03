@@ -21,7 +21,6 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
   const t = useTranslations("nav");
   const navLinks = [
     { href: "/#catalog", label: t("catalog") },
-    { href: "/popup", label: t("popup") },
     { href: "/#about", label: t("about") },
     { href: "/#how", label: t("how") },
     { href: "/#contact", label: t("contacts") },
@@ -90,7 +89,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
         } md:h-12 h-14 md:px-3 px-4`}
       >
         {/* Logo — always using BrandLogoFull (SVG) */}
-        <Link href="/" aria-label={t("logoLink")} className="shrink-0 pl-1 pr-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg">
+        <Link href="/" aria-label={t("logoLink")} className="inline-flex min-h-11 shrink-0 items-center pl-1 pr-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg">
           <BrandLogoFull className="h-8 w-auto" color="var(--color-primary)" />
         </Link>
 
@@ -101,7 +100,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
             <Link
               key={l.href}
               href={l.href}
-              className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+              className={`inline-flex min-h-11 items-center px-4 text-sm font-medium rounded-full transition-all duration-200 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                 isLight
                   ? "text-muted-foreground hover:text-foreground hover:bg-muted"
                   : "text-white/60 hover:text-white hover:bg-white/10"
@@ -144,7 +143,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
 
           <button
             onClick={() => { sound.open(); onCartOpen(); }}
-            aria-label={`Кошик — ${cartCount} товарів`}
+            aria-label={t("cartItems", { count: cartCount })}
             className={`relative flex items-center justify-center w-11 h-11 rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               isLight
                 ? "text-muted-foreground hover:text-foreground hover:bg-muted"
@@ -167,7 +166,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
           {/* CTA — always visible */}
           <Link
             href="/order"
-            className={`hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-5 py-2.5 rounded-full active:scale-95 transition-all duration-200 whitespace-nowrap ml-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+            className={`hidden sm:inline-flex items-center gap-1.5 min-h-11 text-xs font-semibold px-5 py-2.5 rounded-full active:scale-95 transition-all duration-200 whitespace-nowrap ml-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               scrolled
                 ? "bg-primary text-white hover:bg-primary/90"
                 : "border border-primary text-primary hover:bg-primary hover:text-white"
@@ -208,7 +207,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
                   key={l.href}
                   href={l.href}
                   onClick={() => setMenuOpen(false)}
-                  className="block px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-xl transition-colors duration-200"
+                  className="flex min-h-11 items-center px-4 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-xl transition-colors duration-200"
                 >
                   {l.label}
                 </Link>
@@ -216,7 +215,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
               <Link
                 href="/order"
                 onClick={() => setMenuOpen(false)}
-                className="block mt-1 text-center bg-primary text-white text-sm font-semibold px-4 py-2.5 rounded-full hover:bg-primary/90 transition-colors duration-200"
+                className="flex min-h-11 items-center justify-center mt-1 text-center bg-primary text-white text-sm font-semibold px-4 py-2.5 rounded-full hover:bg-primary/90 transition-colors duration-200"
               >
                 {t("startProject")}
               </Link>

@@ -18,13 +18,14 @@ import {
 import { useTranslations } from "next-intl";
 
 const LAYERS = [
-  { name: "Front logo", meta: "DTF · 120 мм" },
-  { name: "Back label", meta: "Вишивка · 48 мм" },
-  { name: "Sleeve mark", meta: "DTF · 32 мм" },
+  { name: "Front logo", tech: "DTF", size: 120 },
+  { name: "Back label", tech: "embroidery", size: 48 },
+  { name: "Sleeve mark", tech: "DTF", size: 32 },
 ];
 
 export function CustomizerPreviewSection() {
   const t = useTranslations("customizer");
+  const tCollections = useTranslations("collections");
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
@@ -96,7 +97,7 @@ export function CustomizerPreviewSection() {
               </aside>
 
               <aside className="hidden border-r border-border bg-white p-4 lg:block">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{t("productLabel")}</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("productLabel")}</p>
                 <div className="mt-4 rounded-2xl border border-border bg-[#f7f7f7] p-3">
                   <div className="flex items-center gap-3">
                     <div className="flex size-14 items-center justify-center rounded-xl bg-white">
@@ -104,24 +105,24 @@ export function CustomizerPreviewSection() {
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-foreground">Hoodie Classic</p>
-                      <p className="text-xs text-muted-foreground">від 1 240 ₴</p>
+                      <p className="text-xs text-muted-foreground">{tCollections("fromPrice", { price: "1 240" })}</p>
                     </div>
                   </div>
                 </div>
 
-                <p className="mt-6 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{t("colorLabel")}</p>
+                <p className="mt-6 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("colorLabel")}</p>
                 <div className="mt-3 flex gap-2">
                   {["bg-[#101114]", "bg-[#f4f4f1]", "bg-[#c7d1d7]", "bg-[#6f7f68]"].map((color, index) => (
                     <span key={color} className={`size-8 rounded-full border ${index === 0 ? "border-foreground ring-2 ring-foreground/15" : "border-border"} ${color}`} />
                   ))}
                 </div>
 
-                <p className="mt-6 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{t("printsLabel")}</p>
+                <p className="mt-6 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("printsLabel")}</p>
                 <div className="mt-3 grid grid-cols-2 gap-2">
                   {["U:DO", "TEAM", "DROP", "2026"].map((item, index) => (
                     <div key={item} className={`aspect-square rounded-2xl border p-3 ${index === 0 ? "border-foreground bg-foreground text-background" : "border-border bg-white text-foreground"}`}>
                       <span className="text-lg font-semibold tracking-tight">{item}</span>
-                      <span className="mt-7 block text-[10px] font-semibold uppercase tracking-wide opacity-55">print</span>
+                      <span className="mt-7 block text-xs font-semibold uppercase tracking-wide opacity-55">print</span>
                     </div>
                   ))}
                 </div>
@@ -138,20 +139,20 @@ export function CustomizerPreviewSection() {
                       <div className="mx-auto flex h-20 w-32 items-center justify-center rounded-xl bg-white text-3xl font-semibold tracking-tighter text-foreground">
                         U:DO
                       </div>
-                      <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/70">print zone</p>
+                      <p className="mt-3 text-xs font-semibold uppercase tracking-[0.2em] text-white/70">print zone</p>
                     </div>
                     <div className="absolute bottom-8 left-1/2 h-3 w-32 -translate-x-1/2 rounded-full bg-white/10" />
                   </div>
 
                   <div className="absolute right-2 top-8 rounded-2xl border border-border bg-white px-3 py-2 shadow-lg">
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">{t("sizeLabel")}</p>
-                    <p className="text-sm font-semibold text-foreground">120 x 84 мм</p>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("sizeLabel")}</p>
+                    <p className="text-sm font-semibold text-foreground">120 x 84 {t("mm")}</p>
                   </div>
                 </div>
               </div>
 
               <aside className="border-t border-border bg-white p-4 lg:border-l lg:border-t-0">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{t("volumeLabel")}</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("volumeLabel")}</p>
 
                 {/* Decorative preview: controls are disabled, so they are hidden from assistive tech */}
                 <div className="mt-4 flex items-center gap-2" aria-hidden="true">
@@ -178,7 +179,7 @@ export function CustomizerPreviewSection() {
                   {[
                     ["Hoodie Classic", "1 240 ₴"],
                     ["DTF front", "180 ₴"],
-                    ["Знижка", "-8%"],
+                    [t("discount"), "-8%"],
                   ].map(([label, value]) => (
                     <div key={label} className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">{label}</span>
@@ -208,7 +209,7 @@ export function CustomizerPreviewSection() {
                   {LAYERS.map((layer) => (
                     <div key={layer.name} className="rounded-2xl border border-border bg-white p-3">
                       <p className="truncate text-sm font-semibold text-foreground">{layer.name}</p>
-                      <p className="truncate text-xs text-muted-foreground">{layer.meta}</p>
+                      <p className="truncate text-xs text-muted-foreground">{layer.tech === "embroidery" ? t("embroidery") : layer.tech} · {layer.size} {t("mm")}</p>
                     </div>
                   ))}
                 </div>

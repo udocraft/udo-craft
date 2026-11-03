@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/table";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DashboardPage } from "@/components/dashboard-page";
-import { AdminToolbar, AdminTablePanel, AdminTabs } from "@/components/admin-layout";
+import { AdminToolbar, AdminSearch, AdminTablePanel, AdminTabs } from "@/components/admin-layout";
 import { UserPlus, Pencil, Trash2, RefreshCw, Loader2, Search, Mail, Calendar, Shield, Eye, Scissors, User, ShoppingBag, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -225,15 +225,7 @@ export default function UsersPage() {
       }
     >
       <AdminToolbar>
-        <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            className="pl-8 bg-muted/40 border-none shadow-none focus-visible:ring-1 focus-visible:ring-primary/20"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Швидкий пошук..."
-          />
-        </div>
+        <AdminSearch value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Швидкий пошук..." />
         <span className="ml-auto text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
           {filtered.length} користувачів
         </span>

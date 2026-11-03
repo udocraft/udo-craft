@@ -13,7 +13,7 @@ import { NextRequest, NextResponse } from "next/server";
 const BUCKET = "attachments";
 
 export async function POST(request: NextRequest) {
-  const { success } = await rateLimit(request, { limit: 10, window: 60 });
+  const { success } = await rateLimit(request, { scope: "upload", limit: 10, window: 60 });
   if (!success) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }

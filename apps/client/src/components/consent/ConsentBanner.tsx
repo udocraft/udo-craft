@@ -19,15 +19,15 @@ export function ConsentBanner() {
     >
       <p className="text-sm text-muted-foreground">
         {t("message")}{" "}
-        <Link href="/privacy" className="underline underline-offset-4">
+        <Link href="/privacy" className="hit-44 underline underline-offset-4">
           {t("privacy")}
         </Link>
       </p>
       <div className="flex shrink-0 gap-2">
-        <Button variant="outline" size="sm" onClick={() => writeConsent("denied")}>
+        <Button variant="outline" size="sm" className="min-h-11" onClick={() => writeConsent("denied")}>
           {t("decline")}
         </Button>
-        <Button size="sm" onClick={() => writeConsent("granted")}>
+        <Button size="sm" className="min-h-11" onClick={() => writeConsent("granted")}>
           {t("accept")}
         </Button>
       </div>

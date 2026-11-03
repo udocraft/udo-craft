@@ -1,11 +1,15 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { ArrowRight, Sparkles, Gift, Calculator } from "lucide-react";
 
 export function LeadMagnetSection() {
+  const t = useTranslations("leadMagnet");
+  const [orBefore, orAfter] = t("orEditor").split("{link}");
+  const orEditorLink = t("editorLink");
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
   const [email, setEmail] = useState("");
@@ -17,7 +21,7 @@ export function LeadMagnetSection() {
     e.preventDefault();
     setError("");
     if (!email.trim() || !email.includes("@")) {
-      setError("Введіть коректний email");
+      setError(t("emailError"));
       return;
     }
     setLoading(true);
@@ -43,13 +47,13 @@ export function LeadMagnetSection() {
             <div className="flex items-center gap-2 mb-4">
               <Gift className="w-4 h-4 text-white" aria-hidden="true" />
               {/* white on primary = 4.8:1 AA */}
-              <span className="text-white text-xs font-bold uppercase tracking-[0.18em]">Безкоштовно</span>
+              <span className="text-white text-xs font-bold uppercase tracking-[0.18em]">{t("badge")}</span>
             </div>
             <h2 id="lead-magnet-heading" className="text-white text-3xl sm:text-4xl font-black tracking-tight leading-tight mb-3">
-              Отримай безкоштовний мокап свого мерчу
+              {t("heading")}
             </h2>
             <p className="text-white/80 text-sm leading-relaxed max-w-md">
-              Завантаж логотип — ми накладемо його на реальний виріб і надішлемо мокап на пошту. Без реєстрації, без зобов'язань.
+              {t("desc")}
             </p>
           </motion.div>
 
@@ -63,15 +67,15 @@ export function LeadMagnetSection() {
               <div className="flex items-center gap-3 bg-white/15 border border-white/25 rounded-2xl px-6 py-4">
                 <Sparkles className="w-5 h-5 text-white shrink-0" aria-hidden="true" />
                 <div>
-                  <p className="text-white font-bold text-sm">Дякуємо!</p>
-                  <p className="text-white/80 text-xs mt-0.5">Мокап надійде на пошту протягом 24 год</p>
+                  <p className="text-white font-bold text-sm">{t("success")}</p>
+                  <p className="text-white/80 text-xs mt-0.5">{t("successDesc")}</p>
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} noValidate aria-label="Форма отримання мокапу">
+              <form onSubmit={handleSubmit} noValidate aria-label={t("formLabel")}>
                 <div className="flex flex-col sm:flex-row gap-2">
                   <div className="flex-1">
-                    <label htmlFor="lead-email" className="sr-only">Ваш email</label>
+                    <label htmlFor="lead-email" className="sr-only">{t("emailLabel")}</label>
                     <input
                       id="lead-email"
                       type="email"
@@ -89,18 +93,15 @@ export function LeadMagnetSection() {
                     className="inline-flex items-center justify-center gap-2 bg-white text-primary font-bold text-sm px-6 py-3 rounded-full hover:bg-white/90 active:scale-[0.97] transition-all duration-200 disabled:opacity-60 whitespace-nowrap">
                     {loading
                       ? <span className="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" aria-hidden="true" />
-                      : <><span>Отримати мокап</span><ArrowRight className="w-4 h-4" aria-hidden="true" /></>
+                      : <><span>{t("cta")}</span><ArrowRight className="w-4 h-4" aria-hidden="true" /></>
                     }
                   </button>
                 </div>
                 {error && (
                   <p id="lead-email-error" role="alert" className="text-white text-xs mt-2 font-medium">{error}</p>
                 )}
-                <p className="text-white/60 text-[10px] mt-2">
-                  Або одразу{" "}
-                  <Link href="/order" className="underline underline-offset-2 hover:text-white transition-colors">
-                    спробуй редактор
-                  </Link>
+                <p className="text-white/60 text-xs mt-2">
+                  {orBefore}<Link href="/order" className="underline underline-offset-2 hover:text-white transition-colors">{orEditorLink}</Link>{orAfter}
                 </p>
               </form>
             )}
@@ -116,9 +117,9 @@ export function LeadMagnetSection() {
         >
           <Calculator className="w-5 h-5 text-white/70 shrink-0" aria-hidden="true" />
           <p className="text-white/80 text-sm">
-            Хочеш дізнатись вартість прямо зараз?{" "}
+            {t("orCalculate")}{" "}
             <Link href="/order" className="text-white font-semibold underline underline-offset-2 hover:no-underline transition-all">
-              Відкрий калькулятор цін →
+              {t("openCalculator")}
             </Link>
           </p>
         </motion.div>

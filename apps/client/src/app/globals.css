@@ -26,7 +26,8 @@
   --color-accent-foreground: oklch(1 0 0);
   --color-destructive: oklch(0.52 0.22 27);
   --color-border: oklch(0.88 0 0);
-  --color-input: oklch(0.88 0 0);
+  /* Input boundary: 3:1 on white (WCAG 1.4.11; was 1.44:1) */
+  --color-input: oklch(0.62 0 0);
   --color-ring: oklch(0.36 0.22 264);
   --radius: 0.5rem;
   --radius-sm: calc(var(--radius) - 4px);
@@ -117,4 +118,31 @@ video::-webkit-media-controls-enclosure {
 *::-webkit-media-controls-start-playback-button {
   display: none !important;
   -webkit-appearance: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Expands the pointer target to at least 44x44 without changing layout. */
+.hit-44 {
+  position: relative;
+}
+.hit-44::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  transform: translate(-50%, -50%);
 }

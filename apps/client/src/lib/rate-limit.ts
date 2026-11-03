@@ -1,22 +1,12 @@
 import { type NextRequest } from "next/server";
+import { createServiceClient } from "@/lib/supabase/service";
 
 interface RateLimitOptions {
+  /** Separate counter per scope, e.g. "leads" or "upload". */
+  scope: string;
   limit: number;
   window: number; // seconds
 }
-
-interface RateLimitResult {
-  success: boolean;
-  remaining: number;
-}
-
-interface RateLimitEntry {
-  count: number;
-  resetAt: number; // Unix ms timestamp
-}
-
-// Module-level in-memory store
-const store = new Map<string, RateLimitEntry>();
 
 export function extractIp(request: NextRequest): string {
   const forwarded = request.headers.get("x-forwarded-for");
@@ -26,28 +16,27 @@ export function extractIp(request: NextRequest): string {
   return request.ip ?? "unknown";
 }
 
-export async function rateLimit(
-  request: NextRequest,
-  options: RateLimitOptions
-): Promise<RateLimitResult> {
-  const ip = extractIp(request);
-  const key = `${ip}:${options.limit}:${options.window}`;
-
-
-
-  // In-memory fallback
-  const now = Date.now();
-  const entry = store.get(key);
-
-  if (!entry || now > entry.resetAt) {
-    store.set(key, { count: 1, resetAt: now + options.window * 1000 });
-    return { success: true, remaining: options.limit - 1 };
+/**
+ * Counts one hit against `key` in the shared database and reports whether it is
+ * within `limit` for the current window. Fails open if the database is unreachable,
+ * so an outage does not block checkout; the failure is logged.
+ */
+export async function consumeLimit(key: string, limit: number, windowSeconds: number): Promise<boolean> {
+  try {
+    const { data, error } = await createServiceClient().rpc("consume_rate_limit", {
+      p_key: key,
+      p_limit: limit,
+      p_window_seconds: windowSeconds,
+    });
+    if (error) throw error;
+    return data === true;
+  } catch (err) {
+    console.error("[rate-limit] check failed, allowing request", err);
+    return true;
   }
+}
 
-  if (entry.count >= options.limit) {
-    return { success: false, remaining: 0 };
-  }
-
-  entry.count++;
-  return { success: true, remaining: options.limit - entry.count };
+export async function rateLimit(request: NextRequest, options: RateLimitOptions): Promise<{ success: boolean }> {
+  const success = await consumeLimit(`${options.scope}:${extractIp(request)}`, options.limit, options.window);
+  return { success };
 }

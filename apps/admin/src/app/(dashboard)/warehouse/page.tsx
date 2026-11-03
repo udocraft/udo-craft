@@ -31,7 +31,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { AdminTablePanel, AdminToolbar, AdminFilter, AdminTabs } from "@/components/admin-layout";
+import { AdminTablePanel, AdminToolbar, AdminSearch, AdminFilter, AdminTabs } from "@/components/admin-layout";
 import { DashboardPage } from "@/components/dashboard-page";
 
 const TABS = [
@@ -341,15 +341,7 @@ export default function WarehousePage() {
         {currentTab === "stock" && (
           <div className="flex-1 flex flex-col overflow-hidden">
             <AdminToolbar>
-              <div className="relative">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  className="pl-8 bg-background border-none shadow-none focus-visible:ring-1 focus-visible:ring-primary/20"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Швидкий пошук..."
-                />
-              </div>
+              <AdminSearch value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Швидкий пошук..." />
 
               <div className="flex items-center gap-2">
                 <AdminFilter

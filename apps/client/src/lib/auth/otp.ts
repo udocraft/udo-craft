@@ -1,4 +1,4 @@
-import { createHmac, randomInt } from "crypto";
+import { createHash, createHmac, randomInt } from "crypto";
 
 export const OTP_TTL_MS = 15 * 60 * 1000;
 export const OTP_MAX_ATTEMPTS = 5;
@@ -35,4 +35,9 @@ export function checkOtp(
   if (now > state.expires) return "expired";
   if ((state.attempts ?? 0) >= OTP_MAX_ATTEMPTS) return "locked";
   return hashOtp(otp, email) === state.hash ? "ok" : "invalid";
+}
+
+/** Stable, non-reversible key for per-address OTP limits, so no email is stored in the limiter table. */
+export function emailLimitKey(email: string): string {
+  return createHash("sha256").update(email.trim().toLowerCase()).digest("hex");
 }

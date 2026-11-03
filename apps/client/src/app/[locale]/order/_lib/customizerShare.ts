@@ -49,7 +49,7 @@ export interface CustomizerSharePayload {
 export interface CustomizerShareComment {
   id: string;
   body: string;
-  author_email?: string | null;
+  author_label: string;
   created_at: string;
 }
 
@@ -57,7 +57,6 @@ export interface LoadedCustomizerShare {
   token: string;
   productId: string;
   access: ShareAccess;
-  ownerEmail?: string | null;
   payload: CustomizerSharePayload;
   comments: CustomizerShareComment[];
 }

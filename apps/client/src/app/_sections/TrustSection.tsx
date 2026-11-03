@@ -83,7 +83,7 @@ export function TrustSection() {
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.6, delay: 0.4 }}
           className="grid grid-cols-2 sm:grid-cols-4 gap-8 pt-10 border-t border-white/10"
-          aria-label="Ключові показники"
+          aria-label={t("statsLabel")}
         >
           {numbers.map((n, i) => (
             <div key={(n.label || "") + i}>
