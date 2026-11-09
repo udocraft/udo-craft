@@ -223,7 +223,7 @@ export function ProductCardDetailed({
                 </button>
               ))}
               {hiddenSizeCount > 0 && (
-                <span className="flex h-8 items-center justify-center rounded-md border border-border bg-background px-1 text-[11px] font-semibold text-muted-foreground">
+                <span className="flex h-8 items-center justify-center rounded-md border border-border bg-background px-1 text-xs font-semibold text-muted-foreground">
                   +{hiddenSizeCount}
                 </span>
               )}

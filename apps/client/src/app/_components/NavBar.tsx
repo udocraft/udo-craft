@@ -157,7 +157,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 500, damping: 20 }}
-                className="absolute top-1.5 right-1.5 bg-primary text-white text-[10px] font-black rounded-full w-4.5 h-4.5 flex items-center justify-center leading-none ring-2 ring-background"
+                className="absolute top-1.5 right-1.5 bg-primary text-white text-xs font-black rounded-full w-4.5 h-4.5 flex items-center justify-center leading-none ring-2 ring-background"
               >
                 {cartCount}
               </motion.span>

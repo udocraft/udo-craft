@@ -25,7 +25,7 @@ export default function LayersPanel({
           <div className="size-8 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
             <ImagePlus className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
           </div>
-          <span className="text-[11px] font-semibold text-muted-foreground group-hover:text-primary transition-colors">Зображення</span>
+          <span className="text-xs font-semibold text-muted-foreground group-hover:text-primary transition-colors">Зображення</span>
         </button>
         {onAddText ? (
           <button type="button" onClick={onAddText} disabled={disabled}
@@ -33,7 +33,7 @@ export default function LayersPanel({
             <div className="size-8 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
               <Type className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
             </div>
-            <span className="text-[11px] font-semibold text-muted-foreground group-hover:text-primary transition-colors">Текст</span>
+            <span className="text-xs font-semibold text-muted-foreground group-hover:text-primary transition-colors">Текст</span>
           </button>
         ) : (
           <div className="h-24 rounded-xl border-2 border-dashed border-border/30 bg-muted/20" />

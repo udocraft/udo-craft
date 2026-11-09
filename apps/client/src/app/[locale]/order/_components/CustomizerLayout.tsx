@@ -88,7 +88,7 @@ export function CustomizerLayout({
           <div className="hidden lg:flex lg:flex-col h-full overflow-hidden border-l border-border bg-card">
             <div className="flex-1 overflow-y-auto overflow-x-hidden p-4">
               <div className="space-y-5">
-                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Тираж та ціна</p>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Тираж та ціна</p>
                 {rightPanel}
               </div>
             </div>
@@ -121,7 +121,7 @@ export function CustomizerLayout({
           <div className="hidden lg:flex lg:flex-col h-full overflow-hidden border-l border-border bg-card">
             <div className="flex-1 overflow-y-auto overflow-x-hidden p-4">
               <div className="space-y-5">
-                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Тираж та ціна</p>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Тираж та ціна</p>
                 {rightPanel}
               </div>
             </div>
@@ -145,12 +145,12 @@ export function CustomizerLayout({
                 onClick={() => onTabChange?.(activeTab === tab.id ? null : tab.id)}
                 aria-label={tab.label}
                 aria-pressed={activeTab === tab.id}
-                className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-semibold transition-colors min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset ${activeTab === tab.id ? "text-primary border-t-2 border-primary -mt-px" : "text-muted-foreground"}`}
+                className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 text-xs font-semibold transition-colors min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset ${activeTab === tab.id ? "text-primary border-t-2 border-primary -mt-px" : "text-muted-foreground"}`}
               >
                 <span className="relative">
                   <tab.Icon className="size-4" />
                   {tab.id === "layers" && layerCount > 0 && (
-                    <span className="absolute -top-1 -right-1.5 min-w-[14px] h-3.5 rounded-full bg-primary text-[9px] font-black text-primary-foreground flex items-center justify-center px-0.5 leading-none">
+                    <span className="absolute -top-1 -right-1.5 min-w-[14px] h-3.5 rounded-full bg-primary text-xs font-black text-primary-foreground flex items-center justify-center px-0.5 leading-none">
                       {layerCount > 9 ? "9+" : layerCount}
                     </span>
                   )}
@@ -161,7 +161,7 @@ export function CustomizerLayout({
             <button
               onClick={onPriceOpen}
               aria-label="Тираж та ціна"
-              className="flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-semibold transition-colors min-h-[44px] text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+              className="flex-1 flex flex-col items-center gap-0.5 py-2.5 text-xs font-semibold transition-colors min-h-[44px] text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
             >
               <PackageOpen className="size-4" />
               Тираж
@@ -174,14 +174,14 @@ export function CustomizerLayout({
           <div className="flex h-full">
             <button
               onClick={() => setMobileSheet(mobileSheet === "config" ? null : "config")}
-              className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset ${mobileSheet === "config" ? "text-primary border-t-2 border-primary -mt-px" : "text-muted-foreground"}`}
+              className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset ${mobileSheet === "config" ? "text-primary border-t-2 border-primary -mt-px" : "text-muted-foreground"}`}
             >
               <Palette className="size-4" />
               Налаштування
             </button>
             <button
               onClick={() => setMobileSheet(mobileSheet === "price" ? null : "price")}
-              className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset ${mobileSheet === "price" ? "text-primary border-t-2 border-primary -mt-px" : "text-muted-foreground"}`}
+              className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset ${mobileSheet === "price" ? "text-primary border-t-2 border-primary -mt-px" : "text-muted-foreground"}`}
             >
               <PackageOpen className="size-4" />
               Тираж та ціна

@@ -35,7 +35,7 @@ export default function ShapesPanel({ onAddLayer }: ShapesPanelProps) {
   return (
     <div className="flex flex-col h-full overflow-y-auto">
       <section className="px-3 pt-3 pb-4">
-        <h3 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
           Фігури
         </h3>
 
@@ -54,13 +54,13 @@ export default function ShapesPanel({ onAddLayer }: ShapesPanelProps) {
 
         <div className="flex flex-wrap gap-1 mb-3">
           <button type="button" onClick={() => setActiveCategory(null)}
-            className={["px-2 py-0.5 rounded-full text-[10px] font-medium border transition-all",
+            className={["px-2 py-0.5 rounded-full text-xs font-medium border transition-all",
               activeCategory === null ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground hover:border-foreground/40"].join(" ")}>
             Всі
           </button>
           {SHAPE_CATEGORIES.map((cat) => (
             <button key={cat} type="button" onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
-              className={["px-2 py-0.5 rounded-full text-[10px] font-medium border transition-all",
+              className={["px-2 py-0.5 rounded-full text-xs font-medium border transition-all",
                 activeCategory === cat ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground hover:border-foreground/40"].join(" ")}>
               {cat}
             </button>

@@ -85,7 +85,7 @@ export function CustomizerPreviewSection() {
                       key={label}
                       type="button"
                       disabled
-                      className={`flex h-14 w-14 flex-col items-center justify-center gap-1 rounded-2xl text-[9px] font-semibold ${
+                      className={`flex h-14 w-14 flex-col items-center justify-center gap-1 rounded-2xl text-xs font-semibold ${
                         active ? "bg-foreground text-background" : "text-muted-foreground"
                       }`}
                     >

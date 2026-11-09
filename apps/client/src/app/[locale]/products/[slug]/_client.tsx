@@ -262,7 +262,7 @@ export function ProductDetailClient({
 
                 {/* Image counter pill */}
                 {imageKeys.length > 1 && (
-                  <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded-full bg-black/30 backdrop-blur-sm text-white text-[10px] font-semibold">
+                  <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded-full bg-black/30 backdrop-blur-sm text-white text-xs font-semibold">
                     {imageKeys.indexOf(activeImageKey) + 1} / {imageKeys.length}
                   </div>
                 )}
@@ -464,7 +464,7 @@ export function ProductDetailClient({
                                 key={mark}
                                 type="button"
                                 onClick={() => setQuantity(mark)}
-                                className="absolute top-0 -translate-x-1/2 text-[10px] font-semibold text-muted-foreground hover:text-foreground"
+                                className="absolute top-0 -translate-x-1/2 text-xs font-semibold text-muted-foreground hover:text-foreground"
                                 style={{ left: `${((mark - 1) / Math.max(1, sliderMax - 1)) * 100}%` }}
                               >
                                 {mark}

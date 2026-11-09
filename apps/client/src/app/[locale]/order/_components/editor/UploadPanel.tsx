@@ -73,12 +73,12 @@ function RecentFileThumbnail({
           ) : (
             <FileImage className="size-6 text-muted-foreground" />
           )}
-          <span className="text-[9px] text-muted-foreground text-center leading-tight truncate w-full px-1">
+          <span className="text-xs text-muted-foreground text-center leading-tight truncate w-full px-1">
             {file.name.split(".").pop()?.toUpperCase()}
           </span>
         </div>
       )}
-      <span className="absolute inset-x-0 bottom-0 bg-black/60 text-white text-[9px] px-1 py-0.5 truncate opacity-0 group-hover:opacity-100 transition-opacity">
+      <span className="absolute inset-x-0 bottom-0 bg-black/60 text-white text-xs px-1 py-0.5 truncate opacity-0 group-hover:opacity-100 transition-opacity">
         {file.name}
       </span>
     </button>
@@ -195,7 +195,7 @@ export default function UploadPanel({ onFileAdd }: UploadPanelProps) {
     <div className="flex flex-col h-full overflow-y-auto">
       {/* ── Upload zone section ── */}
       <section className="px-3 pt-3 pb-4 border-b border-border space-y-3">
-        <h3 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
+        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
           Завантажити файл
         </h3>
 
@@ -238,7 +238,7 @@ export default function UploadPanel({ onFileAdd }: UploadPanelProps) {
                 <p className="text-xs font-medium text-foreground">
                   {isDragOver ? "Відпустіть для завантаження" : "Натисніть або перетягніть"}
                 </p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">
+                <p className="text-xs text-muted-foreground mt-0.5">
                   PNG, JPG, SVG, PDF · макс. 20 МБ
                 </p>
               </div>
@@ -277,13 +277,13 @@ export default function UploadPanel({ onFileAdd }: UploadPanelProps) {
           <div className="flex items-start gap-2 p-2.5 rounded-lg bg-destructive/10 text-destructive">
             <X className="size-3.5 mt-0.5 shrink-0" />
             <div className="flex-1 min-w-0 space-y-1">
-              <p className="text-[11px] leading-snug">{error}</p>
+              <p className="text-xs leading-snug">{error}</p>
               <div className="flex gap-2">
                 {retryFile && (
                   <button
                     type="button"
                     onClick={handleRetry}
-                    className="text-[11px] font-medium underline hover:no-underline"
+                    className="text-xs font-medium underline hover:no-underline"
                   >
                     Повторити
                   </button>
@@ -291,7 +291,7 @@ export default function UploadPanel({ onFileAdd }: UploadPanelProps) {
                 <button
                   type="button"
                   onClick={() => { setError(null); setRetryFile(null); }}
-                  className="text-[11px] underline hover:no-underline"
+                  className="text-xs underline hover:no-underline"
                 >
                   Закрити
                 </button>
@@ -303,7 +303,7 @@ export default function UploadPanel({ onFileAdd }: UploadPanelProps) {
 
       {/* ── Recent uploads section ── */}
       <section className="px-3 pt-3 pb-4">
-        <h3 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
           Нещодавні завантаження
         </h3>
 
@@ -311,7 +311,7 @@ export default function UploadPanel({ onFileAdd }: UploadPanelProps) {
           <div className="flex flex-col items-center gap-2 py-8 text-center">
             <FileImage className="size-8 text-muted-foreground/50" />
             <p className="text-xs text-muted-foreground">Ще немає завантажень.</p>
-            <p className="text-[10px] text-muted-foreground/70 leading-snug max-w-[180px]">
+            <p className="text-xs text-muted-foreground/70 leading-snug max-w-[180px]">
               Завантажені файли з'являться тут для швидкого повторного використання.
             </p>
           </div>

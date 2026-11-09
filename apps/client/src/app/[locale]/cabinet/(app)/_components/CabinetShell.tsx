@@ -50,7 +50,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
             <item.icon className={cn("size-4 shrink-0", item.active ? "text-primary" : "text-muted-foreground/70")} />
             <span className="truncate">{item.label}</span>
             {item.badge > 0 && (
-              <span className="ml-auto flex h-[1.125rem] min-w-[1.125rem] items-center justify-center rounded-full bg-primary px-1 text-[9px] font-bold text-primary-foreground">
+              <span className="ml-auto flex h-[1.125rem] min-w-[1.125rem] items-center justify-center rounded-full bg-primary px-1 text-xs font-bold text-primary-foreground">
                 {item.badge > 99 ? "99+" : item.badge}
               </span>
             )}

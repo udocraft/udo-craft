@@ -90,7 +90,7 @@ function PasswordStrength({ password }: { password: string }) {
       </div>
       <div className="flex gap-2 flex-wrap">
         {checks.map((c) => (
-          <span key={c.label} className={cn("text-[10px]", c.ok ? "text-emerald-600" : "text-muted-foreground")}>
+          <span key={c.label} className={cn("text-xs", c.ok ? "text-emerald-600" : "text-muted-foreground")}>
             {c.ok ? "✓" : "·"} {c.label}
           </span>
         ))}

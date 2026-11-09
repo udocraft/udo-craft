@@ -57,7 +57,7 @@ export function OrderReview({
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold">{item.productName}</p>
                       <p className="text-xs text-muted-foreground">{item.quantity} pcs · {item.size} · {item.color}</p>
-                      {item.itemNote && <p className="text-[10px] text-muted-foreground italic mt-0.5">&quot;{item.itemNote}&quot;</p>}
+                      {item.itemNote && <p className="text-xs text-muted-foreground italic mt-0.5">&quot;{item.itemNote}&quot;</p>}
                     </div>
                     <p className="text-sm font-bold shrink-0">{lineTotal.toFixed(0)} ₴</p>
                   </div>
@@ -105,13 +105,13 @@ export function OrderReview({
               { label: t("contact.social"), value: contact.socialHandle ? `${contact.socialNetwork}: ${contact.socialHandle}` : "—" },
             ].map(({ label, value }) => (
               <div key={label}>
-                <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-medium">{label}</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium">{label}</p>
                 <p className="font-medium text-foreground mt-0.5">{value}</p>
               </div>
             ))}
           </div>
           <div className="border-t border-border pt-3 space-y-2">
-            <h4 className="text-[11px] text-muted-foreground uppercase tracking-wide font-medium">{t("delivery.title")}</h4>
+            <h4 className="text-xs text-muted-foreground uppercase tracking-wide font-medium">{t("delivery.title")}</h4>
             <p className="text-sm font-medium">{deliveryLabels[contact.delivery] ?? "—"}</p>
             {contact.novaPoshtaDetails && <p className="text-sm text-muted-foreground">{contact.novaPoshtaDetails}</p>}
           </div>
@@ -119,13 +119,13 @@ export function OrderReview({
             <div className="border-t border-border pt-3 grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
               {contact.deadline && (
                 <div>
-                  <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-medium">{t("delivery.deadline")}</p>
+                  <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium">{t("delivery.deadline")}</p>
                   <p className="font-medium mt-0.5">{new Date(contact.deadline).toLocaleDateString()}</p>
                 </div>
               )}
               {contact.comment && (
                 <div className="col-span-2">
-                  <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-medium">{t("delivery.comment")}</p>
+                  <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium">{t("delivery.comment")}</p>
                   <p className="text-sm mt-0.5">{contact.comment}</p>
                 </div>
               )}
@@ -133,7 +133,7 @@ export function OrderReview({
           )}
           {extraFiles.length > 0 && (
             <div className="border-t border-border pt-3">
-              <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-medium mb-1.5">{tCab("details.attachments", { n: extraFiles.length })}</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1.5">{tCab("details.attachments", { n: extraFiles.length })}</p>
               <div className="space-y-1">
                 {extraFiles.map((f, i) => (
                   <p key={i} className="text-xs text-muted-foreground truncate">📎 {f.name}</p>

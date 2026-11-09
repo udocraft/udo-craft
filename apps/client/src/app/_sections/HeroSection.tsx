@@ -141,7 +141,7 @@ export function HeroSection({
         aria-hidden={cinemaMode}
       >
         <div className="relative z-10 mx-auto w-full max-w-3xl text-center lg:mx-0 lg:text-left">
-          <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/70 backdrop-blur-md">
+          <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/70 backdrop-blur-md">
             <span className="size-1.5 rounded-full bg-[#7772ff]" />
             U:DO CRAFT <span className="text-white/30">/</span> B2B MERCH
           </p>

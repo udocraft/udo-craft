@@ -192,7 +192,7 @@ export function OrderChat({ lead, onOpenFile }: { lead: Lead; onOpenFile: (url: 
                         </div>
                       ) : null}
                     </div>
-                    <span className="flex shrink-0 items-center gap-0.5 pb-0.5 text-[10px] text-muted-foreground">
+                    <span className="flex shrink-0 items-center gap-0.5 pb-0.5 text-xs text-muted-foreground">
                       {fmtTime(msg.created_at)}
                       {mine && (
                         <span className={`ml-0.5 inline-flex ${msg.read_at ? "text-primary" : "text-slate-300"}`}>

@@ -82,10 +82,10 @@ function AIIllustrationSection({ onAddLayer, isAuthenticated, aiQuota, onPaywall
 
   return (
     <section className="px-3 pt-3 pb-4 border-b border-border">
-      <h3 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+      <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
         AI Ілюстрація
       </h3>
-      <p className="text-[10px] text-muted-foreground mb-2">
+      <p className="text-xs text-muted-foreground mb-2">
         Генеруйте ілюстрації для друку за текстовим описом.
       </p>
 
@@ -134,7 +134,7 @@ function AIIllustrationSection({ onAddLayer, isAuthenticated, aiQuota, onPaywall
 
       {/* Quota-exhausted message */}
       {aiQuota.isExhausted && (
-        <p className="text-[10px] text-muted-foreground mt-2 text-center">
+        <p className="text-xs text-muted-foreground mt-2 text-center">
           Ви використали 3 безкоштовні генерації
         </p>
       )}
@@ -143,8 +143,8 @@ function AIIllustrationSection({ onAddLayer, isAuthenticated, aiQuota, onPaywall
         <div className="flex items-start gap-2 p-2 rounded-xl bg-destructive/10 text-destructive mt-2">
           <AlertCircle className="size-3.5 mt-0.5 shrink-0" />
           <div className="flex-1 min-w-0">
-            <p className="text-[10px]">{ai.error}</p>
-            <button type="button" onClick={ai.clearError} className="text-[10px] underline mt-0.5">Закрити</button>
+            <p className="text-xs">{ai.error}</p>
+            <button type="button" onClick={ai.clearError} className="text-xs underline mt-0.5">Закрити</button>
           </div>
         </div>
       )}
@@ -219,7 +219,7 @@ export default function PrintsPanel({ onAddLayer, isAuthenticated, aiQuota, onPa
       {/* ── Print presets — only when table exists ── */}
       {tableExists && (
         <section className="px-3 pt-3 pb-4">
-          <h3 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+          <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
             Готові принти
           </h3>
 
@@ -276,7 +276,7 @@ export default function PrintsPanel({ onAddLayer, isAuthenticated, aiQuota, onPa
                       title={preset.name}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={preset.thumbnail_url} alt={preset.name} className="w-full h-full object-cover" />
-                      <span className="absolute inset-x-0 bottom-0 bg-foreground/60 text-primary-foreground text-[9px] px-1 py-0.5 truncate opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="absolute inset-x-0 bottom-0 bg-foreground/60 text-primary-foreground text-xs px-1 py-0.5 truncate opacity-0 group-hover:opacity-100 transition-opacity">
                         {preset.name}
                       </span>
                       {addingId === preset.id && (

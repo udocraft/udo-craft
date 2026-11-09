@@ -1016,7 +1016,7 @@ export default function ProductCanvas({
                     onChange={(e) => patch({ textColor: e.target.value })}
                     aria-label="Колір тексту"
                     className="w-6 h-6 rounded border border-border cursor-pointer p-0.5 bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
-                  <span className="text-[9px] leading-none text-muted-foreground">Колір</span>
+                  <span className="text-xs leading-none text-muted-foreground">Колір</span>
                 </div>
                 {/* Align */}
                 <ToolBtn title="Ліво" label="←" active={(activeLayer.textAlign ?? "center") === "left"} onClick={() => patch({ textAlign: "left" })}>
@@ -1040,14 +1040,14 @@ export default function ProductCanvas({
                     onChange={(e) => patch({ svgFillColor: e.target.value })}
                     aria-label="Колір заливки"
                     className="w-6 h-6 rounded border border-border cursor-pointer p-0.5 bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
-                  <span className="text-[9px] leading-none text-muted-foreground">Заливка</span>
+                  <span className="text-xs leading-none text-muted-foreground">Заливка</span>
                 </div>
                 <div className="flex flex-col items-center gap-0.5 shrink-0 min-w-[44px] min-h-[48px] justify-center">
                   <input type="color" value={activeLayer.svgStrokeColor ?? "#000000"}
                     onChange={(e) => patch({ svgStrokeColor: e.target.value })}
                     aria-label="Колір обводки"
                     className="w-6 h-6 rounded border border-border cursor-pointer p-0.5 bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
-                  <span className="text-[9px] leading-none text-muted-foreground">Обводка</span>
+                  <span className="text-xs leading-none text-muted-foreground">Обводка</span>
                 </div>
                 <div className="w-px h-4 bg-border mx-1 shrink-0" />
               </>
@@ -1087,7 +1087,7 @@ export default function ProductCanvas({
 
             {/* ── Opacity — all types ── */}
             <div className="flex items-center gap-1.5 shrink-0">
-              <span className="text-[9px] text-muted-foreground">Прозорість</span>
+              <span className="text-xs text-muted-foreground">Прозорість</span>
               <input type="range" min={0} max={100}
                 aria-label="Прозорість шару"
                 value={Math.round((activeLayer.opacity ?? 1) * 100)}
@@ -1098,7 +1098,7 @@ export default function ProductCanvas({
                   patch({ opacity: v });
                 }}
                 className="w-20 h-1.5 accent-primary" />
-              <span className="text-[9px] text-muted-foreground w-7 text-right tabular-nums">
+              <span className="text-xs text-muted-foreground w-7 text-right tabular-nums">
                 {Math.round((activeLayer.opacity ?? 1) * 100)}%
               </span>
             </div>
@@ -1123,7 +1123,7 @@ export default function ProductCanvas({
             <div className="absolute inset-0 rounded-2xl overflow-hidden z-10 pointer-events-none bg-muted/60">
               <div className="w-full h-full flex flex-col items-center justify-center gap-3">
                 <Shirt className="w-12 h-12 opacity-15 text-foreground" aria-hidden="true" />
-                <span className="text-[11px] font-medium text-muted-foreground/60 tracking-wide select-none">Завантаження зображення...</span>
+                <span className="text-xs font-medium text-muted-foreground/60 tracking-wide select-none">Завантаження зображення...</span>
               </div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-[shimmer_1.4s_ease-in-out_infinite]"
                 style={{ backgroundSize: "200% 100%", animation: "shimmer 1.4s ease-in-out infinite" }}
@@ -1187,7 +1187,7 @@ function ToolBtn({ children, onClick, title, label, disabled, danger, active }: 
       }`}
     >
       {children}
-      <span className="text-[9px] leading-none mt-0.5">{label}</span>
+      <span className="text-xs leading-none mt-0.5">{label}</span>
     </button>
   );
 }
