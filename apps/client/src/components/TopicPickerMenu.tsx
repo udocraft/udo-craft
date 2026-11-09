@@ -35,7 +35,7 @@ export function TopicPickerMenu({ topics, value, disabled, defaultOpen = false, 
         {topics.map((t) => (
           <button key={t.value} type="button"
             onClick={() => { onChange(t.value); setOpen(false); sound.select(); }}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors focus:outline-none ${
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
               value === t.value ? "bg-foreground/10 text-foreground" : "text-muted-foreground hover:bg-foreground/5"
             }`}
           >

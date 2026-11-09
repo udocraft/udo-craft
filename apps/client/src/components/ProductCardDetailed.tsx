@@ -166,7 +166,7 @@ export function ProductCardDetailed({
               href={`/products/${product.slug || product.id}`}
               aria-disabled={isOutOfStock || undefined}
               tabIndex={isOutOfStock ? -1 : undefined}
-              className="min-w-0 text-sm font-semibold text-foreground leading-tight [overflow-wrap:anywhere] outline-none after:absolute after:inset-0"
+              className="min-w-0 text-sm font-semibold text-foreground leading-tight [overflow-wrap:anywhere] outline-none after:absolute after:inset-0 after:rounded-card focus-visible:after:ring-2 focus-visible:after:ring-ring focus-visible:after:ring-offset-2"
             >
               {productName}
             </Link>

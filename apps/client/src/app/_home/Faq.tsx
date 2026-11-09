@@ -32,9 +32,9 @@ export async function Faq({ ctx }: { ctx: HomeCtx }) {
           </p>
         </div>
 
-        <div role="list" aria-label={t("questionsLabel")} className="border-t border-border">
+        <div className="border-t border-border">
           {items.map((item, i) => (
-            <details key={i} role="listitem" className="group border-b border-border">
+            <details key={i} className="group border-b border-border">
               <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-4 text-left font-semibold marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
                 <span>{item.q}</span>
                 <span

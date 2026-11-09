@@ -55,7 +55,7 @@ export async function Services({ locale }: { locale: string }) {
               href={c.href}
               className="mt-6 inline-flex min-h-11 items-center gap-1.5 self-start rounded-control text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              {c.cta} <ArrowRight className="size-4" aria-hidden="true" />
+              {c.cta}<span className="sr-only">: {c.title}</span> <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
           </li>
         ))}
