@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ImageOff, ArrowLeft, ArrowRight, BadgePercent, Check, ChevronDown, ChevronLeft, ChevronRight, CircleSlash, Minus, Plus, Tags, ToolCase } from "lucide-react";
@@ -126,7 +127,7 @@ export function ProductPurchase(p: PurchaseProps) {
             </div>
           )}
           {activeUrl && (
-            <img src={activeUrl} alt={p.name} width={1088} height={1088} fetchPriority="high" decoding="async" className="absolute inset-0 size-full object-contain p-4 sm:p-8" />
+            <Image src={activeUrl} alt={p.name} fill priority sizes="(min-width: 1024px) 33rem, 92vw" className="object-contain p-4 sm:p-8" />
           )}
           {keys.length > 1 && (
             <>
@@ -152,11 +153,11 @@ export function ProductPurchase(p: PurchaseProps) {
                 onClick={() => setImageKey(key)}
                 aria-label={`Фото ${key}`}
                 aria-pressed={activeKey === key}
-                className={`size-16 shrink-0 overflow-hidden rounded-card border-2 bg-white transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                className={`relative size-16 shrink-0 overflow-hidden rounded-card border-2 bg-white transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                   activeKey === key ? "border-primary" : "border-transparent hover:border-border"
                 }`}
               >
-                <img src={images[key]} alt="" loading="lazy" className="size-full object-contain p-1" />
+                <Image src={images[key]} alt="" fill sizes="64px" className="object-contain p-1" />
               </button>
             ))}
           </div>

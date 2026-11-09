@@ -12,7 +12,19 @@ import { Play, X } from "lucide-react";
 export function HeroMedia() {
   const t = useTranslations("hero");
   const [cinema, setCinema] = useState(false);
+  const [showLoop, setShowLoop] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // The background loop is decoration: only load it on wide screens, when the
+  // visitor has not asked for reduced motion or reduced data. No bytes otherwise.
+  useEffect(() => {
+    const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+    const ok =
+      window.matchMedia("(min-width: 768px)").matches &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+      !conn?.saveData;
+    setShowLoop(ok);
+  }, []);
 
   useEffect(() => {
     if (!cinema) return;
@@ -30,9 +42,11 @@ export function HeroMedia() {
 
   return (
     <>
+      {showLoop && (
       <video
-        className="pointer-events-none absolute inset-0 size-full object-cover opacity-15 motion-reduce:hidden"
-        src="/hero-video.mp4"
+        className="pointer-events-none absolute inset-0 size-full object-cover opacity-15"
+        src="/hero-bg.mp4"
+        poster="/hero-poster.jpg"
         autoPlay
         loop
         muted
@@ -40,9 +54,10 @@ export function HeroMedia() {
         controls={false}
         disablePictureInPicture
         disableRemotePlayback
-        preload="metadata"
+        preload="auto"
         aria-hidden="true"
       />
+      )}
 
       {cinema && (
         <div
@@ -63,6 +78,7 @@ export function HeroMedia() {
             }}
             className="absolute inset-0 size-full object-cover"
             src="/hero-video.mp4"
+            poster="/hero-poster.jpg"
             loop
             playsInline
             controls={false}

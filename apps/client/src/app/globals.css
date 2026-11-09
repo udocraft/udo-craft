@@ -132,6 +132,23 @@
   text-transform: uppercase;
 }
 
+/* Motion (Plan.md §3.4). CSS instead of framer for entrances; the global
+   prefers-reduced-motion rule below collapses these to instant. */
+@keyframes enter-down {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes pop {
+  from { transform: scale(0.4); }
+  to { transform: scale(1); }
+}
+@utility animate-enter-down {
+  animation: enter-down var(--duration-slow) var(--ease-out) both;
+}
+@utility animate-pop {
+  animation: pop var(--duration-base) var(--ease-out) both;
+}
+
 /* Dark sections, not dark mode (Plan.md D4). Wrap a section in `.inverse`
    and keep using bg-background / text-foreground / text-muted-foreground. */
 .inverse,

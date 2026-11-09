@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Upload, X } from "lucide-react";
 import { Button } from "@udo-craft/ui";
@@ -137,17 +138,17 @@ export function DemoIsland({
       <div className="order-1 lg:order-2">
         <div className="relative mx-auto aspect-square w-full max-w-[34rem] overflow-hidden rounded-media bg-white ring-1 ring-foreground/10">
           {image && (
-            <img
+            <Image
               src={image}
               alt={productName ?? ""}
-              width={1088}
-              height={1088}
-              loading="lazy"
-              decoding="async"
-              className="absolute inset-0 size-full object-contain p-6 sm:p-10"
+              fill
+              sizes="(min-width: 1024px) 34rem, 92vw"
+              className="object-contain p-6 sm:p-10"
             />
           )}
           {logo && (
+            // blob: preview of the visitor's own file; next/image cannot optimise it.
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={logo.url}
               alt={logo.name}

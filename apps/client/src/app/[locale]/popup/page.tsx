@@ -6,6 +6,7 @@ import { ArrowRight, User } from "lucide-react";
 import { BrandLogoFull } from "@/components/brand-logo";
 import { ContactForm } from "@/components/ContactForm";
 import { motion, useInView } from "framer-motion";
+import { MotionProvider } from "@/components/MotionProvider";
 
 const steps = [
   { step: "01", title: "Обираєте формат", desc: "Розкажіть нам про захід — кількість гостей, локація, дата. Ми підберемо оптимальний формат попапу." },
@@ -90,6 +91,7 @@ export default function PopupPage() {
   ];
 
   return (
+    <MotionProvider>
     <div className="min-h-screen bg-white text-gray-900">
       <motion.div
         initial={{ opacity: 1 }} animate={{ opacity: 0 }}
@@ -353,5 +355,6 @@ export default function PopupPage() {
         </div>
       </footer>
     </div>
+    </MotionProvider>
   );
 }

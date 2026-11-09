@@ -15,6 +15,7 @@ function SimpleLoader() {
   );
 }
 import { OrderPageInner } from "./_main";
+import { MotionProvider } from "@/components/MotionProvider";
 
 interface ProductWithConfig extends Product {
   size_chart_id?: string | null;
@@ -111,8 +112,10 @@ function OrderPageLoader() {
 
 export default function OrderPage() {
   return (
-    <Suspense fallback={<SimpleLoader />}>
-      <OrderPageLoader />
-    </Suspense>
+    <MotionProvider>
+      <Suspense fallback={<SimpleLoader />}>
+        <OrderPageLoader />
+      </Suspense>
+    </MotionProvider>
   );
 }

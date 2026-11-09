@@ -2,7 +2,6 @@
 
 import { Link } from "@/i18n/navigation";
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { User, ShoppingBag, ArrowRight, X, Menu } from "lucide-react";
 import { BrandLogoFull } from "@/components/brand-logo";
 import { sound } from "@/lib/sound";
@@ -15,11 +14,10 @@ interface NavBarProps {
   isLoggedIn: boolean;
   cartCount: number;
   onCartOpen: () => void;
-  cinemaMode: boolean;
   onAuthOpen?: () => void;
 }
 
-export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOpen }: NavBarProps) {
+export function NavBar({ isLoggedIn, cartCount, onCartOpen, onAuthOpen }: NavBarProps) {
   const t = useTranslations("nav");
   const navLinks = [
     { href: "/#catalog", label: t("catalog") },
@@ -32,11 +30,8 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
   const isLight = true; // always use light nav style
 
   return (
-    <motion.nav
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: cinemaMode ? -80 : 0, opacity: cinemaMode ? 0 : 1 }}
-      transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1], delay: cinemaMode ? 0 : 1.3 }}
-      className="fixed inset-x-0 top-3 z-50 flex justify-center pointer-events-none px-3 sm:top-4 sm:px-4"
+    <nav
+      className="animate-enter-down fixed inset-x-0 top-3 z-50 flex justify-center pointer-events-none px-3 sm:top-4 sm:px-4"
       aria-label={t("mainNav")}
     >
       <div
@@ -110,14 +105,11 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
           >
             <ShoppingBag className="w-5 h-5" strokeWidth={2} />
             {cartCount > 0 && (
-              <motion.span
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 500, damping: 20 }}
-                className="absolute top-1.5 right-1.5 bg-primary text-white text-xs font-black rounded-full w-4.5 h-4.5 flex items-center justify-center leading-none ring-2 ring-background"
+              <span
+                className="animate-pop absolute top-1.5 right-1.5 bg-primary text-white text-xs font-black rounded-full w-4.5 h-4.5 flex items-center justify-center leading-none ring-2 ring-background"
               >
                 {cartCount}
-              </motion.span>
+              </span>
             )}
           </button>
 
@@ -177,6 +169,6 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
           </nav>
         </SheetContent>
       </Sheet>
-    </motion.nav>
+    </nav>
   );
 }

@@ -12,7 +12,7 @@ import { useCart } from "@/hooks/useCart";
 const CartSidebar = dynamic(() => import("@/app/_components/CartSidebar").then((m) => m.CartSidebar), { ssr: false });
 const AuthModal = dynamic(() => import("@/components/AuthModal").then((m) => m.AuthModal), { ssr: false });
 
-export function SiteHeader({ cinemaMode = false }: { cinemaMode?: boolean }) {
+export function SiteHeader() {
   const router = useRouter();
   const { cart, cartCount, totalCents } = useCart();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -48,7 +48,6 @@ export function SiteHeader({ cinemaMode = false }: { cinemaMode?: boolean }) {
           setCartMounted(true);
           setCartOpen(true);
         }}
-        cinemaMode={cinemaMode}
         onAuthOpen={() => {
           setAuthMounted(true);
           setAuthOpen(true);
