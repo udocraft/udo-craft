@@ -1,5 +1,5 @@
 import { createServiceClient } from "@/lib/supabase/service";
-import { HomeClient } from "@/app/_components/HomeClient";
+import { HomeSections } from "@/app/_home/HomeSections";
 import { getTranslations } from "next-intl/server";
 import { jsonLdHtml, pageAlternates, SITE_URL } from "@/lib/seo";
 
@@ -88,12 +88,13 @@ export default async function LocaleHomePage({ params }: { params: Promise<{ loc
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: jsonLdHtml(jsonLd) }}
         />
-        <HomeClient
+        <HomeSections
+          locale={locale}
           products={prodRes.data || []}
           categories={catRes.data || []}
           materials={matRes.data || []}
           colorVariants={varRes.data || []}
-          cmsData={cmsData}
+          cms={cmsData}
         />
       </>
     );
@@ -103,12 +104,13 @@ export default async function LocaleHomePage({ params }: { params: Promise<{ loc
     }
     console.error("Error fetching home page data:", err);
     return (
-      <HomeClient
+      <HomeSections
+        locale={locale}
         products={[]}
         categories={[]}
         materials={[]}
         colorVariants={[]}
-        cmsData={{}}
+        cms={{}}
       />
     );
   }

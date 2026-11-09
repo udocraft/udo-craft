@@ -871,5 +871,12 @@
     "privacy": "Privacybeleid",
     "terms": "Voorwaarden",
     "cookieSettings": "Cookie-instellingen"
+  },
+  "homeDemo": {
+    "upload": "Upload je logo",
+    "remove": "Logo verwijderen",
+    "hint": "PNG, JPG, SVG of WebP, tot 5 MB",
+    "note": "Alleen een voorbeeld. In de volledige editor stel je formaat en drukzones in.",
+    "tooLarge": "Het bestand is groter dan 5 MB. Kies een kleinere afbeelding."
   }
 }

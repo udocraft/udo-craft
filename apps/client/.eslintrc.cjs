@@ -35,12 +35,7 @@ module.exports = {
       // each file from this list. Do NOT add files here.
       files: [
         "src/app/[[]locale]/order/_components/editor/DrawingModal.tsx",
-        "src/app/_sections/CustomizerPreviewSection.tsx",
-        "src/app/_sections/ContactSection.tsx",
         "src/app/_sections/FooterSection.tsx",
-        "src/app/_sections/ProblemSolutionSection.tsx",
-        "src/app/_sections/SubscriptionSection.tsx",
-        "src/app/_sections/TrustSection.tsx",
         "src/components/ContactForm.tsx",
       ],
       rules: {

@@ -871,5 +871,12 @@
     "privacy": "Integritetspolicy",
     "terms": "Villkor",
     "cookieSettings": "Cookieinställningar"
+  },
+  "homeDemo": {
+    "upload": "Ladda upp din logotyp",
+    "remove": "Ta bort logotyp",
+    "hint": "PNG, JPG, SVG eller WebP, upp till 5 MB",
+    "note": "Bara en förhandsvisning. Storlek och tryckzoner ställer du in i den fullständiga editorn.",
+    "tooLarge": "Filen är större än 5 MB. Välj en mindre bild."
   }
 }

@@ -695,5 +695,12 @@
     "privacy": "Privacy policy",
     "terms": "Terms",
     "cookieSettings": "Cookie settings"
+  },
+  "homeDemo": {
+    "upload": "Upload your logo",
+    "remove": "Remove logo",
+    "hint": "PNG, JPG, SVG or WebP, up to 5 MB",
+    "note": "Preview only. The full editor sets size and print zones.",
+    "tooLarge": "File is larger than 5 MB. Choose a smaller image."
   }
 }

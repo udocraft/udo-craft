@@ -871,5 +871,12 @@
     "privacy": "Zásady ochrany osobních údajů",
     "terms": "Podmínky",
     "cookieSettings": "Nastavení cookies"
+  },
+  "homeDemo": {
+    "upload": "Nahrát logo",
+    "remove": "Odebrat logo",
+    "hint": "PNG, JPG, SVG nebo WebP, do 5 MB",
+    "note": "Jen náhled. Velikost a tiskové zóny nastavíte v plném editoru.",
+    "tooLarge": "Soubor je větší než 5 MB. Vyberte menší obrázek."
   }
 }
