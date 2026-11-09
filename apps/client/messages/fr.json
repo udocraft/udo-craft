@@ -871,5 +871,17 @@
     "privacy": "Politique de confidentialité",
     "terms": "Conditions",
     "cookieSettings": "Paramètres des cookies"
+  },
+  "homeDemo": {
+    "upload": "Importer votre logo",
+    "remove": "Retirer le logo",
+    "hint": "PNG, JPG, SVG ou WebP, jusqu'à 5 Mo",
+    "note": "Simple aperçu. L'éditeur complet définit la taille et les zones d'impression.",
+    "tooLarge": "Le fichier dépasse 5 Mo. Choisissez une image plus légère."
+  },
+  "checkoutErrors": {
+    "required": "Champ obligatoire",
+    "email": "Saisissez un e-mail valide, par exemple nom@entreprise.fr",
+    "phone": "Saisissez un numéro de téléphone d'au moins 9 chiffres"
   }
 }

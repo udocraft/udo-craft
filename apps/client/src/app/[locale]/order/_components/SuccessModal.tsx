@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { CheckCircle, Eye, EyeOff, Loader2 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { sound } from "@/lib/sound";
+import { CONFETTI_COLORS } from "@/lib/canvas-colors";
 
 export function SuccessModal({ email: initialEmail, onClose }: { email: string; onClose: () => void }) {
   const t = useTranslations("checkout.success");
@@ -35,7 +36,7 @@ export function SuccessModal({ email: initialEmail, onClose }: { email: string; 
     import("canvas-confetti").then((mod) => {
       const confetti = mod.default;
       const end = Date.now() + 2500;
-      const colors = ["#1B3BFF", "#ffffff", "#22c55e", "#f97316"];
+      const colors = CONFETTI_COLORS;
       const frame = () => {
         confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors });
         confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors });

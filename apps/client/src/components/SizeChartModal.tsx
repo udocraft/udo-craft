@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { X, Ruler } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
 
 interface SizeChartRow { [col: string]: string; }
 interface SizeChart { id: string; name: string; rows: SizeChartRow[]; image_url?: string | null; }
@@ -20,8 +19,11 @@ export function SizeChartModal({ chartId, trigger }: Props) {
   useEffect(() => {
     if (!open || !chartId || chart) return;
     setLoading(true);
-    const supabase = createClient();
-    supabase.from("size_charts").select("id, name, rows, image_url").eq("id", chartId).single()
+    // Loaded on open so the Supabase client stays out of the page's first-load JS.
+    import("@/lib/supabase/client")
+      .then(({ createClient }) =>
+        createClient().from("size_charts").select("id, name, rows, image_url").eq("id", chartId).single(),
+      )
       .then(({ data }: { data: SizeChart | null }) => { if (data) setChart(data as SizeChart); })
       .finally(() => setLoading(false));
   }, [open, chartId, chart]);

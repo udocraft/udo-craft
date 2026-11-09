@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import { Button } from "@udo-craft/ui";
+import { buttonVariants } from "@udo-craft/ui/components/ui/button-variants";
 
 export default function NotFound() {
   return (
@@ -10,11 +10,9 @@ export default function NotFound() {
         <p className="text-muted-foreground text-lg">
           На жаль, сторінка, яку ви шукаєте, не існує або була переміщена.
         </p>
-        <Button asChild variant="primary">
-          <Link href="/">
-            На головну
-          </Link>
-        </Button>
+        <Link href="/" className={buttonVariants({ variant: "primary" })}>
+          На головну
+        </Link>
       </div>
     </main>
   );

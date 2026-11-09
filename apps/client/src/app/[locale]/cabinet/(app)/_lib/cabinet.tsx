@@ -97,7 +97,7 @@ export function useCabinet() {
   return ctx;
 }
 
-const TOAST_STYLE = { background: "#111", color: "#fff", borderColor: "#111" };
+const TOAST_STYLE = { background: "var(--color-ink)", color: "var(--color-primary-foreground)", borderColor: "var(--color-ink)" };
 
 export function CabinetProvider({ children, fallback }: { children: React.ReactNode; fallback: React.ReactNode }) {
   const router = useRouter();

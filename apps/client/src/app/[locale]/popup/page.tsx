@@ -107,7 +107,7 @@ export default function PopupPage() {
       >
         <div className={`pointer-events-auto inline-flex items-center gap-2 h-12 px-3 rounded-full bg-background border border-border transition-shadow duration-300 ${scrolled ? "shadow-lg" : "shadow-md"}`}>
           <Link href="/" aria-label="U:DO CRAFT" className="shrink-0 pl-1 pr-2">
-            <BrandLogoFull className="h-6 w-auto" color="var(--color-primary, #1B18AC)" />
+            <BrandLogoFull className="h-6 w-auto" color="var(--color-primary)" />
           </Link>
           <div className="hidden md:block w-px h-5 bg-border shrink-0" />
           <div className="hidden md:flex items-center">

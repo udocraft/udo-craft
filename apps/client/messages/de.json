@@ -871,5 +871,17 @@
     "privacy": "Datenschutz",
     "terms": "AGB",
     "cookieSettings": "Cookie-Einstellungen"
+  },
+  "homeDemo": {
+    "upload": "Logo hochladen",
+    "remove": "Logo entfernen",
+    "hint": "PNG, JPG, SVG oder WebP, bis 5 MB",
+    "note": "Nur eine Vorschau. Größe und Druckzonen legen Sie im vollständigen Editor fest.",
+    "tooLarge": "Die Datei ist größer als 5 MB. Wählen Sie ein kleineres Bild."
+  },
+  "checkoutErrors": {
+    "required": "Pflichtfeld",
+    "email": "Geben Sie eine gültige E-Mail-Adresse ein, z. B. name@firma.de",
+    "phone": "Geben Sie eine Telefonnummer mit mindestens 9 Ziffern ein"
   }
 }

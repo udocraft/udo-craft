@@ -3,10 +3,13 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { Link } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { localizedField } from "@/lib/localized-field";
 import { ChevronLeft, ChevronRight, CircleSlash, ToolCase } from "lucide-react";
-import { Product, ProductColorVariant, Material, resolveProductImages, getAllImages } from "@udo-craft/shared";
+import type { Product, ProductColorVariant, Material } from "@udo-craft/shared";
+import { resolveProductImages, getAllImages } from "@udo-craft/shared/product-images";
+import { FALLBACK_GARMENT_COLORS, NEUTRAL_SWATCH, isLightSwatch } from "@/lib/canvas-colors";
 import { Button } from "@udo-craft/ui";
 
 interface ProductCardDetailedProps {
@@ -17,15 +20,6 @@ interface ProductCardDetailedProps {
   onCustomize?: (product: Product, size: string | null, color: string | null, variant: ProductColorVariant | null) => void;
   onAddWithoutPrint?: (product: Product, size: string | null, color: string | null, variant: ProductColorVariant | null) => void;
 }
-
-const FALLBACK_COLORS = [
-  { name: "Black",       hex: "#1a1a1a", border: false },
-  { name: "White",       hex: "#f0f0f0", border: true  },
-  { name: "Gray",        hex: "#9ca3af", border: false },
-  { name: "Navy",        hex: "#1e3a5f", border: false },
-  { name: "Blue",        hex: "#2563eb", border: false },
-  { name: "Red",         hex: "#dc2626", border: false },
-];
 
 function pickMiddleSize(sizes: string[]): string | null {
   if (!sizes.length) return null;
@@ -72,10 +66,10 @@ export function ProductCardDetailed({
     hasVariants && materials
       ? colorVariants.map((v) => {
           const mat = materials.find((m) => m.id === v.material_id);
-          const hex = mat?.hex_code || "#ccc";
-          return { id: v.id, name: mat?.name || "Standard", hex, border: hex.toLowerCase() === "#f0f0f0" || hex.toLowerCase() === "#ffffff" };
+          const hex = mat?.hex_code || NEUTRAL_SWATCH;
+          return { id: v.id, name: mat?.name || "Standard", hex, border: isLightSwatch(hex) };
         })
-      : FALLBACK_COLORS.map((c) => ({ id: c.name, name: c.name, hex: c.hex, border: c.border }));
+      : FALLBACK_GARMENT_COLORS.map((c) => ({ id: c.name, name: c.name, hex: c.hex, border: c.border }));
 
   const sizes = product.available_sizes || [];
   const visibleSizes = sizes.slice(0, 8);
@@ -88,11 +82,6 @@ export function ProductCardDetailed({
   };
 
   const resolveSize = () => selectedSize ?? pickMiddleSize(sizes);
-
-  const handleCardClick = () => {
-    if (isOutOfStock) return;
-    router.push(`/products/${product.slug || product.id}`);
-  };
 
   const handleAddPrint = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -121,14 +110,8 @@ export function ProductCardDetailed({
   };
 
   return (
-    <div
-      role="button"
-      tabIndex={isOutOfStock ? -1 : 0}
-      aria-label={productName}
-      aria-disabled={isOutOfStock}
-      onClick={handleCardClick}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleCardClick(); }}
-      className={`bg-muted rounded-2xl overflow-hidden flex flex-col h-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${isOutOfStock ? "opacity-60 pointer-events-none" : ""}`}
+    <article
+      className={`relative bg-muted rounded-card overflow-hidden flex flex-col h-full has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-ring has-[a:focus-visible]:ring-offset-2 ${isOutOfStock ? "opacity-60 pointer-events-none" : ""}`}
     >
       {/* Image */}
       <div className="p-3 sm:p-4 w-full flex items-center justify-center aspect-square flex-shrink-0 relative overflow-hidden group/img">
@@ -177,9 +160,17 @@ export function ProductCardDetailed({
       <div className="px-3 pb-3 sm:px-4 sm:pb-4 flex flex-col gap-2">
         {/* Name + price + description */}
         <div className="flex flex-col gap-1">
-          <div className="flex items-start justify-between gap-2">
-            <p className="text-sm font-semibold text-foreground leading-tight">{productName}</p>
-            <p className="text-sm font-bold text-primary shrink-0">
+          <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-0.5">
+            {/* Stretched link: the whole card opens the product; controls sit above it (z-10). */}
+            <Link
+              href={`/products/${product.slug || product.id}`}
+              aria-disabled={isOutOfStock || undefined}
+              tabIndex={isOutOfStock ? -1 : undefined}
+              className="min-w-0 text-sm font-semibold text-foreground leading-tight [overflow-wrap:anywhere] outline-none after:absolute after:inset-0"
+            >
+              {productName}
+            </Link>
+            <p className="text-sm font-bold text-primary shrink-0 whitespace-nowrap">
               {product.base_price_cents > 0
                 ? t("fromPrice", { price: (product.base_price_cents / 100).toFixed(0) })
                 : t("priceOnRequest")}
@@ -194,7 +185,7 @@ export function ProductCardDetailed({
                 <button 
                   type="button"
                   onClick={(e) => { e.stopPropagation(); setDescExpanded(!descExpanded); }}
-                  className="hit-44 text-xs text-primary font-semibold hover:underline mt-0.5 touch-manipulation cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+                  className="relative z-10 inline-flex min-h-6 items-center text-xs text-primary font-semibold hover:underline mt-0.5 touch-manipulation cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
                 >
                   {descExpanded ? t("collapse") : t("expand")}
                 </button>
@@ -204,7 +195,7 @@ export function ProductCardDetailed({
         </div>
 
         {/* Sizes + Colors */}
-        <div className="flex flex-col gap-3">
+        <div className="relative z-10 flex flex-col gap-3">
           {sizes.length > 0 && (
             <div className="grid grid-cols-4 gap-1.5">
               {visibleSizes.map((size) => (
@@ -255,7 +246,7 @@ export function ProductCardDetailed({
 
         {/* Action buttons */}
         <div
-          className={`grid grid-cols-1 gap-2 overflow-hidden transition-all duration-200 ease-out ${
+          className={`relative z-10 grid grid-cols-1 gap-2 overflow-hidden transition-all duration-200 ease-out ${
             actionsVisible ? "max-h-28 opacity-100 mt-1" : "max-h-0 opacity-0 pointer-events-none"
           }`}
         >
@@ -274,6 +265,6 @@ export function ProductCardDetailed({
           </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

@@ -9,6 +9,10 @@ This document defines the mandatory UI/UX standards for both **Client** and **Ad
 *   **No Manual CSS:** Avoid custom CSS or heavy Tailwind nesting for basic components. Use Shadcn primitives (Button, Input, Sheet, Dialog, etc.).
 *   **Consistency:** If a component exists in `packages/ui`, use it. If not, create it there first if it's shared.
 
+### Server components and links
+*   `Button asChild` loses its classes when the child is a client `Link` passed from a **server** component. In server code style links with `buttonVariants` (`@udo-craft/ui/components/ui/button-variants`, no `"use client"`): `<Link className={buttonVariants({ variant: "primary", size: "lg" })}>`. In client components `asChild` is fine.
+*   Hex colours only in `src/lib/canvas-colors.ts` (garment, ink and canvas data). UI chrome uses tokens; dark bands use the `.inverse` scope.
+
 ### 2. Sizing & Touch Targets (Apple HIG Standard)
 *   **Minimum Target:** Every primary interactive element MUST have a minimum touch area of **44px** in width or height.
 *   **Implementation:** 

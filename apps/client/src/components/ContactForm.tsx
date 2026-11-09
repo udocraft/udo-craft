@@ -44,7 +44,7 @@ function topicFromSource(source: string): TopicValue {
 }
 
 // Shared input class — taller to match landing page button height
-const inputCls = "w-full h-[52px] bg-white/5 border border-white/10 text-white placeholder:text-white/30 rounded-lg px-4 text-sm focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/30 transition-colors disabled:opacity-50";
+const inputCls = "w-full h-[52px] bg-foreground/5 border border-input text-foreground placeholder:text-muted-foreground rounded-lg px-4 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors disabled:opacity-50";
 
 export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
   const tForm = useTranslations("contactForm");
@@ -119,14 +119,14 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
   if (sent) {
     return (
       <div className="max-w-2xl">
-        <p className="text-white/90 text-base font-medium">{tForm("success")}</p>
-        <p className="text-white/70 text-sm mt-2">{tForm("successDesc")}</p>
+        <p className="text-foreground text-base font-medium">{tForm("success")}</p>
+        <p className="text-muted-foreground text-sm mt-2">{tForm("successDesc")}</p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-4 max-w-2xl">
+    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
       {/* Honeypot field — hidden from real users, catches bots */}
       <input
         name="website"
@@ -140,7 +140,7 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
       />
 
       <div className="space-y-1.5">
-        <Label htmlFor="cf-name" className="text-white/60 text-xs font-semibold uppercase tracking-wide">{tForm("nameLabel")}</Label>
+        <Label htmlFor="cf-name" className="text-muted-foreground text-sm font-medium">{tForm("nameLabel")}</Label>
         <input id="cf-name" type="text" placeholder={tForm("namePlaceholder")} value={name}
           onChange={(e) => setName(e.target.value)} required disabled={submitting}
           onFocus={() => sound.tap()}
@@ -148,7 +148,7 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="cf-email" className="text-white/60 text-xs font-semibold uppercase tracking-wide">Email *</Label>
+        <Label htmlFor="cf-email" className="text-muted-foreground text-sm font-medium">Email *</Label>
         <input id="cf-email" type="email" placeholder="hr@company.com" value={email}
           onChange={(e) => setEmail(e.target.value)} required disabled={submitting}
           onFocus={() => sound.tap()}
@@ -156,7 +156,7 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="cf-phone" className="text-white/60 text-xs font-semibold uppercase tracking-wide">{tForm("phoneLabel")}</Label>
+        <Label htmlFor="cf-phone" className="text-muted-foreground text-sm font-medium">{tForm("phoneLabel")}</Label>
         <input id="cf-phone" type="tel" placeholder="+380 XX XXX XX XX" value={phone}
           onChange={(e) => setPhone(e.target.value)} required disabled={submitting}
           onFocus={() => sound.tap()}
@@ -164,7 +164,7 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="cf-company" className="text-white/60 text-xs font-semibold uppercase tracking-wide">{tForm("companyLabel")}</Label>
+        <Label htmlFor="cf-company" className="text-muted-foreground text-sm font-medium">{tForm("companyLabel")}</Label>
         <input id="cf-company" type="text" placeholder={tForm("companyPlaceholder")} value={company}
           onChange={(e) => setCompany(e.target.value)} disabled={submitting}
           onFocus={() => sound.tap()}
@@ -173,45 +173,40 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
 
       {/* Topic picker */}
       <div className="md:col-span-2 space-y-1.5">
-        <Label className="text-white/60 text-xs font-semibold uppercase tracking-wide">{tForm("topicLabel")}</Label>
+        <Label className="text-muted-foreground text-sm font-medium">{tForm("topicLabel")}</Label>
         <Popover open={topicOpen} onOpenChange={setTopicOpen}>
           <PopoverTrigger
             disabled={submitting}
-            className="w-full h-[52px] flex items-center gap-3 bg-white/5 border border-white/10 rounded-lg px-4 text-left hover:bg-white/[0.08] hover:border-white/20 transition-colors disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-white/20"
+            className="w-full h-[52px] flex items-center gap-3 bg-foreground/5 border border-input rounded-lg px-4 text-left hover:bg-foreground/10 hover:border-input transition-colors disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-ring"
           >
             <span className="text-xl shrink-0" aria-hidden="true">{selectedTopic.icon}</span>
             <div className="flex-1 min-w-0">
-              <p className="text-white text-sm font-medium leading-tight">{selectedTopic.label}</p>
-              <p className="text-white/40 text-xs mt-0.5 truncate">{selectedTopic.desc}</p>
+              <p className="text-foreground text-sm font-medium leading-tight">{selectedTopic.label}</p>
+              <p className="text-muted-foreground text-xs mt-0.5 truncate">{selectedTopic.desc}</p>
             </div>
-            <ChevronDown className={`w-4 h-4 text-white/40 shrink-0 transition-transform duration-200 ${topicOpen ? "rotate-180" : ""}`} />
+            <ChevronDown className={`w-4 h-4 text-muted-foreground shrink-0 transition-transform duration-200 ${topicOpen ? "rotate-180" : ""}`} />
           </PopoverTrigger>
 
-          {/* Force dark bg with inline style — overrides CSS variable bg-popover */}
+          {/* Portalled out of the inverse section, so it opts into the scope itself. */}
           <PopoverContent
             align="start"
             sideOffset={6}
-            style={{
-              width: "var(--anchor-width)",
-              backgroundColor: "#0f172a",
-              border: "1px solid rgba(255,255,255,0.08)",
-            }}
-            className="!bg-[#0f172a] p-1.5 shadow-2xl rounded-xl"
+            style={{ width: "var(--anchor-width)" }}
+            className="inverse border border-border bg-popover p-1.5 text-popover-foreground shadow-2xl rounded-xl"
           >
             {topics.map((t) => (
               <button key={t.value} type="button"
                 onClick={() => { setTopic(t.value); setTopicOpen(false); sound.select(); }}
-                style={{ color: topic === t.value ? "#fff" : "rgba(255,255,255,0.7)" }}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors focus:outline-none ${
-                  topic === t.value ? "bg-white/10" : "hover:bg-white/5"
+                  topic === t.value ? "bg-foreground/10 text-foreground" : "text-muted-foreground hover:bg-foreground/5"
                 }`}
               >
                 <span className="text-xl shrink-0" aria-hidden="true">{t.icon}</span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium leading-tight" style={{ color: "#fff" }}>{t.label}</p>
-                  <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.55)" }}>{t.desc}</p>
+                  <p className="text-sm font-medium leading-tight text-foreground">{t.label}</p>
+                  <p className="text-xs mt-0.5 text-muted-foreground">{t.desc}</p>
                 </div>
-                {topic === t.value && <Check className="w-4 h-4 shrink-0" style={{ color: "#fff" }} />}
+                {topic === t.value && <Check className="w-4 h-4 shrink-0 text-foreground" />}
               </button>
             ))}
           </PopoverContent>
@@ -219,14 +214,14 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
       </div>
 
       <div className="md:col-span-2 space-y-1.5">
-        <Label htmlFor="cf-message" className="text-white/60 text-xs font-semibold uppercase tracking-wide">{tForm("messageLabel")}</Label>
+        <Label htmlFor="cf-message" className="text-muted-foreground text-sm font-medium">{tForm("messageLabel")}</Label>
         <textarea id="cf-message" placeholder={tForm("messagePlaceholder")}
           rows={4} value={message} onChange={(e) => setMessage(e.target.value)} disabled={submitting}
-          className="w-full bg-white/5 border border-white/10 text-white placeholder:text-white/30 rounded-lg px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/30 transition-colors resize-none disabled:opacity-50" />
+          className="w-full bg-foreground/5 border border-input text-foreground placeholder:text-muted-foreground rounded-lg px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors resize-none disabled:opacity-50" />
       </div>
 
       <div className="md:col-span-2 space-y-1.5">
-        <Label htmlFor="cf-files" className="text-white/60 text-xs font-semibold uppercase tracking-wide">
+        <Label htmlFor="cf-files" className="text-muted-foreground text-sm font-medium">
           {tForm("filesLabel")}
         </Label>
         <div className="relative">
@@ -234,19 +229,19 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
             onChange={(e) => setFiles(Array.from(e.target.files || []))}
             disabled={submitting} className="hidden" />
           <label htmlFor="cf-files"
-            className="flex flex-col items-center justify-center w-full p-6 border-2 border-dashed border-white/20 rounded-lg cursor-pointer hover:border-white/40 hover:bg-white/5 transition-colors">
-            <Upload className="w-8 h-8 text-white/40 mb-2" aria-hidden="true" />
-            <p className="text-white/70 text-sm font-medium">{tForm("filesClick")}</p>
-            <p className="text-white/50 text-xs mt-1">{tForm("filesDesc")}</p>
+            className="flex flex-col items-center justify-center w-full p-6 border-2 border-dashed border-input rounded-lg cursor-pointer hover:border-input hover:bg-foreground/5 transition-colors">
+            <Upload className="w-8 h-8 text-muted-foreground mb-2" aria-hidden="true" />
+            <p className="text-muted-foreground text-sm font-medium">{tForm("filesClick")}</p>
+            <p className="text-muted-foreground text-xs mt-1">{tForm("filesDesc")}</p>
           </label>
           {files.length > 0 && (
             <div className="mt-3 space-y-2">
               {files.map((f, i) => (
-                <div key={i} className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">
-                  <span className="text-white/70 text-xs truncate">{f.name}</span>
+                <div key={i} className="flex items-center justify-between p-2 bg-foreground/5 rounded border border-border">
+                  <span className="text-muted-foreground text-xs truncate">{f.name}</span>
                   <button type="button" onClick={() => setFiles(files.filter((_, idx) => idx !== i))}
                     aria-label={tForm("deleteFile", { name: f.name })}
-                    className="text-white/50 hover:text-white/70 transition-colors rounded focus:outline-none focus:ring-2 focus:ring-white/20">
+                    className="text-muted-foreground hover:text-foreground transition-colors rounded focus:outline-none focus:ring-2 focus:ring-ring">
                     <X className="w-4 h-4" />
                   </button>
                 </div>

@@ -871,5 +871,17 @@
     "privacy": "Polityka prywatności",
     "terms": "Regulamin",
     "cookieSettings": "Ustawienia plików cookie"
+  },
+  "homeDemo": {
+    "upload": "Prześlij logo",
+    "remove": "Usuń logo",
+    "hint": "PNG, JPG, SVG lub WebP, do 5 MB",
+    "note": "To tylko podgląd. Rozmiar i strefy druku ustawisz w pełnym edytorze.",
+    "tooLarge": "Plik jest większy niż 5 MB. Wybierz mniejszy obraz."
+  },
+  "checkoutErrors": {
+    "required": "Pole wymagane",
+    "email": "Podaj poprawny adres e-mail, na przykład imie@firma.pl",
+    "phone": "Podaj numer telefonu z co najmniej 9 cyframi"
   }
 }

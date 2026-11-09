@@ -10,6 +10,8 @@ type SectionHeaderProps = Omit<React.ComponentProps<"div">, "title"> & {
   action?: React.ReactNode
   /** Heading level. Home sections use h2; the page title is the only h1. */
   as?: "h1" | "h2" | "h3"
+  /** id on the heading, so a parent section can use aria-labelledby. */
+  titleId?: string
   align?: "start" | "center"
 }
 
@@ -26,6 +28,7 @@ function SectionHeader({
   lede,
   action,
   as: Heading = "h2",
+  titleId,
   align = "start",
   ...props
 }: SectionHeaderProps) {
@@ -42,7 +45,7 @@ function SectionHeader({
     >
       <div className={cn("max-w-2xl space-y-3", centered && "mx-auto")}>
         {eyebrow ? <p className="text-eyebrow text-brand">{eyebrow}</p> : null}
-        <Heading className={cn(titleSize[Heading], "font-semibold text-balance text-foreground")}>
+        <Heading id={titleId} className={cn(titleSize[Heading], "font-semibold text-balance text-foreground")}>
           {title}
         </Heading>
         {lede ? <p className="text-lede text-muted-foreground">{lede}</p> : null}
