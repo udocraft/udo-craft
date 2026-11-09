@@ -470,7 +470,10 @@
     "quantity": "{qty} pz · {size}",
     "total": "Totale:",
     "cartItem": "Articolo nel carrello",
-    "collapse": "Comprimi carrello"
+    "collapse": "Comprimi carrello",
+    "viewCart": "Vedi carrello",
+    "continueShopping": "Continua gli acquisti",
+    "requestNote": "Gli articoli senza prezzo indicato vengono quotati dal manager."
   },
   "services": {
     "heading": "Three ways to get",

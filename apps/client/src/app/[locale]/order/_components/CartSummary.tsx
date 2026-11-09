@@ -74,6 +74,7 @@ export function CartSummary({ cart, contact, setContact, setStep, onEditCartItem
   const tErr = useTranslations("checkoutErrors");
   const tCart = useTranslations("cart");
   const tCab = useTranslations("cabinet");
+  const tCol = useTranslations("collections");
   const formRef = useRef<HTMLDivElement>(null);
   const [touched, setTouched] = useState<Partial<Record<CheckoutField, boolean>>>({});
   const errors = checkoutErrors(contact, { required: tErr("required"), phone: tErr("phone"), email: tErr("email"), branch: t("np.required") });
@@ -260,7 +261,7 @@ export function CartSummary({ cart, contact, setContact, setStep, onEditCartItem
                   {t("edit")}
                 </button>
               </div>
-              <p className="shrink-0 text-sm font-semibold tabular-nums">{money((item.unitPriceCents + item.printCostCents) * item.quantity)}</p>
+              <p className="shrink-0 text-sm font-semibold tabular-nums">{(item.unitPriceCents + item.printCostCents) > 0 ? money((item.unitPriceCents + item.printCostCents) * item.quantity) : tCol("priceOnRequest")}</p>
             </li>
           ))}
         </ul>

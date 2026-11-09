@@ -470,7 +470,10 @@
     "quantity": "{qty} szt · {size}",
     "total": "Łącznie:",
     "cartItem": "Produkt w koszyku",
-    "collapse": "Zwiń koszyk"
+    "collapse": "Zwiń koszyk",
+    "viewCart": "Zobacz koszyk",
+    "continueShopping": "Kontynuuj zakupy",
+    "requestNote": "Produkty bez podanej ceny wycenia menedżer."
   },
   "services": {
     "heading": "Three ways to get",

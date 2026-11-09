@@ -470,7 +470,10 @@
     "quantity": "{qty} pcs · {size}",
     "total": "Total :",
     "cartItem": "Article du panier",
-    "collapse": "Réduire le panier"
+    "collapse": "Réduire le panier",
+    "viewCart": "Voir le panier",
+    "continueShopping": "Continuer mes achats",
+    "requestNote": "Les articles sans prix indiqué sont chiffrés par le manager."
   },
   "services": {
     "heading": "Three ways to get",

@@ -190,7 +190,8 @@ export function OrderPageInner({
 
     if (editIdx !== null && !isNaN(Number(editIdx))) {
       const idx = Number(editIdx);
-      const storedCart = sessionStorage.getItem("udo_cart");
+      // Legacy key first; otherwise the saved draft (links from /cart).
+      const storedCart = sessionStorage.getItem("udo_cart") ?? JSON.stringify(JSON.parse(sessionStorage.getItem(SESSION_KEY) ?? "{}").cart ?? []);
       if (storedCart) {
         try {
           const parsedCart = JSON.parse(storedCart) as CartItem[];

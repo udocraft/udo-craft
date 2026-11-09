@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { locales } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/seo";
 
-const PRIVATE_PATHS = ["/api", "/cabinet", "/checkout"];
+const PRIVATE_PATHS = ["/api", "/cabinet", "/checkout", "/cart"];
 
 export default function robots(): MetadataRoute.Robots {
   const disallow = PRIVATE_PATHS.flatMap((p) => [p, ...locales.map((l) => `/${l}${p}`)]);

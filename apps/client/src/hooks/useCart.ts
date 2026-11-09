@@ -13,12 +13,19 @@ export interface CartItem {
   mockupDataUrl?: string;
   mockupBackDataUrl?: string;
   productImage?: string;
+  color?: string;
+  /** Mockup stored on the server; data URLs are not kept in the saved draft. */
+  mockupUploadedUrl?: string;
 }
 
 export interface UseCartReturn {
   cart: CartItem[];
   cartCount: number;
   totalCents: number;
+  /** Remove one line from the saved order draft. */
+  remove: (index: number) => void;
+  /** Mark the draft so /order opens on the checkout step. Call before navigating there. */
+  startCheckout: () => void;
 }
 
 export function useCart(): UseCartReturn {
@@ -74,5 +81,19 @@ export function useCart(): UseCartReturn {
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return { cart, cartCount, totalCents };
+  // The draft in sessionStorage is the single source of truth (the /order page owns it).
+  const patchDraft = (patch: (draft: { cart?: unknown[]; step?: string }) => void) => {
+    try {
+      const draft = JSON.parse(sessionStorage.getItem("client-order-draft") ?? "{}");
+      patch(draft);
+      sessionStorage.setItem("client-order-draft", JSON.stringify(draft));
+      window.dispatchEvent(new Event("udo_cart_update"));
+    } catch (error) {
+      console.error("Failed to update the saved cart", error);
+    }
+  };
+  const remove = (index: number) => patchDraft((d) => { d.cart = (d.cart ?? []).filter((_, i) => i !== index); });
+  const startCheckout = () => patchDraft((d) => { d.step = "contact"; });
+
+  return { cart, cartCount, totalCents, remove, startCheckout };
 }

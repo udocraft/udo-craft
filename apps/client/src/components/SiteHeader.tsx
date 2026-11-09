@@ -14,7 +14,7 @@ const AuthModal = dynamic(() => import("@/components/AuthModal").then((m) => m.A
 
 export function SiteHeader() {
   const router = useRouter();
-  const { cart, cartCount, totalCents } = useCart();
+  const { cart, cartCount, totalCents, startCheckout } = useCart();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
@@ -60,6 +60,7 @@ export function SiteHeader() {
           cart={cart}
           cartCount={cartCount}
           totalCents={totalCents}
+          startCheckout={startCheckout}
         />
       )}
       {authMounted && (

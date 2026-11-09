@@ -470,7 +470,10 @@
     "quantity": "{qty} un · {size}",
     "total": "Total:",
     "cartItem": "Artigo do carrinho",
-    "collapse": "Recolher carrinho"
+    "collapse": "Recolher carrinho",
+    "viewCart": "Ver carrinho",
+    "continueShopping": "Continuar a comprar",
+    "requestNote": "Os artigos sem preço indicado são orçamentados pelo gestor."
   },
   "services": {
     "heading": "Three ways to get",

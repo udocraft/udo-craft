@@ -470,7 +470,10 @@
     "quantity": "{qty} uds · {size}",
     "total": "Total:",
     "cartItem": "Artículo del carrito",
-    "collapse": "Contraer carrito"
+    "collapse": "Contraer carrito",
+    "viewCart": "Ver carrito",
+    "continueShopping": "Seguir comprando",
+    "requestNote": "El gestor calcula el precio de los artículos sin precio indicado."
   },
   "services": {
     "heading": "Three ways to get",

@@ -470,7 +470,10 @@
     "quantity": "{qty} st · {size}",
     "total": "Totalt:",
     "cartItem": "Kundvagnsartikel",
-    "collapse": "Fäll ihop varukorgen"
+    "collapse": "Fäll ihop varukorgen",
+    "viewCart": "Visa varukorg",
+    "continueShopping": "Fortsätt handla",
+    "requestNote": "Varor utan angivet pris offereras av managern."
   },
   "services": {
     "heading": "Three ways to get",

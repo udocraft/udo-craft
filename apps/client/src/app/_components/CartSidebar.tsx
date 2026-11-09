@@ -14,9 +14,10 @@ interface CartSidebarProps {
   cart: CartItem[];
   cartCount: number;
   totalCents: number;
+  startCheckout: () => void;
 }
 
-export function CartSidebar({ open, onClose, cart, cartCount, totalCents }: CartSidebarProps) {
+export function CartSidebar({ open, onClose, cart, cartCount, totalCents, startCheckout }: CartSidebarProps) {
   const t = useTranslations("cart");
   const tCheckout = useTranslations("checkout");
 
@@ -53,7 +54,7 @@ export function CartSidebar({ open, onClose, cart, cartCount, totalCents }: Cart
                     <div className="size-14 shrink-0 overflow-hidden rounded-xl border border-border/70 bg-muted">
                       <MockupViewer
                         images={item.mockupsMap}
-                        frontUrl={item.mockupDataUrl}
+                        frontUrl={item.mockupDataUrl ?? item.mockupUploadedUrl}
                         backUrl={item.mockupBackDataUrl}
                         fallbackUrl={item.productImage}
                         alt={item.productName}
@@ -74,9 +75,12 @@ export function CartSidebar({ open, onClose, cart, cartCount, totalCents }: Cart
                 <span className="text-lg font-semibold tracking-tight text-foreground">{(totalCents / 100).toFixed(0)} ₴</span>
               </div>
               <Button asChild variant="primary" size="lg" className="w-full">
-                <Link href="/order" onClick={onClose}>
+                <Link href="/order" onClick={() => { startCheckout(); onClose(); }}>
                   {tCheckout("orderTitle")} <ArrowRight className="size-4" />
                 </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="w-full">
+                <Link href="/cart" onClick={onClose}>{t("viewCart")}</Link>
               </Button>
               <p className="text-center text-xs text-muted-foreground">{tCheckout("finalPriceNote")}</p>
             </div>

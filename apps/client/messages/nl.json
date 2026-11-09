@@ -470,7 +470,10 @@
     "quantity": "{qty} st · {size}",
     "total": "Totaal:",
     "cartItem": "Winkelwagenartikel",
-    "collapse": "Winkelwagen inklappen"
+    "collapse": "Winkelwagen inklappen",
+    "viewCart": "Winkelwagen bekijken",
+    "continueShopping": "Verder winkelen",
+    "requestNote": "Artikelen zonder prijs worden door de manager geoffreerd."
   },
   "services": {
     "heading": "Three ways to get",
