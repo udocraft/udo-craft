@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { localizedField } from "@/lib/localized-field";
 import { ChevronLeft, ChevronRight, CircleSlash, ToolCase } from "lucide-react";
-import { Product, ProductColorVariant, Material, resolveProductImages, getAllImages } from "@udo-craft/shared";
+import type { Product, ProductColorVariant, Material } from "@udo-craft/shared";
+import { resolveProductImages, getAllImages } from "@udo-craft/shared/product-images";
 import { Button } from "@udo-craft/ui";
 
 interface ProductCardDetailedProps {

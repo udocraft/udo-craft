@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Button } from "@udo-craft/ui";
-import { getAllImages, resolveProductImages } from "@udo-craft/shared";
+import { getAllImages, resolveProductImages } from "@udo-craft/shared/product-images";
 import { Link } from "@/i18n/navigation";
 import { localizedField } from "@/lib/localized-field";
 import { HeroMedia } from "./HeroMedia";

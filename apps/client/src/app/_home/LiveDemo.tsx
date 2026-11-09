@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Section, SectionHeader } from "@udo-craft/ui";
-import { getAllImages, resolveProductImages } from "@udo-craft/shared";
+import { getAllImages, resolveProductImages } from "@udo-craft/shared/product-images";
 import { Link } from "@/i18n/navigation";
 import { localizedField } from "@/lib/localized-field";
 import { DemoIsland, type DemoVariant } from "./DemoIsland";
