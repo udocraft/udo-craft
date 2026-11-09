@@ -126,7 +126,7 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-4 max-w-2xl">
+    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
       {/* Honeypot field — hidden from real users, catches bots */}
       <input
         name="website"

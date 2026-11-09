@@ -62,7 +62,7 @@ export async function WhyUs({ ctx }: { ctx: HomeCtx }) {
         ))}
       </dl>
 
-      <div className="mt-12 overflow-x-auto rounded-card border border-border">
+      <div className="mt-12 overflow-x-auto rounded-card border border-border" role="region" aria-label={t("heading")} tabIndex={0}>
         <table className="w-full text-left text-sm">
           <caption className="sr-only">{t("heading")}</caption>
           <thead>

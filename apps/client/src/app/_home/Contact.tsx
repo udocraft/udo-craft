@@ -24,7 +24,7 @@ export async function Contact({ ctx }: { ctx: HomeCtx }) {
 
   return (
     <Section id="contact" tone="inverse" aria-labelledby="contact-heading">
-      <div className="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
         <div>
           <h2 id="contact-heading" className="text-h1 font-semibold text-balance" {...cmsAttrs(ctx, "home_contact", "heading")}>
             {cmsText(ctx, "home_contact", "heading", t("heading"))}
