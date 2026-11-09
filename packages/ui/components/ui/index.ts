@@ -3,6 +3,7 @@ export * from './avatar';
 export * from './badge';
 export * from './breadcrumb';
 export * from './button';
+export { buttonVariants } from './button-variants';
 export * from './card';
 export * from './collapsible';
 export * from './command';

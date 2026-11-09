@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import { Button } from "@udo-craft/ui";
+import { buttonVariants } from "@udo-craft/ui/components/ui/button-variants";
 
 export default function ProductNotFound() {
   return (
@@ -10,11 +10,9 @@ export default function ProductNotFound() {
         <p className="text-muted-foreground">
           На жаль, цей товар не існує або більше не доступний.
         </p>
-        <Button asChild variant="primary">
-          <Link href="/order">
-            Переглянути каталог
-          </Link>
-        </Button>
+        <Link href="/order" className={buttonVariants({ variant: "primary" })}>
+          Переглянути каталог
+        </Link>
       </div>
     </main>
   );

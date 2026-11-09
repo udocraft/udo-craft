@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Button } from "@udo-craft/ui";
+import { buttonVariants } from "@udo-craft/ui/components/ui/button-variants";
 import { getAllImages, resolveProductImages } from "@udo-craft/shared/product-images";
 import { Link } from "@/i18n/navigation";
 import { localizedField } from "@/lib/localized-field";
@@ -54,12 +54,18 @@ export async function Hero({ ctx }: { ctx: HomeCtx }) {
           </p>
 
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <Button asChild variant="primary" size="lg" className="shadow-glow">
-              {primaryIsRoute ? <Link href={primaryUrl}>{primaryText}</Link> : <a href={primaryUrl}>{primaryText}</a>}
-            </Button>
-            <Button asChild variant="outline" size="lg">
-              <a href="#contact">{tNav("getQuote")}</a>
-            </Button>
+            {primaryIsRoute ? (
+              <Link href={primaryUrl} className={buttonVariants({ variant: "primary", size: "lg", className: "shadow-glow" })}>
+                {primaryText}
+              </Link>
+            ) : (
+              <a href={primaryUrl} className={buttonVariants({ variant: "primary", size: "lg", className: "shadow-glow" })}>
+                {primaryText}
+              </a>
+            )}
+            <a href="#contact" className={buttonVariants({ variant: "outline", size: "lg" })}>
+              {tNav("getQuote")}
+            </a>
           </div>
 
           <p className="mt-8 inline-flex items-center gap-2 text-sm text-muted-foreground">

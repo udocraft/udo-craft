@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { ArrowRight } from "lucide-react";
-import { Button, Section, SectionHeader } from "@udo-craft/ui";
+import { Section, SectionHeader } from "@udo-craft/ui";
+import { buttonVariants } from "@udo-craft/ui/components/ui/button-variants";
 import { Link } from "@/i18n/navigation";
 import { CollectionsGrid } from "./CollectionsGrid";
 import type { HomeCtx } from "./context";
@@ -13,11 +14,9 @@ export async function Collections({ ctx }: { ctx: HomeCtx }) {
         titleId="catalog-heading"
         title={t("heading")}
         action={
-          <Button asChild variant="ghost">
-            <Link href="/order">
-              {t("allProducts")} <ArrowRight aria-hidden="true" />
-            </Link>
-          </Button>
+          <Link href="/order" className={buttonVariants({ variant: "ghost" })}>
+            {t("allProducts")} <ArrowRight aria-hidden="true" />
+          </Link>
         }
       />
       <CollectionsGrid

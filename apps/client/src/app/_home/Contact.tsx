@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { ArrowRight, Instagram, Send } from "lucide-react";
-import { Button, Section } from "@udo-craft/ui";
+import { Section } from "@udo-craft/ui";
+import { buttonVariants } from "@udo-craft/ui/components/ui/button-variants";
 import { Link } from "@/i18n/navigation";
 import { ContactForm } from "@/components/ContactForm";
 import { cmsAttrs, cmsText, cmsValue, type HomeCtx } from "./context";
@@ -33,11 +34,9 @@ export async function Contact({ ctx }: { ctx: HomeCtx }) {
           </p>
 
           <div className="mt-8">
-            <Button asChild variant="primary" size="lg">
-              <Link href="/order">
-                {tCta("cta")} <ArrowRight aria-hidden="true" />
-              </Link>
-            </Button>
+            <Link href="/order" className={buttonVariants({ variant: "primary", size: "lg" })}>
+              {tCta("cta")} <ArrowRight aria-hidden="true" />
+            </Link>
             <p className="mt-3 text-sm text-muted-foreground">{tCta("footer")}</p>
           </div>
 
@@ -65,16 +64,12 @@ export async function Contact({ ctx }: { ctx: HomeCtx }) {
           </dl>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <Button asChild variant="outline">
-              <a href={instagram} target="_blank" rel="noopener noreferrer">
-                <Instagram aria-hidden="true" /> Instagram
-              </a>
-            </Button>
-            <Button asChild variant="outline">
-              <a href={telegram} target="_blank" rel="noopener noreferrer">
-                <Send aria-hidden="true" /> Telegram
-              </a>
-            </Button>
+            <a href={instagram} target="_blank" rel="noopener noreferrer" className={buttonVariants({ variant: "outline" })}>
+              <Instagram aria-hidden="true" /> Instagram
+            </a>
+            <a href={telegram} target="_blank" rel="noopener noreferrer" className={buttonVariants({ variant: "outline" })}>
+              <Send aria-hidden="true" /> Telegram
+            </a>
           </div>
         </div>
 
