@@ -1,7 +1,12 @@
 {
   "meta": {
     "title": "U:DO CRAFT — Corporate merch",
-    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA."
+    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA.",
+    "productTitle": "{name} | Personnalisation et confection | U:DO CRAFT",
+    "productDescription": "Commandez le vêtement d'entreprise {name} avec impression ou broderie personnalisée à partir de {min} pièces.",
+    "productNotFound": "Produit introuvable | U:DO CRAFT",
+    "popupTitle": "Popup merch pour votre événement | U:DO CRAFT",
+    "popupDescription": "Un popup merch mobile : les invités personnalisent leurs vêtements et repartent avec sur place. Pour événements d'entreprise, conférences et festivals."
   },
   "nav": {
     "catalog": "Catalogue",

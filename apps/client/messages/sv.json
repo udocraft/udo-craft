@@ -1,7 +1,12 @@
 {
   "meta": {
     "title": "U:DO CRAFT — Corporate merch",
-    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA."
+    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA.",
+    "productTitle": "{name} | Anpassning och sömnad | U:DO CRAFT",
+    "productDescription": "Beställ företagskläder {name} med eget tryck eller brodyr från {min} st.",
+    "productNotFound": "Produkten hittades inte | U:DO CRAFT",
+    "popupTitle": "Merch-popup för ditt event | U:DO CRAFT",
+    "popupDescription": "En mobil merch-popup: gäster anpassar kläder och tar med dem direkt. För företagsevent, konferenser och festivaler."
   },
   "nav": {
     "catalog": "Katalog",

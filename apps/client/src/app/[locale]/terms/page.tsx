@@ -1,13 +1,13 @@
 import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { createServiceClient } from "@/lib/supabase/service";
-import { pageAlternates } from "@/lib/seo";
+import { pageMetadata } from "@/lib/seo";
 import { ContentPageShell } from "@/app/_components/ContentPageShell";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "terms" });
-  return { title: `${t("title")} — U:DO CRAFT`, alternates: pageAlternates(locale, "/terms") };
+  return pageMetadata({ locale, path: "/terms", title: `${t("title")} — U:DO CRAFT` });
 }
 
 // CMS legal text rarely changes; rebuild at most every 5 minutes.

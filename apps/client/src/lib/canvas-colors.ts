@@ -62,3 +62,9 @@ export const DRAWING_PRESET_COLORS: { hex: string; label: string }[] = [
 export const DRAWING_DEFAULT_COLOR = "#ffd60a";
 /** Eraser tip in the tool-preview illustration. */
 export const ERASER_TIP_PINK = "#f1a1ad";
+
+/** Social share image (opengraph-image). Satori cannot read oklch tokens, so these are the brand values as hex. */
+export const OG_BACKGROUND = "#0d1020";
+export const OG_FOREGROUND = "#fafaff";
+export const OG_MUTED = "#b4b8d0";
+export const OG_ACCENT = "#6d7bff";

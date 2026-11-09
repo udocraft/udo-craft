@@ -9,6 +9,7 @@ import { ConsentBanner } from "@/components/consent/ConsentBanner";
 import { ConsentScripts } from "@/components/consent/ConsentScripts";
 import { SoundProvider } from "@/app/_components/SoundProvider";
 import { locales } from "@/i18n/routing";
+import { ogLocale, SITE_URL } from "@/lib/seo";
 import { BASE_CLIENT_NAMESPACES, pickMessages } from "@/i18n/client-messages";
 import "../globals.css";
 
@@ -41,20 +42,14 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "meta" });
   const title = t("title");
   const description = t("description");
+  // Site-wide defaults only. Each page sets its own title, canonical, hreflang and
+  // Open Graph (see pageMetadata); the share image comes from opengraph-image.tsx.
   return {
-    metadataBase: new URL("https://u-do-craft.store"),
+    metadataBase: new URL(SITE_URL),
     title,
     description,
-    openGraph: {
-      title,
-      description,
-      url: "https://u-do-craft.store",
-      siteName: "U:DO CRAFT",
-      locale,
-      type: "website",
-      images: [{ url: "/logo.png", alt: "U:DO CRAFT" }],
-    },
-    twitter: { card: "summary", title, description, images: ["/logo.png"] },
+    openGraph: { siteName: "U:DO CRAFT", type: "website", locale: ogLocale(locale) },
+    twitter: { card: "summary_large_image" },
   };
 }
 

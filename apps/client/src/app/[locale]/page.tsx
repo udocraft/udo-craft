@@ -3,7 +3,7 @@ import { HomeSections } from "@/app/_home/HomeSections";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Material, ProductColorVariant } from "@udo-craft/shared";
 import type { HomeCategory, HomeProduct } from "@/app/_home/context";
-import { jsonLdHtml, pageAlternates, SITE_URL } from "@/lib/seo";
+import { jsonLdHtml, pageMetadata, SITE_URL } from "@/lib/seo";
 
 // ISR: the page is prerendered per locale and rebuilt in the background at most
 // once a minute, so admin CMS / catalog edits show up within this window.
@@ -21,21 +21,7 @@ const FAQ_KEYS = ["0", "1", "2", "3", "4", "5"] as const;
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta" });
-  const alternates = pageAlternates(locale, "");
-  return {
-    title: t("title"),
-    description: t("description"),
-    alternates,
-    openGraph: {
-      title: t("title"),
-      description: t("description"),
-      url: alternates.canonical as string,
-      siteName: "U:DO CRAFT",
-      locale,
-      type: "website",
-      images: [{ url: "/logo.png", alt: "U:DO CRAFT" }],
-    },
-  };
+  return pageMetadata({ locale, path: "", title: t("title"), description: t("description") });
 }
 
 export default async function LocaleHomePage({ params }: { params: Promise<{ locale: string }> }) {

@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createServiceClient } from "@/lib/supabase/service";
-import { jsonLdHtml } from "@/lib/seo";
+import { jsonLdHtml, localizedUrl, pageMetadata } from "@/lib/seo";
 import { cache } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowRight, BadgeCheck, Clock3, PackageCheck, Shield } from "lucide-react";
@@ -32,29 +32,34 @@ const getActiveProducts = cache(async () => {
   return (data ?? []) as ProductWithMeta[];
 });
 
+/** One-line plain-text summary for meta description: markup stripped, trimmed to ~160 chars. */
+function summarize(text: string, max = 160): string {
+  const plain = text.replace(/<[^>]*>/g, " ").replace(/[*_#`>]/g, "").replace(/\s+/g, " ").trim();
+  return plain.length <= max ? plain : `${plain.slice(0, max - 1).trimEnd()}…`;
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const prodList = await getActiveProducts();
+  const { slug, locale } = await params;
+  const [t, prodList] = await Promise.all([getTranslations({ locale, namespace: "meta" }), getActiveProducts()]);
   const prod = prodList.find((p) => p.slug === slug || p.id === slug);
 
   if (!prod) {
-    return { title: "Товар не знайдено | U:DO Craft" };
+    return { title: t("productNotFound"), robots: { index: false, follow: false } };
   }
 
+  const name = localizedField(prod.name, prod.name_en, locale);
+  const min = normalizeProductMarketingMeta(prod.marketing_meta).min_order_qty;
+  const own = summarize(localizedField(prod.description ?? "", prod.description_en, locale));
   const imgs = resolveProductImages((prod as any).product_images, prod.images as Record<string, string>);
   const imageMap = getAllImages(imgs);
-  const imageUrl = imageMap.front || Object.values(imageMap)[0] || "";
 
-  return {
-    title: `${prod.name} | Брендування та пошив | U:DO Craft`,
-    description: prod.description || `Замовте корпоративний одяг ${prod.name} з індивідуальним принтом або вишивкою від 10 одиниць.`,
-    openGraph: {
-      title: `${prod.name} | Корпоративний одяг U:DO Craft`,
-      description: prod.description || `Замовте корпоративний одяг ${prod.name} з індивідуальним принтом або вишивкою від 10 одиниць.`,
-      images: [imageUrl],
-      type: "website",
-    },
-  };
+  return pageMetadata({
+    locale,
+    path: `/products/${prod.slug || prod.id}`,
+    title: t("productTitle", { name }),
+    description: own || t("productDescription", { name, min }),
+    image: imageMap.front || Object.values(imageMap)[0] || undefined,
+  });
 }
 
 export default async function ProductDetailPage({ params }: PageProps) {
@@ -78,34 +83,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const allVariants = (vars ?? []) as ProductColorVariant[];
   const materialsList = (mats ?? []) as Material[];
 
-  const imgs = resolveProductImages((prod as any).product_images, prod.images as Record<string, string>);
-  const imageMap = getAllImages(imgs);
-  const imageUrl = imageMap.front || Object.values(imageMap)[0] || "";
-  const marketing = prod.marketing_meta ?? {};
-
-  // JSON-LD Microdata for Google Rich Snippets
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: prod.name,
-    image: imageUrl,
-    description: prod.description || `Корпоративний одяг ${prod.name} з індивідуальним принтом або вишивкою.`,
-    offers: {
-      "@type": "Offer",
-      url: `https://u-do-craft.store/products/${prod.slug || prod.id}`,
-      priceCurrency: "UAH",
-      price: Math.round((prod.base_price_cents || 0) / 100),
-      availability: "https://schema.org/InStock",
-      itemCondition: "https://schema.org/NewCondition",
-      deliveryLeadTime: {
-        "@type": "QuantitativeValue",
-        minValue: marketing.delivery_min_days ?? 7,
-        maxValue: marketing.delivery_max_days ?? 14,
-        unitCode: "DAY",
-      },
-    },
-  };
-
   const [tHero, tFooter] = await Promise.all([
     getTranslations({ locale, namespace: "hero" }),
     getTranslations({ locale, namespace: "footer" }),
@@ -126,6 +103,41 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const description =
     localizedField(prod.description ?? "", prod.description_en, locale) ||
     `${name} для корпоративного мерчу, брендованих подій і командного одягу.`;
+  const productUrl = localizedUrl(locale, `/products/${prod.slug || prod.id}`);
+  const allImages = Object.values(getAllImages(productImgs));
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name,
+      description: summarize(description, 300),
+      url: productUrl,
+      sku: prod.slug || prod.id,
+      brand: { "@type": "Brand", name: "U:DO CRAFT" },
+      ...(allImages.length ? { image: allImages } : {}),
+      // Priced products only: "from 0" is not a real offer and fails Rich Results.
+      ...((prod.base_price_cents ?? 0) > 0
+        ? {
+            offers: {
+              "@type": "Offer",
+              url: productUrl,
+              priceCurrency: "UAH",
+              price: Math.round(prod.base_price_cents / 100),
+              availability: "https://schema.org/InStock",
+              itemCondition: "https://schema.org/NewCondition",
+            },
+          }
+        : {}),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "U:DO CRAFT", item: localizedUrl(locale, "/") },
+        { "@type": "ListItem", position: 2, name, item: productUrl },
+      ],
+    },
+  ];
   const deliveryBadges = [
     { icon: Clock3, label: `${meta.delivery_min_days}–${meta.delivery_max_days} днів виробництво` },
     { icon: PackageCheck, label: `Від ${meta.min_order_qty} одиниць` },

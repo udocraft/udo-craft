@@ -1,7 +1,12 @@
 {
   "meta": {
     "title": "U:DO CRAFT — Corporate merch",
-    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA."
+    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA.",
+    "productTitle": "{name} | Potisk, výšivka a šití | U:DO CRAFT",
+    "productDescription": "Objednejte firemní oblečení {name} s vlastním potiskem nebo výšivkou od {min} kusů.",
+    "productNotFound": "Produkt nebyl nalezen | U:DO CRAFT",
+    "popupTitle": "Merch popup na vaši akci | U:DO CRAFT",
+    "popupDescription": "Mobilní merch popup: hosté si oblečení přizpůsobí a odnesou si ho hned. Pro firemní akce, konference a festivaly."
   },
   "nav": {
     "catalog": "Katalog",
