@@ -9,9 +9,11 @@ import { Button } from "@udo-craft/ui";
 
 interface FooterSectionProps {
   tagline: string; copyright: string; instagram: string; telegram: string;
+  /** The "ready to start" strip. The home page hides it: its contact section already ends in the same CTA. */
+  showCta?: boolean;
 }
 
-export function FooterSection({ tagline, copyright, instagram, telegram }: FooterSectionProps) {
+export function FooterSection({ tagline, copyright, instagram, telegram, showCta = true }: FooterSectionProps) {
   const t = useTranslations("footer");
   const tc = useTranslations("consent");
 
@@ -47,6 +49,7 @@ export function FooterSection({ tagline, copyright, instagram, telegram }: Foote
   return (
     <footer className="inverse bg-background text-foreground" aria-label={t("ariaLabel")}>
       {/* Pre-footer CTA strip */}
+      {showCta && (
       <div className="border-t border-border">
         <div className="mx-auto w-full max-w-6xl px-gutter py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div>
@@ -60,6 +63,7 @@ export function FooterSection({ tagline, copyright, instagram, telegram }: Foote
           </Button>
         </div>
       </div>
+      )}
 
       {/* Main footer */}
       <div className="border-t border-border">

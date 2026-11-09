@@ -49,6 +49,7 @@ export async function HomeSections(ctx: HomeCtx) {
         ))}
       </main>
       <FooterSection
+        showCta={false}
         tagline={cmsText(ctx, "footer", "tagline", tFooter("tagline"))}
         copyright={cmsText(ctx, "footer", "copyright", tFooter("copyright"))}
         instagram={cmsValue(ctx, "home_contact", "instagram", "https://www.instagram.com/u.do.craft/")}
