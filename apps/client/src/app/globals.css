@@ -2,12 +2,48 @@
 
 @source "../components/**/*.{ts,tsx}";
 @source "../app/**/*.{ts,tsx}";
+@source "../../../../packages/ui/components/**/*.{ts,tsx}";
 
 @utility text-balance {
   text-wrap: balance;
 }
 
-@theme inline {
+/* Design tokens: single source of truth (Plan.md section 2).
+   `static` emits every variable, so inline `var(--color-*)` and the
+   `.inverse` scope below always have something to resolve against.
+   Colours are NOT `inline`: utilities must read the CSS variable so a
+   scope (`.inverse`) can remap it. */
+@theme static {
+  /* ── Typography ───────────────────────────────────────────── */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Type scale. Floor is 12px: never use text-[Npx] (lint blocks it). */
+  --text-display: clamp(2.75rem, 6.2vw, 6.5rem);
+  --text-display--line-height: 0.95;
+  --text-display--letter-spacing: -0.05em;
+  --text-h1: clamp(2.25rem, 4vw, 3.5rem);
+  --text-h1--line-height: 1.05;
+  --text-h1--letter-spacing: -0.035em;
+  --text-h2: clamp(1.75rem, 3vw, 2.5rem);
+  --text-h2--line-height: 1.1;
+  --text-h2--letter-spacing: -0.03em;
+  --text-h3: 1.25rem;
+  --text-h3--line-height: 1.3;
+  --text-h3--letter-spacing: -0.015em;
+  --text-h4: 1.0625rem;
+  --text-h4--line-height: 1.4;
+  --text-h4--letter-spacing: -0.01em;
+  --text-lede: 1.125rem;
+  --text-lede--line-height: 1.6;
+  --text-base: 1rem;
+  --text-base--line-height: 1.6;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.5;
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.4;
+
+  /* ── Colour (semantic, oklch) ─────────────────────────────── */
   --color-background: oklch(0.985 0.008 250);
   --color-foreground: oklch(0.16 0.015 260);
   --color-card: oklch(1 0 0);
@@ -15,24 +51,108 @@
   --color-popover: oklch(1 0 0);
   --color-popover-foreground: oklch(0.16 0.015 260);
   --color-primary: oklch(0.48 0.22 270);
+  --color-primary-hover: oklch(0.44 0.22 270);
   --color-primary-foreground: oklch(1 0 0);
   --color-secondary: oklch(0.955 0.012 255);
   --color-secondary-foreground: oklch(0.2 0.018 260);
   --color-muted: oklch(0.955 0.01 255);
   --color-muted-foreground: oklch(0.46 0.018 260);
+  --color-surface-muted: var(--color-muted);
   --color-accent: oklch(0.94 0.03 270);
   --color-accent-foreground: oklch(0.2 0.018 260);
   --color-destructive: oklch(0.55 0.22 27);
   --color-border: oklch(0.89 0.012 255);
   --color-input: oklch(0.72 0.012 255);
   --color-ring: oklch(0.48 0.22 270);
+
+  /* Brand colour used as text/accent; lightens inside `.inverse`. */
+  --color-brand: var(--color-primary);
+
+  /* Dark marketing surfaces (approx #0d1020). */
+  --color-ink: oklch(0.14 0.03 270);
+  --color-ink-2: oklch(0.18 0.03 270);
+  /* Legacy names, kept so old call sites keep working. Prefer ink. */
+  --color-surface-dark: var(--color-ink);
+  --color-surface-dark-2: var(--color-ink-2);
+  --dark-blue: #101226;
+
+  /* Status colours (text on the *-foreground pair is >= 4.5:1). */
+  --color-success: oklch(0.5 0.13 150);
+  --color-success-foreground: oklch(1 0 0);
+  --color-warning: oklch(0.8 0.16 80);
+  --color-warning-foreground: oklch(0.22 0.05 70);
+  --color-info: oklch(0.5 0.15 245);
+  --color-info-foreground: oklch(1 0 0);
+
+  /* ── Radius ───────────────────────────────────────────────── */
   --radius: 0.875rem;
   --radius-sm: calc(var(--radius) - 6px);
   --radius-md: calc(var(--radius) - 3px);
   --radius-lg: var(--radius);
-  --color-surface-dark: oklch(0.12 0.025 265);
-  --color-surface-dark-2: oklch(0.16 0.03 265);
-  --dark-blue: #101226;
+  --radius-control: 9999px; /* buttons, inputs, badges */
+  --radius-card: 1rem; /* cards, sheets */
+  --radius-media: 1.5rem; /* images, video, large panels */
+
+  /* ── Elevation ────────────────────────────────────────────── */
+  --shadow-glow: 0 12px 40px oklch(0.48 0.22 270 / 0.3); /* primary CTA */
+
+  /* ── Spacing rhythm ───────────────────────────────────────── */
+  --spacing-section: clamp(4rem, 8vw, 7.5rem); /* section padding-block */
+  --spacing-gutter: 1rem; /* page gutter; 1.5rem from md, see :root below */
+
+  /* ── Motion ───────────────────────────────────────────────── */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 150ms; /* hover, press */
+  --duration-base: 200ms;
+  --duration-slow: 320ms; /* sheets, dialogs */
+  --duration-reveal: 500ms; /* scroll-in */
+}
+
+/* Duration utilities (Tailwind has no duration theme namespace). */
+@utility duration-fast {
+  transition-duration: var(--duration-fast);
+}
+@utility duration-base {
+  transition-duration: var(--duration-base);
+}
+@utility duration-slow {
+  transition-duration: var(--duration-slow);
+}
+@utility duration-reveal {
+  transition-duration: var(--duration-reveal);
+}
+
+/* Section label: 12px uppercase, tracked. Use instead of a tiny uppercase label. */
+@utility text-eyebrow {
+  font-size: 0.75rem;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Dark sections, not dark mode (Plan.md D4). Wrap a section in `.inverse`
+   and keep using bg-background / text-foreground / text-muted-foreground. */
+.inverse,
+[data-surface="dark"] {
+  --color-background: var(--color-ink);
+  --color-foreground: oklch(0.98 0.004 270);
+  --color-card: var(--color-ink-2);
+  --color-card-foreground: oklch(0.98 0.004 270);
+  --color-popover: var(--color-ink-2);
+  --color-popover-foreground: oklch(0.98 0.004 270);
+  --color-secondary: var(--color-ink-2);
+  --color-secondary-foreground: oklch(0.98 0.004 270);
+  --color-muted: var(--color-ink-2);
+  --color-muted-foreground: oklch(0.74 0.02 270);
+  --color-accent: oklch(0.24 0.04 270);
+  --color-accent-foreground: oklch(0.98 0.004 270);
+  --color-border: oklch(0.3 0.03 270);
+  --color-input: oklch(0.4 0.03 270);
+  --color-brand: oklch(0.78 0.12 270);
+  background-color: var(--color-background);
+  color: var(--color-foreground);
 }
 
 @layer base {
@@ -44,6 +164,15 @@
 }
 
 @layer base {
+  :root {
+    --spacing-gutter: 1rem;
+  }
+  @media (min-width: 48rem) {
+    :root {
+      --spacing-gutter: 1.5rem;
+    }
+  }
+
   html {
     scroll-behavior: smooth;
     min-height: 100%;
