@@ -2,13 +2,16 @@
 
 import { Link } from "@/i18n/navigation";
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { User, ShoppingBag, ArrowRight, X, Menu } from "lucide-react";
 import { BrandLogoFull } from "@/components/brand-logo";
 import { sound } from "@/lib/sound";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Button } from "@udo-craft/ui";
-import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
+
+// The sheet pulls in the base-ui dialog; load it on the first tap of the burger.
+const MobileMenuSheet = dynamic(() => import("./MobileMenuSheet").then((m) => m.MobileMenuSheet), { ssr: false });
 
 interface NavBarProps {
   isLoggedIn: boolean;
@@ -26,6 +29,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, onAuthOpen }: NavBar
     { href: "/#contact", label: t("contacts") },
   ];
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuMounted, setMenuMounted] = useState(false);
 
   const isLight = true; // always use light nav style
 
@@ -126,7 +130,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, onAuthOpen }: NavBar
           <LanguageSwitcher />
 
           <button
-            onClick={() => { sound.toggle(!menuOpen); setMenuOpen(!menuOpen); }}
+            onClick={() => { sound.toggle(!menuOpen); setMenuMounted(true); setMenuOpen(!menuOpen); }}
             aria-label={menuOpen ? t("closeMenu") : t("openMenu")}
             aria-expanded={menuOpen}
             className={`xl:hidden flex items-center justify-center w-11 h-11 rounded-full transition-colors duration-200 ml-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
@@ -138,37 +142,13 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, onAuthOpen }: NavBar
         </div>
       </div>
 
-      <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
-        <SheetContent side="right" className="w-full gap-0 border-l border-border p-0 sm:max-w-sm">
-          <div className="flex h-16 items-center border-b border-border px-6">
-            <BrandLogoFull className="h-7 w-auto" color="var(--color-primary)" />
-          </div>
-          <SheetTitle className="sr-only">{t("mainNav")}</SheetTitle>
-          <SheetDescription className="sr-only">{t("mainNav")}</SheetDescription>
-          <nav className="flex flex-1 flex-col gap-1 p-4" aria-label={t("mainNav")}>
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMenuOpen(false)}
-                className="flex min-h-12 items-center rounded-xl px-4 text-base font-medium text-muted-foreground transition hover:bg-muted hover:text-foreground"
-              >
-                {link.label}
-              </Link>
-            ))}
-            <Button asChild variant="primary" size="lg" className="mt-3">
-              <Link href="/order" onClick={() => setMenuOpen(false)}>
-                  {t("designMerch")} <ArrowRight className="size-4" aria-hidden="true" />
-              </Link>
-            </Button>
-            <Button asChild variant="outline" size="lg">
-              <Link href="/#contact" onClick={() => setMenuOpen(false)}>
-                  {t("getQuote")}
-              </Link>
-            </Button>
-          </nav>
-        </SheetContent>
-      </Sheet>
+      {menuMounted && (
+        <MobileMenuSheet
+          open={menuOpen}
+          onOpenChange={setMenuOpen}
+          links={navLinks}
+        />
+      )}
     </nav>
   );
 }

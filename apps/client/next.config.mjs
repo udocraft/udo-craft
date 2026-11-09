@@ -1,7 +1,10 @@
 import { withSentryConfig } from "@sentry/nextjs";
 import createNextIntlPlugin from "next-intl/plugin";
+import bundleAnalyzer from "@next/bundle-analyzer";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
+// Opt-in: `npm run analyze` (ANALYZE=true) writes treemaps to .next/analyze/.
+const withBundleAnalyzer = bundleAnalyzer({ enabled: process.env.ANALYZE === "true" });
 
 /** @type {import('next').NextConfig} */
 // Report-only for now: violations are logged by the browser, nothing is blocked.
@@ -90,11 +93,18 @@ const nextConfig = {
   },
 };
 
-export default withSentryConfig(withNextIntl(nextConfig), {
+export default withSentryConfig(withBundleAnalyzer(withNextIntl(nextConfig)), {
   org: "udo-craft",
   project: "udocraft-client",
   silent: !process.env.CI,
   disableReplayInjection: true,
   widenClientFileUpload: true,
   tunnelRoute: "/monitoring",
+  // Drop Sentry's debug logging and the replay pieces (replay is not injected) from the client bundle.
+  bundleSizeOptimizations: {
+    excludeDebugStatements: true,
+    excludeReplayIframe: true,
+    excludeReplayShadowDom: true,
+    excludeReplayWorker: true,
+  },
 });

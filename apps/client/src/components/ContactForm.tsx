@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { useState, useEffect } from "react";
 import { track } from "@/lib/analytics";
 import { Label } from "@/components/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { TopicPicker } from "./TopicPicker";
 import { Loader2, Upload, X, ChevronDown, Check } from "lucide-react";
 import { sound } from "@/lib/sound";
 import { Button } from "@udo-craft/ui";
@@ -61,7 +61,6 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
   const [phone, setPhone]           = useState("");
   const [company, setCompany]       = useState("");
   const [topic, setTopic]           = useState<TopicValue>(defaultTopic ?? "merch");
-  const [topicOpen, setTopicOpen]   = useState(false);
   const [message, setMessage]       = useState("");
   const [files, setFiles]           = useState<File[]>([]);
   const [source, setSource]         = useState("contact_form");
@@ -77,8 +76,6 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
     window.addEventListener("hashchange", apply);
     return () => window.removeEventListener("hashchange", apply);
   }, [defaultTopic]);
-
-  const selectedTopic = topics.find((t) => t.value === topic)!;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -174,43 +171,12 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
       {/* Topic picker */}
       <div className="md:col-span-2 space-y-1.5">
         <Label className="text-muted-foreground text-sm font-medium">{tForm("topicLabel")}</Label>
-        <Popover open={topicOpen} onOpenChange={setTopicOpen}>
-          <PopoverTrigger
-            disabled={submitting}
-            className="w-full h-[52px] flex items-center gap-3 bg-foreground/5 border border-input rounded-lg px-4 text-left hover:bg-foreground/10 hover:border-input transition-colors disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-ring"
-          >
-            <span className="text-xl shrink-0" aria-hidden="true">{selectedTopic.icon}</span>
-            <div className="flex-1 min-w-0">
-              <p className="text-foreground text-sm font-medium leading-tight">{selectedTopic.label}</p>
-              <p className="text-muted-foreground text-xs mt-0.5 truncate">{selectedTopic.desc}</p>
-            </div>
-            <ChevronDown className={`w-4 h-4 text-muted-foreground shrink-0 transition-transform duration-200 ${topicOpen ? "rotate-180" : ""}`} />
-          </PopoverTrigger>
-
-          {/* Portalled out of the inverse section, so it opts into the scope itself. */}
-          <PopoverContent
-            align="start"
-            sideOffset={6}
-            style={{ width: "var(--anchor-width)" }}
-            className="inverse border border-border bg-popover p-1.5 text-popover-foreground shadow-2xl rounded-xl"
-          >
-            {topics.map((t) => (
-              <button key={t.value} type="button"
-                onClick={() => { setTopic(t.value); setTopicOpen(false); sound.select(); }}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors focus:outline-none ${
-                  topic === t.value ? "bg-foreground/10 text-foreground" : "text-muted-foreground hover:bg-foreground/5"
-                }`}
-              >
-                <span className="text-xl shrink-0" aria-hidden="true">{t.icon}</span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium leading-tight text-foreground">{t.label}</p>
-                  <p className="text-xs mt-0.5 text-muted-foreground">{t.desc}</p>
-                </div>
-                {topic === t.value && <Check className="w-4 h-4 shrink-0 text-foreground" />}
-              </button>
-            ))}
-          </PopoverContent>
-        </Popover>
+        <TopicPicker
+          topics={topics}
+          value={topic}
+          disabled={submitting}
+          onChange={(v) => setTopic(v as TopicValue)}
+        />
       </div>
 
       <div className="md:col-span-2 space-y-1.5">
