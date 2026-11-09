@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Loader2, Upload, X, ChevronDown, Check } from "lucide-react";
 import { sound } from "@/lib/sound";
+import { Button } from "@udo-craft/ui";
 
 const TOPICS = [
   { value: "merch",      icon: "👕" },
@@ -262,12 +263,11 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
       )}
 
       <div className="md:col-span-2">
-        <button type="submit" disabled={submitting}
-          className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold text-sm px-8 py-3.5 rounded-full active:scale-95 transition-all duration-200 disabled:opacity-50">
+        <Button type="submit" disabled={submitting} variant="primary">
           {submitting ? (
             <><Loader2 className="size-4 animate-spin" aria-hidden="true" />{tForm("submitting")}</>
           ) : tForm("submit")}
-        </button>
+        </Button>
       </div>
     </form>
   );

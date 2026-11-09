@@ -6,6 +6,7 @@ import { MockupViewer } from "@/components/MockupViewer";
 import type { CartItem } from "@/hooks/useCart";
 import { useTranslations } from "next-intl";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Button } from "@udo-craft/ui";
 
 interface CartSidebarProps {
   open: boolean;
@@ -36,13 +37,11 @@ export function CartSidebar({ open, onClose, cart, cartCount, totalCents }: Cart
             </div>
             <p className="text-sm font-medium text-foreground">{t("empty")}</p>
             <p className="max-w-[240px] text-sm leading-relaxed text-muted-foreground">{t("emptyDesc")}</p>
-            <Link
-              href="/order"
-              onClick={onClose}
-              className="mt-2 inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
-            >
-              {t("toCatalog")} <ArrowRight className="size-4" />
-            </Link>
+            <Button asChild variant="primary" className="mt-2">
+              <Link href="/order" onClick={onClose}>
+                {t("toCatalog")} <ArrowRight className="size-4" />
+              </Link>
+            </Button>
           </div>
         ) : (
           <>
@@ -74,13 +73,11 @@ export function CartSidebar({ open, onClose, cart, cartCount, totalCents }: Cart
                 <span className="text-muted-foreground">{t("total")}</span>
                 <span className="text-lg font-semibold tracking-tight text-foreground">{(totalCents / 100).toFixed(0)} ₴</span>
               </div>
-              <Link
-                href="/order"
-                onClick={onClose}
-                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
-              >
-                {tCheckout("orderTitle")} <ArrowRight className="size-4" />
-              </Link>
+              <Button asChild variant="primary" size="lg" className="w-full">
+                <Link href="/order" onClick={onClose}>
+                  {tCheckout("orderTitle")} <ArrowRight className="size-4" />
+                </Link>
+              </Button>
               <p className="text-center text-xs text-muted-foreground">{tCheckout("finalPriceNote")}</p>
             </div>
           </>

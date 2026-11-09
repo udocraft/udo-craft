@@ -166,6 +166,8 @@
 @layer base {
   :root {
     --spacing-gutter: 1rem;
+    /* Floating header: top offset + pill height (top-3/h-14 mobile, top-4/h-12 desktop), rounded up. */
+    --header-height: 5rem;
   }
   @media (min-width: 48rem) {
     :root {
@@ -175,6 +177,8 @@
 
   html {
     scroll-behavior: smooth;
+    /* In-page anchors (#catalog, #contact, #main) land below the fixed header. */
+    scroll-padding-top: var(--header-height);
     min-height: 100%;
     overflow-x: clip;
   }
@@ -254,6 +258,29 @@ video::-webkit-media-controls-enclosure {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* Skip link: first focusable element on every page; visible only when focused. */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-control, 0.75rem);
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  transform: translateY(-200%);
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .skip-link {
+    transition: transform var(--duration-fast, 150ms) ease-out;
   }
 }
 

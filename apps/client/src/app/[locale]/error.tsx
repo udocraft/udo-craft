@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { Button } from "@udo-craft/ui";
 
 export default function GlobalError({
   error,
@@ -15,19 +16,16 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-8">
+    <main id="main" className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-8">
       <div className="max-w-md text-center space-y-6">
         <h1 className="text-4xl font-bold">Щось пішло не так</h1>
         <p className="text-muted-foreground text-lg">
           Виникла неочікувана помилка. Спробуйте оновити сторінку або поверніться пізніше.
         </p>
-        <button
-          onClick={reset}
-          className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold text-sm px-8 py-3.5 rounded-full transition-all duration-200"
-        >
+        <Button onClick={reset} variant="primary">
           Спробувати знову
-        </button>
+        </Button>
       </div>
-    </div>
+    </main>
   );
 }

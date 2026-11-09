@@ -5,6 +5,7 @@ import { Instagram, Send, ArrowRight } from "lucide-react";
 import { BrandLogoFull } from "@/components/brand-logo";
 import { useTranslations } from "next-intl";
 import { resetConsent } from "@/lib/consent";
+import { Button } from "@udo-craft/ui";
 
 interface FooterSectionProps {
   tagline: string; copyright: string; instagram: string; telegram: string;
@@ -52,10 +53,11 @@ export function FooterSection({ tagline, copyright, instagram, telegram }: Foote
             <p className="text-white font-bold text-base mb-1">{t("readyToStart")}</p>
             <p className="text-white/45 text-sm">{t("readyDesc")}</p>
           </div>
-          <Link href="/order"
-            className="inline-flex items-center gap-2 bg-primary text-white font-semibold text-sm px-6 py-3 rounded-full hover:bg-primary/90 active:scale-[0.97] transition-all duration-200 shrink-0">
-            {t("startProject")} <ArrowRight className="w-4 h-4" aria-hidden="true" />
-          </Link>
+          <Button asChild variant="primary" className="shrink-0">
+            <Link href="/order">
+              {t("startProject")} <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            </Link>
+          </Button>
         </div>
       </div>
 

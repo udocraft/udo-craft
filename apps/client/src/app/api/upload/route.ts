@@ -1,6 +1,8 @@
 import { rateLimit } from "@/lib/rate-limit";
 import { createServiceClient } from "@/lib/supabase/service";
 import { validateFile } from "@/lib/validate-file";
+import { parseFilesBody } from "@/lib/api/request";
+import { UploadFilesRequestSchema } from "@udo-craft/shared";
 import { NextRequest, NextResponse } from "next/server";
 
 // SERVICE ROLE JUSTIFICATION:
@@ -18,10 +20,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }
 
+  const parsedBody = await parseFilesBody(request, UploadFilesRequestSchema);
+  if (!parsedBody.ok) return parsedBody.response;
+  const files = parsedBody.data;
+
   try {
     const supabase = createServiceClient();
-    const formData = await request.formData();
-    const files = formData.getAll("files") as File[];
 
     if (!files.length) {
       return NextResponse.json({ urls: [] });

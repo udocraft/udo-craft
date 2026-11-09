@@ -1,9 +1,9 @@
 import { randomBytes } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
+import { CreateShareRequestSchema } from "@udo-craft/shared";
+import { parseJsonBody } from "@/lib/api/request";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
-
-const ACCESS = new Set(["view", "comment", "edit"]);
 
 function makeToken() {
   return randomBytes(16).toString("base64url");
@@ -18,14 +18,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Login required to create a share link" }, { status: 401 });
   }
 
-  const body = await request.json();
-  const productId = typeof body.productId === "string" ? body.productId : "";
-  const access = typeof body.access === "string" && ACCESS.has(body.access) ? body.access : "view";
-  const payload = body.payload && typeof body.payload === "object" ? body.payload : null;
-
-  if (!productId || !payload) {
-    return NextResponse.json({ error: "productId and payload are required" }, { status: 400 });
-  }
+  const parsedBody = await parseJsonBody(request, CreateShareRequestSchema);
+  if (!parsedBody.ok) return parsedBody.response;
+  const { productId, access, payload } = parsedBody.data;
 
   const { data, error } = await service
     .from("customizer_shares")

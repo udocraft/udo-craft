@@ -16,7 +16,10 @@
     "signIn": "Přihlásit se",
     "cartItems": "Košík — {count} položek",
     "mainNav": "Hlavní navigace",
-    "logoLink": "U:DO CRAFT — zpět na úvod"
+    "logoLink": "U:DO CRAFT — zpět na úvod",
+    "skipToContent": "Přeskočit na hlavní obsah",
+    "designMerch": "Navrhněte svůj merch",
+    "getQuote": "Získat nabídku"
   },
   "homeStats": {
     "stat3Suffix": " dní",

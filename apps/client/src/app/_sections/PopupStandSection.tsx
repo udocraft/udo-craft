@@ -7,6 +7,7 @@ import { motion, useInView, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { HighlightText, RoughHighlight } from "@/app/_components/HighlightText";
 import { useTranslations } from "next-intl";
+import { Button } from "@udo-craft/ui";
 
 export function PopupStandSection() {
   const t = useTranslations("popupStand");
@@ -111,10 +112,11 @@ export function PopupStandSection() {
 
             {/* CTA */}
             <div className="flex items-center gap-4 mt-6 px-4">
-              <Link href="/popup"
-                className="inline-flex items-center gap-2 bg-primary text-white font-bold text-sm px-6 py-3 rounded-full hover:bg-primary/90 active:scale-[0.97] transition-all duration-200">
-                {t("cta")} <ArrowRight className="w-4 h-4" aria-hidden="true" />
-              </Link>
+              <Button asChild variant="primary">
+                <Link href="/popup">
+                  {t("cta")} <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                </Link>
+              </Button>
             </div>
           </motion.div>
         </div>

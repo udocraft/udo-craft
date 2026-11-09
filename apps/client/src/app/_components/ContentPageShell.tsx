@@ -17,7 +17,7 @@ export async function ContentPageShell({
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <SiteHeader />
-      <main className="flex-1 px-4 pb-20 pt-32 sm:px-6">
+      <main id="main" className="flex-1 px-4 pb-20 pt-32 sm:px-6">
         <div className="mx-auto max-w-4xl">
           <header className="mb-8 border-b border-border/70 pb-7 sm:mb-10 sm:pb-9">
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-primary">U:DO CRAFT</p>

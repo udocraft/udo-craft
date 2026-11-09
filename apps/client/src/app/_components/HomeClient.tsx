@@ -175,7 +175,7 @@ export function HomeClient({
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden scroll-smooth">
       <SiteHeader cinemaMode={cinemaMode} />
 
-      <main>
+      <main id="main">
         {layout.map((s) => s.visible !== "false" && renderSection(s.id))}
       </main>
 

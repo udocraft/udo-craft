@@ -260,7 +260,7 @@ export function OrderPageInner({
 
   if (loadError && products.length === 0) {
     return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 px-6 text-center">
+      <main id="main" className="flex min-h-[60vh] flex-col items-center justify-center gap-3 px-6 text-center">
         <p className="text-lg font-bold">Не вдалося завантажити каталог</p>
         <p className="max-w-md text-sm text-muted-foreground">{loadError}</p>
         <button
@@ -270,7 +270,7 @@ export function OrderPageInner({
         >
           Спробувати ще раз
         </button>
-      </div>
+      </main>
     );
   }
 
@@ -310,7 +310,7 @@ export function OrderPageInner({
         />
 
         {/* Body */}
-        <div className="flex-1 min-h-0 flex overflow-hidden">
+        <main id="main" className="flex-1 min-h-0 flex overflow-hidden">
           <div className={`flex-1 overflow-y-auto ${step === "select" ? "" : "lg:pr-80"}`}>
             <div className="mx-auto px-4 py-6 space-y-6 max-w-full">
               {step === "select" && (
@@ -376,7 +376,7 @@ export function OrderPageInner({
             onRemove={(i) => setCart((prev) => prev.filter((_, idx) => idx !== i))}
             onEdit={(i) => { const prod = products.find((p) => p.id === cart[i]?.productId); if (!prod) return; setCustomizerInitialSize(null); setCustomizerInitialColor(null); setEditingCartIndex(i); setCustomizing(prod); }}
           />
-        </div>
+        </main>
       </div>
     </>
   );

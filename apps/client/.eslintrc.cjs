@@ -38,7 +38,6 @@ module.exports = {
         "src/app/_sections/CustomizerPreviewSection.tsx",
         "src/app/_sections/ContactSection.tsx",
         "src/app/_sections/FooterSection.tsx",
-        "src/app/_sections/HeroSection.tsx",
         "src/app/_sections/ProblemSolutionSection.tsx",
         "src/app/_sections/SubscriptionSection.tsx",
         "src/app/_sections/TrustSection.tsx",

@@ -16,7 +16,10 @@
     "signIn": "Logga in",
     "cartItems": "Kundvagn — {count} artiklar",
     "mainNav": "Huvudnavigation",
-    "logoLink": "U:DO CRAFT — tillbaka till startsidan"
+    "logoLink": "U:DO CRAFT — tillbaka till startsidan",
+    "skipToContent": "Hoppa till huvudinnehållet",
+    "designMerch": "Designa din merch",
+    "getQuote": "Begär offert"
   },
   "homeStats": {
     "stat3Suffix": " dagar",

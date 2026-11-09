@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
+import { AiGenerateRequestSchema } from "@udo-craft/shared";
+import { parseJsonBody } from "@/lib/api/request";
 
 const AI_QUOTA_LIMIT = 3;
 
@@ -52,6 +54,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Validate before touching the quota: a malformed body must not burn an attempt.
+  const parsedBody = await parseJsonBody(request, AiGenerateRequestSchema);
+  if (!parsedBody.ok) return parsedBody.response;
+  const { prompt, contextDescription, imageDataUrl, canvasDataUrl, hasSelfie, systemPrompt, mode } = parsedBody.data;
+
   // Quota is reserved server-side before the paid call. A failed generation
   // still consumes an attempt; the client can no longer skip or inflate it.
   const service = createServiceClient();
@@ -75,16 +82,6 @@ export async function POST(request: Request) {
   if (!apiKey) {
     return NextResponse.json({ error: "AI generation is not configured" }, { status: 500 });
   }
-
-  const { prompt, contextDescription, imageDataUrl, canvasDataUrl, hasSelfie, systemPrompt, mode } = await request.json() as {
-    prompt: string;
-    contextDescription: string;
-    imageDataUrl: string;
-    canvasDataUrl?: string;
-    hasSelfie?: boolean;
-    systemPrompt?: string;
-    mode?: "illustration" | "enhance" | "mockup";
-  };
 
   // Resolve system prompt: mode flag takes priority, then allowlist match, then default mockup
   let resolvedSystemPrompt: string;

@@ -1,13 +1,14 @@
 "use client";
 
 import { Link } from "@/i18n/navigation";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { User, ShoppingBag, ArrowRight, X, Menu } from "lucide-react";
 import { BrandLogoFull } from "@/components/brand-logo";
 import { sound } from "@/lib/sound";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { Button } from "@udo-craft/ui";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 
 interface NavBarProps {
@@ -27,67 +28,23 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
     { href: "/#contact", label: t("contacts") },
   ];
   const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [navVisible, setNavVisible] = useState(true);
-  const lastScrollY = useRef(0);
-  const scrollStopTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY;
-      setScrolled(y > 80);
-
-      if (y < 120) {
-        setNavVisible(true);
-      } else if (y > lastScrollY.current + 8) {
-        // Scrolling down — hide
-        setNavVisible(false);
-      } else if (y < lastScrollY.current - 8) {
-        // Scrolling up — show full
-        setNavVisible(true);
-      }
-
-      lastScrollY.current = y;
-
-      // Scroll stopped — show full nav after 500ms
-      if (scrollStopTimer.current) clearTimeout(scrollStopTimer.current);
-      if (y > 120) {
-        scrollStopTimer.current = setTimeout(() => {
-          setNavVisible(true);
-        }, 500);
-      }
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (scrollStopTimer.current) clearTimeout(scrollStopTimer.current);
-    };
-  }, []);
 
   const isLight = true; // always use light nav style
 
   return (
     <motion.nav
       initial={{ y: -20, opacity: 0 }}
-      animate={{
-        y: navVisible && !cinemaMode ? 0 : -80,
-        opacity: navVisible && !cinemaMode ? 1 : 0,
-      }}
-      transition={{
-        duration: 0.4,
-        ease: [0.32, 0.72, 0, 1],
-        delay: navVisible && !scrolled ? 1.3 : 0,
-      }}
+      animate={{ y: cinemaMode ? -80 : 0, opacity: cinemaMode ? 0 : 1 }}
+      transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1], delay: cinemaMode ? 0 : 1.3 }}
       className="fixed inset-x-0 top-3 z-50 flex justify-center pointer-events-none px-3 sm:top-4 sm:px-4"
       aria-label={t("mainNav")}
     >
       <div
-        className={`pointer-events-auto inline-flex h-14 items-center gap-1.5 rounded-full border px-3 shadow-[0_12px_40px_rgba(12,16,34,0.12)] backdrop-blur-2xl transition-all duration-300 md:h-12 md:gap-2 ${
+        className={`pointer-events-auto inline-flex max-w-full h-14 items-center gap-1.5 rounded-full border px-3 shadow-[0_12px_40px_rgba(12,16,34,0.12)] backdrop-blur-2xl md:gap-2 ${
           isLight
             ? "bg-background/90 border-border/80"
             : "bg-white/8 backdrop-blur-xl border-white/12 shadow-lg shadow-black/20"
-        } md:h-12 h-14 md:px-3 px-4`}
+        }`}
       >
         {/* Logo — always using BrandLogoFull (SVG) */}
         <Link href="/" aria-label={t("logoLink")} className="inline-flex min-h-11 shrink-0 items-center pl-1 pr-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg">
@@ -95,7 +52,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
         </Link>
 
         {/* Nav links — always visible on desktop */}
-        <div className="hidden md:flex items-center">
+        <div className="hidden xl:flex items-center">
           <div className={`w-px h-5 shrink-0 mx-1 ${isLight ? "bg-border" : "bg-white/12"}`} aria-hidden="true" />
           {navLinks.map((l) => (
             <Link
@@ -164,17 +121,15 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
             )}
           </button>
 
-          {/* CTA — always visible */}
-          <Link
-            href="/order"
-            className={`hidden sm:inline-flex items-center gap-1.5 min-h-11 text-xs font-semibold px-5 py-2.5 rounded-full active:scale-95 transition-all duration-200 whitespace-nowrap ml-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-              scrolled
-                ? "bg-primary text-white hover:bg-primary/90"
-                : "border border-primary text-primary hover:bg-primary hover:text-white"
-            }`}
-          >
-            {t("startProject")} <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-          </Link>
+          {/* One primary CTA, one secondary (Plan.md 3.1). */}
+          <Button asChild variant="outline" className="ml-1 hidden xl:inline-flex">
+            <Link href="/#contact">{t("getQuote")}</Link>
+            </Button>
+            <Button asChild variant="primary" className="ml-1 hidden md:inline-flex">
+              <Link href="/order">
+                {t("designMerch")} <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+          </Button>
 
           <LanguageSwitcher />
 
@@ -182,7 +137,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
             onClick={() => { sound.toggle(!menuOpen); setMenuOpen(!menuOpen); }}
             aria-label={menuOpen ? t("closeMenu") : t("openMenu")}
             aria-expanded={menuOpen}
-            className={`md:hidden flex items-center justify-center w-11 h-11 rounded-full transition-colors duration-200 ml-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+            className={`xl:hidden flex items-center justify-center w-11 h-11 rounded-full transition-colors duration-200 ml-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               isLight ? "hover:bg-muted text-foreground" : "hover:bg-white/10 text-white/70"
             }`}
           >
@@ -209,13 +164,16 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="/order"
-              onClick={() => setMenuOpen(false)}
-              className="mt-3 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
-            >
-              {t("startProject")} <ArrowRight className="size-4" />
-            </Link>
+            <Button asChild variant="primary" size="lg" className="mt-3">
+              <Link href="/order" onClick={() => setMenuOpen(false)}>
+                  {t("designMerch")} <ArrowRight className="size-4" aria-hidden="true" />
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg">
+              <Link href="/#contact" onClick={() => setMenuOpen(false)}>
+                  {t("getQuote")}
+              </Link>
+            </Button>
           </nav>
         </SheetContent>
       </Sheet>

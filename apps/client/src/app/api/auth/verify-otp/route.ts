@@ -3,18 +3,16 @@ import { createServiceClient } from "@/lib/supabase/service";
 import { findUserByEmail } from "@/lib/supabase/users";
 import { checkOtp, emailLimitKey, type OtpState } from "@/lib/auth/otp";
 import { consumeLimit } from "@/lib/rate-limit";
+import { VerifyOtpRequestSchema } from "@udo-craft/shared";
+import { parseJsonBody } from "@/lib/api/request";
 
 // POST /api/auth/verify-otp
 // Verifies the reset code (hashed, expiring, attempt-limited, single use),
 // then sets the new password.
 export async function POST(req: NextRequest) {
-  const { email, otp, newPassword } = await req.json();
-  if (!email || !otp || !newPassword) {
-    return NextResponse.json({ error: "email, otp та newPassword обов'язкові" }, { status: 400 });
-  }
-  if (newPassword.length < 8) {
-    return NextResponse.json({ error: "Пароль має містити щонайменше 8 символів" }, { status: 400 });
-  }
+  const parsedBody = await parseJsonBody(req, VerifyOtpRequestSchema);
+  if (!parsedBody.ok) return parsedBody.response;
+  const { email, otp, newPassword } = parsedBody.data;
 
   if (!(await consumeLimit(`otp-verify:${emailLimitKey(email)}`, 5, 900))) {
     return NextResponse.json({ error: "Забагато спроб. Запросіть новий код." }, { status: 429 });

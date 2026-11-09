@@ -160,6 +160,7 @@ export default function PopupPage() {
         </div>
       </motion.nav>
 
+      <main id="main">
       {/* HERO */}
       <section className="relative overflow-hidden bg-gray-950 pt-32 pb-20 sm:pt-44 sm:pb-28">
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
@@ -341,6 +342,8 @@ export default function PopupPage() {
           </div>
         </div>
       </section>
+
+      </main>
 
       {/* FOOTER */}
       <footer className="bg-gray-950 py-8">

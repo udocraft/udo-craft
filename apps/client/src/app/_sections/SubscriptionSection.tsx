@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { motion, useInView } from "framer-motion";
 import { ArrowRight, Check } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { Button } from "@udo-craft/ui";
 
 export function SubscriptionSection() {
   const t = useTranslations("subscription");
@@ -94,13 +95,12 @@ export function SubscriptionSection() {
             </div>
 
             <div className="mt-8 flex justify-center">
-              <Link
-                href="#contact"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-foreground px-6 text-sm font-semibold text-background transition-all duration-200 hover:bg-foreground/90 active:scale-[0.98]"
-              >
-                {t("cta")}
-                <ArrowRight className="size-4" />
-              </Link>
+              <Button asChild variant="inverse" size="lg">
+                <Link href="#contact">
+                  {t("cta")}
+                  <ArrowRight className="size-4" />
+                </Link>
+              </Button>
             </div>
           </div>
         </motion.div>
