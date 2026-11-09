@@ -72,7 +72,7 @@ export function QtyPriceContent({
   return (
     <div className={`space-y-5 pb-4 ${disabled ? "opacity-50 pointer-events-none" : ""}`}>
       {showTitle && (
-        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
           Тираж та ціна
         </p>
       )}
@@ -129,7 +129,7 @@ export function QtyPriceContent({
                 }`}
               >
                 <div className="font-bold whitespace-nowrap">від {tier.qty}</div>
-                <div className="text-[10px] opacity-80">−{tier.discount_pct}%</div>
+                <div className="text-xs opacity-80">−{tier.discount_pct}%</div>
               </button>
             );
           })}
@@ -187,7 +187,7 @@ export function QtyPriceContent({
               <div className="min-w-0">
                 <p className="text-sm font-medium text-foreground">Товар</p>
                 {discountPct > 0 && (
-                  <p className="text-[11px] text-muted-foreground mt-0.5">
+                  <p className="text-xs text-muted-foreground mt-0.5">
                     <span className="line-through">{(itemBaseCents / 100).toFixed(0)} ₴</span>
                     <span className="ml-1.5 text-emerald-600 font-semibold">−{discountPct}%</span>
                   </p>
@@ -207,18 +207,18 @@ export function QtyPriceContent({
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <p className="text-sm font-medium text-foreground">{label}</p>
                         {sizeLabel && (
-                          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">{sizeLabel}</span>
+                          <span className="text-xs px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">{sizeLabel}</span>
                         )}
-                        <span className="text-[10px] text-muted-foreground opacity-60">{layer.side}</span>
+                        <span className="text-xs text-muted-foreground opacity-60">{layer.side}</span>
                       </div>
                       {hasDiscount && (
-                        <p className="text-[11px] text-muted-foreground mt-0.5">
+                        <p className="text-xs text-muted-foreground mt-0.5">
                           <span className="line-through">{(basePriceCents / 100).toFixed(0)} ₴</span>
                           <span className="ml-1.5 text-emerald-600 font-semibold">−{discountPctPrint}%</span>
                         </p>
                       )}
                       {!sizeLabel && (
-                        <p className="text-[11px] text-amber-600 mt-0.5">Оберіть розмір</p>
+                        <p className="text-xs text-amber-600 mt-0.5">Оберіть розмір</p>
                       )}
                     </div>
                     <p className="text-sm font-semibold shrink-0 tabular-nums">
@@ -247,7 +247,7 @@ export function QtyPriceContent({
               <div>
                 <p className="text-base font-bold">Разом</p>
                 {quantity > 1 && (
-                  <p className="text-[11px] text-muted-foreground mt-0.5">
+                  <p className="text-xs text-muted-foreground mt-0.5">
                     {quantity} шт × {((itemDiscountedCents / 100) + (totalPrintCents / 100)).toFixed(0)} ₴
                   </p>
                 )}
@@ -276,7 +276,7 @@ export function QtyPriceContent({
           disabled={disabled}
           className="w-full flex items-center justify-between px-3 py-2.5 text-left hover:bg-muted/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Нотатка до позиції</span>
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Нотатка до позиції</span>
           {noteOpen ? <Minus className="size-3.5 text-muted-foreground shrink-0" /> : <Plus className="size-3.5 text-muted-foreground shrink-0" />}
         </button>
         <AnimatePresence initial={false}>

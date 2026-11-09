@@ -72,7 +72,7 @@ export function CustomizerLeftPanel({
             {product.description.length > 80 && (
               <button 
                 onClick={() => setDescExpanded(!descExpanded)}
-                className="text-[11px] text-primary font-semibold hover:underline mt-1 touch-manipulation cursor-pointer"
+                className="text-xs text-primary font-semibold hover:underline mt-1 touch-manipulation cursor-pointer"
               >
                 {descExpanded ? "Згорнути" : "Розгорнути"}
               </button>
@@ -82,7 +82,7 @@ export function CustomizerLeftPanel({
       </div>
 
       <div className="space-y-2">
-        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Колір</p>
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Колір</p>
         {variants.length > 0 ? (
           <div className="flex gap-2 flex-wrap">
             {variants.map((v) => {
@@ -104,7 +104,7 @@ export function CustomizerLeftPanel({
       </div>
 
       <div className="space-y-2">
-        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Розмір</p>
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Розмір</p>
         <div className="flex gap-1.5 flex-wrap">
           {(Array.isArray(product.available_sizes) && product.available_sizes.length > 0
             ? product.available_sizes as string[] : []
@@ -118,7 +118,7 @@ export function CustomizerLeftPanel({
       </div>
 
       <div className="space-y-2">
-        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Нанесення</p>
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Нанесення</p>
         <LayersPanel
           layers={layers}
           activeSide={activeSide}

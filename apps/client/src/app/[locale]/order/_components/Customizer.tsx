@@ -326,7 +326,7 @@ export function Customizer({
     if (tab === "upload") return <UploadPanel activeSide={s.activeSide} onFileAdd={addLayer} />;
     if (tab === "layers") return (
       <div className="p-3">
-        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-3">Шари</p>
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Шари</p>
         {s.layers.filter((l) => l.side === s.activeSide).length === 0 ? (
           <p className="text-xs text-muted-foreground text-center py-8">Немає шарів. Додайте зображення або текст.</p>
         ) : (
@@ -399,7 +399,7 @@ export function Customizer({
       {/* Color picker */}
       {variants.length > 0 && (
         <div className="space-y-1.5 pb-3 mb-1">
-          <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Колір</p>
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Колір</p>
           <div className="flex gap-2 flex-wrap">
             {variants.map((v) => {
               const mat = materials.find((m) => m.id === v.material_id);
@@ -422,7 +422,7 @@ export function Customizer({
       {/* Size picker */}
       {Array.isArray(product.available_sizes) && (product.available_sizes as string[]).length > 0 && (
         <div className="space-y-1.5 pb-3 mb-3 border-b border-border">
-          <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Розмір</p>
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Розмір</p>
           <div className="flex gap-1.5 flex-wrap">
             {(product.available_sizes as string[]).map((size) => (
               <button key={size} onClick={() => { if (!isReadOnly) s.setSelectedSize(size); }} aria-pressed={s.selectedSize === size}
@@ -474,7 +474,7 @@ export function Customizer({
         <MirrorRound className="size-5 text-primary shrink-0" aria-hidden="true" />
         <div className="text-left">
           <p className="text-sm font-medium text-foreground leading-tight">Приміряти на людину</p>
-          <p className="text-[10px] text-muted-foreground leading-tight">З допомогою AI</p>
+          <p className="text-xs text-muted-foreground leading-tight">З допомогою AI</p>
         </div>
       </button>
 
@@ -693,7 +693,7 @@ export function Customizer({
             <div className="space-y-2 rounded-xl border bg-background p-3">
               <div className="flex items-center justify-between gap-3">
                 <p className="text-sm font-medium">Посилання готове</p>
-                <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">активне</span>
+                <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700">активне</span>
               </div>
               <div className="flex gap-2">
                 <Input value={shareUrl} readOnly className="h-9 text-xs" />

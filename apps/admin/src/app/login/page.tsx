@@ -163,7 +163,7 @@ export default function LoginPage() {
                     value={password} onChange={(e) => setPassword(e.target.value)} required
                     autoComplete="current-password" className="pr-10" />
                   <button type="button" onClick={(e) => { e.preventDefault(); setShowPassword(!showPassword); }}
-                    tabIndex={-1} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                    aria-label={showPassword ? "Приховати пароль" : "Показати пароль"} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                     {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                   </button>
                 </div>
@@ -230,7 +230,7 @@ export default function LoginPage() {
                     value={newPassword} onChange={(e) => setNewPassword(e.target.value)}
                     required autoComplete="new-password" className="pr-10" />
                   <button type="button" onClick={(e) => { e.preventDefault(); setShowPassword(!showPassword); }}
-                    tabIndex={-1} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                    aria-label={showPassword ? "Приховати пароль" : "Показати пароль"} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                     {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                   </button>
                 </div>

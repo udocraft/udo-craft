@@ -39,7 +39,7 @@ export default function MessagesPage() {
                         {statusConfig(lead.status).label} · {new Date(lead.created_at).toLocaleDateString(undefined, { day: "numeric", month: "short" })}
                       </p>
                     </div>
-                    {unread > 0 && <span className="rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-bold text-white">{unread}</span>}
+                    {unread > 0 && <span className="rounded-full bg-red-500 px-1.5 py-0.5 text-xs font-bold text-white">{unread}</span>}
                     <ChevronRight className="size-4 shrink-0 text-muted-foreground/50" />
                   </Link>
                 </li>

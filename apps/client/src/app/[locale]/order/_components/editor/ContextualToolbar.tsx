@@ -286,7 +286,7 @@ function FontSelect({
           <div className="max-h-[320px] overflow-y-auto p-1 scrollbar-thin">
             {grouped.map((group) => (
               <div key={group.category}>
-                <div className="px-3 pt-2.5 pb-1 text-[9px] font-bold uppercase tracking-wider text-muted-foreground/60 select-none">
+                <div className="px-3 pt-2.5 pb-1 text-xs font-bold uppercase tracking-wider text-muted-foreground/60 select-none">
                   {group.category}
                 </div>
                 {group.fonts.map((f) => (
@@ -300,7 +300,7 @@ function FontSelect({
                     ].join(" ")}
                   >
                     <div className="flex flex-col gap-0.5 min-w-0">
-                      <span className="text-[10px] text-muted-foreground truncate">{f.label}</span>
+                      <span className="text-xs text-muted-foreground truncate">{f.label}</span>
                       <span
                         style={{ fontFamily: f.id }}
                         className="text-sm leading-tight truncate"
@@ -386,7 +386,7 @@ function TextControls({
       </ToolBtn>
       {/* Curve slider */}
       <div className="flex items-center gap-1.5 shrink-0">
-        <span className="text-[10px] text-muted-foreground whitespace-nowrap">Дуга</span>
+        <span className="text-xs text-muted-foreground whitespace-nowrap">Дуга</span>
         <input
           type="range"
           min={-180}
@@ -395,11 +395,11 @@ function TextControls({
           onChange={(e) => patch({ textCurve: Number(e.target.value) })}
           className="w-20 h-1.5 accent-primary"
         />
-        <span className="text-[10px] text-muted-foreground w-8 text-right">{layer.textCurve ?? 0}°</span>
+        <span className="text-xs text-muted-foreground w-8 text-right">{layer.textCurve ?? 0}°</span>
       </div>
       {/* Letter spacing */}
       <div className="flex items-center gap-1.5 shrink-0">
-        <span className="text-[10px] text-muted-foreground whitespace-nowrap" title="Міжлітерний інтервал">AV</span>
+        <span className="text-xs text-muted-foreground whitespace-nowrap" title="Міжлітерний інтервал">AV</span>
         <input
           type="range"
           min={-10}
@@ -413,11 +413,11 @@ function TextControls({
           }}
           className="w-16 h-1.5 accent-primary"
         />
-        <span className="text-[10px] text-muted-foreground w-6 text-right">{layer.textLetterSpacing ?? 0}</span>
+        <span className="text-xs text-muted-foreground w-6 text-right">{layer.textLetterSpacing ?? 0}</span>
       </div>
       {/* Line height */}
       <div className="flex items-center gap-1.5 shrink-0">
-        <span className="text-[10px] text-muted-foreground whitespace-nowrap" title="Міжрядковий інтервал">↕</span>
+        <span className="text-xs text-muted-foreground whitespace-nowrap" title="Міжрядковий інтервал">↕</span>
         <input
           type="range"
           min={50}
@@ -431,7 +431,7 @@ function TextControls({
           }}
           className="w-16 h-1.5 accent-primary"
         />
-        <span className="text-[10px] text-muted-foreground w-6 text-right">{(layer.textLineHeight ?? 1.2).toFixed(1)}</span>
+        <span className="text-xs text-muted-foreground w-6 text-right">{(layer.textLineHeight ?? 1.2).toFixed(1)}</span>
       </div>
       <OpacityControl
         value={layer.opacity ?? 1}

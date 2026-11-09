@@ -19,27 +19,27 @@ export function FooterSection({ tagline, copyright, instagram, telegram }: Foote
       title: t("columns.products.title"),
       links: [
         { href: "/order",    label: t("columns.products.links.constructor") },
-        { href: "#catalog",  label: t("columns.products.links.catalog") },
-        { href: "#contact",  label: t("columns.products.links.box") },
-        { href: "#contact",  label: t("columns.products.links.designer") },
+        { href: "/#catalog",  label: t("columns.products.links.catalog") },
+        { href: "/#contact",  label: t("columns.products.links.box") },
+        { href: "/#contact",  label: t("columns.products.links.designer") },
       ],
     },
     {
       title: t("columns.company.title"),
       links: [
-        { href: "#about",   label: t("columns.company.links.about") },
-        { href: "#how",     label: t("columns.company.links.how") },
-        { href: "#contact", label: t("columns.company.links.career") },
-        { href: "#contact", label: t("columns.company.links.blog") },
+        { href: "/#about",   label: t("columns.company.links.about") },
+        { href: "/#how",     label: t("columns.company.links.how") },
+        { href: "/#contact", label: t("columns.company.links.career") },
+        { href: "/#contact", label: t("columns.company.links.blog") },
       ],
     },
     {
       title: t("columns.support.title"),
       links: [
-        { href: "#faq",     label: t("columns.support.links.faq") },
-        { href: "#contact", label: t("columns.support.links.contact") },
+        { href: "/#faq",     label: t("columns.support.links.faq") },
+        { href: "/#contact", label: t("columns.support.links.contact") },
         { href: "/cabinet", label: t("columns.support.links.cabinet") },
-        { href: "#contact", label: t("columns.support.links.delivery") },
+        { href: "/#contact", label: t("columns.support.links.delivery") },
       ],
     },
   ];

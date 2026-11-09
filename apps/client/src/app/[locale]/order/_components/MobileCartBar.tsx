@@ -21,7 +21,7 @@ export function MobileCartBar({ cart, totalCents, onCheckout, onRemove, onEdit }
         <button onClick={() => setOpen(true)} className="w-full flex items-center gap-3 bg-primary text-primary-foreground rounded-2xl px-4 py-3.5 active:scale-[0.98] transition-transform">
           <div className="relative shrink-0">
             <ShoppingCart className="size-5" />
-            <span className="absolute -top-2 -right-2 bg-card text-primary text-[10px] font-black rounded-full w-4 h-4 flex items-center justify-center leading-none">{cart.length}</span>
+            <span className="absolute -top-2 -right-2 bg-card text-primary text-xs font-black rounded-full w-4 h-4 flex items-center justify-center leading-none">{cart.length}</span>
           </div>
           <span className="flex-1 text-left text-sm font-bold">Кошик · {cart.length} {cart.length === 1 ? "товар" : "товари"}</span>
           <span className="text-sm font-black">{(totalCents / 100).toFixed(0)} ₴</span>
@@ -38,7 +38,7 @@ export function MobileCartBar({ cart, totalCents, onCheckout, onRemove, onEdit }
               <div className="flex items-center gap-2">
                 <ShoppingCart className="size-4 text-muted-foreground" />
                 <span className="text-base font-bold text-foreground">Кошик</span>
-                <span className="bg-primary text-primary-foreground text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">{cart.length}</span>
+                <span className="bg-primary text-primary-foreground text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">{cart.length}</span>
               </div>
               <button onClick={() => setOpen(false)} className="size-8 flex items-center justify-center rounded-full bg-muted hover:bg-muted/70 transition-colors">
                 <span className="text-muted-foreground text-sm">✕</span>

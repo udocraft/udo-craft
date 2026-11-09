@@ -1,17 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import dynamic from "next/dynamic";
 import { useLocale, useTranslations } from "next-intl";
-import { Product, Material, ProductColorVariant } from "@udo-craft/shared";
-import { createClient } from "@/lib/supabase/client";
+import { getAllImages, Product, Material, ProductColorVariant, resolveProductImages } from "@udo-craft/shared";
+import { localizedField } from "@/lib/localized-field";
 import { useCms } from "@/hooks/useCms";
-import { useCart } from "@/hooks/useCart";
 import { useSoundInit } from "@/hooks/useSoundInit";
 
-import { NavBar } from "@/app/_components/NavBar";
-import { CartSidebar } from "@/app/_components/CartSidebar";
-import { AuthModal } from "@/components/AuthModal";
+import { SiteHeader } from "@/components/SiteHeader";
 
 // Above the fold
 import { HeroSection } from "@/app/_sections/HeroSection";
@@ -60,19 +57,34 @@ export function HomeClient({
   const tStats = useTranslations("homeStats");
   const tHomeContact = useTranslations("homeContact");
   const tFooter = useTranslations("footer");
-  const supabase = createClient();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cinemaMode, setCinemaMode] = useState(false);
-  const [cartOpen, setCartOpen] = useState(false);
-  const [authOpen, setAuthOpen] = useState(false);
 
-  const { cart, cartCount, totalCents } = useCart();
   useSoundInit();
-
-  useEffect(() => {
-    void supabase.auth.getSession().then((r: { data: { session: unknown } }) => setIsLoggedIn(!!r.data.session));
-  }, []);
+  const heroProduct = products.find((product) => {
+    const productImages = resolveProductImages(product.product_images, product.images);
+    return product.is_active && (
+      productImages.length > 0 ||
+      colorVariants.some((variant) => (
+        variant.product_id === product.id &&
+        resolveProductImages(variant.variant_images, variant.images).length > 0
+      ))
+    );
+  });
+  const heroVariant = heroProduct && colorVariants.find((variant) => (
+    variant.product_id === heroProduct.id &&
+    resolveProductImages(variant.variant_images, variant.images).length > 0
+  ));
+  const heroImages = heroVariant
+    ? resolveProductImages(heroVariant.variant_images, heroVariant.images)
+    : heroProduct
+      ? resolveProductImages(heroProduct.product_images, heroProduct.images)
+      : [];
+  const heroImageMap = getAllImages(heroImages);
+  const heroImage = heroImageMap.front ?? Object.values(heroImageMap)[0] ?? null;
+  const heroProductName = heroProduct
+    ? localizedField(heroProduct.name, heroProduct.name_en, locale)
+    : null;
 
   const layout = (cms.home_layout?.sections as unknown as any[]) || [
     { id: "hero", visible: "true" },
@@ -107,6 +119,8 @@ export function HomeClient({
             ctaPrimaryText={locale === "uk" ? get("home_hero", "cta_primary_text", tHero("ctaPrimary")) : tHero("ctaPrimary")}
             ctaPrimaryUrl={get("home_hero", "cta_primary_url", "#catalog")}
             ctaSecondaryText={tHero("contactCta")}
+            visualImage={heroImage}
+            visualAlt={heroProductName ?? ""}
           />
         );
       case "social": return <SocialProofBar key="social" />;
@@ -159,13 +173,7 @@ export function HomeClient({
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden scroll-smooth">
-      <NavBar isLoggedIn={isLoggedIn} cartCount={cartCount} onCartOpen={() => setCartOpen(true)} cinemaMode={cinemaMode} onAuthOpen={() => setAuthOpen(true)} />
-      <CartSidebar open={cartOpen} onClose={() => setCartOpen(false)} cart={cart} cartCount={cartCount} totalCents={totalCents} />
-      <AuthModal
-        open={authOpen}
-        onClose={() => setAuthOpen(false)}
-        onAuthSuccess={() => { setIsLoggedIn(true); setAuthOpen(false); }}
-      />
+      <SiteHeader cinemaMode={cinemaMode} />
 
       <main>
         {layout.map((s) => s.visible !== "false" && renderSection(s.id))}

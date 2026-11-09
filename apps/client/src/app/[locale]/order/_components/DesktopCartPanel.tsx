@@ -34,7 +34,7 @@ export function DesktopCartPanel({ cart, totalCents, onCheckout, onEdit, onRemov
       >
         <ShoppingCart className="size-5 text-primary" />
         {cart.length > 0 && (
-          <span className="bg-primary text-white text-[10px] font-black rounded-full w-5 h-5 flex items-center justify-center leading-none">
+          <span className="bg-primary text-white text-xs font-black rounded-full w-5 h-5 flex items-center justify-center leading-none">
             {cart.length}
           </span>
         )}
@@ -81,7 +81,7 @@ export function DesktopCartPanel({ cart, totalCents, onCheckout, onEdit, onRemov
               {item.layers && item.layers.length > 0 && (
                 <div className="space-y-0.5 pt-0.5">
                   {item.layers.map((layer, li) => (
-                    <p key={li} className="text-[10px] text-muted-foreground flex justify-between">
+                    <p key={li} className="text-xs text-muted-foreground flex justify-between">
                       <span className="capitalize">{layer.type}{layer.sizeLabel ? ` · ${layer.sizeLabel}` : ""} ({layer.side})</span>
                       <span>{layer.priceCents != null ? `+${(layer.priceCents / 100).toFixed(0)} ₴/шт` : "—"}</span>
                     </p>
@@ -89,12 +89,12 @@ export function DesktopCartPanel({ cart, totalCents, onCheckout, onEdit, onRemov
                 </div>
               )}
               <div className="pt-0.5 space-y-0.5 border-t border-border/50">
-                <div className="flex justify-between text-[10px] text-muted-foreground">
+                <div className="flex justify-between text-xs text-muted-foreground">
                   <span>Товар × {item.quantity}</span>
                   <span>{(item.unitPriceCents * item.quantity / 100).toFixed(0)} ₴</span>
                 </div>
                 {item.printCostCents > 0 && (
-                  <div className="flex justify-between text-[10px] text-muted-foreground">
+                  <div className="flex justify-between text-xs text-muted-foreground">
                     <span>Нанесення × {item.quantity}</span>
                     <span>+{(item.printCostCents * item.quantity / 100).toFixed(0)} ₴</span>
                   </div>
@@ -107,7 +107,7 @@ export function DesktopCartPanel({ cart, totalCents, onCheckout, onEdit, onRemov
               <div className="flex gap-1.5 pt-1">
                 <button
                   onClick={() => onEdit(i)}
-                  className="flex-1 cursor-pointer text-[10px] font-medium border border-border rounded-xl py-1 hover:bg-muted transition-colors text-center"
+                  className="flex-1 cursor-pointer text-xs font-medium border border-border rounded-xl py-1 hover:bg-muted transition-colors text-center"
                 >
                   Редагувати
                 </button>

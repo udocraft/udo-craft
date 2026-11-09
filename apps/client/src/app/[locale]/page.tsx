@@ -1,7 +1,7 @@
 import { createServiceClient } from "@/lib/supabase/service";
 import { HomeClient } from "@/app/_components/HomeClient";
 import { getTranslations } from "next-intl/server";
-import { pageAlternates, SITE_URL } from "@/lib/seo";
+import { jsonLdHtml, pageAlternates, SITE_URL } from "@/lib/seo";
 
 const FAQ_KEYS = ["0", "1", "2", "3", "4", "5"] as const;
 
@@ -86,7 +86,7 @@ export default async function LocaleHomePage({ params }: { params: Promise<{ loc
       <>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+          dangerouslySetInnerHTML={{ __html: jsonLdHtml(jsonLd) }}
         />
         <HomeClient
           products={prodRes.data || []}

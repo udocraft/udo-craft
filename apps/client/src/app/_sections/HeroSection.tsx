@@ -1,11 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Play, X } from "lucide-react";
-import { RoughHighlight } from "@/app/_components/HighlightText";
 import { sound } from "@/lib/sound";
 
 interface HeroSectionProps {
@@ -17,30 +15,12 @@ interface HeroSectionProps {
   ctaPrimaryText: string;
   ctaPrimaryUrl: string;
   ctaSecondaryText: string;
+  visualImage: string | null;
+  visualAlt: string;
 }
 
 function AnimatedHeadline({ text }: { text: string }) {
-  const words = text.split(" ");
-  return (
-    <span aria-label={text}>
-      {words.map((word, i) => (
-        <span key={i} className="inline-block overflow-hidden mr-[0.2em] last:mr-0">
-          <motion.span
-            className="inline-block"
-            initial={{ y: "110%", opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{
-              duration: 0.6,
-              delay: 0.2 + i * 0.04,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-          >
-            {word}
-          </motion.span>
-        </span>
-      ))}
-    </span>
-  );
+  return <span>{text}</span>;
 }
 
 export function HeroSection({
@@ -52,6 +32,8 @@ export function HeroSection({
   ctaPrimaryText,
   ctaPrimaryUrl,
   ctaSecondaryText,
+  visualImage,
+  visualAlt,
 }: HeroSectionProps) {
   const t = useTranslations("hero");
   const bgVideoRef = useRef<HTMLVideoElement>(null);
@@ -77,7 +59,7 @@ export function HeroSection({
 
   return (
     <section
-      className="relative min-h-[100svh] bg-[#060812] overflow-hidden flex flex-col"
+      className="relative min-h-[100svh] overflow-hidden bg-[#0d1020] text-white"
       aria-label={t("mainSection")}
     >
       {/* Skip link */}
@@ -91,10 +73,10 @@ export function HeroSection({
       {/* Video */}
       <video
         ref={bgVideoRef}
-        className="absolute inset-0 w-full h-full object-cover opacity-0 transition-[opacity] duration-[2s] pointer-events-none"
+        className="absolute inset-0 h-full w-full object-cover opacity-0 transition-[opacity] duration-[2s] pointer-events-none"
         onPlaying={(e) => {
           if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-            (e.target as HTMLVideoElement).style.opacity = "0.3";
+            (e.target as HTMLVideoElement).style.opacity = "0.14";
           }
         }}
         src="/hero-video.mp4"
@@ -110,7 +92,7 @@ export function HeroSection({
       />
 
       <div
-        className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#060812]/80 pointer-events-none"
+        className="absolute inset-0 bg-gradient-to-b from-[#0d1020]/20 via-[#0d1020]/65 to-[#0d1020] pointer-events-none"
         aria-hidden="true"
       />
 
@@ -151,62 +133,87 @@ export function HeroSection({
         )}
       </AnimatePresence>
 
-      {/* Main content */}
       <motion.div
         animate={{ opacity: cinemaMode ? 0 : 1 }}
         transition={{ duration: 0.4 }}
         style={{ pointerEvents: cinemaMode ? "none" : "auto" } as React.CSSProperties}
-        className="relative flex-1 flex flex-col items-center justify-center px-5 sm:px-10 pt-24 pb-20 text-center"
+        className="relative mx-auto grid min-h-[100svh] w-full max-w-[1440px] flex-1 items-center gap-10 px-5 pb-24 pt-32 sm:px-10 lg:grid-cols-[1.05fr_.95fr] lg:gap-14 lg:px-20 lg:py-32"
         aria-hidden={cinemaMode}
       >
-        <h1
-          className="text-white font-black leading-[0.92] tracking-[-0.025em] mb-6 max-w-4xl"
-          style={{ fontSize: "clamp(2.2rem, 6.5vw, 6rem)" }}
-        >
-          <AnimatedHeadline text={heading} />
-        </h1>
+        <div className="relative z-10 mx-auto w-full max-w-3xl text-center lg:mx-0 lg:text-left">
+          <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/70 backdrop-blur-md">
+            <span className="size-1.5 rounded-full bg-[#7772ff]" />
+            U:DO CRAFT <span className="text-white/30">/</span> B2B MERCH
+          </p>
+          <h1
+            className="mb-6 text-white font-semibold leading-[0.94] tracking-[-0.055em]"
+            style={{ fontSize: "clamp(2.75rem, 6.2vw, 6.5rem)" }}
+          >
+            <AnimatedHeadline text={heading} />
+          </h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="text-white/70 text-base sm:text-lg max-w-2xl mb-10 leading-relaxed"
-        >
-          {subheading}
-        </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-auto mb-9 max-w-xl text-base leading-relaxed text-white/65 sm:text-lg lg:mx-0"
+          >
+            {subheading}
+          </motion.p>
 
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-center gap-4 w-full sm:w-auto"
-        >
-          <a
-            href={ctaPrimaryUrl}
-            onClick={(e) => {
-              sound.button();
-              if (ctaPrimaryUrl.startsWith("#")) {
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0, ease: [0.22, 1, 0.36, 1] }}
+            className="flex w-full flex-col items-stretch justify-center gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center lg:justify-start"
+          >
+            <a
+              href={ctaPrimaryUrl}
+              onClick={(e) => {
+                sound.button();
+                if (ctaPrimaryUrl.startsWith("#")) {
+                  e.preventDefault();
+                  document.querySelector(ctaPrimaryUrl)?.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+              className="inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-full bg-[#5c57ff] px-8 text-sm font-semibold text-white shadow-[0_12px_40px_rgba(92,87,255,0.28)] transition hover:bg-[#716dff] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d1020] sm:w-auto"
+            >
+              {ctaPrimaryText}
+            </a>
+            <a
+              href="#contact"
+              onClick={(e) => {
+                sound.button();
                 e.preventDefault();
-                document.querySelector(ctaPrimaryUrl)?.scrollIntoView({ behavior: "smooth" });
-              }
-            }}
-            className="inline-flex items-center justify-center gap-2 bg-white text-[#06060e] font-bold text-sm px-8 py-4 rounded-full hover:bg-white/90 active:scale-[0.97] transition-all duration-200 w-full sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-          >
-            {ctaPrimaryText}
-          </a>
-          <a
-            href="#contact"
-            onClick={(e) => {
-              sound.button();
-              e.preventDefault();
-              document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
-            }}
-            className="inline-flex items-center justify-center gap-2 border border-white/20 text-white/70 font-semibold text-sm px-8 py-4 rounded-full hover:border-white/40 hover:text-white active:scale-[0.97] transition-all duration-200 w-full sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2"
-          >
-            {ctaSecondaryText || t("contactCta")}
-          </a>
-        </motion.div>
+                document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="inline-flex min-h-14 w-full items-center justify-center rounded-full border border-white/20 bg-white/[0.04] px-8 text-sm font-medium text-white/80 transition hover:border-white/40 hover:bg-white/[0.08] hover:text-white active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:w-auto"
+            >
+              {ctaSecondaryText || t("contactCta")}
+            </a>
+          </motion.div>
+        </div>
+
+        <div className="relative mx-auto w-full max-w-[560px] lg:mx-0">
+          <div className="absolute -inset-8 rounded-full bg-[#514cff]/20 blur-3xl" aria-hidden="true" />
+          <div className="relative aspect-[1.04/1] overflow-hidden rounded-[2rem] border border-white/15 bg-white/[0.06] p-3 shadow-[0_32px_100px_rgba(0,0,0,0.38)] backdrop-blur-sm sm:rounded-[2.5rem] sm:p-4">
+            <div className="absolute inset-3 rounded-[1.5rem] bg-[radial-gradient(ellipse_at_55%_38%,rgba(115,111,255,0.34),transparent_58%),linear-gradient(145deg,rgba(255,255,255,0.12),rgba(255,255,255,0.015))] sm:inset-4 sm:rounded-[2rem]" />
+            {visualImage && (
+              <motion.img
+                src={visualImage}
+                alt={visualAlt}
+                initial={{ opacity: 0, scale: 1.04, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.85, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute inset-3 h-[calc(100%-1.5rem)] w-[calc(100%-1.5rem)] rounded-[1.5rem] object-contain p-5 sm:inset-4 sm:h-[calc(100%-2rem)] sm:w-[calc(100%-2rem)] sm:rounded-[2rem] sm:p-8"
+              />
+            )}
+            <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between rounded-2xl border border-white/15 bg-[#111429]/70 px-4 py-3 backdrop-blur-xl sm:bottom-7 sm:left-7 sm:right-7 sm:px-5 sm:py-4">
+              <span className="text-xs font-medium text-white/70 sm:text-sm">{visualAlt || "U:DO CRAFT"}</span>
+              <span className="size-2 rounded-full bg-[#7772ff] shadow-[0_0_16px_rgba(119,114,255,0.9)]" />
+            </div>
+          </div>
+        </div>
       </motion.div>
 
       {/* Video reel button */}

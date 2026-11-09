@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": "20.x"
+    "node": "26.x"
   },
   "scripts": {
     "dev": "next dev",
@@ -37,10 +37,12 @@
     "lucide-react": "^0.577.0",
     "next": "14.2.35",
     "next-intl": "^3.26.5",
+    "onnxruntime-web": "1.21.0",
     "react": "^18",
     "react-dom": "^18",
     "react-rough-notation": "^1.0.8",
     "resend": "^6.12.0",
+    "sanitize-html": "^2.18.1",
     "snd-lib": "^1.2.4",
     "tailwind-merge": "^3.5.0"
   },
@@ -50,6 +52,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/sanitize-html": "^2.16.2",
     "@vitest/coverage-v8": "^4.1.5",
     "eslint": "^8",
     "eslint-config-next": "14.2.35",

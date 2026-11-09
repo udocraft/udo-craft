@@ -27,7 +27,7 @@ function calcPrice(tiers: { min_qty: number; price_cents: number }[], qty: numbe
 function PrintTypeBadge({ typeId, small }: { typeId: string; small?: boolean }) {
   const t = PRINT_TYPES.find((x) => x.id === typeId) ?? PRINT_TYPES[0];
   return (
-    <span className={`inline-flex items-center font-semibold rounded-full ${small ? "text-[10px] px-1.5 py-0.5" : "text-xs px-2 py-0.5"}`}
+    <span className={`inline-flex items-center font-semibold rounded-full ${small ? "text-xs px-1.5 py-0.5" : "text-xs px-2 py-0.5"}`}
       style={{ color: t.color, backgroundColor: t.bg }}>{t.label}</span>
   );
 }
@@ -226,7 +226,7 @@ export default function LayersList({
                   </p>
                   <div className="flex items-center gap-1 mt-0.5">
                     {isText ? (
-                      <span className="inline-flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded-full font-semibold bg-violet-100 text-violet-700">
+                      <span className="inline-flex items-center gap-0.5 text-xs px-1.5 py-0.5 rounded-full font-semibold bg-violet-100 text-violet-700">
                         <Type className="size-2.5" /> Текст
                       </span>
                     ) : (
@@ -270,21 +270,21 @@ export default function LayersList({
                     </div>
                     <div className="min-w-0 space-y-1">
                       <p className="text-xs font-semibold text-foreground">Налаштуйте шар</p>
-                      <p className="text-[11px] leading-relaxed text-muted-foreground">
+                      <p className="text-xs leading-relaxed text-muted-foreground">
                         Оберіть тип нанесення та розмір. Вартість оновиться автоматично.
                       </p>
                     </div>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">Тип нанесення</label>
+                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Тип нанесення</label>
                     <div className="flex flex-wrap gap-1.5">
                       {PRINT_TYPES.map((t) => (
                         <button
                           key={t.id}
                           type="button"
                           onClick={() => onTypeChange(layer.id, t.id as PrintTypeId)}
-                          className={`rounded-full border px-2.5 py-1.5 text-[11px] font-semibold transition-all ${
+                          className={`rounded-full border px-2.5 py-1.5 text-xs font-semibold transition-all ${
                             layer.type === t.id
                               ? "border-transparent text-white shadow-sm"
                               : "border-border bg-background text-muted-foreground hover:border-foreground/30 hover:text-foreground"
@@ -299,7 +299,7 @@ export default function LayersList({
 
                   {sizePriceRows.length > 0 && onSizeLabelChange && (
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">Розмір нанесення</label>
+                      <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Розмір нанесення</label>
                       <div className="grid grid-cols-5 gap-1.5">
                         {sizePriceRows.map((r) => {
                           const p = calcPrice(r.qty_tiers, quantity);
@@ -316,7 +316,7 @@ export default function LayersList({
                               }`}
                             >
                               <span className="block truncate text-xs font-black uppercase">{r.size_label}</span>
-                              {p ? <span className="block truncate text-[10px] opacity-75">{(p / 100).toFixed(0)} ₴</span> : null}
+                              {p ? <span className="block truncate text-xs opacity-75">{(p / 100).toFixed(0)} ₴</span> : null}
                             </button>
                           );
                         })}

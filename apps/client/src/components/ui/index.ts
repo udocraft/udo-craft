@@ -12,3 +12,6 @@ export * from './badge';
 export * from './separator';
 export * from './sheet';
 export * from './command';
+export * from './container';
+export * from './section';
+export * from './section-header';

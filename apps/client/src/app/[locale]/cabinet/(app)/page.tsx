@@ -39,11 +39,11 @@ export default function OrdersPage() {
                       </p>
                     </div>
                     {unread > 0 && (
-                      <span className="flex items-center gap-1 rounded-full bg-red-100 px-1.5 py-0.5 text-[10px] font-semibold text-red-700">
+                      <span className="flex items-center gap-1 rounded-full bg-red-100 px-1.5 py-0.5 text-xs font-semibold text-red-700">
                         <MessageCircle className="size-3" />+{unread}
                       </span>
                     )}
-                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${cfg.color}`}>{cfg.label}</span>
+                    <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${cfg.color}`}>{cfg.label}</span>
                     {lead.total_amount_cents > 0 && <span className="w-16 text-right text-sm font-semibold tabular-nums">{(lead.total_amount_cents / 100).toFixed(0)} ₴</span>}
                     <ChevronRight className="size-4 shrink-0 text-muted-foreground/50" />
                   </Link>

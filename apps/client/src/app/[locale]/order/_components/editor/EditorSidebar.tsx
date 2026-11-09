@@ -31,7 +31,7 @@ export default function EditorSidebar({ activeTab, onTabChange, onBack, layerCou
           className="flex flex-col items-center justify-center gap-1 w-11 h-11 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         >
           <ArrowLeft className="size-4" />
-          <span className="text-[9px] font-medium leading-none">Назад</span>
+          <span className="text-xs font-medium leading-none">Назад</span>
         </button>
       </div>
 
@@ -59,11 +59,11 @@ export default function EditorSidebar({ activeTab, onTabChange, onBack, layerCou
               {isActive && <span className="absolute left-0 top-2 bottom-2 w-0.5 rounded-full bg-primary" />}
               <Icon className="size-4" />
               {id === "layers" && layerCount > 0 && (
-                <span className="absolute top-1 right-1 min-w-[14px] h-3.5 rounded-full bg-primary text-[8px] font-black text-primary-foreground flex items-center justify-center px-0.5 leading-none">
+                <span className="absolute top-1 right-1 min-w-[14px] h-3.5 rounded-full bg-primary text-xs font-black text-primary-foreground flex items-center justify-center px-0.5 leading-none">
                   {layerCount > 9 ? "9+" : layerCount}
                 </span>
               )}
-              <span className="text-[9px] font-medium leading-none">{label}</span>
+              <span className="text-xs font-medium leading-none">{label}</span>
             </button>
           );
         })}

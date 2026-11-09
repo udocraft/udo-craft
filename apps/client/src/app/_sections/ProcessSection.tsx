@@ -112,12 +112,9 @@ function DesktopTimeline({ isInView, steps }: { isInView: boolean; steps: Step[]
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   className={`w-10 h-10 rounded-full border-2 flex items-center justify-center relative z-10 transition-shadow bg-background ${isCurrent ? 'shadow-[0_0_15px_rgba(59,130,246,0.4)]' : ''}`}
                 >
-                  <motion.span
-                    animate={{ color: isPast || isCurrent ? "white" : "var(--color-muted-foreground)" }}
-                    className="text-sm font-black tabular-nums"
-                  >
+                  <span className={`text-sm font-black tabular-nums ${isPast || isCurrent ? "text-white" : "text-muted-foreground"}`}>
                     {step.number}
-                  </motion.span>
+                  </span>
                   {isPast && (
                     <motion.div
                       initial={{ scale: 0 }}
@@ -129,15 +126,9 @@ function DesktopTimeline({ isInView, steps }: { isInView: boolean; steps: Step[]
                     </motion.div>
                   )}
                 </motion.div>
-                <motion.span
-                  animate={{
-                    color: isCurrent ? "var(--color-foreground)" : "var(--color-muted-foreground)",
-                    fontWeight: isCurrent ? 700 : 500,
-                  }}
-                  className="text-xs text-center max-w-[80px] leading-tight"
-                >
+                <span className={`max-w-[80px] text-center text-xs leading-tight transition-colors ${isCurrent ? "font-bold text-foreground" : "font-medium text-muted-foreground"}`}>
                   {step.title}
-                </motion.span>
+                </span>
               </button>
             );
           })}
@@ -252,12 +243,9 @@ function MobileTimeline({ steps }: { steps: Step[] }) {
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   className={`w-10 h-10 rounded-full border-2 flex items-center justify-center relative z-10 transition-shadow bg-background ${isCurrent ? 'shadow-[0_0_15px_rgba(59,130,246,0.4)]' : ''}`}
                 >
-                  <motion.span
-                    animate={{ color: isPast || isCurrent ? "white" : "var(--color-muted-foreground)" }}
-                    className="text-sm font-black tabular-nums"
-                  >
+                  <span className={`text-sm font-black tabular-nums ${isPast || isCurrent ? "text-white" : "text-muted-foreground"}`}>
                     {step.number}
-                  </motion.span>
+                  </span>
                   {isPast && (
                     <motion.div
                       initial={{ scale: 0 }}

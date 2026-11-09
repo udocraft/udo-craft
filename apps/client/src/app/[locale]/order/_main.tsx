@@ -26,6 +26,7 @@ function SimpleLoader() {
 import { createClient } from "@/lib/supabase/client";
 import { useAiQuota } from "@/hooks/useAiQuota";
 import type { LoadedCustomizerShare } from "./_lib/customizerShare";
+import { migrateLegacyCheckoutCart } from "./_lib/cart-migration";
 
 // ── Types ─────────────────────────────────────────────────────────────────
 
@@ -106,17 +107,39 @@ export function OrderPageInner({
     didRestoreRef.current = true;
     try {
       const raw = sessionStorage.getItem(SESSION_KEY);
-      if (!raw) return;
-      const draft = JSON.parse(raw);
-      if (draft.step) setStep(draft.step);
-      if (draft.contact) setContact(draft.contact);
-      if (Array.isArray(draft.cart) && draft.cart.length > 0) {
+      const draft = raw ? JSON.parse(raw) : null;
+      if (draft?.step) setStep(draft.step);
+      if (draft?.contact) setContact(draft.contact);
+      if (Array.isArray(draft?.cart) && draft.cart.length > 0) {
         setCart(draft.cart.map((item: CartItem) => ({
           ...item,
           layers: (item.layers ?? []).map((l: PrintLayer) => ({ ...l, url: l.uploadedUrl ?? l.url ?? "", file: new File([], "restored") })),
         })));
+        return;
       }
-    } catch { /* ignore */ }
+      const legacyRaw = sessionStorage.getItem("udo_cart");
+      if (!legacyRaw) return;
+      const migratedCart = migrateLegacyCheckoutCart(JSON.parse(legacyRaw));
+      if (!migratedCart) {
+        toast.error("Не вдалося відновити збережений кошик. Дані залишилися збереженими.");
+        return;
+      }
+
+      const persistedCart = migratedCart.map((item) => ({
+        ...item,
+        layers: (item.layers ?? []).map((layer) => ({ ...layer, file: undefined })),
+      }));
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify({
+        step: draft?.step ?? "select",
+        contact: draft?.contact ?? contact,
+        cart: persistedCart,
+      }));
+      sessionStorage.removeItem("udo_cart");
+      setCart(migratedCart);
+    } catch (error) {
+      console.error("Failed to restore the saved order cart", error);
+      toast.error("Не вдалося відновити збережений кошик. Дані залишилися збереженими.");
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -103,12 +103,12 @@ export default function TextPanel({ onAddTextLayer, onAddComposition }: TextPane
                   fontSize: Math.min(comp.layers[1].textFontSize / 4, 12),
                   color: comp.layers[1].textColor,
                 }}
-                className="truncate w-full text-[10px]"
+                className="truncate w-full text-xs"
               >
                 {comp.layers[1].textContent}
               </span>
             )}
-            <span className="text-[9px] text-muted-foreground mt-1">{comp.label}</span>
+            <span className="text-xs text-muted-foreground mt-1">{comp.label}</span>
           </button>
         ))}
       </div>
