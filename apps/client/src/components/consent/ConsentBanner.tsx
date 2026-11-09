@@ -15,7 +15,7 @@ export function ConsentBanner() {
     <div
       role="region"
       aria-label={t("title")}
-      className="fixed inset-x-4 bottom-4 z-50 mx-auto flex max-w-xl flex-col gap-4 rounded-lg border bg-background p-4 shadow-lg md:flex-row md:items-center"
+      className="consent-banner fixed inset-x-4 bottom-4 z-50 mx-auto flex max-w-xl flex-col gap-4 rounded-lg border bg-background p-4 shadow-lg md:flex-row md:items-center"
     >
       <p className="text-sm text-muted-foreground">
         {t("message")}{" "}

@@ -1,18 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { MockupViewer } from "@/components/MockupViewer";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { generateInvoicePDF } from "@/lib/generate-invoice";
 import { getSessionId, getVisitorId, track } from "@/lib/analytics";
-import { Trash2, Loader2 } from "lucide-react";
+import { FileDown, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { sound } from "@/lib/sound";
 import type { PrintLayer } from "@udo-craft/shared";
-import { OrderReview } from "./OrderReview";
-import { ContactForm } from "./ContactForm";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import { ContactForm, checkoutErrors, type CheckoutField } from "./ContactForm";
+
+const FIELDS: CheckoutField[] = ["name", "phone", "email", "delivery"];
 
 // ── Types ─────────────────────────────────────────────────────────────────
 
@@ -45,16 +46,13 @@ export interface ContactData {
   socialHandle: string;
   delivery: string;
   novaPoshtaDetails: string;
+  /** "card" (payment link after confirmation) or "invoice" (bank transfer). Nothing is charged on the site. */
+  payment: string;
   source: string;
   sourceDetails: string;
   deadline: string;
   comment: string;
 }
-
-const DELIVERY_OPTIONS = [
-  { id: "nova_poshta", label: "Нова Пошта", desc: "2–3 робочих дні" },
-  { id: "pickup", label: "Самовивіз", desc: "Львів, Джерельна, 69, офіс 10" },
-];
 
 const SESSION_KEY = "client-order-draft";
 
@@ -62,38 +60,23 @@ export interface CartSummaryProps {
   cart: CartItem[];
   contact: ContactData;
   setContact: (c: ContactData) => void;
-  step: "select" | "contact" | "review";
-  setStep: (s: "select" | "contact" | "review") => void;
-  highlightRequired: boolean;
-  cipherText: string;
-  showExtraDetails: boolean;
-  setShowExtraDetails: (v: boolean) => void;
-  onRemoveCartItem: (i: number) => void;
+  setStep: (s: "select" | "contact") => void;
   onEditCartItem: (i: number) => void;
   onSubmitSuccess: (email: string) => void;
-  products: { id: string }[];
   extraFiles: File[];
   setExtraFiles: (files: File[]) => void;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────
 
-export function CartSummary({
-  cart,
-  contact,
-  setContact,
-  step,
-  setStep,
-  highlightRequired,
-  cipherText,
-  showExtraDetails,
-  setShowExtraDetails,
-  onRemoveCartItem,
-  onEditCartItem,
-  onSubmitSuccess,
-  extraFiles,
-  setExtraFiles,
-}: CartSummaryProps) {
+export function CartSummary({ cart, contact, setContact, setStep, onEditCartItem, onSubmitSuccess, extraFiles, setExtraFiles }: CartSummaryProps) {
+  const t = useTranslations("checkout");
+  const tErr = useTranslations("checkoutErrors");
+  const tCart = useTranslations("cart");
+  const tCab = useTranslations("cabinet");
+  const formRef = useRef<HTMLDivElement>(null);
+  const [touched, setTouched] = useState<Partial<Record<CheckoutField, boolean>>>({});
+  const errors = checkoutErrors(contact, { required: tErr("required"), phone: tErr("phone"), email: tErr("email"), branch: t("np.required") });
   const [submitting, setSubmitting] = useState(false);
   const [generatingPdf, setGeneratingPdf] = useState(false);
 
@@ -103,8 +86,6 @@ export function CartSummary({
   );
 
   const handleSubmit = async () => {
-    if (!contact.name.trim() || !contact.phone.trim() || !contact.email.trim()) { toast.error("Заповніть ім'я, телефон та email"); sound.caution(); return; }
-    if (cart.length === 0) { toast.error("Додайте товар"); sound.caution(); return; }
     setSubmitting(true);
     sound.button();
     try {
@@ -162,6 +143,7 @@ export function CartSummary({
             social_channel: contact.socialHandle ? `${contact.socialNetwork}:${contact.socialHandle}` : undefined,
             delivery: contact.delivery,
             delivery_details: contact.novaPoshtaDetails || undefined,
+            payment: contact.payment,
             source: contact.source || undefined,
             source_details: contact.sourceDetails || undefined,
             deadline: contact.deadline || undefined,
@@ -179,7 +161,7 @@ export function CartSummary({
         }),
       });
 
-      if (!leadRes.ok) throw new Error((await leadRes.json().catch(() => ({}))).error || "Помилка відправки замовлення");
+      if (!leadRes.ok) throw new Error((await leadRes.json().catch(() => ({}))).error || "Order request failed");
       const lead = await leadRes.json();
 
       track("form_submit", { form: "order", lead_id: lead.id });
@@ -188,7 +170,7 @@ export function CartSummary({
       onSubmitSuccess(contact.email);
     } catch (err) {
       console.error("[handleSubmit]", err);
-      toast.error("Помилка при відправці замовлення");
+      toast.error(t("submitError"));
       sound.caution();
     } finally {
       setSubmitting(false);
@@ -214,74 +196,107 @@ export function CartSummary({
         contact: { name: contact.name, email: contact.email, phone: contact.phone, company: contact.company || undefined },
         createdAt: new Date(),
       });
-    } catch { toast.error("Помилка при генерації PDF"); }
+    } catch { toast.error(t("submitError")); }
     finally { setGeneratingPdf(false); }
   };
 
-  // ── Contact step ──────────────────────────────────────────────────────────
+  const shown = (key: CheckoutField) => (touched[key] ? errors[key] : null);
 
-  if (step === "contact") {
-    return (
-      <ContactForm
-        contact={contact}
-        setContact={setContact}
-        highlightRequired={highlightRequired}
-        cipherText={cipherText}
-        showExtraDetails={showExtraDetails}
-        setShowExtraDetails={setShowExtraDetails}
-        extraFiles={extraFiles}
-        setExtraFiles={setExtraFiles}
-        onBack={() => setStep("select")}
-        onNext={() => setStep("review")}
-      />
-    );
-  }
-  // ── Review step ───────────────────────────────────────────────────────────
+  const confirm = () => {
+    const firstInvalid = FIELDS.find((k) => errors[k]);
+    if (firstInvalid) {
+      setTouched({ name: true, phone: true, email: true, delivery: true });
+      const target = firstInvalid === "delivery"
+        ? formRef.current?.querySelector<HTMLElement>('input[name="delivery"]:checked')
+        : formRef.current?.querySelector<HTMLElement>(`#order-${firstInvalid}`);
+      target?.focus();
+      target?.scrollIntoView({ block: "center", behavior: "smooth" });
+      sound.caution();
+      return;
+    }
+    void handleSubmit();
+  };
 
-  if (step === "review") {
+  if (cart.length === 0) {
     return (
-      <OrderReview
-        cart={cart}
-        contact={contact}
-        extraFiles={extraFiles}
-        submitting={submitting}
-        generatingPdf={generatingPdf}
-        onBack={() => setStep("contact")}
-        onSubmit={handleSubmit}
-        onDownloadInvoice={handleDownloadInvoice}
-      />
+      <div className="mx-auto flex max-w-md flex-col items-center gap-4 py-20 text-center">
+        <p className="text-h4 font-semibold">{t("emptyCart")}</p>
+        <Button onClick={() => setStep("select")}>{t("toCatalog")}</Button>
+      </div>
     );
   }
 
-  // ── Cart items list (used in desktop side panel and mobile sheet) ─────────
+  const productsCents = cart.reduce((sum, item) => sum + item.unitPriceCents * item.quantity, 0);
+  const printCents = cart.reduce((sum, item) => sum + item.printCostCents * item.quantity, 0);
+  const money = (cents: number) => `${(cents / 100).toFixed(0)} ₴`;
+  const confirmLabel = submitting ? <><Loader2 className="size-4 animate-spin" aria-hidden="true" /> {t("submitting")}</> : t("submit");
 
   return (
-    <div className="space-y-2">
-      {cart.map((item, i) => {
-        const lineTotal = (item.unitPriceCents + item.printCostCents) * item.quantity / 100;
-        return (
-          <div key={i} className="flex items-center gap-3 p-3 bg-muted/50 rounded-2xl">
-            <div className="w-14 h-14 rounded-xl overflow-hidden shrink-0 bg-card border border-border">
-              <MockupViewer images={item.mockupsMap} frontUrl={item.mockupDataUrl} backUrl={item.mockupBackDataUrl} fallbackUrl={item.productImage} alt={item.productName} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-foreground truncate">{item.productName}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">{item.quantity} шт · {item.size} · {item.color}</p>
-              <p className="text-sm font-bold text-primary mt-0.5">{lineTotal.toFixed(0)} ₴</p>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <button onClick={() => onEditCartItem(i)}
-                className="h-9 px-3 rounded-xl text-xs font-semibold border border-border bg-background hover:bg-muted transition-colors">
-                Редагувати
-              </button>
-              <button onClick={() => onRemoveCartItem(i)}
-                className="size-9 rounded-full border border-border hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30 transition-colors text-muted-foreground flex items-center justify-center">
-                <Trash2 className="size-4" />
-              </button>
-            </div>
+    <div className="mx-auto grid max-w-5xl gap-6 pb-28 lg:grid-cols-[minmax(0,1fr)_22rem] lg:pb-0">
+      <div ref={formRef}>
+        <h1 className="mb-4 text-h3 font-semibold">{t("placeOrder")}</h1>
+        <ContactForm
+          contact={contact}
+          setContact={setContact}
+          errors={{ name: shown("name"), phone: shown("phone"), email: shown("email"), delivery: shown("delivery") }}
+          onBlur={(key) => setTouched((prev) => ({ ...prev, [key]: true }))}
+          extraFiles={extraFiles}
+          setExtraFiles={setExtraFiles}
+        />
+      </div>
+
+      <aside aria-labelledby="order-summary-title" className="self-start rounded-card border border-border bg-card p-5 lg:sticky lg:top-20">
+        <h2 id="order-summary-title" className="text-h4 font-semibold">{t("summaryTitle")}</h2>
+        <ul className="mt-4 divide-y divide-border">
+          {cart.map((item, i) => (
+            <li key={i} className="flex gap-3 py-3 first:pt-0">
+              <div className="size-14 shrink-0 overflow-hidden rounded-lg border border-border bg-background">
+                <MockupViewer images={item.mockupsMap} frontUrl={item.mockupDataUrl ?? item.mockupUploadedUrl} backUrl={item.mockupBackDataUrl} fallbackUrl={item.productImage} alt={item.productName} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium">{item.productName}</p>
+                <p className="text-sm text-muted-foreground">{tCart("quantity", { qty: item.quantity, size: item.size })} · {item.color}</p>
+                <button type="button" onClick={() => onEditCartItem(i)} className="hit-44 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                  {t("edit")}
+                </button>
+              </div>
+              <p className="shrink-0 text-sm font-semibold tabular-nums">{money((item.unitPriceCents + item.printCostCents) * item.quantity)}</p>
+            </li>
+          ))}
+        </ul>
+
+        <dl className="mt-2 space-y-2 border-t border-border pt-4 text-sm">
+          <div className="flex justify-between"><dt className="text-muted-foreground">{t("subtotal")}</dt><dd className="tabular-nums">{money(productsCents)}</dd></div>
+          {printCents > 0 && <div className="flex justify-between"><dt className="text-muted-foreground">{t("printCost")}</dt><dd className="tabular-nums">{money(printCents)}</dd></div>}
+          <div className="flex justify-between"><dt className="text-muted-foreground">{t("deliveryTitle")}</dt><dd>{contact.delivery === "pickup" ? t("free") : t("byCarrier")}</dd></div>
+          <div className="flex items-baseline justify-between border-t border-border pt-3">
+            <dt className="font-medium">{t("total")}</dt>
+            <dd className="text-h3 font-semibold tabular-nums">{money(totalCents)}</dd>
           </div>
-        );
-      })}
+        </dl>
+
+        <Button size="lg" className="mt-4 hidden w-full lg:inline-flex" onClick={confirm} disabled={submitting}>{confirmLabel}</Button>
+        <button type="button" onClick={handleDownloadInvoice} disabled={generatingPdf}
+          className="mt-2 flex min-h-11 w-full items-center justify-center gap-2 rounded-control text-sm font-medium text-primary hover:underline disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          {generatingPdf ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : <FileDown className="size-4" aria-hidden="true" />}
+          {tCab("details.invoice")}
+        </button>
+        <p className="mt-3 text-xs text-muted-foreground">
+          {t.rich("agree", {
+            privacy: (chunks) => <Link href="/privacy" className="underline underline-offset-2">{chunks}</Link>,
+            terms: (chunks) => <Link href="/terms" className="underline underline-offset-2">{chunks}</Link>,
+          })}
+        </p>
+      </aside>
+
+      {/* Mobile: total and the one primary action stay in reach. */}
+      <div data-sticky-bar className="fixed inset-x-0 bottom-0 z-30 flex items-center gap-4 border-t border-border bg-background/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur lg:hidden">
+        <div className="shrink-0 whitespace-nowrap">
+          <p className="text-xs text-muted-foreground">{t("total")}</p>
+          <p className="text-lg font-semibold tabular-nums">{money(totalCents)}</p>
+        </div>
+        <Button size="lg" className="flex-1" onClick={confirm} disabled={submitting}>{confirmLabel}</Button>
+      </div>
     </div>
   );
 }

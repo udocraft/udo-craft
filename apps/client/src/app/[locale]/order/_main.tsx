@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import type { Product, PrintZone, Material, ProductColorVariant } from "@udo-craft/shared";
 import type { PrintLayer } from "@udo-craft/shared";
 import { track } from "@/lib/analytics";
@@ -14,7 +16,6 @@ import { MobileCartBar } from "./_components/MobileCartBar";
 import { DesktopCartPanel } from "./_components/DesktopCartPanel";
 import { ProductGrid } from "./_components/ProductGrid";
 import { StepHeader } from "./_components/StepHeader";
-import { useCipherText } from "./_components/useCipherText";
 // Simple inline loader to avoid hydration issues
 function SimpleLoader() {
   return (
@@ -78,16 +79,16 @@ export function OrderPageInner({
   }, [checkAuth]);
 
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [step, setStep] = useState<"select" | "contact" | "review">("select");
-  const [highlightRequired, setHighlightRequired] = useState(false);
-  const [showExtraDetails, setShowExtraDetails] = useState(false);
+  const t = useTranslations("checkout");
+  // "contact" is the single checkout page (contact, delivery, payment, summary).
+  const [step, setStep] = useState<"select" | "contact">("select");
   const [cart, setCart] = useState<CartItem[]>([]);
   const [customizing, setCustomizing] = useState<ProductWithConfig | null>(null);
   const [editingCartIndex, setEditingCartIndex] = useState<number | null>(null);
   const [customizerInitialSize, setCustomizerInitialSize] = useState<string | null>(null);
   const [customizerInitialColor, setCustomizerInitialColor] = useState<string | null>(null);
   const [activeShare, setActiveShare] = useState<LoadedCustomizerShare | null>(null);
-  const [contact, setContact] = useState<ContactData>({ name: "", email: "", phone: "", company: "", edrpou: "", socialNetwork: "telegram", socialHandle: "", delivery: "nova_poshta", novaPoshtaDetails: "", source: "", sourceDetails: "", deadline: "", comment: "" });
+  const [contact, setContact] = useState<ContactData>({ name: "", email: "", phone: "", company: "", edrpou: "", socialNetwork: "telegram", socialHandle: "", delivery: "nova_poshta", novaPoshtaDetails: "", payment: "card", source: "", sourceDetails: "", deadline: "", comment: "" });
   const [extraFiles, setExtraFiles] = useState<File[]>([]);
   const [successEmail, setSuccessEmail] = useState<string | null>(null);
   const processedAddQueryRef = useRef(false);
@@ -108,8 +109,9 @@ export function OrderPageInner({
     try {
       const raw = sessionStorage.getItem(SESSION_KEY);
       const draft = raw ? JSON.parse(raw) : null;
-      if (draft?.step) setStep(draft.step);
-      if (draft?.contact) setContact(draft.contact);
+      // Drafts saved before the review step was merged into checkout may say "review".
+      if (draft?.step) setStep(draft.step === "select" ? "select" : "contact");
+      if (draft?.contact) setContact((prev) => ({ ...prev, ...draft.contact }));
       if (Array.isArray(draft?.cart) && draft.cart.length > 0) {
         setCart(draft.cart.map((item: CartItem) => ({
           ...item,
@@ -158,15 +160,6 @@ export function OrderPageInner({
       window.dispatchEvent(new Event("udo_cart_update"));
     } catch { /* quota */ }
   }, [step, cart, contact]);
-
-  const cipherText = useCipherText(step === "contact");
-
-  useEffect(() => {
-    if (step !== "contact") return;
-    setHighlightRequired(true);
-    const t = setTimeout(() => setHighlightRequired(false), 1000);
-    return () => clearTimeout(t);
-  }, [step]);
 
   // Handle URL query params (product pre-selection, edit mode)
   useEffect(() => {
@@ -227,7 +220,7 @@ export function OrderPageInner({
         if (searchParams.get("add") === "1" && !processedAddQueryRef.current) {
           processedAddQueryRef.current = true;
           setCart((prev) => [...prev, buildPlainCartItem(p, selectedVariant, searchParams.get("size"), color)]);
-          toast.success(`${p.name} додано до кошика`);
+          toast.success(t("addedToCart", { name: p.name }));
           router.replace("/order");
           return;
         }
@@ -252,7 +245,7 @@ export function OrderPageInner({
   }, [editingCartIndex]);
 
   const totalCents = cart.reduce((sum, item) => sum + (item.unitPriceCents + item.printCostCents) * item.quantity, 0);
-  const stepIdx = (["select", "contact", "review"] as const).indexOf(step);
+  const stepIdx = step === "select" ? 0 : 1;
 
   if (loading) {
     return <SimpleLoader />;
@@ -310,8 +303,8 @@ export function OrderPageInner({
         />
 
         {/* Body */}
-        <main id="main" className="flex-1 min-h-0 flex overflow-hidden">
-          <div className={`flex-1 overflow-y-auto ${step === "select" ? "" : "lg:pr-80"}`}>
+        <main id="main" className={`flex-1 min-h-0 flex ${step === "select" ? "overflow-hidden" : ""}`}>
+          <div className={`flex-1 ${step === "select" ? "overflow-y-auto" : ""}`}>
             <div className="mx-auto px-4 py-6 space-y-6 max-w-full">
               {step === "select" && (
                 <ProductGrid
@@ -331,26 +324,19 @@ export function OrderPageInner({
                   }}
                   onAddWithoutPrint={(prod, size, color, variant) => {
                     setCart((prev) => [...prev, buildPlainCartItem(prod, variant, size, color)]);
-                    toast.success(`${prod.name} додано до кошика`);
+                    toast.success(t("addedToCart", { name: prod.name }));
                   }}
                 />
               )}
 
-              {(step === "contact" || step === "review") && (
+              {step === "contact" && (
                 <CartSummary
                   cart={cart}
                   contact={contact}
                   setContact={setContact}
-                  step={step}
                   setStep={setStep}
-                  highlightRequired={highlightRequired}
-                  cipherText={cipherText}
-                  showExtraDetails={showExtraDetails}
-                  setShowExtraDetails={setShowExtraDetails}
-                  onRemoveCartItem={(i) => setCart((prev) => prev.filter((_, idx) => idx !== i))}
                   onEditCartItem={(i) => { const prod = products.find((p) => p.id === cart[i]?.productId); if (!prod) return; setCustomizerInitialSize(null); setCustomizerInitialColor(null); setEditingCartIndex(i); setCustomizing(prod); }}
                   onSubmitSuccess={(email) => setSuccessEmail(email)}
-                  products={products}
                   extraFiles={extraFiles}
                   setExtraFiles={setExtraFiles}
                 />
@@ -366,10 +352,11 @@ export function OrderPageInner({
             onEdit={(i) => { const prod = products.find((p) => p.id === cart[i]?.productId); if (!prod) return; setCustomizerInitialSize(null); setCustomizerInitialColor(null); setEditingCartIndex(i); setCustomizing(prod); }}
             onRemove={(i) => setCart((prev) => prev.filter((_, idx) => idx !== i))}
             collapsible={step === "select"}
-            hidden={step === "contact" || step === "review"}
+            hidden={step === "contact"}
           />
 
           <MobileCartBar
+            hidden={step === "contact"}
             cart={cart}
             totalCents={totalCents}
             onCheckout={() => setStep("contact")}

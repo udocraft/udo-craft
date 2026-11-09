@@ -469,7 +469,8 @@
     "ariaLabel": "Kundvagn",
     "quantity": "{qty} st · {size}",
     "total": "Totalt:",
-    "cartItem": "Kundvagnsartikel"
+    "cartItem": "Kundvagnsartikel",
+    "collapse": "Fäll ihop varukorgen"
   },
   "services": {
     "heading": "Three ways to get",
@@ -516,7 +517,8 @@
       "name": "Företagsnamn *",
       "namePlaceholder": "AB «Namn»",
       "taxId": "Organisationsnummer / VAT",
-      "taxIdPlaceholder": "SE556123456701"
+      "taxIdPlaceholder": "SE556123456701",
+      "nameLabel": "Företagsnamn"
     },
     "contact": {
       "title": "Kontaktperson",
@@ -525,7 +527,7 @@
       "email": "E-post *",
       "emailPlaceholder": "hr@foretag.se",
       "phone": "Telefon *",
-      "phonePlaceholder": "+46 XX XXX XXXX",
+      "phonePlaceholder": "+380 XX XXX XX XX",
       "social": "Telegram / Instagram",
       "socialPlaceholder": "@användarnamn eller länk"
     },
@@ -542,7 +544,7 @@
         },
         "pickup": {
           "label": "Upphämtning",
-          "desc": "Efter överenskommelse"
+          "desc": "Lviv, Dzherelna-gatan 69, kontor 10"
         }
       },
       "deadline": "Önskat datum",
@@ -582,7 +584,36 @@
     },
     "back": "Tillbaka",
     "header": "U:DO",
-    "backAriaLabel": "Tillbaka"
+    "backAriaLabel": "Tillbaka",
+    "optional": "Valfritt",
+    "deliveryTitle": "Leverans",
+    "paymentTitle": "Betalning",
+    "extrasTitle": "Ytterligare uppgifter",
+    "summaryTitle": "Din beställning",
+    "subtotal": "Varor",
+    "printCost": "Tryck",
+    "byCarrier": "Enligt fraktbolagets taxa",
+    "free": "Gratis",
+    "sourceLabel": "Hur hörde du talas om oss?",
+    "submitError": "Det gick inte att skicka beställningen. Försök igen.",
+    "addedToCart": "{name} har lagts i varukorgen",
+    "agree": "Genom att bekräfta beställningen godkänner du <privacy>integritetspolicyn</privacy> och <terms>användarvillkoren</terms>.",
+    "np": {
+      "branch": "Nova Poshta-ombud",
+      "courier": "Nova Poshta-bud",
+      "cityPlaceholder": "Stad eller ort",
+      "branchPlaceholder": "Ombudets nummer eller gata",
+      "addressPlaceholder": "Gata, hus, lägenhet",
+      "manualPlaceholder": "Stad och ombudets nummer",
+      "noResults": "Inget hittades",
+      "required": "Välj stad och ombud"
+    },
+    "pay": {
+      "card": "Med kort",
+      "cardDesc": "Betalningslänk när managern har bekräftat beställningen",
+      "invoice": "Faktura för företag",
+      "invoiceDesc": "Banköverföring mot faktura, med avslutande dokument"
+    }
   },
   "cabinet": {
     "breadcrumb": "/ Konto",

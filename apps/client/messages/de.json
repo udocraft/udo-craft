@@ -469,7 +469,8 @@
     "ariaLabel": "Warenkorb",
     "quantity": "{qty} Stk · {size}",
     "total": "Gesamt:",
-    "cartItem": "Warenkorb-Artikel"
+    "cartItem": "Warenkorb-Artikel",
+    "collapse": "Warenkorb einklappen"
   },
   "services": {
     "heading": "Three ways to get",
@@ -516,7 +517,8 @@
       "name": "Firmenname *",
       "namePlaceholder": "GmbH «Name»",
       "taxId": "Steuernummer / USt-IdNr.",
-      "taxIdPlaceholder": "DE123456789"
+      "taxIdPlaceholder": "DE123456789",
+      "nameLabel": "Firmenname"
     },
     "contact": {
       "title": "Ansprechpartner",
@@ -525,7 +527,7 @@
       "email": "E-Mail *",
       "emailPlaceholder": "hr@firma.de",
       "phone": "Telefon *",
-      "phonePlaceholder": "+49 XXX XXXXXXX",
+      "phonePlaceholder": "+380 XX XXX XX XX",
       "social": "Telegram / Instagram",
       "socialPlaceholder": "@benutzername oder Link"
     },
@@ -542,7 +544,7 @@
         },
         "pickup": {
           "label": "Abholung",
-          "desc": "Nach Vereinbarung"
+          "desc": "Lwiw, Dzherelna-Str. 69, Büro 10"
         }
       },
       "deadline": "Gewünschter Termin",
@@ -582,7 +584,36 @@
     },
     "back": "Zurück",
     "header": "U:DO",
-    "backAriaLabel": "Zurück"
+    "backAriaLabel": "Zurück",
+    "optional": "Optional",
+    "deliveryTitle": "Lieferung",
+    "paymentTitle": "Zahlung",
+    "extrasTitle": "Weitere Angaben",
+    "summaryTitle": "Ihre Bestellung",
+    "subtotal": "Artikel",
+    "printCost": "Druck",
+    "byCarrier": "Nach Tarif des Versanddienstes",
+    "free": "Kostenlos",
+    "sourceLabel": "Wie haben Sie von uns erfahren?",
+    "submitError": "Die Bestellung konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
+    "addedToCart": "{name} wurde in den Warenkorb gelegt",
+    "agree": "Mit der Bestätigung akzeptieren Sie die <privacy>Datenschutzerklärung</privacy> und die <terms>Nutzungsbedingungen</terms>.",
+    "np": {
+      "branch": "Nova-Poshta-Filiale",
+      "courier": "Nova-Poshta-Kurier",
+      "cityPlaceholder": "Stadt oder Ort",
+      "branchPlaceholder": "Filialnummer oder Straße",
+      "addressPlaceholder": "Straße, Hausnummer, Wohnung",
+      "manualPlaceholder": "Stadt und Filialnummer",
+      "noResults": "Nichts gefunden",
+      "required": "Wählen Sie Stadt und Filiale"
+    },
+    "pay": {
+      "card": "Mit Karte",
+      "cardDesc": "Zahlungslink, nachdem der Manager die Bestellung bestätigt hat",
+      "invoice": "Rechnung für Unternehmen",
+      "invoiceDesc": "Überweisung auf Rechnung, mit Abschlussdokumenten"
+    }
   },
   "cabinet": {
     "breadcrumb": "/ Konto",

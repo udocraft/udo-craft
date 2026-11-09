@@ -469,7 +469,8 @@
     "ariaLabel": "Panier",
     "quantity": "{qty} pcs · {size}",
     "total": "Total :",
-    "cartItem": "Article du panier"
+    "cartItem": "Article du panier",
+    "collapse": "Réduire le panier"
   },
   "services": {
     "heading": "Three ways to get",
@@ -516,7 +517,8 @@
       "name": "Nom de l'entreprise *",
       "namePlaceholder": "SARL «Nom»",
       "taxId": "N° SIRET / TVA",
-      "taxIdPlaceholder": "FR12345678901"
+      "taxIdPlaceholder": "FR12345678901",
+      "nameLabel": "Nom de l'entreprise"
     },
     "contact": {
       "title": "Personne de contact",
@@ -525,7 +527,7 @@
       "email": "E-mail *",
       "emailPlaceholder": "rh@entreprise.fr",
       "phone": "Téléphone *",
-      "phonePlaceholder": "+33 X XX XX XX XX",
+      "phonePlaceholder": "+380 XX XXX XX XX",
       "social": "Telegram / Instagram",
       "socialPlaceholder": "@pseudo ou lien"
     },
@@ -542,7 +544,7 @@
         },
         "pickup": {
           "label": "Retrait",
-          "desc": "Sur rendez-vous"
+          "desc": "Lviv, rue Dzherelna 69, bureau 10"
         }
       },
       "deadline": "Date souhaitée",
@@ -582,7 +584,36 @@
     },
     "back": "Retour",
     "header": "U:DO",
-    "backAriaLabel": "Retour"
+    "backAriaLabel": "Retour",
+    "optional": "Facultatif",
+    "deliveryTitle": "Livraison",
+    "paymentTitle": "Paiement",
+    "extrasTitle": "Informations complémentaires",
+    "summaryTitle": "Votre commande",
+    "subtotal": "Articles",
+    "printCost": "Impression",
+    "byCarrier": "Selon les tarifs du transporteur",
+    "free": "Gratuit",
+    "sourceLabel": "Comment nous avez-vous connus ?",
+    "submitError": "Impossible d'envoyer la commande. Veuillez réessayer.",
+    "addedToCart": "{name} ajouté au panier",
+    "agree": "En confirmant la commande, vous acceptez la <privacy>politique de confidentialité</privacy> et les <terms>conditions d'utilisation</terms>.",
+    "np": {
+      "branch": "Agence Nova Poshta",
+      "courier": "Coursier Nova Poshta",
+      "cityPlaceholder": "Ville ou village",
+      "branchPlaceholder": "Numéro d'agence ou rue",
+      "addressPlaceholder": "Rue, bâtiment, appartement",
+      "manualPlaceholder": "Ville et numéro d'agence",
+      "noResults": "Aucun résultat",
+      "required": "Choisissez une ville et une agence"
+    },
+    "pay": {
+      "card": "Par carte",
+      "cardDesc": "Lien de paiement après confirmation de la commande par le manager",
+      "invoice": "Facture pour une entreprise",
+      "invoiceDesc": "Virement sur facture, avec documents de clôture"
+    }
   },
   "cabinet": {
     "breadcrumb": "/ Compte",

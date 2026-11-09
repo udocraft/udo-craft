@@ -69,12 +69,30 @@
     "desc1": "From startups to large corporations — we help teams create merch they're proud of.",
     "desc2": "From 10 units, no hidden fees, with delivery across Ukraine. Own production, personal manager, quality guarantee.",
     "features": {
-      "editor": { "title": "Online Editor", "desc": "Upload your logo, place it on the product and see the result immediately. No extra emails or approvals." },
-      "minOrder": { "title": "From 10 Units", "desc": "Perfect for startups and teams. No surcharges for small runs." },
-      "pricing": { "title": "Transparent Pricing", "desc": "Invoice right away. No hidden charges." },
-      "timeline": { "title": "7–14 Days", "desc": "From confirmation to delivery. Deadline is not a problem." },
-      "quality": { "title": "Quality Control", "desc": "Every batch is inspected before shipping." },
-      "manager": { "title": "Personal Manager", "desc": "Available from first request to order delivery." }
+      "editor": {
+        "title": "Online Editor",
+        "desc": "Upload your logo, place it on the product and see the result immediately. No extra emails or approvals."
+      },
+      "minOrder": {
+        "title": "From 10 Units",
+        "desc": "Perfect for startups and teams. No surcharges for small runs."
+      },
+      "pricing": {
+        "title": "Transparent Pricing",
+        "desc": "Invoice right away. No hidden charges."
+      },
+      "timeline": {
+        "title": "7–14 Days",
+        "desc": "From confirmation to delivery. Deadline is not a problem."
+      },
+      "quality": {
+        "title": "Quality Control",
+        "desc": "Every batch is inspected before shipping."
+      },
+      "manager": {
+        "title": "Personal Manager",
+        "desc": "Available from first request to order delivery."
+      }
     }
   },
   "problemSolution": {
@@ -151,10 +169,22 @@
     "desc": "Most companies order a run blindly — and get something different than expected. Box of Touch solves this: a physical set of fabric samples, colors and print types.",
     "contentsLabel": "Contents of Box of Touch",
     "contents": {
-      "products": { "label": "Product samples", "desc": "T-shirts, hoodies, long sleeves — feel the cut and fit" },
-      "fabrics": { "label": "Fabric samples", "desc": "Different compositions and weights — from 180 to 320 g/m²" },
-      "palette": { "label": "Color palette", "desc": "All available colors with real samples" },
-      "printing": { "label": "Print types", "desc": "Silk-screen, embroidery, DTF — compare by touch" }
+      "products": {
+        "label": "Product samples",
+        "desc": "T-shirts, hoodies, long sleeves — feel the cut and fit"
+      },
+      "fabrics": {
+        "label": "Fabric samples",
+        "desc": "Different compositions and weights — from 180 to 320 g/m²"
+      },
+      "palette": {
+        "label": "Color palette",
+        "desc": "All available colors with real samples"
+      },
+      "printing": {
+        "label": "Print types",
+        "desc": "Silk-screen, embroidery, DTF — compare by touch"
+      }
     },
     "cta": "Order Box of Touch",
     "freeDelivery": "Free delivery · No obligations"
@@ -163,9 +193,18 @@
     "label": "U:DO Popup",
     "heading": "Pop-up stand — merch right at the event",
     "slides": {
-      "0": { "title": "Choose a package", "desc": "Sticker packs or print packages — find the right format for your event" },
-      "1": { "title": "Choose a product", "desc": "T-shirts, hoodies, accessories — guests choose on-site" },
-      "2": { "title": "We come to you", "desc": "We bring equipment and apply prints right at the event" }
+      "0": {
+        "title": "Choose a package",
+        "desc": "Sticker packs or print packages — find the right format for your event"
+      },
+      "1": {
+        "title": "Choose a product",
+        "desc": "T-shirts, hoodies, accessories — guests choose on-site"
+      },
+      "2": {
+        "title": "We come to you",
+        "desc": "We bring equipment and apply prints right at the event"
+      }
     },
     "cta": "Learn more",
     "slideLabel": "Slide {n}",
@@ -185,12 +224,20 @@
       "welcome": {
         "title": "Welcome kits",
         "desc": "For onboarding, HR processes and growing teams.",
-        "features": ["storage", "personalization", "delivery to employee"]
+        "features": [
+          "storage",
+          "personalization",
+          "delivery to employee"
+        ]
       },
       "uniform": {
         "title": "Regular uniforms",
         "desc": "For HoReCa, retail and teams with regular uniform replacement.",
-        "features": ["size tracking", "repeat shipments", "stock management"]
+        "features": [
+          "size tracking",
+          "repeat shipments",
+          "stock management"
+        ]
       }
     },
     "cta": "Discuss subscription"
@@ -280,16 +327,46 @@
     "selectProvider": "Select provider",
     "goTo": "Go to: {name}",
     "features": {
-      "minOrder": { "name": "Minimum run", "desc": "Minimum quantity for an order" },
-      "editor": { "name": "Online editor", "desc": "Ability to create a design 24/7 independently" },
-      "samples": { "name": "Samples before run", "desc": "Getting a test sample before launching the batch" },
-      "manager": { "name": "Personal manager", "desc": "Direct contact for quick problem solving" },
-      "fixedPrice": { "name": "Fixed price", "desc": "No hidden fees after approval" },
-      "timeline": { "name": "Production time", "desc": "Time from design approval to shipping" },
-      "quality": { "name": "Quality guarantee", "desc": "Free replacement if defects are found" },
-      "popup": { "name": "Mobile pop-up stand", "desc": "Organizing an offline point at your event" },
-      "design": { "name": "Designer help", "desc": "Logo adaptation and design for printing" },
-      "logistics": { "name": "Logistics", "desc": "Packing and delivery to each employee separately" }
+      "minOrder": {
+        "name": "Minimum run",
+        "desc": "Minimum quantity for an order"
+      },
+      "editor": {
+        "name": "Online editor",
+        "desc": "Ability to create a design 24/7 independently"
+      },
+      "samples": {
+        "name": "Samples before run",
+        "desc": "Getting a test sample before launching the batch"
+      },
+      "manager": {
+        "name": "Personal manager",
+        "desc": "Direct contact for quick problem solving"
+      },
+      "fixedPrice": {
+        "name": "Fixed price",
+        "desc": "No hidden fees after approval"
+      },
+      "timeline": {
+        "name": "Production time",
+        "desc": "Time from design approval to shipping"
+      },
+      "quality": {
+        "name": "Quality guarantee",
+        "desc": "Free replacement if defects are found"
+      },
+      "popup": {
+        "name": "Mobile pop-up stand",
+        "desc": "Organizing an offline point at your event"
+      },
+      "design": {
+        "name": "Designer help",
+        "desc": "Logo adaptation and design for printing"
+      },
+      "logistics": {
+        "name": "Logistics",
+        "desc": "Packing and delivery to each employee separately"
+      }
     },
     "columns": {
       "typical": "Typical supplier",
@@ -392,7 +469,8 @@
     "ariaLabel": "Cart",
     "quantity": "{qty} pcs · {size}",
     "total": "Total:",
-    "cartItem": "Cart item"
+    "cartItem": "Cart item",
+    "collapse": "Collapse cart"
   },
   "services": {
     "heading": "Three ways to get",
@@ -439,7 +517,8 @@
       "name": "Company name *",
       "namePlaceholder": "LLC «Name»",
       "taxId": "Tax ID / Details",
-      "taxIdPlaceholder": "12345678"
+      "taxIdPlaceholder": "12345678",
+      "nameLabel": "Company name"
     },
     "contact": {
       "title": "Contact person",
@@ -448,16 +527,25 @@
       "email": "Email *",
       "emailPlaceholder": "hr@company.com",
       "phone": "Phone *",
-      "phonePlaceholder": "+1 XXX XXX XXXX",
+      "phonePlaceholder": "+380 XX XXX XX XX",
       "social": "Telegram / Instagram",
       "socialPlaceholder": "@username or link"
     },
     "delivery": {
       "title": "Delivery & deadlines",
       "options": {
-        "nova_poshta": { "label": "Nova Poshta", "desc": "2–3 business days" },
-        "ukrposhta": { "label": "Ukrposhta", "desc": "5–7 business days" },
-        "pickup": { "label": "Pickup", "desc": "Kyiv, Khreshchatyk 1" }
+        "nova_poshta": {
+          "label": "Nova Poshta",
+          "desc": "2–3 business days"
+        },
+        "ukrposhta": {
+          "label": "Ukrposhta",
+          "desc": "5–7 business days"
+        },
+        "pickup": {
+          "label": "Pickup",
+          "desc": "Lviv, Dzherelna St 69, office 10"
+        }
       },
       "deadline": "Desired deadline",
       "comment": "Order comment",
@@ -496,14 +584,58 @@
     },
     "back": "Back",
     "header": "U:DO",
-    "backAriaLabel": "Back"
+    "backAriaLabel": "Back",
+    "optional": "Optional",
+    "deliveryTitle": "Delivery",
+    "paymentTitle": "Payment",
+    "extrasTitle": "Additional details",
+    "summaryTitle": "Your order",
+    "subtotal": "Items",
+    "printCost": "Printing",
+    "byCarrier": "Carrier's rates",
+    "free": "Free",
+    "sourceLabel": "How did you hear about us?",
+    "submitError": "Could not send the order. Please try again.",
+    "addedToCart": "{name} added to cart",
+    "agree": "By confirming the order you accept the <privacy>privacy policy</privacy> and the <terms>terms of use</terms>.",
+    "np": {
+      "branch": "Nova Poshta branch",
+      "courier": "Nova Poshta courier",
+      "cityPlaceholder": "City or town",
+      "branchPlaceholder": "Branch number or street",
+      "addressPlaceholder": "Street, building, apartment",
+      "manualPlaceholder": "City and branch number",
+      "noResults": "Nothing found",
+      "required": "Choose a city and a branch"
+    },
+    "pay": {
+      "card": "By card",
+      "cardDesc": "Payment link after the manager confirms the order",
+      "invoice": "Invoice for a company",
+      "invoiceDesc": "Bank transfer by invoice, with closing documents"
+    }
   },
   "cabinet": {
-    "nav": { "orders": "Orders", "messages": "Messages", "menu": "Menu" },
-    "orders": { "title": "My orders", "subtitle": "Track status, files and chat for each order" },
-    "tracking": { "title": "Order progress" },
-    "messages": { "title": "Messages", "subtitle": "Chat with your manager about an order" },
-    "order": { "back": "All orders", "notFound": "Order not found" },
+    "nav": {
+      "orders": "Orders",
+      "messages": "Messages",
+      "menu": "Menu"
+    },
+    "orders": {
+      "title": "My orders",
+      "subtitle": "Track status, files and chat for each order"
+    },
+    "tracking": {
+      "title": "Order progress"
+    },
+    "messages": {
+      "title": "Messages",
+      "subtitle": "Chat with your manager about an order"
+    },
+    "order": {
+      "back": "All orders",
+      "notFound": "Order not found"
+    },
     "breadcrumb": "/ Account",
     "settings": "Settings",
     "logout": "Log out",
@@ -570,32 +702,77 @@
       "label": "Who it's for",
       "heading": "Suitable for any event",
       "items": {
-        "corporate": { "title": "Corporate events", "desc": "Make the corporate event unforgettable — guests go home with personalized company merch." },
-        "conferences": { "title": "Conferences & forums", "desc": "Branded merch on-site — the best networking tool and memory of the event." },
-        "festivals": { "title": "Festivals & markets", "desc": "A pop-up stand that attracts attention and generates a queue. Live customization — it's a show." },
-        "launches": { "title": "Product launches", "desc": "Product launch with merch that guests made themselves — maximum audience engagement." },
-        "universities": { "title": "Universities & schools", "desc": "Graduations, open days, student events — merch that unites the community." },
-        "b2b": { "title": "B2B events", "desc": "Partner meetings, exhibitions, presentations — leave an impression they wear." }
+        "corporate": {
+          "title": "Corporate events",
+          "desc": "Make the corporate event unforgettable — guests go home with personalized company merch."
+        },
+        "conferences": {
+          "title": "Conferences & forums",
+          "desc": "Branded merch on-site — the best networking tool and memory of the event."
+        },
+        "festivals": {
+          "title": "Festivals & markets",
+          "desc": "A pop-up stand that attracts attention and generates a queue. Live customization — it's a show."
+        },
+        "launches": {
+          "title": "Product launches",
+          "desc": "Product launch with merch that guests made themselves — maximum audience engagement."
+        },
+        "universities": {
+          "title": "Universities & schools",
+          "desc": "Graduations, open days, student events — merch that unites the community."
+        },
+        "b2b": {
+          "title": "B2B events",
+          "desc": "Partner meetings, exhibitions, presentations — leave an impression they wear."
+        }
       }
     },
     "process": {
       "label": "Process",
       "heading": "Three steps to the perfect pop-up",
       "steps": {
-        "0": { "step": "01", "title": "Choose the format", "desc": "Tell us about the event — number of guests, location, date. We'll choose the optimal pop-up format." },
-        "1": { "step": "02", "title": "We prepare the stand", "desc": "We bring equipment, clothing and everything needed for customization. We set up the stand before the event starts." },
-        "2": { "step": "03", "title": "Guests customize", "desc": "Each guest chooses a product, places a print and receives ready merch on-site — in minutes." }
+        "0": {
+          "step": "01",
+          "title": "Choose the format",
+          "desc": "Tell us about the event — number of guests, location, date. We'll choose the optimal pop-up format."
+        },
+        "1": {
+          "step": "02",
+          "title": "We prepare the stand",
+          "desc": "We bring equipment, clothing and everything needed for customization. We set up the stand before the event starts."
+        },
+        "2": {
+          "step": "03",
+          "title": "Guests customize",
+          "desc": "Each guest chooses a product, places a print and receives ready merch on-site — in minutes."
+        }
       }
     },
     "faq": {
       "label": "FAQ",
       "heading": "Frequently asked questions",
       "items": {
-        "0": { "q": "What is the minimum number of participants?", "a": "From 50 people. For smaller events we can offer an alternative format — write to us." },
-        "1": { "q": "How long does customization of one product take?", "a": "From 3 to 10 minutes depending on print complexity. For large events we set up multiple workstations." },
-        "2": { "q": "What products are available at the pop-up?", "a": "T-shirts, hoodies, long sleeves, caps and accessories. The final range is agreed for your event and budget." },
-        "3": { "q": "Who pays for the merch — organizer or guests?", "a": "Both options. Merch can be included in the ticket price, given as a company gift, or sold on-site." },
-        "4": { "q": "How far in advance should I book?", "a": "We recommend 2–3 weeks before the event. For large events (500+ people) — a month in advance." }
+        "0": {
+          "q": "What is the minimum number of participants?",
+          "a": "From 50 people. For smaller events we can offer an alternative format — write to us."
+        },
+        "1": {
+          "q": "How long does customization of one product take?",
+          "a": "From 3 to 10 minutes depending on print complexity. For large events we set up multiple workstations."
+        },
+        "2": {
+          "q": "What products are available at the pop-up?",
+          "a": "T-shirts, hoodies, long sleeves, caps and accessories. The final range is agreed for your event and budget."
+        },
+        "3": {
+          "q": "Who pays for the merch — organizer or guests?",
+          "a": "Both options. Merch can be included in the ticket price, given as a company gift, or sold on-site."
+        },
+        "4": {
+          "q": "How far in advance should I book?",
+          "a": "We recommend 2–3 weeks before the event. For large events (500+ people) — a month in advance."
+        }
       }
     },
     "contact": {
@@ -642,12 +819,30 @@
     "successDesc": "We received your request and will contact you shortly.",
     "deleteFile": "Delete file {name}",
     "topics": {
-      "merch": { "label": "Corporate merch", "desc": "T-shirts, hoodies, accessories for your team or brand" },
-      "popup": { "label": "Pop-up stand for event", "desc": "Mobile merch customization right at your event" },
-      "box": { "label": "Box of Touch", "desc": "Set of fabric and product samples before production" },
-      "designer": { "label": "Designer services", "desc": "Logo development or adaptation for printing" },
-      "bulk": { "label": "Large order (500+)", "desc": "Wholesale orders with individual terms" },
-      "other": { "label": "Other", "desc": "Any other question or suggestion" }
+      "merch": {
+        "label": "Corporate merch",
+        "desc": "T-shirts, hoodies, accessories for your team or brand"
+      },
+      "popup": {
+        "label": "Pop-up stand for event",
+        "desc": "Mobile merch customization right at your event"
+      },
+      "box": {
+        "label": "Box of Touch",
+        "desc": "Set of fabric and product samples before production"
+      },
+      "designer": {
+        "label": "Designer services",
+        "desc": "Logo development or adaptation for printing"
+      },
+      "bulk": {
+        "label": "Large order (500+)",
+        "desc": "Wholesale orders with individual terms"
+      },
+      "other": {
+        "label": "Other",
+        "desc": "Any other question or suggestion"
+      }
     }
   },
   "privacy": {
@@ -681,9 +876,21 @@
     "label": "How it works",
     "heading": "Customize for your goals",
     "steps": {
-      "0": { "title": "Choose products", "desc": "Browse the catalog, filter by categories. Choose the base for your merch — hoodies, t-shirts, accessories.", "cta": "To catalog" },
-      "1": { "title": "Customize clothing", "desc": "Upload logo, choose print zone, size and color. Preview in real time.", "cta": "Try it" },
-      "2": { "title": "Get a proposal", "desc": "Fill out the order form. A manager will contact you to confirm details and send an invoice.", "cta": "Order" }
+      "0": {
+        "title": "Choose products",
+        "desc": "Browse the catalog, filter by categories. Choose the base for your merch — hoodies, t-shirts, accessories.",
+        "cta": "To catalog"
+      },
+      "1": {
+        "title": "Customize clothing",
+        "desc": "Upload logo, choose print zone, size and color. Preview in real time.",
+        "cta": "Try it"
+      },
+      "2": {
+        "title": "Get a proposal",
+        "desc": "Fill out the order form. A manager will contact you to confirm details and send an invoice.",
+        "cta": "Order"
+      }
     }
   },
   "stats": {

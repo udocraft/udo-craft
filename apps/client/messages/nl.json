@@ -469,7 +469,8 @@
     "ariaLabel": "Winkelwagen",
     "quantity": "{qty} st · {size}",
     "total": "Totaal:",
-    "cartItem": "Winkelwagenartikel"
+    "cartItem": "Winkelwagenartikel",
+    "collapse": "Winkelwagen inklappen"
   },
   "services": {
     "heading": "Three ways to get",
@@ -516,7 +517,8 @@
       "name": "Bedrijfsnaam *",
       "namePlaceholder": "BV «Naam»",
       "taxId": "KVK / BTW-nummer",
-      "taxIdPlaceholder": "NL123456789B01"
+      "taxIdPlaceholder": "NL123456789B01",
+      "nameLabel": "Bedrijfsnaam"
     },
     "contact": {
       "title": "Contactpersoon",
@@ -525,7 +527,7 @@
       "email": "E-mail *",
       "emailPlaceholder": "hr@bedrijf.nl",
       "phone": "Telefoon *",
-      "phonePlaceholder": "+31 XX XXX XXXX",
+      "phonePlaceholder": "+380 XX XXX XX XX",
       "social": "Telegram / Instagram",
       "socialPlaceholder": "@gebruikersnaam of link"
     },
@@ -542,7 +544,7 @@
         },
         "pickup": {
           "label": "Afhalen",
-          "desc": "Op afspraak"
+          "desc": "Lviv, Dzherelna-straat 69, kantoor 10"
         }
       },
       "deadline": "Gewenste datum",
@@ -582,7 +584,36 @@
     },
     "back": "Terug",
     "header": "U:DO",
-    "backAriaLabel": "Terug"
+    "backAriaLabel": "Terug",
+    "optional": "Optioneel",
+    "deliveryTitle": "Levering",
+    "paymentTitle": "Betaling",
+    "extrasTitle": "Aanvullende gegevens",
+    "summaryTitle": "Je bestelling",
+    "subtotal": "Artikelen",
+    "printCost": "Bedrukking",
+    "byCarrier": "Volgens tarieven van de vervoerder",
+    "free": "Gratis",
+    "sourceLabel": "Hoe heb je ons gevonden?",
+    "submitError": "De bestelling kon niet worden verzonden. Probeer het opnieuw.",
+    "addedToCart": "{name} toegevoegd aan winkelwagen",
+    "agree": "Door de bestelling te bevestigen accepteer je het <privacy>privacybeleid</privacy> en de <terms>gebruiksvoorwaarden</terms>.",
+    "np": {
+      "branch": "Nova Poshta-filiaal",
+      "courier": "Nova Poshta-koerier",
+      "cityPlaceholder": "Stad of dorp",
+      "branchPlaceholder": "Filiaalnummer of straat",
+      "addressPlaceholder": "Straat, gebouw, appartement",
+      "manualPlaceholder": "Stad en filiaalnummer",
+      "noResults": "Niets gevonden",
+      "required": "Kies een stad en een filiaal"
+    },
+    "pay": {
+      "card": "Met kaart",
+      "cardDesc": "Betaallink nadat de manager de bestelling heeft bevestigd",
+      "invoice": "Factuur voor bedrijf",
+      "invoiceDesc": "Bankoverschrijving op factuur, met afsluitende documenten"
+    }
   },
   "cabinet": {
     "breadcrumb": "/ Account",

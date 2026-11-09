@@ -469,7 +469,8 @@
     "ariaLabel": "Košík",
     "quantity": "{qty} ks · {size}",
     "total": "Celkem:",
-    "cartItem": "Položka košíku"
+    "cartItem": "Položka košíku",
+    "collapse": "Sbalit košík"
   },
   "services": {
     "heading": "Three ways to get",
@@ -516,7 +517,8 @@
       "name": "Název firmy *",
       "namePlaceholder": "s.r.o. «Název»",
       "taxId": "IČO / DIČ",
-      "taxIdPlaceholder": "CZ12345678"
+      "taxIdPlaceholder": "CZ12345678",
+      "nameLabel": "Název firmy"
     },
     "contact": {
       "title": "Kontaktní osoba",
@@ -525,7 +527,7 @@
       "email": "E-mail *",
       "emailPlaceholder": "hr@firma.cz",
       "phone": "Telefon *",
-      "phonePlaceholder": "+420 XXX XXX XXX",
+      "phonePlaceholder": "+380 XX XXX XX XX",
       "social": "Telegram / Instagram",
       "socialPlaceholder": "@uživatel nebo odkaz"
     },
@@ -542,7 +544,7 @@
         },
         "pickup": {
           "label": "Osobní odběr",
-          "desc": "Po domluvě"
+          "desc": "Lvov, ul. Dzherelna 69, kancelář 10"
         }
       },
       "deadline": "Požadovaný termín",
@@ -582,7 +584,36 @@
     },
     "back": "Zpět",
     "header": "U:DO",
-    "backAriaLabel": "Zpět"
+    "backAriaLabel": "Zpět",
+    "optional": "Volitelné",
+    "deliveryTitle": "Doručení",
+    "paymentTitle": "Platba",
+    "extrasTitle": "Další údaje",
+    "summaryTitle": "Vaše objednávka",
+    "subtotal": "Zboží",
+    "printCost": "Potisk",
+    "byCarrier": "Podle ceníku dopravce",
+    "free": "Zdarma",
+    "sourceLabel": "Jak jste se o nás dozvěděli?",
+    "submitError": "Objednávku se nepodařilo odeslat. Zkuste to znovu.",
+    "addedToCart": "{name} přidáno do košíku",
+    "agree": "Potvrzením objednávky přijímáte <privacy>zásady ochrany osobních údajů</privacy> a <terms>podmínky použití</terms>.",
+    "np": {
+      "branch": "Pobočka Nova Poshta",
+      "courier": "Kurýr Nova Poshta",
+      "cityPlaceholder": "Město nebo obec",
+      "branchPlaceholder": "Číslo pobočky nebo ulice",
+      "addressPlaceholder": "Ulice, dům, byt",
+      "manualPlaceholder": "Město a číslo pobočky",
+      "noResults": "Nic nenalezeno",
+      "required": "Vyberte město a pobočku"
+    },
+    "pay": {
+      "card": "Kartou",
+      "cardDesc": "Odkaz na platbu po potvrzení objednávky manažerem",
+      "invoice": "Faktura pro firmu",
+      "invoiceDesc": "Bankovní převod na fakturu, s uzavíracími doklady"
+    }
   },
   "cabinet": {
     "breadcrumb": "/ Účet",

@@ -469,7 +469,8 @@
     "ariaLabel": "Koszyk",
     "quantity": "{qty} szt · {size}",
     "total": "Łącznie:",
-    "cartItem": "Produkt w koszyku"
+    "cartItem": "Produkt w koszyku",
+    "collapse": "Zwiń koszyk"
   },
   "services": {
     "heading": "Three ways to get",
@@ -516,7 +517,8 @@
       "name": "Nazwa firmy *",
       "namePlaceholder": "Sp. z o.o. «Nazwa»",
       "taxId": "NIP / REGON",
-      "taxIdPlaceholder": "1234567890"
+      "taxIdPlaceholder": "1234567890",
+      "nameLabel": "Nazwa firmy"
     },
     "contact": {
       "title": "Osoba kontaktowa",
@@ -525,7 +527,7 @@
       "email": "E-mail *",
       "emailPlaceholder": "hr@firma.pl",
       "phone": "Telefon *",
-      "phonePlaceholder": "+48 XXX XXX XXX",
+      "phonePlaceholder": "+380 XX XXX XX XX",
       "social": "Telegram / Instagram",
       "socialPlaceholder": "@użytkownik lub link"
     },
@@ -542,7 +544,7 @@
         },
         "pickup": {
           "label": "Odbiór własny",
-          "desc": "Po uzgodnieniu"
+          "desc": "Lwów, ul. Dżerelna 69, biuro 10"
         }
       },
       "deadline": "Pożądana data",
@@ -582,7 +584,36 @@
     },
     "back": "Wstecz",
     "header": "U:DO",
-    "backAriaLabel": "Wstecz"
+    "backAriaLabel": "Wstecz",
+    "optional": "Opcjonalnie",
+    "deliveryTitle": "Dostawa",
+    "paymentTitle": "Płatność",
+    "extrasTitle": "Dodatkowe informacje",
+    "summaryTitle": "Twoje zamówienie",
+    "subtotal": "Produkty",
+    "printCost": "Nadruk",
+    "byCarrier": "Według taryf przewoźnika",
+    "free": "Bezpłatnie",
+    "sourceLabel": "Skąd o nas wiesz?",
+    "submitError": "Nie udało się wysłać zamówienia. Spróbuj ponownie.",
+    "addedToCart": "Dodano do koszyka: {name}",
+    "agree": "Potwierdzając zamówienie, akceptujesz <privacy>politykę prywatności</privacy> i <terms>regulamin</terms>.",
+    "np": {
+      "branch": "Oddział Nova Poshta",
+      "courier": "Kurier Nova Poshta",
+      "cityPlaceholder": "Miasto lub miejscowość",
+      "branchPlaceholder": "Numer oddziału lub ulica",
+      "addressPlaceholder": "Ulica, budynek, mieszkanie",
+      "manualPlaceholder": "Miasto i numer oddziału",
+      "noResults": "Nic nie znaleziono",
+      "required": "Wybierz miasto i oddział"
+    },
+    "pay": {
+      "card": "Kartą",
+      "cardDesc": "Link do płatności po potwierdzeniu zamówienia przez menedżera",
+      "invoice": "Faktura dla firmy",
+      "invoiceDesc": "Przelew na podstawie faktury, z dokumentami zamknięcia"
+    }
   },
   "cabinet": {
     "breadcrumb": "/ Konto",

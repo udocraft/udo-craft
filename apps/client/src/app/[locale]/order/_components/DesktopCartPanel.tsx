@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 import { MockupViewer } from "@/components/MockupViewer";
-import { AnimatedNumber } from "@/components/AnimatedNumber";
 import { Button } from "@/components/ui/button";
 import { Trash2, ShoppingCart, ChevronLeft } from "lucide-react";
 import type { CartItem } from "./Customizer";
@@ -20,6 +20,8 @@ interface DesktopCartPanelProps {
 }
 
 export function DesktopCartPanel({ cart, totalCents, onCheckout, onEdit, onRemove, collapsible = false, hidden = false }: DesktopCartPanelProps) {
+  const t = useTranslations("checkout");
+  const tCart = useTranslations("cart");
   const [collapsed, setCollapsed] = useState(collapsible);
 
   if (hidden) return null;
@@ -29,8 +31,8 @@ export function DesktopCartPanel({ cart, totalCents, onCheckout, onEdit, onRemov
     return (
       <button
         onClick={() => setCollapsed(false)}
-        className="hidden lg:flex fixed top-1/2 -translate-y-1/2 right-0 z-40 flex-col items-center gap-1.5 bg-card border border-border border-r-0 rounded-l-2xl px-2 py-4 shadow-xl hover:bg-muted transition-colors"
-        aria-label="Відкрити кошик"
+        className="hidden lg:flex fixed top-1/2 -translate-y-1/2 right-0 z-40 flex-col items-center gap-1.5 bg-card border border-border border-r-0 rounded-l-2xl min-h-11 min-w-11 px-2 py-4 shadow-xl hover:bg-muted transition-colors"
+        aria-label={tCart("ariaLabel")}
       >
         <ShoppingCart className="size-5 text-primary" />
         {cart.length > 0 && (
@@ -44,12 +46,12 @@ export function DesktopCartPanel({ cart, totalCents, onCheckout, onEdit, onRemov
 
   return (
     <div className="hidden lg:flex fixed top-0 right-0 bottom-0 z-40 w-80 border-l border-border bg-card flex-col shadow-xl">
-      <div className="h-12 px-4 border-b border-border flex items-center justify-between shrink-0">
-        <span className="font-semibold text-sm">Кошик ({cart.length})</span>
+      <div className="h-14 pl-4 pr-1.5 border-b border-border flex items-center justify-between shrink-0">
+        <span className="font-semibold text-sm">{tCart("titleWithCount", { count: cart.length })}</span>
         <div className="flex items-center gap-2">
           <span className="text-xs text-muted-foreground">{(totalCents / 100).toFixed(0)} ₴</span>
           {collapsible && (
-            <button onClick={() => setCollapsed(true)} className="p-1 rounded-lg hover:bg-muted transition-colors" aria-label="Згорнути кошик">
+            <button onClick={() => setCollapsed(true)} className="flex size-11 items-center justify-center rounded-lg hover:bg-muted transition-colors" aria-label={tCart("collapse")}>
               <ChevronLeft className="size-4 text-muted-foreground" />
             </button>
           )}
@@ -59,7 +61,7 @@ export function DesktopCartPanel({ cart, totalCents, onCheckout, onEdit, onRemov
         {cart.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full gap-3 text-muted-foreground py-12">
             <ShoppingCart className="size-10 opacity-30" />
-            <p className="text-sm">Кошик порожній</p>
+            <p className="text-sm">{tCart("empty")}</p>
           </div>
         )}
         {cart.map((item, i) => (
@@ -77,73 +79,70 @@ export function DesktopCartPanel({ cart, totalCents, onCheckout, onEdit, onRemov
             </div>
             <div className="p-2.5 space-y-1.5">
               <p className="text-xs font-semibold">{item.productName}</p>
-              <p className="text-xs text-muted-foreground">{item.quantity} шт. · {item.size} · {item.color}</p>
+              <p className="text-xs text-muted-foreground">{tCart("quantity", { qty: item.quantity, size: item.size })} · {item.color}</p>
               {item.layers && item.layers.length > 0 && (
                 <div className="space-y-0.5 pt-0.5">
                   {item.layers.map((layer, li) => (
                     <p key={li} className="text-xs text-muted-foreground flex justify-between">
                       <span className="capitalize">{layer.type}{layer.sizeLabel ? ` · ${layer.sizeLabel}` : ""} ({layer.side})</span>
-                      <span>{layer.priceCents != null ? `+${(layer.priceCents / 100).toFixed(0)} ₴/шт` : "—"}</span>
+                      <span>{layer.priceCents != null ? `+${(layer.priceCents / 100).toFixed(0)} ₴` : "—"}</span>
                     </p>
                   ))}
                 </div>
               )}
               <div className="pt-0.5 space-y-0.5 border-t border-border/50">
                 <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>Товар × {item.quantity}</span>
+                  <span>{t("subtotal")} × {item.quantity}</span>
                   <span>{(item.unitPriceCents * item.quantity / 100).toFixed(0)} ₴</span>
                 </div>
                 {item.printCostCents > 0 && (
                   <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>Нанесення × {item.quantity}</span>
+                    <span>{t("printCost")} × {item.quantity}</span>
                     <span>+{(item.printCostCents * item.quantity / 100).toFixed(0)} ₴</span>
                   </div>
                 )}
                 <div className="flex justify-between text-xs font-semibold text-primary">
-                  <span>Разом</span>
+                  <span>{t("total")}</span>
                   <span>{((item.unitPriceCents + item.printCostCents) * item.quantity / 100).toFixed(0)} ₴</span>
                 </div>
               </div>
               <div className="flex gap-1.5 pt-1">
                 <button
                   onClick={() => onEdit(i)}
-                  className="flex-1 cursor-pointer text-xs font-medium border border-border rounded-xl py-1 hover:bg-muted transition-colors text-center"
+                  className="flex-1 min-h-11 cursor-pointer text-sm font-medium border border-border rounded-xl hover:bg-muted transition-colors text-center"
                 >
-                  Редагувати
+                  {t("edit")}
                 </button>
                 <button
                   onClick={() => onRemove(i)}
-                  className="cursor-pointer size-6 rounded-full border border-border hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30 transition-colors text-muted-foreground flex items-center justify-center"
+                  aria-label={`${t("removeItem")}: ${item.productName}`}
+                  className="cursor-pointer size-11 rounded-full border border-border hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30 transition-colors text-muted-foreground flex items-center justify-center"
                 >
-                  <Trash2 className="size-3" />
+                  <Trash2 className="size-4" aria-hidden="true" />
                 </button>
               </div>
             </div>
           </div>
         ))}
       </div>
-      <div className="p-4 bg-muted/30 border-t border-dashed border-border shrink-0 space-y-3 relative overflow-hidden">
-        <div className="absolute top-0 left-0 right-0 h-1 bg-[radial-gradient(ellipse_at_top,_var(--color-border)_20%,_transparent_20%)] bg-[length:10px_10px]" />
-        <div className="space-y-1.5 pt-1">
-          <div className="flex justify-between text-xs text-muted-foreground font-mono">
-            <span>Сума товарів:</span>
-            <span>{(cart.reduce((sum, item) => sum + item.unitPriceCents * item.quantity, 0) / 100).toFixed(0)} ₴</span>
+      <div className="shrink-0 space-y-3 border-t border-border p-4">
+        <dl className="space-y-1.5 text-sm">
+          <div className="flex justify-between text-muted-foreground">
+            <dt>{t("subtotal")}</dt>
+            <dd className="tabular-nums">{(cart.reduce((sum, item) => sum + item.unitPriceCents * item.quantity, 0) / 100).toFixed(0)} ₴</dd>
           </div>
-          {cart.some(item => item.printCostCents > 0) && (
-            <div className="flex justify-between text-xs text-muted-foreground font-mono">
-              <span>Вартість нанесення:</span>
-              <span>{(cart.reduce((sum, item) => sum + item.printCostCents * item.quantity, 0) / 100).toFixed(0)} ₴</span>
+          {cart.some((item) => item.printCostCents > 0) && (
+            <div className="flex justify-between text-muted-foreground">
+              <dt>{t("printCost")}</dt>
+              <dd className="tabular-nums">{(cart.reduce((sum, item) => sum + item.printCostCents * item.quantity, 0) / 100).toFixed(0)} ₴</dd>
             </div>
           )}
-          <div className="border-t border-dotted border-border/80 my-2 pt-2 flex justify-between items-baseline text-base font-black">
-            <span className="uppercase tracking-wider text-xs text-foreground">Загалом до сплати</span>
-            <div className="font-mono text-primary flex items-baseline gap-1 text-lg">
-              <AnimatedNumber value={totalCents / 100} decimals={0} className="font-black" />
-              <span className="text-sm font-bold">₴</span>
-            </div>
+          <div className="flex items-baseline justify-between border-t border-border pt-2">
+            <dt className="font-medium">{t("total")}</dt>
+            <dd className="text-lg font-semibold tabular-nums">{(totalCents / 100).toFixed(0)} ₴</dd>
           </div>
-        </div>
-        <Button className="w-full cursor-pointer rounded-full shadow-md hover:shadow-lg transition-all" onClick={onCheckout}>Оформити замовлення →</Button>
+        </dl>
+        <Button size="lg" className="w-full" onClick={onCheckout} disabled={cart.length === 0}>{t("placeOrder")}</Button>
       </div>
     </div>
   );

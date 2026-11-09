@@ -374,3 +374,14 @@ video::-webkit-media-controls-enclosure {
 .cms-prose strong {
   color: var(--color-foreground);
 }
+
+/* A page with a sticky bottom action bar (checkout, cart) marks it with [data-sticky-bar];
+   the cookie banner then sits above it instead of covering the primary action. */
+body:has([data-sticky-bar]) .consent-banner {
+  bottom: calc(5.5rem + env(safe-area-inset-bottom));
+}
+@media (min-width: 64rem) {
+  body:has([data-sticky-bar]) .consent-banner {
+    bottom: 1rem;
+  }
+}

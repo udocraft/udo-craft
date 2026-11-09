@@ -469,7 +469,8 @@
     "ariaLabel": "Carrito",
     "quantity": "{qty} uds · {size}",
     "total": "Total:",
-    "cartItem": "Artículo del carrito"
+    "cartItem": "Artículo del carrito",
+    "collapse": "Contraer carrito"
   },
   "services": {
     "heading": "Three ways to get",
@@ -516,7 +517,8 @@
       "name": "Nombre de la empresa *",
       "namePlaceholder": "SL «Nombre»",
       "taxId": "NIF / CIF",
-      "taxIdPlaceholder": "B12345678"
+      "taxIdPlaceholder": "B12345678",
+      "nameLabel": "Nombre de la empresa"
     },
     "contact": {
       "title": "Persona de contacto",
@@ -525,7 +527,7 @@
       "email": "Correo electrónico *",
       "emailPlaceholder": "rrhh@empresa.es",
       "phone": "Teléfono *",
-      "phonePlaceholder": "+34 XXX XXX XXX",
+      "phonePlaceholder": "+380 XX XXX XX XX",
       "social": "Telegram / Instagram",
       "socialPlaceholder": "@usuario o enlace"
     },
@@ -542,7 +544,7 @@
         },
         "pickup": {
           "label": "Recogida",
-          "desc": "Previa cita"
+          "desc": "Leópolis, calle Dzherelna 69, oficina 10"
         }
       },
       "deadline": "Fecha deseada",
@@ -582,7 +584,36 @@
     },
     "back": "Atrás",
     "header": "U:DO",
-    "backAriaLabel": "Atrás"
+    "backAriaLabel": "Atrás",
+    "optional": "Opcional",
+    "deliveryTitle": "Entrega",
+    "paymentTitle": "Pago",
+    "extrasTitle": "Detalles adicionales",
+    "summaryTitle": "Tu pedido",
+    "subtotal": "Artículos",
+    "printCost": "Impresión",
+    "byCarrier": "Según las tarifas del transportista",
+    "free": "Gratis",
+    "sourceLabel": "¿Cómo nos conociste?",
+    "submitError": "No se pudo enviar el pedido. Inténtalo de nuevo.",
+    "addedToCart": "{name} añadido al carrito",
+    "agree": "Al confirmar el pedido aceptas la <privacy>política de privacidad</privacy> y los <terms>términos de uso</terms>.",
+    "np": {
+      "branch": "Sucursal de Nova Poshta",
+      "courier": "Mensajero de Nova Poshta",
+      "cityPlaceholder": "Ciudad o localidad",
+      "branchPlaceholder": "Número de sucursal o calle",
+      "addressPlaceholder": "Calle, edificio, piso",
+      "manualPlaceholder": "Ciudad y número de sucursal",
+      "noResults": "No se encontró nada",
+      "required": "Elige una ciudad y una sucursal"
+    },
+    "pay": {
+      "card": "Con tarjeta",
+      "cardDesc": "Enlace de pago después de que el gestor confirme el pedido",
+      "invoice": "Factura para empresa",
+      "invoiceDesc": "Transferencia bancaria con factura y documentos de cierre"
+    }
   },
   "cabinet": {
     "breadcrumb": "/ Cuenta",

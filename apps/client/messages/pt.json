@@ -469,7 +469,8 @@
     "ariaLabel": "Carrinho",
     "quantity": "{qty} un · {size}",
     "total": "Total:",
-    "cartItem": "Artigo do carrinho"
+    "cartItem": "Artigo do carrinho",
+    "collapse": "Recolher carrinho"
   },
   "services": {
     "heading": "Three ways to get",
@@ -516,7 +517,8 @@
       "name": "Nome da empresa *",
       "namePlaceholder": "Lda «Nome»",
       "taxId": "NIF / NIPC",
-      "taxIdPlaceholder": "PT123456789"
+      "taxIdPlaceholder": "PT123456789",
+      "nameLabel": "Nome da empresa"
     },
     "contact": {
       "title": "Pessoa de contacto",
@@ -525,7 +527,7 @@
       "email": "E-mail *",
       "emailPlaceholder": "rh@empresa.pt",
       "phone": "Telefone *",
-      "phonePlaceholder": "+351 XXX XXX XXX",
+      "phonePlaceholder": "+380 XX XXX XX XX",
       "social": "Telegram / Instagram",
       "socialPlaceholder": "@utilizador ou link"
     },
@@ -542,7 +544,7 @@
         },
         "pickup": {
           "label": "Levantamento",
-          "desc": "Mediante marcação"
+          "desc": "Lviv, rua Dzherelna 69, escritório 10"
         }
       },
       "deadline": "Data desejada",
@@ -582,7 +584,36 @@
     },
     "back": "Voltar",
     "header": "U:DO",
-    "backAriaLabel": "Voltar"
+    "backAriaLabel": "Voltar",
+    "optional": "Opcional",
+    "deliveryTitle": "Entrega",
+    "paymentTitle": "Pagamento",
+    "extrasTitle": "Detalhes adicionais",
+    "summaryTitle": "A sua encomenda",
+    "subtotal": "Artigos",
+    "printCost": "Impressão",
+    "byCarrier": "Segundo as tarifas da transportadora",
+    "free": "Grátis",
+    "sourceLabel": "Como nos conheceu?",
+    "submitError": "Não foi possível enviar a encomenda. Tente novamente.",
+    "addedToCart": "{name} adicionado ao carrinho",
+    "agree": "Ao confirmar a encomenda aceita a <privacy>política de privacidade</privacy> e os <terms>termos de utilização</terms>.",
+    "np": {
+      "branch": "Agência Nova Poshta",
+      "courier": "Estafeta Nova Poshta",
+      "cityPlaceholder": "Cidade ou localidade",
+      "branchPlaceholder": "Número da agência ou rua",
+      "addressPlaceholder": "Rua, edifício, apartamento",
+      "manualPlaceholder": "Cidade e número da agência",
+      "noResults": "Nada encontrado",
+      "required": "Escolha uma cidade e uma agência"
+    },
+    "pay": {
+      "card": "Com cartão",
+      "cardDesc": "Link de pagamento depois de o gestor confirmar a encomenda",
+      "invoice": "Fatura para empresa",
+      "invoiceDesc": "Transferência bancária por fatura, com documentos de fecho"
+    }
   },
   "cabinet": {
     "breadcrumb": "/ Conta",
