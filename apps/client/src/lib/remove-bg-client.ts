@@ -10,9 +10,9 @@ let currentAbortController: AbortController | null = null;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function getRemoveBgFn(): Promise<(input: Blob, config?: any) => Promise<Blob>> {
   if (cachedFn) return cachedFn;
-  const dynamicImport = new Function("url", "return import(url)");
-  const mod = await dynamicImport("https://esm.sh/@imgly/background-removal@1.7.0");
-  const fn = mod.removeBackground ?? mod.default?.removeBackground ?? mod.default;
+  const mod = await import("@imgly/background-removal");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const fn = mod.removeBackground ?? (mod as any).default?.removeBackground ?? (mod as any).default;
   if (typeof fn !== "function") throw new Error("removeBackground not found");
   cachedFn = fn as (input: Blob, config?: any) => Promise<Blob>;
   return cachedFn;

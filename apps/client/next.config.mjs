@@ -8,16 +8,18 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 // Switch the header name to Content-Security-Policy once reports are clean.
 const CSP_REPORT_ONLY = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.clarity.ms https://*.clarity.ms https://va.vercel-scripts.com https://js.sentry-cdn.com https://esm.sh",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.clarity.ms https://*.clarity.ms https://va.vercel-scripts.com https://js.sentry-cdn.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
   "img-src 'self' data: blob: https:",
-  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.sentry.io https://*.clarity.ms https://vitals.vercel-insights.com https://va.vercel-scripts.com https://esm.sh https://*.imgly.com https://staticimgly.com https://cdn.jsdelivr.net",
+  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.sentry.io https://*.clarity.ms https://vitals.vercel-insights.com https://va.vercel-scripts.com https://*.imgly.com https://staticimgly.com https://cdn.jsdelivr.net",
   "worker-src 'self' blob:",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
   "frame-ancestors 'self'",
+  "report-uri /api/csp-report",
+  "report-to csp-endpoint",
 ].join("; ");
 
 const nextConfig = {
@@ -35,6 +37,7 @@ const nextConfig = {
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+          { key: "Reporting-Endpoints", value: 'csp-endpoint="/api/csp-report"' },
           { key: "Content-Security-Policy-Report-Only", value: CSP_REPORT_ONLY },
         ],
       },

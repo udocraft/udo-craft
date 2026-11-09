@@ -14,3 +14,8 @@ export function pageAlternates(locale: string, path: string): NonNullable<Metada
     ),
   };
 }
+
+/** Serialise JSON-LD for a <script type="application/ld+json"> body. Escapes "<" so "</script>" in data cannot break out. */
+export function jsonLdHtml(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}

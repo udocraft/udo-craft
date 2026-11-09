@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createServiceClient } from "@/lib/supabase/service";
+import { jsonLdHtml } from "@/lib/seo";
 import { ProductDetailClient, type ProductWithMeta } from "./_client";
 import { getAllImages, resolveProductImages, type Material, type ProductColorVariant } from "@udo-craft/shared";
 
@@ -88,7 +89,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdHtml(jsonLd) }}
       />
       <ProductDetailClient
         product={prod}
