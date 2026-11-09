@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import { createClient } from "@/lib/supabase/client";
 import { X, ArrowLeft, Mail, Lock, Eye, EyeOff, Loader2, CheckCircle2, User, Building2, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { sound } from "@/lib/sound";
 
@@ -103,7 +103,6 @@ function PasswordStrength({ password }: { password: string }) {
 
 export function AuthModal({ open, onClose, onAuthSuccess, initialScreen = "login" }: AuthModalProps) {
   const supabase = createClient();
-  const [mounted, setMounted] = useState(false);
   const [screen, setScreen] = useState<"login" | "register" | "verify" | "forgot" | "forgot-verify" | "new-password">(initialScreen);
 
   // Login state
@@ -137,9 +136,6 @@ export function AuthModal({ open, onClose, onAuthSuccess, initialScreen = "login
   const [resetLoading, setResetLoading] = useState(false);
   const [resetError, setResetError] = useState<string | null>(null);
 
-  // Mount guard for portal
-  useEffect(() => { setMounted(true); }, []);
-
   // Reset screen when modal opens
   useEffect(() => {
     if (open) {
@@ -152,14 +148,6 @@ export function AuthModal({ open, onClose, onAuthSuccess, initialScreen = "login
     }
   }, [open, initialScreen]);
 
-  // Escape key
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [open, onClose]);
-
   // Resend cooldown ticker
   useEffect(() => {
     if (resendCooldown <= 0) return;
@@ -168,7 +156,6 @@ export function AuthModal({ open, onClose, onAuthSuccess, initialScreen = "login
   }, [resendCooldown]);
 
   if (!open) return null;
-  if (!mounted) return null;
 
   // ── Handlers ────────────────────────────────────────────────────────────
 
@@ -354,28 +341,25 @@ export function AuthModal({ open, onClose, onAuthSuccess, initialScreen = "login
 
   // ── Render ───────────────────────────────────────────────────────────────
 
-  return createPortal(
-    <div className="fixed inset-0 z-[10010] flex items-center justify-center px-4">
-      {/* Backdrop — blurred, site visible behind */}
-      <div
-        className="absolute inset-0 bg-foreground/20 backdrop-blur-md"
-        onClick={() => { sound.close(); onClose(); }}
-        aria-hidden="true"
-      />
-
-      {/* Panel */}
-      <div className="relative bg-card rounded-2xl w-full max-w-md shadow-xl overflow-hidden">
+  return (
+    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
+      <DialogContent
+        showCloseButton={false}
+        className="max-w-md border-0 bg-transparent p-0 shadow-none ring-0 sm:max-w-md"
+      >
+        <DialogTitle className="sr-only">U:DO CRAFT account</DialogTitle>
+        <div className="relative w-full overflow-hidden rounded-[2rem] border border-border/70 bg-card shadow-2xl">
         {/* Close */}
         <button
           type="button"
           onClick={() => { sound.close(); onClose(); }}
-          className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground z-10"
+          className="absolute right-4 top-4 z-10 flex size-10 items-center justify-center rounded-full text-muted-foreground transition hover:bg-muted hover:text-foreground"
           aria-label="Закрити"
         >
-          <X className="w-4 h-4" />
+          <X className="size-4" />
         </button>
 
-        <div className="p-6 space-y-5 max-h-[90dvh] overflow-y-auto">
+        <div className="max-h-[min(90dvh,780px)] space-y-5 overflow-y-auto p-6 sm:p-8">
 
           {/* ── LOGIN ── */}
           {screen === "login" && (
@@ -651,8 +635,8 @@ export function AuthModal({ open, onClose, onAuthSuccess, initialScreen = "login
           )}
 
         </div>
-      </div>
-    </div>,
-    document.body
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

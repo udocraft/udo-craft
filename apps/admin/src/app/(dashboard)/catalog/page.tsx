@@ -61,7 +61,7 @@ export default function CatalogPage() {
   return (
     <DashboardPage
         title="Каталог"
-        titleAccessory={<AdminTabs tabs={TABS} value={tab} onValueChange={(next) => router.push(`/catalog?tab=${next}`)} />}
+        toolbar={<AdminTabs tabs={TABS} value={tab} onValueChange={(next) => router.push(`/catalog?tab=${next}`)} className="px-4 md:px-6" />}
         actions={
           createConfig?.onClick ? (
             <Button size="sm" onClick={createConfig.onClick}>

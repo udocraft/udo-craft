@@ -57,13 +57,13 @@ export function CollectionsSection({ products, categories, materials, colorVaria
   return (
     <section id="catalog" className="bg-background">
       {/* Section header */}
-      <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-md border-b border-border">
+      <div className="sticky top-20 z-20 border-b border-border/70 bg-background/90 backdrop-blur-xl">
         <div className="w-full px-5 sm:px-8 lg:px-16">
           <div className="flex items-center justify-between py-5">
             <div className="flex items-center gap-4">
-              <h2 className="text-xl font-black tracking-tight">{t("heading")}</h2>
+              <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">{t("heading")}</h2>
             </div>
-            <Link href="/order" className="group flex min-h-11 items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors duration-200 underline underline-offset-4">
+            <Link href="/order" className="group flex min-h-11 items-center gap-1.5 rounded-full px-4 text-sm font-medium text-primary transition hover:bg-primary/5">
               {t("allProducts")}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
             </Link>

@@ -213,10 +213,6 @@ export function ProductDetailClient({
     <div className="min-h-screen bg-background flex flex-col">
       <SiteHeader />
 
-      {/* Page load fade-in */}
-      <motion.div initial={{ opacity: 1 }} animate={{ opacity: 0 }} transition={{ duration: 0.4, delay: 0.1 }}
-        className="fixed inset-0 bg-white z-[100] pointer-events-none" />
-
       <main className="flex-1 pt-24">
 
         {/* ── Breadcrumb ─────────────────────────────────────────────────── */}
@@ -237,13 +233,13 @@ export function ProductDetailClient({
             {/* LEFT — gallery */}
             <div className="flex flex-col gap-3 lg:sticky lg:top-24">
               {/* Main image */}
-              <div className="relative aspect-square bg-[#f5f5f5] rounded-3xl overflow-hidden group">
+              <div className="group relative aspect-square overflow-hidden rounded-[2rem] border border-border/60 bg-muted/50 sm:rounded-[2.5rem]">
                 <AnimatePresence mode="wait">
                   <motion.img
                     key={activeImageKey + (selectedVariantId ?? "")}
                     src={activeImageUrl}
                     alt={productName}
-                    className="absolute inset-0 w-full h-full object-contain p-2"
+                    className="absolute inset-0 h-full w-full object-contain p-4 sm:p-8"
                     initial={{ opacity: 0, scale: 1.02 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0 }}
@@ -278,7 +274,7 @@ export function ProductDetailClient({
                   {imageKeys.map((key) => (
                     <button key={key} onClick={() => setActiveImageKey(key)}
                       aria-label={`Фото ${key}`} aria-pressed={activeImageKey === key}
-                      className={`shrink-0 w-16 h-16 rounded-xl overflow-hidden bg-[#f5f5f5] border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                      className={`shrink-0 w-16 h-16 rounded-xl overflow-hidden bg-muted/60 border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                         activeImageKey === key ? "border-primary shadow-sm" : "border-transparent hover:border-border"
                       }`}>
                       <img src={currentImages[key]} alt={key} className="w-full h-full object-contain p-1" />

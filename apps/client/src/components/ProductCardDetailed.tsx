@@ -12,6 +12,7 @@ interface ProductCardDetailedProps {
   product: Product;
   colorVariants?: ProductColorVariant[];
   materials?: Material[];
+  imagePriority?: boolean;
   onCustomize?: (product: Product, size: string | null, color: string | null, variant: ProductColorVariant | null) => void;
   onAddWithoutPrint?: (product: Product, size: string | null, color: string | null, variant: ProductColorVariant | null) => void;
 }
@@ -31,7 +32,7 @@ function pickMiddleSize(sizes: string[]): string | null {
 }
 
 export function ProductCardDetailed({
-  product, colorVariants, materials, onCustomize, onAddWithoutPrint,
+  product, colorVariants, materials, imagePriority = false, onCustomize, onAddWithoutPrint,
 }: ProductCardDetailedProps) {
   const t = useTranslations("collections");
   const locale = useLocale();
@@ -132,7 +133,14 @@ export function ProductCardDetailed({
       <div className="p-3 sm:p-4 w-full flex items-center justify-center aspect-square flex-shrink-0 relative overflow-hidden group/img">
         {imageUrl ? (
           <div className="relative w-full h-full">
-            <Image src={imageUrl} alt={productName} fill className="object-contain" />
+            <Image
+              src={imageUrl}
+              alt={productName}
+              fill
+              sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, 50vw"
+              priority={imagePriority}
+              className="object-contain"
+            />
             {availableImages.length > 1 && (
               <div className="absolute inset-y-0 inset-x-1 flex items-center justify-between opacity-0 group-hover/img:opacity-100 transition-opacity pointer-events-none z-10">
                 <button

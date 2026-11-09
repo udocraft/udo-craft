@@ -2,12 +2,13 @@
 
 import { Link } from "@/i18n/navigation";
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { User, ShoppingBag, ArrowRight, X, Menu } from "lucide-react";
 import { BrandLogoFull } from "@/components/brand-logo";
 import { sound } from "@/lib/sound";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 
 interface NavBarProps {
   isLoggedIn: boolean;
@@ -78,13 +79,13 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
         ease: [0.32, 0.72, 0, 1],
         delay: navVisible && !scrolled ? 1.3 : 0,
       }}
-      className="fixed top-4 inset-x-0 z-50 flex justify-center pointer-events-none px-4"
+      className="fixed inset-x-0 top-3 z-50 flex justify-center pointer-events-none px-3 sm:top-4 sm:px-4"
       aria-label={t("mainNav")}
     >
       <div
-        className={`pointer-events-auto inline-flex items-center gap-2 h-12 px-3 rounded-full border transition-all duration-300 ${
+        className={`pointer-events-auto inline-flex h-14 items-center gap-1.5 rounded-full border px-3 shadow-[0_12px_40px_rgba(12,16,34,0.12)] backdrop-blur-2xl transition-all duration-300 md:h-12 md:gap-2 ${
           isLight
-            ? "bg-background/90 backdrop-blur-xl border-border shadow-xl shadow-black/8"
+            ? "bg-background/90 border-border/80"
             : "bg-white/8 backdrop-blur-xl border-white/12 shadow-lg shadow-black/20"
         } md:h-12 h-14 md:px-3 px-4`}
       >
@@ -190,39 +191,34 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
         </div>
       </div>
 
-      {/* Mobile dropdown */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            key="mobile-menu"
-            initial={{ opacity: 0, y: -8, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.97 }}
-            transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
-            className="absolute top-[calc(100%+8px)] left-4 right-4"
-          >
-            <div className="bg-background/95 backdrop-blur-xl border border-border shadow-2xl rounded-2xl px-4 py-3 space-y-1">
-              {navLinks.map((l) => (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  onClick={() => setMenuOpen(false)}
-                  className="flex min-h-11 items-center px-4 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-xl transition-colors duration-200"
-                >
-                  {l.label}
-                </Link>
-              ))}
+      <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+        <SheetContent side="right" className="w-full gap-0 border-l border-border p-0 sm:max-w-sm">
+          <div className="flex h-16 items-center border-b border-border px-6">
+            <BrandLogoFull className="h-7 w-auto" color="var(--color-primary)" />
+          </div>
+          <SheetTitle className="sr-only">{t("mainNav")}</SheetTitle>
+          <SheetDescription className="sr-only">{t("mainNav")}</SheetDescription>
+          <nav className="flex flex-1 flex-col gap-1 p-4" aria-label={t("mainNav")}>
+            {navLinks.map((link) => (
               <Link
-                href="/order"
+                key={link.href}
+                href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className="flex min-h-11 items-center justify-center mt-1 text-center bg-primary text-white text-sm font-semibold px-4 py-2.5 rounded-full hover:bg-primary/90 transition-colors duration-200"
+                className="flex min-h-12 items-center rounded-xl px-4 text-base font-medium text-muted-foreground transition hover:bg-muted hover:text-foreground"
               >
-                {t("startProject")}
+                {link.label}
               </Link>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            ))}
+            <Link
+              href="/order"
+              onClick={() => setMenuOpen(false)}
+              className="mt-3 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+            >
+              {t("startProject")} <ArrowRight className="size-4" />
+            </Link>
+          </nav>
+        </SheetContent>
+      </Sheet>
     </motion.nav>
   );
 }

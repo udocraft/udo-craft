@@ -1,10 +1,13 @@
 import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { pageAlternates } from "@/lib/seo";
+import { ContentPageShell } from "@/app/_components/ContentPageShell";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
-  return { title: "Умови та правила — U:DO CRAFT", alternates: pageAlternates(locale, "/terms") };
+  const t = await getTranslations({ locale, namespace: "terms" });
+  return { title: `${t("title")} — U:DO CRAFT`, alternates: pageAlternates(locale, "/terms") };
 }
 
 async function getContent() {
@@ -24,25 +27,17 @@ async function getContent() {
   }
 }
 
-export default async function TermsPage() {
+export default async function TermsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "terms" });
   const content = await getContent();
   const html = content?.html ?? "";
 
   return (
-    <main className="min-h-screen bg-background">
-      <div className="max-w-3xl mx-auto px-4 py-16">
-        <h1 className="text-2xl font-bold mb-8">
-          {content?.title || "Умови та правила"}
-        </h1>
-        {html ? (
-          <div
-            className="prose prose-zinc max-w-none text-foreground"
-            dangerouslySetInnerHTML={{ __html: html }}
-          />
-        ) : (
-          <p className="text-muted-foreground">Контент ще не додано.</p>
-        )}
-      </div>
-    </main>
+    <ContentPageShell
+      title={content?.title || t("title")}
+      html={html || null}
+      emptyMessage={t("noContent")}
+    />
   );
 }

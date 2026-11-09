@@ -54,7 +54,7 @@ export function ProductGrid({
             <p className="text-3xl mb-3">🧺</p>
             <p className="text-muted-foreground text-sm font-medium">У цій категорії поки немає товарів</p>
           </div>
-        ) : filtered.map((product) => {
+        ) : filtered.map((product, index) => {
           const prodVariants = variants.filter((v) => v.product_id === product.id);
           return (
             <ProductCardDetailed
@@ -62,6 +62,7 @@ export function ProductGrid({
               product={product}
               colorVariants={prodVariants}
               materials={materials}
+              imagePriority={index === 0}
               onCustomize={(prod, size, color) => {
                 window.scrollTo({ top: 0, behavior: "auto" });
                 onCustomize(prod as ProductWithConfig, size, color);
