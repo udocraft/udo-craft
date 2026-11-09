@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { pageAlternates } from "@/lib/seo";
 import { ContentPageShell } from "@/app/_components/ContentPageShell";
@@ -9,6 +9,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const t = await getTranslations({ locale, namespace: "terms" });
   return { title: `${t("title")} — U:DO CRAFT`, alternates: pageAlternates(locale, "/terms") };
 }
+
+// CMS legal text rarely changes; rebuild at most every 5 minutes.
+export const revalidate = 300;
 
 async function getContent() {
   try {
@@ -29,6 +32,7 @@ async function getContent() {
 
 export default async function TermsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "terms" });
   const content = await getContent();
   const html = content?.html ?? "";

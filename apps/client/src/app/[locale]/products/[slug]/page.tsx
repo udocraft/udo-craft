@@ -2,7 +2,8 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createServiceClient } from "@/lib/supabase/service";
 import { jsonLdHtml } from "@/lib/seo";
-import { getTranslations } from "next-intl/server";
+import { cache } from "react";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowRight, BadgeCheck, Clock3, PackageCheck, Shield } from "lucide-react";
 import { Container, Section } from "@udo-craft/ui";
 import { buttonVariants } from "@udo-craft/ui/components/ui/button-variants";
@@ -22,11 +23,18 @@ interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
 }
 
+// One query per render, shared by generateMetadata and the page.
+const getActiveProducts = cache(async () => {
+  const { data } = await createServiceClient()
+    .from("products")
+    .select("*, discount_grid, category_id, size_chart_id, marketing_meta")
+    .eq("is_active", true);
+  return (data ?? []) as ProductWithMeta[];
+});
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = createServiceClient();
-  const { data: prods } = await supabase.from("products").select("*, discount_grid, category_id, size_chart_id, marketing_meta").eq("is_active", true);
-  const prodList = (prods ?? []) as ProductWithMeta[];
+  const prodList = await getActiveProducts();
   const prod = prodList.find((p) => p.slug === slug || p.id === slug);
 
   if (!prod) {
@@ -50,16 +58,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function ProductDetailPage({ params }: PageProps) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
+  setRequestLocale(locale);
   const supabase = createServiceClient();
 
-  const [{ data: prods }, { data: vars }, { data: mats }] = await Promise.all([
-    supabase.from("products").select("*, discount_grid, category_id, size_chart_id, marketing_meta").eq("is_active", true),
+  const [prodList, { data: vars }, { data: mats }] = await Promise.all([
+    getActiveProducts(),
     supabase.from("product_color_variants").select("*").eq("is_active", true).order("sort_order"),
     supabase.from("materials").select("*").eq("is_active", true),
   ]);
 
-  const prodList = (prods ?? []) as ProductWithMeta[];
   const prod = prodList.find((p) => p.slug === slug || p.id === slug);
 
   if (!prod) {
@@ -98,7 +106,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
     },
   };
 
-  const { locale } = await params;
   const [tHero, tFooter] = await Promise.all([
     getTranslations({ locale, namespace: "hero" }),
     getTranslations({ locale, namespace: "footer" }),
