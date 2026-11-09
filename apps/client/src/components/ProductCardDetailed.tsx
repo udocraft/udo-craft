@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { localizedField } from "@/lib/localized-field";
 import { ChevronLeft, ChevronRight, CircleSlash, ToolCase } from "lucide-react";
 import { Product, ProductColorVariant, Material, resolveProductImages, getAllImages } from "@udo-craft/shared";
+import { Button } from "@udo-craft/ui";
 
 interface ProductCardDetailedProps {
   product: Product;
@@ -258,15 +259,10 @@ export function ProductCardDetailed({
             actionsVisible ? "max-h-28 opacity-100 mt-1" : "max-h-0 opacity-0 pointer-events-none"
           }`}
         >
-          <button
-            type="button"
-            onClick={handleAddPrint}
-            disabled={isOutOfStock}
-            className="w-full min-h-11 py-2.5 rounded-full bg-primary text-white text-xs font-bold hover:bg-primary/90 active:scale-[0.98] transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
-          >
+          <Button type="button" onClick={handleAddPrint} disabled={isOutOfStock} variant="primary" className="w-full">
             <ToolCase className="mr-2 inline size-5 align-[-5px]" />
             {t("addPrint")}
-          </button>
+          </Button>
           <button
             type="button"
             onClick={handleAddWithoutPrint}

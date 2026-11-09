@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { Link } from "@/i18n/navigation";
+import { Button } from "@udo-craft/ui";
 
 export default function CabinetError({
   error,
@@ -23,12 +24,9 @@ export default function CabinetError({
           Не вдалося завантажити кабінет. Спробуйте ще раз або поверніться на головну.
         </p>
         <div className="flex gap-3 justify-center">
-          <button
-            onClick={reset}
-            className="inline-flex items-center bg-primary hover:bg-primary/90 text-white font-bold text-sm px-6 py-3 rounded-full transition-all"
-          >
+          <Button onClick={reset} variant="primary">
             Спробувати знову
-          </button>
+          </Button>
           <Link
             href="/"
             className="inline-flex items-center border border-border hover:bg-accent text-foreground font-medium text-sm px-6 py-3 rounded-full transition-all"

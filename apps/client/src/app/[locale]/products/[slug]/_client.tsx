@@ -13,6 +13,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { FooterSection } from "@/app/_sections/FooterSection";
 import { ProductCardDetailed } from "@/components/ProductCardDetailed";
 import { SizeChartModal } from "@/components/SizeChartModal";
+import { Button } from "@udo-craft/ui";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -489,13 +490,12 @@ export function ProductDetailClient({
                             Замовте ще {nextDiscount.qty - quantity} шт, щоб отримати знижку {nextDiscount.discount_pct}%.
                           </p>
                         )}
-                        <Link
-                          href={meta.guide_url || "/#contact"}
-                          className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                        >
-                          Отримати консультацію по тиражу
-                          <ArrowRight className="size-4" />
-                        </Link>
+                        <Button asChild variant="primary" className="w-full">
+                          <Link href={meta.guide_url || "/#contact"}>
+                            Отримати консультацію по тиражу
+                            <ArrowRight className="size-4" />
+                          </Link>
+                        </Button>
                       </div>
                     </motion.div>
                   )}
@@ -504,13 +504,11 @@ export function ProductDetailClient({
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                <button onClick={handleCustomize}
-                  className="flex-1 inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold text-sm px-6 py-3.5 rounded-full active:scale-95 transition-all duration-200 shadow-md hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                <Button onClick={handleCustomize} variant="primary" className="flex-1 shadow-md">
                   <ToolCase className="size-5" />
                   Додати принт
-                </button>
-                <button onClick={handleAddToCart}
-                  className="flex-1 inline-flex items-center justify-center gap-2 border-2 border-primary text-primary hover:bg-primary/5 font-bold text-sm px-6 py-3.5 rounded-full active:scale-95 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                </Button>
+                <Button onClick={handleAddToCart} variant="outline" className="flex-1">
                   <AnimatePresence mode="wait" initial={false}>
                     {added ? (
                       <motion.span key="added" initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 4 }}
@@ -524,7 +522,7 @@ export function ProductDetailClient({
                       </motion.span>
                     )}
                   </AnimatePresence>
-                </button>
+                </Button>
               </div>
 
               {/* Back link */}
@@ -656,11 +654,12 @@ export function ProductDetailClient({
               <p className="text-white font-black text-xl sm:text-2xl">Потрібен корпоративний тираж?</p>
               <p className="text-white/70 text-sm mt-1">Від {meta.min_order_qty} одиниць · Знижки до {maxDiscountPct}% · {meta.delivery_min_days}–{meta.delivery_max_days} днів виробництво</p>
             </div>
-            <Link href="/#contact"
-              className="shrink-0 inline-flex items-center gap-2 bg-white text-primary font-bold text-sm px-7 py-3.5 rounded-full hover:bg-white/90 active:scale-95 transition-all duration-200 shadow-lg">
-              Обговорити проєкт
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+            <Button asChild variant="inverse" className="shrink-0 shadow-lg bg-white text-primary hover:bg-white/90">
+              <Link href="/#contact">
+                Обговорити проєкт
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </Button>
           </div>
         </div>
 

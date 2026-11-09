@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/navigation";
+import { Button } from "@udo-craft/ui";
 
 export default function NotFound() {
   return (
@@ -9,12 +10,11 @@ export default function NotFound() {
         <p className="text-muted-foreground text-lg">
           На жаль, сторінка, яку ви шукаєте, не існує або була переміщена.
         </p>
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold text-sm px-8 py-3.5 rounded-full transition-all duration-200"
-        >
-          На головну
-        </Link>
+        <Button asChild variant="primary">
+          <Link href="/">
+            На головну
+          </Link>
+        </Button>
       </div>
     </main>
   );

@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { ArrowRight, X, Check } from "lucide-react";
+import { Button } from "@udo-craft/ui";
 
 const PROBS = ["minOrder", "approvals", "quality", "hidden"] as const;
 const SOLS = ["minOrder", "editor", "samples", "price"] as const;
@@ -68,10 +69,11 @@ export function ProblemSolutionSection() {
                 </motion.li>
               ))}
             </ul>
-            <Link href="#catalog"
-              className="inline-flex w-fit items-center gap-2 bg-primary text-white font-semibold text-sm px-6 py-3 rounded-full hover:bg-primary/90 active:scale-[0.97] transition-all duration-200">
-              {t("ctaLabel")} <ArrowRight className="w-4 h-4" aria-hidden="true" />
-            </Link>
+            <Button asChild variant="primary" className="w-fit">
+              <Link href="#catalog">
+                {t("ctaLabel")} <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              </Link>
+            </Button>
           </motion.div>
       </div>
     </section>

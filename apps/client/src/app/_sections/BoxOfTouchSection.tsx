@@ -6,6 +6,7 @@ import { motion, useInView } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { ArrowRight } from "lucide-react";
 import { HighlightText } from "@/app/_components/HighlightText";
+import { Button } from "@udo-craft/ui";
 
 const CONTENT_KEYS = ["products", "fabrics", "palette", "printing"] as const;
 
@@ -81,12 +82,11 @@ export function BoxOfTouchSection() {
             </ul>
 
             <div className="flex items-center gap-4">
-              <Link
-                href="#contact?ref=box"
-                className="inline-flex items-center gap-2.5 bg-primary text-white font-semibold text-sm px-7 py-3.5 rounded-full hover:bg-primary/90 active:scale-[0.97] transition-all duration-200 shadow-md shadow-primary/20"
-              >
-                {t("cta")} <ArrowRight className="w-4 h-4" aria-hidden="true" />
-              </Link>
+              <Button asChild variant="primary" className="shadow-md shadow-primary/20">
+                <Link href="#contact?ref=box">
+                  {t("cta")} <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                </Link>
+              </Button>
             </div>
             <p className="text-white/45 text-xs mt-3">{t("freeDelivery")}</p>
           </motion.div>

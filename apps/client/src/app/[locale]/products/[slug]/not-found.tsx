@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/navigation";
+import { Button } from "@udo-craft/ui";
 
 export default function ProductNotFound() {
   return (
@@ -9,12 +10,11 @@ export default function ProductNotFound() {
         <p className="text-muted-foreground">
           На жаль, цей товар не існує або більше не доступний.
         </p>
-        <Link
-          href="/order"
-          className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold text-sm px-8 py-3.5 rounded-full transition-all duration-200"
-        >
-          Переглянути каталог
-        </Link>
+        <Button asChild variant="primary">
+          <Link href="/order">
+            Переглянути каталог
+          </Link>
+        </Button>
       </div>
     </main>
   );

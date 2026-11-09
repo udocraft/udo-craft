@@ -6,6 +6,7 @@ import { motion, useInView } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { HighlightText, RoughHighlight } from "@/app/_components/HighlightText";
 import { useTranslations } from "next-intl";
+import { Button } from "@udo-craft/ui";
 
 export function DesignerSection() {
   const t = useTranslations("designer");
@@ -88,12 +89,11 @@ export function DesignerSection() {
           transition={{ duration: 0.6, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
           className="flex justify-start mt-4"
         >
-          <Link
-            href="#contact?ref=designer"
-            className="inline-flex items-center gap-2 bg-primary text-white font-semibold text-sm px-8 py-4 rounded-full hover:bg-primary/90 hover:scale-105 active:scale-[0.97] shadow-md shadow-primary/20 transition-all duration-200 shrink-0"
-          >
-            {t("cta")} <ArrowRight className="w-4 h-4" aria-hidden="true" />
-          </Link>
+          <Button asChild variant="primary" size="lg" className="shadow-md shadow-primary/20 shrink-0">
+            <Link href="#contact?ref=designer">
+              {t("cta")} <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            </Link>
+          </Button>
         </motion.div>
       </div>
     </section>

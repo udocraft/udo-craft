@@ -7,6 +7,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import { useTranslations } from "next-intl";
 import { ArrowRight, Check } from "lucide-react";
 import { HighlightText, RoughHighlight } from "@/app/_components/HighlightText";
+import { Button } from "@udo-craft/ui";
 
 const STEP_DURATION = 7500;
 
@@ -157,10 +158,11 @@ function DesktopTimeline({ isInView, steps }: { isInView: boolean; steps: Step[]
                 <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold mb-1.5">{t("estimatedTime")}</p>
                 <p className="text-xl font-black text-foreground">{steps[active].time}</p>
               </div>
-              <Link href={steps[active].href}
-                className="inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold text-sm px-8 py-4 rounded-full hover:bg-primary/90 hover:scale-105 active:scale-[0.97] transition-all duration-200 whitespace-nowrap w-full sm:w-auto shadow-md shadow-primary/20">
-                {steps[active].cta} <ArrowRight className="w-4 h-4" aria-hidden="true" />
-              </Link>
+              <Button asChild variant="primary" size="lg" className="w-full sm:w-auto shadow-md shadow-primary/20">
+                <Link href={steps[active].href}>
+                  {steps[active].cta} <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                </Link>
+              </Button>
             </div>
           </motion.div>
         </AnimatePresence>
@@ -280,10 +282,11 @@ function MobileTimeline({ steps }: { steps: Step[] }) {
                      <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold mb-1">{t("estimatedTime")}</p>
                      <p className="text-lg font-black text-foreground">{step.time}</p>
                    </div>
-                   <Link href={step.href}
-                     className="flex items-center justify-center gap-2 w-full bg-primary text-white hover:bg-primary/90 font-semibold text-sm px-6 py-3.5 rounded-full transition-all duration-200 shadow-md shadow-primary/20">
-                     {step.cta} <ArrowRight className="w-4 h-4" aria-hidden="true" />
-                   </Link>
+                   <Button asChild variant="primary" className="w-full shadow-md shadow-primary/20">
+                     <Link href={step.href}>
+                       {step.cta} <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                     </Link>
+                   </Button>
                 </div>
               </div>
             </div>
