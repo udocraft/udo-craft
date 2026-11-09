@@ -4,6 +4,8 @@ import { createServiceClient } from "@/lib/supabase/service";
 import { findUserByEmail } from "@/lib/supabase/users";
 import { emailLimitKey, generateOtp, hashOtp, OTP_TTL_MS } from "@/lib/auth/otp";
 import { consumeLimit } from "@/lib/rate-limit";
+import { SendOtpRequestSchema } from "@udo-craft/shared";
+import { parseJsonBody } from "@/lib/api/request";
 
 let resendClient: Resend | null = null;
 
@@ -22,20 +24,12 @@ function escapeHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
 export async function POST(req: NextRequest) {
+  const parsedBody = await parseJsonBody(req, SendOtpRequestSchema);
+  if (!parsedBody.ok) return parsedBody.response;
+  const { email, otp: clientOtp, name, type } = parsedBody.data;
+
   try {
-    const { email, otp: clientOtp, name, type } = await req.json();
-
-    if (!email) {
-      return NextResponse.json({ error: "Email is required" }, { status: 400 });
-    }
-
-    if (typeof email !== "string" || !EMAIL_PATTERN.test(email) || email.length > 254) {
-      return NextResponse.json({ error: "Invalid email" }, { status: 400 });
-    }
 
     if (!(await consumeLimit(`otp-send:${emailLimitKey(email)}`, 3, 900))) {
       return NextResponse.json({ error: "Забагато запитів. Спробуйте пізніше." }, { status: 429 });

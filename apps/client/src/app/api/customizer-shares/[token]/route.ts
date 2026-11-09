@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ShareCommentRequestSchema, UpdateShareRequestSchema } from "@udo-craft/shared";
+import { parseJsonBody } from "@/lib/api/request";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
-
-const ACCESS = new Set(["view", "comment", "edit"]);
 
 // Comments are shown to anyone with the link, so expose a masked label instead of the address.
 function maskEmail(email: string | null): string {
@@ -72,13 +72,9 @@ export async function PATCH(
     return NextResponse.json({ error: "This link is not editable" }, { status: 403 });
   }
 
-  const body = await request.json();
-  const payload = body.payload && typeof body.payload === "object" ? body.payload : null;
-  const nextAccess = typeof body.access === "string" && ACCESS.has(body.access) ? body.access : null;
-
-  if (!payload && !nextAccess) {
-    return NextResponse.json({ error: "payload or access required" }, { status: 400 });
-  }
+  const parsedBody = await parseJsonBody(request, UpdateShareRequestSchema);
+  if (!parsedBody.ok) return parsedBody.response;
+  const { payload, access: nextAccess } = parsedBody.data;
 
   const patch: Record<string, unknown> = {};
   if (payload) patch.payload = payload;
@@ -110,9 +106,9 @@ export async function POST(
     return NextResponse.json({ error: "Comments are disabled for this link" }, { status: 403 });
   }
 
-  const body = await request.json();
-  const comment = typeof body.body === "string" ? body.body.trim() : "";
-  if (!comment) return NextResponse.json({ error: "Comment is required" }, { status: 400 });
+  const parsedBody = await parseJsonBody(request, ShareCommentRequestSchema);
+  if (!parsedBody.ok) return parsedBody.response;
+  const comment = parsedBody.data.body;
 
   const { data, error } = await service
     .from("customizer_share_comments")

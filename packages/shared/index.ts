@@ -780,6 +780,124 @@ export const CreateLeadSchema = z.object({
 
 export type CreateLead = z.infer<typeof CreateLeadSchema>;
 
+// ── API request bodies (apps/client/src/app/api/**) ─────────────────────────
+// Every POST body is parsed with one of these; a failed parse is a 400.
+
+const urlString = z.string().max(2048);
+
+export const LeadOrderItemSchema = z.object({
+  product_id: z.string().min(1).max(100),
+  quantity: z.number().int().min(1).max(100_000),
+  size: z.union([z.string(), z.number()]).transform(String),
+  color: z.union([z.string(), z.number()]).transform(String),
+  custom_print_url: urlString.nullish(),
+  mockup_url: urlString.nullish(),
+  technical_metadata: z.record(z.unknown()).nullish(),
+});
+
+/** POST /api/leads. Extra customer_data keys (edrpou, delivery...) are kept. */
+export const CreateLeadRequestSchema = CreateLeadSchema.extend({
+  customer_data: CreateLeadSchema.shape.customer_data
+    .passthrough()
+    .extend({ attachments: z.array(urlString).max(20).optional() }),
+  order_items: z.array(LeadOrderItemSchema).max(100).optional(),
+  initial_message: z.string().max(5000).nullish(),
+});
+export type CreateLeadRequest = z.infer<typeof CreateLeadRequestSchema>;
+
+/** `files` parts of POST /api/upload and /api/cabinet/upload (multipart, not JSON). */
+export const UploadFilesRequestSchema = z.array(z.instanceof(File)).max(10, "At most 10 files per request");
+
+const emailField = z.string().trim().email("Invalid email").max(254);
+const otpField = z.string().regex(/^\d{6}$/, "Invalid code");
+
+/** POST /api/auth/check-email */
+export const CheckEmailRequestSchema = z.object({ email: emailField });
+
+/** POST /api/auth/send-otp. `otp` is only read for type "register". */
+export const SendOtpRequestSchema = z.object({
+  email: emailField,
+  otp: otpField.optional(),
+  name: z.string().max(100).optional(),
+  type: z.enum(["register", "reset"]).optional(),
+});
+
+/** POST /api/auth/verify-otp */
+export const VerifyOtpRequestSchema = z.object({
+  email: emailField,
+  otp: otpField,
+  newPassword: z
+    .string()
+    .min(8, "Пароль має містити щонайменше 8 символів")
+    .max(128, "Пароль задовгий"),
+});
+
+/** POST /api/cabinet/messages */
+export const CabinetMessageRequestSchema = z
+  .object({
+    lead_id: z.string().uuid(),
+    body: z.string().max(5000).optional(),
+    attachments: z.array(urlString).max(10).optional(),
+  })
+  .refine((m) => Boolean(m.body?.trim()) || Boolean(m.attachments?.length), {
+    message: "body or attachments required",
+    path: ["body"],
+  });
+
+const dataUrl = z.string().max(12_000_000).startsWith("data:").includes(",");
+
+/** POST /api/ai/generate */
+export const AiGenerateRequestSchema = z.object({
+  prompt: z.string().min(1).max(4000),
+  contextDescription: z.string().max(4000).optional().default(""),
+  imageDataUrl: dataUrl,
+  canvasDataUrl: z.string().max(12_000_000).optional(),
+  hasSelfie: z.boolean().optional(),
+  systemPrompt: z.string().max(4000).optional(),
+  mode: z.enum(["illustration", "enhance", "mockup"]).optional(),
+});
+
+export const ShareAccessEnum = z.enum(["view", "comment", "edit"]);
+const sharePayload = z.record(z.unknown());
+
+/** POST /api/customizer-shares */
+export const CreateShareRequestSchema = z.object({
+  productId: z.string().min(1).max(100),
+  access: ShareAccessEnum.optional().default("view"),
+  payload: sharePayload,
+});
+
+/** PATCH /api/customizer-shares/[token] */
+export const UpdateShareRequestSchema = z
+  .object({ payload: sharePayload.optional(), access: ShareAccessEnum.optional() })
+  .refine((v) => v.payload !== undefined || v.access !== undefined, {
+    message: "payload or access required",
+  });
+
+/** POST /api/customizer-shares/[token] (comment) */
+export const ShareCommentRequestSchema = z.object({
+  body: z.string().trim().min(1, "Comment is required").max(2000),
+});
+
+export const ANALYTICS_EVENT_TYPES = [
+  "pageview",
+  "session_start",
+  "form_submit",
+  "customize_start",
+  "customize_complete",
+] as const;
+
+/** POST /api/analytics/track */
+export const TrackEventRequestSchema = z.object({
+  event_type: z.enum(ANALYTICS_EVENT_TYPES),
+  visitor_id: z.string().min(1).max(100),
+  session_id: z.string().min(1).max(100),
+  page: z.string().nullish(),
+  referrer: z.string().nullish(),
+  user_agent: z.string().nullish(),
+  metadata: z.record(z.unknown()).nullish(),
+});
+
 // ── useCustomizer hook ──────────────────────────────────────────────────────
 
 export {

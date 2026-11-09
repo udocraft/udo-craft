@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
+import { CabinetMessageRequestSchema } from "@udo-craft/shared";
+import { parseJsonBody } from "@/lib/api/request";
 
 // This route reads and writes messages for the currently authenticated user's leads.
 // We use the session-based createClient() throughout so that Supabase RLS policies
@@ -53,10 +55,9 @@ export async function POST(request: NextRequest) {
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { lead_id, body, attachments } = await request.json();
-  if (!lead_id || (!body?.trim() && !attachments?.length)) {
-    return NextResponse.json({ error: "lead_id and body or attachments required" }, { status: 400 });
-  }
+  const parsedBody = await parseJsonBody(request, CabinetMessageRequestSchema);
+  if (!parsedBody.ok) return parsedBody.response;
+  const { lead_id, body, attachments } = parsedBody.data;
 
   // Verify ownership using the session-based client (RLS enforced).
   const { data: lead } = await supabase

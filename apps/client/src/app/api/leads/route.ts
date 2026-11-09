@@ -1,4 +1,5 @@
-import { CreateLeadSchema } from "@udo-craft/shared";
+import { CreateLeadRequestSchema } from "@udo-craft/shared";
+import { parseJsonBody } from "@/lib/api/request";
 import { createServiceClient } from "@/lib/supabase/service";
 import { getSupabasePublicEnv, getSupabaseServiceEnv } from "@/lib/supabase/env";
 import { sendOrderConfirmation, sendContactNotification } from "@/lib/email";
@@ -20,6 +21,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }
 
+  const parsedBody = await parseJsonBody(request, CreateLeadRequestSchema);
+  if (!parsedBody.ok) return parsedBody.response;
+  const { status, customer_data, order_items, initial_message, visitor_id, session_id } = parsedBody.data;
+
   try {
     const serviceEnv = getSupabaseServiceEnv();
     const publicEnv = getSupabasePublicEnv();
@@ -28,37 +33,21 @@ export async function POST(request: NextRequest) {
       ? createServiceClient()
       : createClient(publicEnv.url, publicEnv.anonKey);
 
-    const body = await request.json();
-    const parsed = CreateLeadSchema.safeParse(body);
-    if (!parsed.success) {
-      return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
-    }
-    const { status } = parsed.data;
-    const customer_data = {
-      ...(body.customer_data ?? {}),
-      name: parsed.data.customer_data.name,
-      email: parsed.data.customer_data.email,
-      phone: parsed.data.customer_data.phone,
-      social_channel: parsed.data.customer_data.social_channel,
-    };
-
     // Honeypot check — bots fill this field, real users don't
     if (customer_data.website) {
       return NextResponse.json({ id: "bot-rejected" }, { status: 200 });
     }
 
-    const { order_items, initial_message, visitor_id, session_id } = body;
-    // attachments is an extra field not covered by CreateLeadSchema — read from raw body
-    const attachments: string[] = body.customer_data?.attachments ?? [];
+    const attachments = customer_data.attachments ?? [];
 
     // Prices are recalculated from the catalogue; client-sent amounts and unit prices are ignored.
-    const orderItemsInput = Array.isArray(order_items) ? order_items : [];
+    const orderItemsInput = order_items ?? [];
     const basePriceById = new Map<string, number>();
     if (orderItemsInput.length > 0) {
       const { data: products, error: productsError } = await supabase
         .from("products")
         .select("id, base_price_cents")
-        .in("id", [...new Set(orderItemsInput.map((item: { product_id: string }) => item.product_id))]);
+        .in("id", [...new Set(orderItemsInput.map((item) => item.product_id))]);
       if (productsError) {
         console.error("Product price lookup error:", productsError);
         return NextResponse.json({ error: "Не вдалося перевірити ціни" }, { status: 500 });
@@ -72,7 +61,7 @@ export async function POST(request: NextRequest) {
     }
     const serverTotalCents = Math.round(
       orderItemsInput.reduce(
-        (sum: number, item: { product_id: string; quantity: number }) =>
+        (sum, item) =>
           sum + lineTotalCents(basePriceById.get(item.product_id)!, item.quantity),
         0,
       ),
@@ -100,20 +89,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: leadError?.message ?? "Помилка створення" }, { status: 500 });
     }
 
-    if (Array.isArray(order_items) && order_items.length > 0) {
-      const items = orderItemsInput.map((item: {
-        product_id: string;
-        quantity: number;
-        size: string;
-        color: string;
-        custom_print_url?: string | null;
-        mockup_url?: string | null;
-        technical_metadata?: Record<string, unknown> | null;
-      }) => ({
+    if (orderItemsInput.length > 0) {
+      const items = orderItemsInput.map((item) => ({
         lead_id: lead.id,
         product_id: item.product_id,
-        size: String(item.size),
-        color: String(item.color),
+        size: item.size,
+        color: item.color,
         quantity: item.quantity,
         custom_print_url: item.custom_print_url ?? null,
         mockup_url: item.mockup_url ?? null,
@@ -164,7 +145,7 @@ export async function POST(request: NextRequest) {
         company: customer_data.company,
         topic: customer_data.topic,
         source: customer_data.source,
-        message: body.initial_message ?? undefined,
+        message: initial_message ?? undefined,
       }).catch((err) => console.error("Contact notification email failed:", err));
     }
 

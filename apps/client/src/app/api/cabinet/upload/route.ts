@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { validateFile } from "@/lib/validate-file";
+import { parseFilesBody } from "@/lib/api/request";
+import { UploadFilesRequestSchema } from "@udo-craft/shared";
 import { NextRequest, NextResponse } from "next/server";
 
 // SERVICE ROLE JUSTIFICATION:
@@ -17,11 +19,13 @@ export async function POST(request: NextRequest) {
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const parsedBody = await parseFilesBody(request, UploadFilesRequestSchema);
+  if (!parsedBody.ok) return parsedBody.response;
+  const files = parsedBody.data;
+
   try {
     const service = await createClient();
 
-    const formData = await request.formData();
-    const files = formData.getAll("files") as File[];
     if (!files.length) return NextResponse.json({ results: [] });
 
     const results: { url: string }[] = [];
