@@ -19,6 +19,17 @@ import { InfoTabs } from "./_components/InfoTabs";
 import { ProductPurchase, type PurchaseColor } from "./_components/ProductPurchase";
 import { RichText } from "./_components/RichText";
 
+// Product pages are ISR: rebuilt in the background at most every 5 minutes.
+export const revalidate = 300;
+// Nothing is prerendered at build (the catalog lives in Supabase); an empty list makes Next
+// render each slug on first request and then serve it from the ISR cache.
+// Do not add a segment-level not-found.tsx here: together with notFound() it makes Next 14
+// discard the rendered HTML and serve every request dynamically (no-store). The locale-level
+// not-found.tsx handles unknown slugs.
+export function generateStaticParams() {
+  return [];
+}
+
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
 }

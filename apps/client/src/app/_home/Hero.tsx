@@ -56,7 +56,7 @@ export async function Hero({ ctx }: { ctx: HomeCtx }) {
 
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             {primaryIsRoute ? (
-              <Link href={primaryUrl} className={buttonVariants({ variant: "primary", size: "lg", className: "shadow-glow" })}>
+              <Link href={primaryUrl} prefetch={false} className={buttonVariants({ variant: "primary", size: "lg", className: "shadow-glow" })}>
                 {primaryText}
               </Link>
             ) : (

@@ -14,7 +14,7 @@ export async function Collections({ ctx }: { ctx: HomeCtx }) {
         titleId="catalog-heading"
         title={t("heading")}
         action={
-          <Link href="/order" className={buttonVariants({ variant: "ghost" })}>
+          <Link href="/order" prefetch={false} className={buttonVariants({ variant: "ghost" })}>
             {t("allProducts")} <ArrowRight aria-hidden="true" />
           </Link>
         }

@@ -34,7 +34,7 @@ export async function Contact({ ctx }: { ctx: HomeCtx }) {
           </p>
 
           <div className="mt-8">
-            <Link href="/order" className={buttonVariants({ variant: "primary", size: "lg" })}>
+            <Link href="/order" prefetch={false} className={buttonVariants({ variant: "primary", size: "lg" })}>
               {tCta("cta")} <ArrowRight aria-hidden="true" />
             </Link>
             <p className="mt-3 text-sm text-muted-foreground">{tCta("footer")}</p>

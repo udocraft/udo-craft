@@ -122,7 +122,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, onAuthOpen }: NavBar
             <Link href="/#contact">{t("getQuote")}</Link>
             </Button>
             <Button asChild variant="primary" className="ml-1 hidden md:inline-flex">
-              <Link href="/order">
+              <Link href="/order" prefetch={false}>
                 {t("designMerch")} <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
           </Button>

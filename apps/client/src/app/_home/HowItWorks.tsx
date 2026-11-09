@@ -26,6 +26,7 @@ export async function HowItWorks({ locale }: { locale: string }) {
             </p>
             <Link
               href={href}
+              prefetch={false}
               className="mt-3 inline-flex min-h-11 items-center gap-1.5 self-start rounded-control text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {t(`steps.${n}.cta`)} <ArrowRight className="size-4" aria-hidden="true" />
