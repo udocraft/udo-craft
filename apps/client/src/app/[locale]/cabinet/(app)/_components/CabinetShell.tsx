@@ -32,7 +32,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
     <div className="flex h-full flex-col bg-card">
       <div className="flex h-14 shrink-0 items-center border-b border-border px-4">
         <Link href="/" aria-label="U:DO CRAFT" onClick={onNavigate}>
-          <BrandLogoFull className="h-6 w-auto text-primary" color="var(--color-primary, #1B18AC)" />
+          <BrandLogoFull className="h-6 w-auto text-primary" color="var(--color-primary)" />
         </Link>
       </div>
       <nav className="flex-1 space-y-0.5 overflow-y-auto p-2" aria-label={t("breadcrumb")}>
@@ -93,7 +93,7 @@ function Frame({ children }: { children: React.ReactNode }) {
             <Menu className="size-5" />
           </button>
           <Link href="/" aria-label="U:DO CRAFT">
-            <BrandLogoFull className="h-5 w-auto text-primary" color="var(--color-primary, #1B18AC)" />
+            <BrandLogoFull className="h-5 w-auto text-primary" color="var(--color-primary)" />
           </Link>
         </header>
         <main id="main" className="min-h-0 flex-1">{children}</main>

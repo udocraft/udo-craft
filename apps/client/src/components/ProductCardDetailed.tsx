@@ -8,6 +8,7 @@ import { localizedField } from "@/lib/localized-field";
 import { ChevronLeft, ChevronRight, CircleSlash, ToolCase } from "lucide-react";
 import type { Product, ProductColorVariant, Material } from "@udo-craft/shared";
 import { resolveProductImages, getAllImages } from "@udo-craft/shared/product-images";
+import { FALLBACK_GARMENT_COLORS, NEUTRAL_SWATCH, isLightSwatch } from "@/lib/canvas-colors";
 import { Button } from "@udo-craft/ui";
 
 interface ProductCardDetailedProps {
@@ -18,15 +19,6 @@ interface ProductCardDetailedProps {
   onCustomize?: (product: Product, size: string | null, color: string | null, variant: ProductColorVariant | null) => void;
   onAddWithoutPrint?: (product: Product, size: string | null, color: string | null, variant: ProductColorVariant | null) => void;
 }
-
-const FALLBACK_COLORS = [
-  { name: "Black",       hex: "#1a1a1a", border: false },
-  { name: "White",       hex: "#f0f0f0", border: true  },
-  { name: "Gray",        hex: "#9ca3af", border: false },
-  { name: "Navy",        hex: "#1e3a5f", border: false },
-  { name: "Blue",        hex: "#2563eb", border: false },
-  { name: "Red",         hex: "#dc2626", border: false },
-];
 
 function pickMiddleSize(sizes: string[]): string | null {
   if (!sizes.length) return null;
@@ -73,10 +65,10 @@ export function ProductCardDetailed({
     hasVariants && materials
       ? colorVariants.map((v) => {
           const mat = materials.find((m) => m.id === v.material_id);
-          const hex = mat?.hex_code || "#ccc";
-          return { id: v.id, name: mat?.name || "Standard", hex, border: hex.toLowerCase() === "#f0f0f0" || hex.toLowerCase() === "#ffffff" };
+          const hex = mat?.hex_code || NEUTRAL_SWATCH;
+          return { id: v.id, name: mat?.name || "Standard", hex, border: isLightSwatch(hex) };
         })
-      : FALLBACK_COLORS.map((c) => ({ id: c.name, name: c.name, hex: c.hex, border: c.border }));
+      : FALLBACK_GARMENT_COLORS.map((c) => ({ id: c.name, name: c.name, hex: c.hex, border: c.border }));
 
   const sizes = product.available_sizes || [];
   const visibleSizes = sizes.slice(0, 8);

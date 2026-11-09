@@ -32,6 +32,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import type { CustomizerShareComment, LoadedCustomizerShare, ShareAccess } from "../_lib/customizerShare";
 import { buildSharePayload } from "../_lib/customizerShare";
+import { isLightSwatch } from "@/lib/canvas-colors";
 
 interface ProductWithConfig extends Product {
   size_chart_id?: string | null;
@@ -405,7 +406,7 @@ export function Customizer({
               const mat = materials.find((m) => m.id === v.material_id);
               if (!mat) return null;
               const isSelected = s.selectedVariant?.id === v.id;
-              const isWhite = mat.hex_code.toLowerCase() === "#ffffff" || mat.hex_code.toLowerCase() === "#f5f5f5";
+              const isWhite = isLightSwatch(mat.hex_code);
               return (
                 <button key={v.id} onClick={() => { if (!isReadOnly) { s.setSelectedColor(mat.name); s.setSelectedVariant(v); } }}
                   title={mat.name} aria-label={mat.name} aria-pressed={isSelected}

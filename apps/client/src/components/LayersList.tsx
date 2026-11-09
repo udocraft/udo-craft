@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { GripVertical, Trash2, Type, Copy } from "lucide-react";
 import { PRINT_TYPES, type PrintLayer, type PrintTypeId } from "@udo-craft/shared";
+import { CHECKER_LIGHT, INK_BLACK } from "@/lib/canvas-colors";
 
 export interface PrintTypePricingRow {
   id: string; print_type: string; size_label: string;
@@ -207,12 +208,12 @@ export default function LayersList({
                   <GripVertical className="size-3.5" />
                 </div>
                 <div className="size-10 rounded-lg overflow-hidden shrink-0 flex items-center justify-center border border-border/40"
-                  style={{ background: "repeating-conic-gradient(#e5e7eb 0% 25%, transparent 0% 50%) 0 0 / 8px 8px" }}>
+                  style={{ background: `repeating-conic-gradient(${CHECKER_LIGHT} 0% 25%, transparent 0% 50%) 0 0 / 8px 8px` }}>
                   {isText ? (
                     <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
                       <text x="50%" y="55%" dominantBaseline="middle" textAnchor="middle"
                         fontFamily={`'${layer.textFont ?? "Montserrat"}', sans-serif`}
-                        fontSize="16" fill={layer.textColor ?? "#000000"}>
+                        fontSize="16" fill={layer.textColor ?? INK_BLACK}>
                         {(layer.textContent ?? "T").replace(/\n/g, " ").slice(0, 3)}
                       </text>
                     </svg>
@@ -255,12 +256,12 @@ export default function LayersList({
                 <div className="p-3 space-y-3">
                   <div className="flex gap-3 rounded-xl bg-muted/30 p-2">
                     <div className="size-14 rounded-lg overflow-hidden shrink-0 flex items-center justify-center border border-border/40 bg-background"
-                      style={{ background: "repeating-conic-gradient(#e5e7eb 0% 25%, transparent 0% 50%) 0 0 / 8px 8px" }}>
+                      style={{ background: `repeating-conic-gradient(${CHECKER_LIGHT} 0% 25%, transparent 0% 50%) 0 0 / 8px 8px` }}>
                       {isText ? (
                         <svg width="56" height="56" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
                           <text x="50%" y="55%" dominantBaseline="middle" textAnchor="middle"
                             fontFamily={`'${layer.textFont ?? "Montserrat"}', sans-serif`}
-                            fontSize="20" fill={layer.textColor ?? "#000000"}>
+                            fontSize="20" fill={layer.textColor ?? INK_BLACK}>
                             {(layer.textContent ?? "T").replace(/\n/g, " ").slice(0, 3)}
                           </text>
                         </svg>

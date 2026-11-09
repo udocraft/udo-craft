@@ -6,6 +6,7 @@ import { Product, PrintZone, PRINT_TYPES, TEXT_FONTS, type PrintLayer, type Prin
 import { AlignCenter, AlignLeft, AlignRight, Bold, Copy, Eraser, Focus, Italic, Loader2, Pencil, RotateCcw, RotateCw, Shirt, Trash2 } from "lucide-react";
 import { removeBgClient } from "@/lib/remove-bg-client";
 import { toast } from "sonner";
+import { BRAND_FALLBACK, CANVAS_HANDLE_FILL, DESTRUCTIVE_FALLBACK, INK_BLACK } from "@/lib/canvas-colors";
 
 const loadedFonts = new Set<string>();
 
@@ -165,9 +166,9 @@ export default function ProductCanvas({
       selection: !readOnly,
     });
     // Fabric.js does not read CSS variables natively — read at runtime
-    const primary = typeof document !== "undefined" ? getComputedStyle(document.documentElement).getPropertyValue("--color-primary").trim() || "#1B3BFF" : "#1B3BFF";
+    const primary = typeof document !== "undefined" ? getComputedStyle(document.documentElement).getPropertyValue("--color-primary").trim() || BRAND_FALLBACK : BRAND_FALLBACK;
     fabric.Object.prototype.set({
-      cornerColor: "#ffffff",
+      cornerColor: CANVAS_HANDLE_FILL,
       cornerStrokeColor: primary,
       cornerSize: 10,
       cornerStyle: "circle",
@@ -211,8 +212,8 @@ export default function ProductCanvas({
 
     // ── Snap-to-center guide lines ───────────────────────────────────────
     const snapColor = typeof document !== "undefined"
-      ? getComputedStyle(document.documentElement).getPropertyValue("--color-destructive").trim() || "#ef4444"
-      : "#ef4444";
+      ? getComputedStyle(document.documentElement).getPropertyValue("--color-destructive").trim() || DESTRUCTIVE_FALLBACK
+      : DESTRUCTIVE_FALLBACK;
     const vLine = new fabric.Line([CANVAS_SIZE / 2, 0, CANVAS_SIZE / 2, CANVAS_SIZE], {
       stroke: snapColor, strokeWidth: 1, selectable: false, evented: false,
       visible: false, strokeDashArray: [4, 4],
@@ -465,7 +466,7 @@ export default function ProductCanvas({
   const buildTextObject = (layer: PrintLayer, saved?: { left: number; top: number; scaleX: number; scaleY: number; angle: number; flipX: boolean }) => {
     const fontFamily = layer.textFont ?? "Montserrat";
     const fontSize = layer.textFontSize ?? 48;
-    const fill = layer.textColor ?? "#000000";
+    const fill = layer.textColor ?? INK_BLACK;
     const content = layer.textContent ?? "Текст";
     const align = layer.textAlign ?? "center";
     const curve = layer.textCurve ?? 0;
@@ -641,7 +642,7 @@ export default function ProductCanvas({
 
                 textObj.set({
                   text: layer.textContent ?? "Текст",
-                  fill: layer.textColor ?? "#000000",
+                  fill: layer.textColor ?? INK_BLACK,
                   fontFamily: layer.textFont ?? "Montserrat",
                   fontSize: layer.textFontSize ?? 48,
                   textAlign: layer.textAlign ?? "center",
@@ -1012,7 +1013,7 @@ export default function ProductCanvas({
                 </ToolBtn>
                 {/* Text color */}
                 <div className="flex flex-col items-center gap-0.5 shrink-0 min-w-[44px] min-h-[48px] justify-center">
-                  <input type="color" value={activeLayer.textColor ?? "#000000"}
+                  <input type="color" value={activeLayer.textColor ?? INK_BLACK}
                     onChange={(e) => patch({ textColor: e.target.value })}
                     aria-label="Колір тексту"
                     className="w-6 h-6 rounded border border-border cursor-pointer p-0.5 bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
@@ -1036,14 +1037,14 @@ export default function ProductCanvas({
             {isSvg && (
               <>
                 <div className="flex flex-col items-center gap-0.5 shrink-0 min-w-[44px] min-h-[48px] justify-center">
-                  <input type="color" value={activeLayer.svgFillColor ?? "#000000"}
+                  <input type="color" value={activeLayer.svgFillColor ?? INK_BLACK}
                     onChange={(e) => patch({ svgFillColor: e.target.value })}
                     aria-label="Колір заливки"
                     className="w-6 h-6 rounded border border-border cursor-pointer p-0.5 bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
                   <span className="text-xs leading-none text-muted-foreground">Заливка</span>
                 </div>
                 <div className="flex flex-col items-center gap-0.5 shrink-0 min-w-[44px] min-h-[48px] justify-center">
-                  <input type="color" value={activeLayer.svgStrokeColor ?? "#000000"}
+                  <input type="color" value={activeLayer.svgStrokeColor ?? INK_BLACK}
                     onChange={(e) => patch({ svgStrokeColor: e.target.value })}
                     aria-label="Колір обводки"
                     className="w-6 h-6 rounded border border-border cursor-pointer p-0.5 bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />

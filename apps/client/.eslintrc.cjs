@@ -34,7 +34,6 @@ module.exports = {
       // Legacy debt, downgraded to warnings. Phase 3 (colour clean-up) removes
       // each file from this list. Do NOT add files here.
       files: [
-        "src/app/[[]locale]/order/_components/editor/DrawingModal.tsx",
         "src/app/_sections/FooterSection.tsx",
         "src/components/ContactForm.tsx",
       ],

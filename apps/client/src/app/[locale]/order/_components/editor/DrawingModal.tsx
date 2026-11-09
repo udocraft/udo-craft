@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { DRAWING_DEFAULT_COLOR, DRAWING_PRESET_COLORS, ERASER_TIP_PINK, INK_BLACK } from "@/lib/canvas-colors";
 
 export interface DrawingModalProps {
   open: boolean;
@@ -34,19 +35,6 @@ type ToolMeta = {
   Icon: React.ElementType;
   sample: "pen" | "arrow" | "marker" | "neon" | "blur" | "eraser";
 };
-
-const PRESET_COLORS: { hex: string; label: string }[] = [
-  { hex: "#ffffff", label: "Білий" },
-  { hex: "#ff453a", label: "Червоний" },
-  { hex: "#ff9f0a", label: "Помаранчевий" },
-  { hex: "#ffd60a", label: "Жовтий" },
-  { hex: "#30d158", label: "Зелений" },
-  { hex: "#64d2ff", label: "Блакитний" },
-  { hex: "#0a84ff", label: "Синій" },
-  { hex: "#bf5af2", label: "Фіолетовий" },
-  { hex: "#ff2d55", label: "Рожевий" },
-  { hex: "#000000", label: "Чорний" },
-];
 
 const TOOLS: ToolMeta[] = [
   { id: "pen", label: "Pen", hint: "Чіткі контури та ескізи", Icon: Pencil, sample: "pen" },
@@ -144,8 +132,8 @@ function SliderField({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3">
-        <span className="text-sm font-medium text-white/72">{label}</span>
-        <span className="text-3xl font-light tracking-tight text-white/70">
+        <span className="text-sm font-medium text-muted-foreground">{label}</span>
+        <span className="text-3xl font-light tracking-tight text-muted-foreground">
           {value}
           <span className="ml-0.5 text-lg">{suffix}</span>
         </span>
@@ -156,7 +144,7 @@ function SliderField({
         max={max}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="h-2 w-full cursor-pointer appearance-none rounded-full bg-white/10 accent-[#ffd60a]"
+        className="h-2 w-full cursor-pointer appearance-none rounded-full bg-foreground/10 accent-brand"
         aria-label={label}
       />
     </div>
@@ -167,7 +155,7 @@ function ToolSample({ sample, color }: { sample: ToolMeta["sample"]; color: stri
   if (sample === "arrow") {
     return (
       <div className="relative h-8 w-24">
-        <div className="absolute left-0 right-4 top-1/2 h-1 -translate-y-1/2 rounded-full bg-white/10" />
+        <div className="absolute left-0 right-4 top-1/2 h-1 -translate-y-1/2 rounded-full bg-foreground/10" />
         <div className="absolute left-0 right-4 top-1/2 h-1 -translate-y-1/2 rounded-full" style={{ backgroundColor: color }} />
         <div
           className="absolute right-1 top-1/2 h-0 w-0 -translate-y-1/2 border-y-[7px] border-l-[13px] border-y-transparent"
@@ -180,7 +168,7 @@ function ToolSample({ sample, color }: { sample: ToolMeta["sample"]; color: stri
   if (sample === "marker") {
     return (
       <div className="relative h-8 w-24">
-        <div className="absolute left-0 right-0 top-1/2 h-4 -translate-y-1/2 rounded-full bg-white/8" />
+        <div className="absolute left-0 right-0 top-1/2 h-4 -translate-y-1/2 rounded-full bg-foreground/8" />
         <div className="absolute left-2 right-7 top-1/2 h-3 -translate-y-1/2 rounded-full opacity-60" style={{ backgroundColor: color }} />
       </div>
     );
@@ -205,9 +193,9 @@ function ToolSample({ sample, color }: { sample: ToolMeta["sample"]; color: stri
   if (sample === "eraser") {
     return (
       <div className="relative h-8 w-24">
-        <div className="absolute left-0 right-0 top-1/2 h-4 -translate-y-1/2 rounded-full bg-white/8" />
-        <div className="absolute left-1 right-8 top-1/2 h-3.5 -translate-y-1/2 rounded-full bg-white/12" />
-        <div className="absolute right-1 top-1/2 h-5 w-8 -translate-y-1/2 rounded-lg bg-[#f1a1ad]" />
+        <div className="absolute left-0 right-0 top-1/2 h-4 -translate-y-1/2 rounded-full bg-foreground/8" />
+        <div className="absolute left-1 right-8 top-1/2 h-3.5 -translate-y-1/2 rounded-full bg-foreground/12" />
+        <div className="absolute right-1 top-1/2 h-5 w-8 -translate-y-1/2 rounded-lg" style={{ backgroundColor: ERASER_TIP_PINK }} />
       </div>
     );
   }
@@ -236,16 +224,16 @@ function ToolCard({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "flex w-full items-center gap-4 rounded-3xl border px-4 py-4 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff] focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950",
+        "flex w-full items-center gap-4 rounded-3xl border px-4 py-4 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950",
         active
-          ? "border-white/14 bg-white/8 shadow-[0_12px_30px_rgba(0,0,0,0.35)]"
-          : "border-transparent bg-white/[0.04] hover:border-white/10 hover:bg-white/[0.06]"
+          ? "border-input bg-foreground/8 shadow-lg"
+          : "border-transparent bg-foreground/5 hover:border-border hover:bg-foreground/5"
       )}
     >
       <ToolSample sample={tool.sample} color={color} />
       <div className="min-w-0 flex-1">
-        <div className="text-lg font-medium text-white">{tool.label}</div>
-        <div className="mt-0.5 text-xs text-white/45">{tool.hint}</div>
+        <div className="text-lg font-medium text-foreground">{tool.label}</div>
+        <div className="mt-0.5 text-xs text-muted-foreground">{tool.hint}</div>
       </div>
     </button>
   );
@@ -258,7 +246,7 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
   const stageViewportRef = useRef<HTMLDivElement>(null);
 
   const [tool, setTool] = useState<Tool>("pen");
-  const [color, setColor] = useState("#ffd60a");
+  const [color, setColor] = useState(DRAWING_DEFAULT_COLOR);
   const [brushSize, setBrushSize] = useState(7);
   const [opacity, setOpacity] = useState(100);
   const [undoStack, setUndoStack] = useState<string[]>([]);
@@ -382,7 +370,7 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
 
     if (toolRef.current === "eraser") {
       brush.width = Math.max(10, Math.round(baseWidth * 1.8));
-      brush.color = "#000000";
+      brush.color = INK_BLACK;
       (brush as unknown as { opacity?: number }).opacity = 1;
     }
 
@@ -659,26 +647,26 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
     <div className="space-y-5">
       <div>
         <div className="mb-3 flex items-center justify-between gap-3">
-          <span className="text-sm font-medium text-white/72">Color</span>
-          <label className="flex h-10 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 px-3 text-xs font-medium text-white/75 transition-all hover:border-white/20 hover:bg-white/10">
+          <span className="text-sm font-medium text-muted-foreground">Color</span>
+          <label className="flex h-10 cursor-pointer items-center justify-center rounded-full border border-border bg-foreground/5 px-3 text-xs font-medium text-muted-foreground transition-all hover:border-input hover:bg-foreground/10">
             Custom
             <input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="sr-only" aria-label="Власний колір" />
           </label>
         </div>
         <div className="flex flex-wrap gap-3">
-          {PRESET_COLORS.map(({ hex, label }) => (
+          {DRAWING_PRESET_COLORS.map(({ hex, label }) => (
             <button
               key={hex}
               type="button"
               aria-label={label}
               onClick={() => setColor(hex)}
               className={cn(
-                "relative size-11 rounded-full border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff] focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950",
-                color === hex ? "scale-110 border-white shadow-[0_0_0_16px_rgba(255,214,10,0.08)]" : "border-white/10 hover:scale-105"
+                "relative size-11 rounded-full border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950",
+                color === hex ? "scale-110 border-foreground shadow-[0_0_0_16px_var(--color-accent)]" : "border-border hover:scale-105"
               )}
               style={{ backgroundColor: hex }}
             >
-              {color === hex && <span className="absolute inset-0 rounded-full ring-2 ring-white/70 ring-offset-2 ring-offset-transparent" />}
+              {color === hex && <span className="absolute inset-0 rounded-full ring-2 ring-foreground/70 ring-offset-2 ring-offset-transparent" />}
             </button>
           ))}
         </div>
@@ -691,7 +679,7 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
       )}
 
       <div>
-        <div className="mb-3 text-sm font-medium text-white/72">Tool</div>
+        <div className="mb-3 text-sm font-medium text-muted-foreground">Tool</div>
         <div className="space-y-3">
           {TOOLS.map((item) => (
             <ToolCard key={item.id} tool={item} active={tool === item.id} color={color} onClick={() => setTool(item.id)} />
@@ -702,12 +690,12 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
   );
 
   return (
-    <div className="fixed inset-0 z-[10002] flex flex-col overflow-hidden bg-[#1f1f1f] text-white" role="dialog" aria-modal="true" aria-label="Студія малювання">
-      <div className="shrink-0 border-b border-white/8 bg-[#202020] px-4 py-3 sm:px-5">
+    <div className="fixed inset-0 z-[10002] flex flex-col overflow-hidden inverse bg-background text-foreground" role="dialog" aria-modal="true" aria-label="Студія малювання">
+      <div className="shrink-0 border-b border-border bg-card px-4 py-3 sm:px-5">
         <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="text-sm font-semibold">Студія малювання</p>
-            <p className="mt-0.5 text-xs text-white/45">
+            <p className="mt-0.5 text-xs text-muted-foreground">
               {initialImageUrl ? "Редагування існуючого drawing-шару" : "Нове полотно з прозорим фоном"}
             </p>
           </div>
@@ -718,7 +706,7 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
               onClick={undo}
               disabled={undoStack.length <= 1}
               aria-label="Скасувати"
-              className="flex size-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition-all hover:bg-white/10 disabled:opacity-35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]"
+              className="flex size-10 items-center justify-center rounded-full border border-border bg-foreground/5 text-muted-foreground transition-all hover:bg-foreground/10 disabled:opacity-35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <RotateCcw className="size-4" />
             </button>
@@ -727,7 +715,7 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
               onClick={redo}
               disabled={redoStack.length === 0}
               aria-label="Повторити"
-              className="flex size-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition-all hover:bg-white/10 disabled:opacity-35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]"
+              className="flex size-10 items-center justify-center rounded-full border border-border bg-foreground/5 text-muted-foreground transition-all hover:bg-foreground/10 disabled:opacity-35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <RotateCw className="size-4" />
             </button>
@@ -735,7 +723,7 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
               type="button"
               onClick={clear}
               aria-label="Очистити"
-              className="flex size-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition-all hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]"
+              className="flex size-10 items-center justify-center rounded-full border border-border bg-foreground/5 text-muted-foreground transition-all hover:bg-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <Trash2 className="size-4" />
             </button>
@@ -743,7 +731,7 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
               type="button"
               onClick={onClose}
               aria-label="Закрити"
-              className="flex size-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/80 transition-all hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]"
+              className="flex size-10 items-center justify-center rounded-full border border-border bg-foreground/5 text-foreground transition-all hover:bg-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <X className="size-4" />
             </button>
@@ -751,7 +739,7 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
         </div>
       </div>
 
-      <div className="shrink-0 border-b border-white/8 bg-[#202020] px-3 py-3 sm:px-5">
+      <div className="shrink-0 border-b border-border bg-card px-3 py-3 sm:px-5">
         <div className="mx-auto flex max-w-[1600px] items-center gap-2 overflow-x-auto">
           {quickTools.map(({ id, label, Icon }) => (
             <button
@@ -760,11 +748,11 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
               onClick={() => setTool(id)}
               aria-pressed={tool === id}
               className={cn(
-                "flex min-w-[72px] flex-col items-center gap-1 rounded-3xl px-3 py-2 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]",
-                tool === id ? "bg-[#2e2e2e] text-[#0a84ff] shadow-[inset_0_-3px_0_0_#0a84ff]" : "text-white/68 hover:bg-white/6"
+                "flex min-w-[72px] flex-col items-center gap-1 rounded-3xl px-3 py-2 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                tool === id ? "bg-accent text-brand shadow-[inset_0_-3px_0_0_var(--color-brand)]" : "text-muted-foreground hover:bg-foreground/6"
               )}
             >
-              <span className={cn("flex size-11 items-center justify-center rounded-full border", tool === id ? "border-[#0a84ff]/30 bg-[#3a3a3a]" : "border-white/10 bg-white/5") }>
+              <span className={cn("flex size-11 items-center justify-center rounded-full border", tool === id ? "border-brand/30 bg-secondary" : "border-border bg-foreground/5") }>
                 <Icon className="size-5" />
               </span>
               {label}
@@ -774,10 +762,9 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
       </div>
 
       <div className="flex flex-1 min-h-0">
-        <div ref={stageViewportRef} className="relative flex min-h-0 flex-1 items-center justify-center overflow-auto bg-[#242424] px-3 pb-[24rem] pt-4 sm:px-6 lg:px-8 lg:pb-8 lg:pt-8">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.03),transparent_30%)]" />
-          <div className="relative rounded-[26px] border border-white/10 bg-white/[0.03] p-3 shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
-            <div className="overflow-hidden rounded-[18px] border border-white/8 bg-[linear-gradient(45deg,rgba(255,255,255,0.05)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.05)_50%,rgba(255,255,255,0.05)_75%,transparent_75%,transparent)] bg-[length:24px_24px]">
+        <div ref={stageViewportRef} className="relative flex min-h-0 flex-1 items-center justify-center overflow-auto bg-muted px-3 pb-[24rem] pt-4 sm:px-6 lg:px-8 lg:pb-8 lg:pt-8">
+          <div className="relative rounded-media border border-border bg-foreground/5 p-3 shadow-2xl">
+            <div className="overflow-hidden rounded-[18px] border border-border bg-[linear-gradient(45deg,rgba(255,255,255,0.05)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.05)_50%,rgba(255,255,255,0.05)_75%,transparent_75%,transparent)] bg-[length:24px_24px]">
               <div style={{ width: `${canvasDisplay.width}px`, height: `${canvasDisplay.height}px` }}>
                 <canvas ref={canvasElRef} style={{ width: "100%", height: "100%", display: "block" }} />
               </div>
@@ -785,27 +772,27 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
           </div>
         </div>
 
-        <aside className="hidden h-full w-[420px] shrink-0 overflow-y-auto border-l border-white/8 bg-[#202020] px-5 py-5 lg:block">
+        <aside className="hidden h-full w-[420px] shrink-0 overflow-y-auto border-l border-border bg-card px-5 py-5 lg:block">
           {inspector}
         </aside>
       </div>
 
-      <div className="lg:hidden shrink-0 border-t border-white/8 bg-[#202020] px-4 pt-4 pb-[max(16px,env(safe-area-inset-bottom))]">
+      <div className="lg:hidden shrink-0 border-t border-border bg-card px-4 pt-4 pb-[max(16px,env(safe-area-inset-bottom))]">
         <div className="mx-auto max-h-[48svh] max-w-[960px] overflow-y-auto pr-1">
           {inspector}
         </div>
       </div>
 
-      <div className="shrink-0 border-t border-white/8 bg-[#202020] px-4 py-3 sm:px-5">
+      <div className="shrink-0 border-t border-border bg-card px-4 py-3 sm:px-5">
         <div className="mx-auto flex max-w-[1600px] flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="text-xs text-white/45">
+          <div className="text-xs text-muted-foreground">
             PNG автоматично обрізається по контуру малюнка. Гарячі клавіші: Cmd/Ctrl+Z, Shift+Cmd/Ctrl+Z, Cmd/Ctrl+Enter.
           </div>
           <div className="grid grid-cols-2 gap-2 sm:flex">
             <button
               type="button"
               onClick={onClose}
-              className="inline-flex h-11 items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 text-sm font-semibold text-white/82 transition-all hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]"
+              className="inline-flex h-11 items-center justify-center rounded-full border border-border bg-foreground/5 px-5 text-sm font-semibold text-foreground transition-all hover:bg-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Закрити
             </button>
@@ -813,7 +800,7 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
               type="button"
               onClick={() => void handlePaste()}
               disabled={pasting}
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-semibold text-[#1f1f1f] transition-all hover:bg-white/90 disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-foreground px-5 text-sm font-semibold text-background transition-all hover:bg-foreground/90 disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {pasting ? <RefreshCw className="size-4 animate-spin" /> : <Check className="size-4" />}
               Вставити на полотно

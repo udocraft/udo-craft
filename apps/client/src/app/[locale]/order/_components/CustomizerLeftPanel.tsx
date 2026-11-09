@@ -5,6 +5,7 @@ import type { Product, Material, ProductColorVariant, PrintLayer } from "@udo-cr
 import LayersPanel, { type PrintTypePricingRow } from "@/components/LayersPanel";
 import { ArrowLeft, Check } from "lucide-react";
 import type { TextLayerPatch } from "./editor/TextPanel";
+import { isLightSwatch, TICK_ON_LIGHT, TICK_ON_DARK } from "@/lib/canvas-colors";
 
 interface ProductWithConfig extends Product {
   size_chart_id?: string | null;
@@ -89,12 +90,12 @@ export function CustomizerLeftPanel({
               const mat = materials.find((m) => m.id === v.material_id);
               if (!mat) return null;
               const isSelected = selectedVariant?.id === v.id;
-              const isWhite = mat.hex_code.toLowerCase() === "#ffffff" || mat.hex_code.toLowerCase() === "#f5f5f5";
+              const isWhite = isLightSwatch(mat.hex_code);
               return (
                 <button key={v.id} onClick={() => onColorSelect(mat.name, v)} title={mat.name}
                   className={`cursor-pointer relative size-8 rounded-full transition-all ${isSelected ? "ring-2 ring-primary ring-offset-2 scale-110" : "hover:scale-105"} ${isWhite ? "border border-border" : ""}`}
                   style={{ backgroundColor: mat.hex_code }}>
-                  {isSelected && <Check className="absolute inset-0 m-auto size-3" style={{ color: isWhite ? "#1a1a1a" : "#fff" }} />}
+                  {isSelected && <Check className="absolute inset-0 m-auto size-3" style={{ color: isWhite ? TICK_ON_LIGHT : TICK_ON_DARK }} />}
                 </button>
               );
             })}

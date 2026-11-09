@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { TEXT_FONTS, type PrintLayer, type TextFontId, type PrintTypePricingRow } from "@udo-craft/shared";
 import type { TextLayerPatch } from "./TextPanel";
+import { INK_BLACK, INK_WHITE, PRINT_SWATCHES } from "@/lib/canvas-colors";
 
 // ── Types ─────────────────────────────────────────────────────────────────
 
@@ -150,11 +151,7 @@ function ColorSwatch({
   title: string;
 }) {
   const [open, setOpen] = useState(false);
-  const SWATCHES = [
-    "#000000", "#ffffff", "#ef4444", "#f97316",
-    "#eab308", "#22c55e", "#3b82f6", "#8b5cf6",
-    "#ec4899", "#06b6d4", "#1B3BFF", "#6b7280",
-  ];
+  const SWATCHES = PRINT_SWATCHES;
   return (
     <div className="relative shrink-0">
       <button
@@ -194,7 +191,7 @@ function ColorSwatch({
                 className={[
                   "w-5 h-5 rounded border transition-all",
                   value === s ? "border-primary ring-1 ring-primary" : "border-border",
-                  s === "#ffffff" ? "border-border" : "",
+                  s === INK_WHITE ? "border-border" : "",
                 ].join(" ")}
               />
             ))}
@@ -371,7 +368,7 @@ function TextControls({
         <Italic className="size-3.5" />
       </ToolBtn>
       <ColorSwatch
-        value={layer.textColor ?? "#000000"}
+        value={layer.textColor ?? INK_BLACK}
         onChange={(v) => patch({ textColor: v })}
         title="Колір тексту"
       />
@@ -467,7 +464,7 @@ function SvgControls({
         <span className="text-muted-foreground">{mode === "fill" ? "Заливка" : "Обводка"}</span>
       </button>
       <ColorSwatch
-        value={(mode === "fill" ? layer.svgFillColor : layer.svgStrokeColor) ?? "#000000"}
+        value={(mode === "fill" ? layer.svgFillColor : layer.svgStrokeColor) ?? INK_BLACK}
         onChange={(v) => onTextChange(layer.id, { [mode === "fill" ? "svgFillColor" : "svgStrokeColor"]: v } as any)}
         title={mode === "fill" ? "Колір заливки" : "Колір обводки"}
       />
