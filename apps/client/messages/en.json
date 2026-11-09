@@ -16,7 +16,10 @@
     "signIn": "Sign In",
     "cartItems": "Cart — {count} items",
     "mainNav": "Main navigation",
-    "logoLink": "U:DO CRAFT — back to home"
+    "logoLink": "U:DO CRAFT — back to home",
+    "skipToContent": "Skip to main content",
+    "designMerch": "Design your merch",
+    "getQuote": "Get a quote"
   },
   "homeStats": {
     "stat3Suffix": " days",

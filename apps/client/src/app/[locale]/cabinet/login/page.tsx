@@ -15,7 +15,7 @@ function LoginPage() {
   const returnTo = searchParams.get("returnTo") || "/cabinet";
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-[#f0f0ff] via-background to-background flex items-center justify-center px-4 py-12">
+    <main id="main" className="min-h-screen bg-gradient-to-br from-[#f0f0ff] via-background to-background flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
           <Link href="/" aria-label="U:DO CRAFT" className="inline-block">

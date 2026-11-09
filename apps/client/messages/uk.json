@@ -16,7 +16,10 @@
     "signIn": "Увійти",
     "cartItems": "Кошик — {count} товарів",
     "mainNav": "Головна навігація",
-    "logoLink": "U:DO CRAFT — повернутися на головну"
+    "logoLink": "U:DO CRAFT — повернутися на головну",
+    "skipToContent": "Перейти до основного вмісту",
+    "designMerch": "Створити мерч",
+    "getQuote": "Отримати розрахунок"
   },
   "homeStats": {
     "stat3Suffix": " дн",

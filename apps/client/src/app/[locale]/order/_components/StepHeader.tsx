@@ -34,7 +34,7 @@ export function StepHeader({ step, stepIdx, cartLength, onNavigate }: StepHeader
       >
         <ArrowLeft className="size-4" />
       </Link>
-      <p className="z-10 ml-3 hidden shrink-0 text-sm font-semibold tracking-tight md:block">{t("orderTitle")}</p>
+      <h1 className="z-10 ml-3 shrink-0 text-sm font-semibold tracking-tight max-md:sr-only">{t("orderTitle")}</h1>
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="flex items-center gap-1.5 pointer-events-auto">
           {STEPS.map((s, i) => {

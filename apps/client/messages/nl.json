@@ -16,7 +16,10 @@
     "signIn": "Inloggen",
     "cartItems": "Winkelwagen — {count} artikelen",
     "mainNav": "Hoofdnavigatie",
-    "logoLink": "U:DO CRAFT — terug naar home"
+    "logoLink": "U:DO CRAFT — terug naar home",
+    "skipToContent": "Ga naar hoofdinhoud",
+    "designMerch": "Ontwerp je merch",
+    "getQuote": "Offerte aanvragen"
   },
   "homeStats": {
     "stat3Suffix": " dagen",

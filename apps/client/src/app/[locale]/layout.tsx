@@ -1,15 +1,35 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { PageTracker } from "@/components/PageTracker";
 import { Toaster } from "@/components/ui/sonner";
 import { ConsentBanner } from "@/components/consent/ConsentBanner";
-import { HtmlLang } from "@/components/HtmlLang";
 import { ConsentScripts } from "@/components/consent/ConsentScripts";
 import { MotionProvider } from "@/components/MotionProvider";
 import { SoundProvider } from "@/app/_components/SoundProvider";
 import { locales } from "@/i18n/routing";
+import "../globals.css";
+
+// Self-hosted Geist (Plan.md D5). next/font preloads the files and generates a
+// size-adjusted fallback, so swapping causes no layout shift.
+const geistSans = localFont({
+  src: "../fonts/GeistVF.woff",
+  variable: "--font-geist-sans",
+  weight: "100 900",
+  display: "swap",
+  adjustFontFallback: "Arial",
+});
+
+const geistMono = localFont({
+  src: "../fonts/GeistMonoVF.woff",
+  variable: "--font-geist-mono",
+  weight: "100 900",
+  display: "swap",
+  adjustFontFallback: "Arial",
+  preload: false,
+});
 
 export async function generateMetadata({
   params,
@@ -57,16 +77,23 @@ export default async function LocaleLayout({
   }
 
   const messages = await getMessages();
+  const tNav = await getTranslations({ locale, namespace: "nav" });
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
-      <PageTracker />
-      <SoundProvider />
-      <MotionProvider>{children}</MotionProvider>
-      <Toaster richColors position="top-right" />
-      <HtmlLang />
-      <ConsentScripts />
-      <ConsentBanner />
-    </NextIntlClientProvider>
+    <html lang={locale} className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
+      <body className="min-h-screen bg-background text-foreground antialiased" suppressHydrationWarning>
+        <a href="#main" className="skip-link">
+          {tNav("skipToContent")}
+        </a>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <PageTracker />
+          <SoundProvider />
+          <MotionProvider>{children}</MotionProvider>
+          <Toaster richColors position="top-right" />
+          <ConsentScripts />
+          <ConsentBanner />
+        </NextIntlClientProvider>
+      </body>
+    </html>
   );
 }

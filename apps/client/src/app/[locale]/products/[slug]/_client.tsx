@@ -213,7 +213,7 @@ export function ProductDetailClient({
     <div className="min-h-screen bg-background flex flex-col">
       <SiteHeader />
 
-      <main className="flex-1 pt-24">
+      <main id="main" className="flex-1 pt-24">
 
         {/* ── Breadcrumb ─────────────────────────────────────────────────── */}
         <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-4">

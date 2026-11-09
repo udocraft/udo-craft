@@ -15,7 +15,7 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-8">
+    <main id="main" className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-8">
       <div className="max-w-md text-center space-y-6">
         <h1 className="text-4xl font-bold">Щось пішло не так</h1>
         <p className="text-muted-foreground text-lg">
@@ -28,6 +28,6 @@ export default function GlobalError({
           Спробувати знову
         </button>
       </div>
-    </div>
+    </main>
   );
 }

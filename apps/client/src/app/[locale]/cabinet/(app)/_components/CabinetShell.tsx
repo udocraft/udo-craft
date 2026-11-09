@@ -96,7 +96,7 @@ function Frame({ children }: { children: React.ReactNode }) {
             <BrandLogoFull className="h-5 w-auto text-primary" color="var(--color-primary, #1B18AC)" />
           </Link>
         </header>
-        <main className="min-h-0 flex-1">{children}</main>
+        <main id="main" className="min-h-0 flex-1">{children}</main>
       </div>
 
       <Sheet open={open} onOpenChange={setOpen}>

@@ -16,7 +16,10 @@
     "signIn": "Zaloguj się",
     "cartItems": "Koszyk — {count} produktów",
     "mainNav": "Nawigacja główna",
-    "logoLink": "U:DO CRAFT — wróć na stronę główną"
+    "logoLink": "U:DO CRAFT — wróć na stronę główną",
+    "skipToContent": "Przejdź do głównej treści",
+    "designMerch": "Zaprojektuj swój merch",
+    "getQuote": "Poproś o wycenę"
   },
   "homeStats": {
     "stat3Suffix": " dni",
