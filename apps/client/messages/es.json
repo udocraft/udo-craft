@@ -878,5 +878,10 @@
     "hint": "PNG, JPG, SVG o WebP, hasta 5 MB",
     "note": "Solo una vista previa. El editor completo define el tamaño y las zonas de impresión.",
     "tooLarge": "El archivo supera los 5 MB. Elige una imagen más pequeña."
+  },
+  "checkoutErrors": {
+    "required": "Campo obligatorio",
+    "email": "Introduce un correo válido, por ejemplo nombre@empresa.com",
+    "phone": "Introduce un teléfono con al menos 9 dígitos"
   }
 }

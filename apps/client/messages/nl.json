@@ -878,5 +878,10 @@
     "hint": "PNG, JPG, SVG of WebP, tot 5 MB",
     "note": "Alleen een voorbeeld. In de volledige editor stel je formaat en drukzones in.",
     "tooLarge": "Het bestand is groter dan 5 MB. Kies een kleinere afbeelding."
+  },
+  "checkoutErrors": {
+    "required": "Verplicht veld",
+    "email": "Vul een geldig e-mailadres in, bijvoorbeeld naam@bedrijf.nl",
+    "phone": "Vul een telefoonnummer in met minstens 9 cijfers"
   }
 }

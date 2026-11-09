@@ -878,5 +878,10 @@
     "hint": "PNG, JPG, SVG ou WebP, até 5 MB",
     "note": "Apenas uma pré-visualização. O editor completo define o tamanho e as zonas de impressão.",
     "tooLarge": "O ficheiro tem mais de 5 MB. Escolha uma imagem mais pequena."
+  },
+  "checkoutErrors": {
+    "required": "Campo obrigatório",
+    "email": "Introduza um e-mail válido, por exemplo nome@empresa.pt",
+    "phone": "Introduza um telefone com pelo menos 9 dígitos"
   }
 }
