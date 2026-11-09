@@ -25,7 +25,8 @@ This document defines the mandatory UI/UX standards for both **Client** and **Ad
 ### 4. Responsive Layout Standards
 *   **Outer Padding:** Use `px-4 md:px-6` for headers, toolbars, and main content wrappers.
 *   **Content Padding:** Standardize on `p-6` (24px) for cards and inner sections.
-*   **Containers:** Use consistent max-widths for client-facing pages (e.g., `max-w-7xl`).
+*   **Containers:** Use the `Container` primitive from `@udo-craft/ui` (`default` = `max-w-6xl`, `prose` = `max-w-3xl`) with the `--spacing-gutter` gutter, and `Section` / `SectionHeader` for page bands. Tokens live in `apps/client/src/app/globals.css` (`@theme`).
+*   **Type & colour:** No `text-[...]` or `bg-[#...]` classes (ESLint blocks them). Use the type scale (`text-xs` is the 12px floor, `text-eyebrow`, `text-h1`…`text-h4`, `text-lede`) and colour tokens; wrap dark sections in `.inverse` (or `Section tone="inverse"`).
 
 ## 🛠 Role-Specific Layouts
 
