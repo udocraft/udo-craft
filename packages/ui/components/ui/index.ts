@@ -24,3 +24,6 @@ export * from './tabs';
 export * from './textarea';
 export * from './tooltip';
 export * from './accordion';
+export * from './container';
+export * from './section';
+export * from './section-header';
