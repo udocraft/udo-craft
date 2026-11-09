@@ -40,7 +40,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
       aria-label={t("mainNav")}
     >
       <div
-        className={`pointer-events-auto inline-flex h-14 items-center gap-1.5 rounded-full border px-3 shadow-[0_12px_40px_rgba(12,16,34,0.12)] backdrop-blur-2xl md:gap-2 ${
+        className={`pointer-events-auto inline-flex max-w-full h-14 items-center gap-1.5 rounded-full border px-3 shadow-[0_12px_40px_rgba(12,16,34,0.12)] backdrop-blur-2xl md:gap-2 ${
           isLight
             ? "bg-background/90 border-border/80"
             : "bg-white/8 backdrop-blur-xl border-white/12 shadow-lg shadow-black/20"
@@ -52,7 +52,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
         </Link>
 
         {/* Nav links — always visible on desktop */}
-        <div className="hidden md:flex items-center">
+        <div className="hidden xl:flex items-center">
           <div className={`w-px h-5 shrink-0 mx-1 ${isLight ? "bg-border" : "bg-white/12"}`} aria-hidden="true" />
           {navLinks.map((l) => (
             <Link
@@ -122,10 +122,10 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
           </button>
 
           {/* One primary CTA, one secondary (Plan.md 3.1). */}
-          <Button asChild variant="outline" className="ml-1 hidden lg:inline-flex">
+          <Button asChild variant="outline" className="ml-1 hidden xl:inline-flex">
             <Link href="/#contact">{t("getQuote")}</Link>
             </Button>
-            <Button asChild variant="primary" className="ml-1 hidden sm:inline-flex">
+            <Button asChild variant="primary" className="ml-1 hidden md:inline-flex">
               <Link href="/order">
                 {t("designMerch")} <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
@@ -137,7 +137,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
             onClick={() => { sound.toggle(!menuOpen); setMenuOpen(!menuOpen); }}
             aria-label={menuOpen ? t("closeMenu") : t("openMenu")}
             aria-expanded={menuOpen}
-            className={`md:hidden flex items-center justify-center w-11 h-11 rounded-full transition-colors duration-200 ml-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+            className={`xl:hidden flex items-center justify-center w-11 h-11 rounded-full transition-colors duration-200 ml-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               isLight ? "hover:bg-muted text-foreground" : "hover:bg-white/10 text-white/70"
             }`}
           >
