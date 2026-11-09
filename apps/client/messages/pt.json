@@ -919,5 +919,28 @@
     "required": "Campo obrigatório",
     "email": "Introduza um e-mail válido, por exemplo nome@empresa.pt",
     "phone": "Introduza um telefone com pelo menos 9 dígitos"
+  },
+  "drawing": {
+    "title": "Estúdio de desenho",
+    "done": "Concluir",
+    "close": "Fechar",
+    "undo": "Anular",
+    "redo": "Refazer",
+    "clear": "Limpar tela",
+    "cleared": "Tela limpa",
+    "empty": "A tela está vazia. Desenhe algo primeiro.",
+    "size": "Tamanho",
+    "opacity": "Opacidade",
+    "color": "Cor",
+    "customColor": "Cor personalizada",
+    "pen": "Caneta",
+    "marker": "Marcador",
+    "neon": "Néon",
+    "blur": "Spray",
+    "arrow": "Seta",
+    "eraser": "Borracha",
+    "hint": "Desenhe diretamente na peça com caneta, marcador, néon ou spray.",
+    "new": "Novo desenho",
+    "editSelected": "Editar o desenho selecionado"
   }
 }

@@ -316,6 +316,7 @@ export function Customizer({
         printZoneBounds={{ left: 0, top: 0, width: 0, height: 0 }}
         editRequestLayerId={drawingEditLayerId}
         onEditRequestHandled={() => setDrawingEditLayerId(null)}
+        garmentImageUrl={productImages[s.activeSide] ?? Object.values(productImages)[0] ?? null}
       />
     );
     if (tab === "text") return (

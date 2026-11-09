@@ -919,5 +919,28 @@
     "required": "Verplicht veld",
     "email": "Vul een geldig e-mailadres in, bijvoorbeeld naam@bedrijf.nl",
     "phone": "Vul een telefoonnummer in met minstens 9 cijfers"
+  },
+  "drawing": {
+    "title": "Tekenstudio",
+    "done": "Klaar",
+    "close": "Sluiten",
+    "undo": "Ongedaan maken",
+    "redo": "Opnieuw",
+    "clear": "Canvas wissen",
+    "cleared": "Canvas gewist",
+    "empty": "Het canvas is leeg. Teken eerst iets.",
+    "size": "Grootte",
+    "opacity": "Dekking",
+    "color": "Kleur",
+    "customColor": "Eigen kleur",
+    "pen": "Pen",
+    "marker": "Marker",
+    "neon": "Neon",
+    "blur": "Spray",
+    "arrow": "Pijl",
+    "eraser": "Gum",
+    "hint": "Teken direct op het kledingstuk met pen, marker, neon of spray.",
+    "new": "Nieuwe tekening",
+    "editSelected": "Geselecteerde tekening bewerken"
   }
 }

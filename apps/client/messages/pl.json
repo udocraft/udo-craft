@@ -919,5 +919,28 @@
     "required": "Pole wymagane",
     "email": "Podaj poprawny adres e-mail, na przykład imie@firma.pl",
     "phone": "Podaj numer telefonu z co najmniej 9 cyframi"
+  },
+  "drawing": {
+    "title": "Studio rysowania",
+    "done": "Gotowe",
+    "close": "Zamknij",
+    "undo": "Cofnij",
+    "redo": "Ponów",
+    "clear": "Wyczyść płótno",
+    "cleared": "Płótno wyczyszczone",
+    "empty": "Płótno jest puste. Najpierw coś narysuj.",
+    "size": "Rozmiar",
+    "opacity": "Krycie",
+    "color": "Kolor",
+    "customColor": "Własny kolor",
+    "pen": "Długopis",
+    "marker": "Marker",
+    "neon": "Neon",
+    "blur": "Spray",
+    "arrow": "Strzałka",
+    "eraser": "Gumka",
+    "hint": "Rysuj bezpośrednio na ubraniu długopisem, markerem, neonem lub sprayem.",
+    "new": "Nowy rysunek",
+    "editSelected": "Edytuj wybrany rysunek"
   }
 }

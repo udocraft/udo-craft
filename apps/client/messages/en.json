@@ -919,5 +919,28 @@
     "required": "Required field",
     "email": "Enter a valid email, for example name@company.com",
     "phone": "Enter a phone number with at least 9 digits"
+  },
+  "drawing": {
+    "title": "Drawing studio",
+    "done": "Done",
+    "close": "Close",
+    "undo": "Undo",
+    "redo": "Redo",
+    "clear": "Clear canvas",
+    "cleared": "Canvas cleared",
+    "empty": "The canvas is empty. Draw something first.",
+    "size": "Size",
+    "opacity": "Opacity",
+    "color": "Colour",
+    "customColor": "Custom colour",
+    "pen": "Pen",
+    "marker": "Marker",
+    "neon": "Neon",
+    "blur": "Spray",
+    "arrow": "Arrow",
+    "eraser": "Eraser",
+    "hint": "Draw right on the garment with a pen, marker, neon or spray.",
+    "new": "New drawing",
+    "editSelected": "Edit selected drawing"
   }
 }

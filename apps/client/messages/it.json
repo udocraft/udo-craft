@@ -919,5 +919,28 @@
     "required": "Campo obbligatorio",
     "email": "Inserisci un'e-mail valida, ad esempio nome@azienda.it",
     "phone": "Inserisci un numero di telefono di almeno 9 cifre"
+  },
+  "drawing": {
+    "title": "Studio di disegno",
+    "done": "Fatto",
+    "close": "Chiudi",
+    "undo": "Annulla",
+    "redo": "Ripeti",
+    "clear": "Pulisci tela",
+    "cleared": "Tela pulita",
+    "empty": "La tela è vuota. Disegna prima qualcosa.",
+    "size": "Dimensione",
+    "opacity": "Opacità",
+    "color": "Colore",
+    "customColor": "Colore personalizzato",
+    "pen": "Penna",
+    "marker": "Pennarello",
+    "neon": "Neon",
+    "blur": "Spray",
+    "arrow": "Freccia",
+    "eraser": "Gomma",
+    "hint": "Disegna direttamente sul capo con penna, pennarello, neon o spray.",
+    "new": "Nuovo disegno",
+    "editSelected": "Modifica il disegno selezionato"
   }
 }

@@ -919,5 +919,28 @@
     "required": "Obligatoriskt fält",
     "email": "Ange en giltig e-postadress, till exempel namn@foretag.se",
     "phone": "Ange ett telefonnummer med minst 9 siffror"
+  },
+  "drawing": {
+    "title": "Ritstudio",
+    "done": "Klar",
+    "close": "Stäng",
+    "undo": "Ångra",
+    "redo": "Gör om",
+    "clear": "Rensa duken",
+    "cleared": "Duken rensad",
+    "empty": "Duken är tom. Rita något först.",
+    "size": "Storlek",
+    "opacity": "Opacitet",
+    "color": "Färg",
+    "customColor": "Egen färg",
+    "pen": "Penna",
+    "marker": "Märkpenna",
+    "neon": "Neon",
+    "blur": "Sprej",
+    "arrow": "Pil",
+    "eraser": "Suddgummi",
+    "hint": "Rita direkt på plagget med penna, märkpenna, neon eller sprej.",
+    "new": "Ny teckning",
+    "editSelected": "Redigera vald teckning"
   }
 }

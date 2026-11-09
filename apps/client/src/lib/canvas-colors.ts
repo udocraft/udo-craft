@@ -68,3 +68,19 @@ export const OG_BACKGROUND = "#0d1020";
 export const OG_FOREGROUND = "#fafaff";
 export const OG_MUTED = "#b4b8d0";
 export const OG_ACCENT = "#6d7bff";
+
+/** Drawing-studio tool illustrations (physical materials, not UI chrome). */
+export const TOOL_ART = {
+  bodyDark: "#2b2d33",
+  bodyDarkEdge: "#17181c",
+  bodyLight: "#f4f4f6",
+  bodyLightEdge: "#c9cbd3",
+  metal: "#b9bdc7",
+  metalEdge: "#8b909c",
+  wood: "#e7c391",
+  woodEdge: "#c79a5d",
+  glass: "#eef2ff",
+  eraser: ERASER_TIP_PINK,
+  eraserEdge: "#d97f8e",
+  highlight: "#ffffff",
+} as const;

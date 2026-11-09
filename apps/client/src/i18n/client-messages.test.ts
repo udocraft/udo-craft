@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import { describe, expect, it } from "vitest";
-import { BASE_CLIENT_NAMESPACES, CABINET_NAMESPACES, pickMessages } from "./client-messages";
+import { BASE_CLIENT_NAMESPACES, CABINET_NAMESPACES, ORDER_NAMESPACES, pickMessages } from "./client-messages";
 
 const SRC = join(__dirname, "..");
 
@@ -36,6 +36,7 @@ describe("client message namespaces", () => {
       if ((CABINET_NAMESPACES as readonly string[]).includes(namespace)) {
         return !CABINET_ROUTES.some((r) => file.startsWith(r));
       }
+      if ((ORDER_NAMESPACES as readonly string[]).includes(namespace)) return !file.startsWith("app/[locale]/order/");
       return true;
     });
     expect(missing).toEqual([]);

@@ -919,5 +919,28 @@
     "required": "Campo obligatorio",
     "email": "Introduce un correo válido, por ejemplo nombre@empresa.com",
     "phone": "Introduce un teléfono con al menos 9 dígitos"
+  },
+  "drawing": {
+    "title": "Estudio de dibujo",
+    "done": "Listo",
+    "close": "Cerrar",
+    "undo": "Deshacer",
+    "redo": "Rehacer",
+    "clear": "Limpiar lienzo",
+    "cleared": "Lienzo limpiado",
+    "empty": "El lienzo está vacío. Dibuja algo primero.",
+    "size": "Tamaño",
+    "opacity": "Opacidad",
+    "color": "Color",
+    "customColor": "Color personalizado",
+    "pen": "Bolígrafo",
+    "marker": "Rotulador",
+    "neon": "Neón",
+    "blur": "Spray",
+    "arrow": "Flecha",
+    "eraser": "Goma",
+    "hint": "Dibuja directamente sobre la prenda con bolígrafo, rotulador, neón o spray.",
+    "new": "Nuevo dibujo",
+    "editSelected": "Editar el dibujo seleccionado"
   }
 }

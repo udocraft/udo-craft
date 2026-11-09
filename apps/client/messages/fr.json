@@ -919,5 +919,28 @@
     "required": "Champ obligatoire",
     "email": "Saisissez un e-mail valide, par exemple nom@entreprise.fr",
     "phone": "Saisissez un numéro de téléphone d'au moins 9 chiffres"
+  },
+  "drawing": {
+    "title": "Studio de dessin",
+    "done": "Terminé",
+    "close": "Fermer",
+    "undo": "Annuler",
+    "redo": "Rétablir",
+    "clear": "Effacer la toile",
+    "cleared": "Toile effacée",
+    "empty": "La toile est vide. Dessinez d'abord quelque chose.",
+    "size": "Taille",
+    "opacity": "Opacité",
+    "color": "Couleur",
+    "customColor": "Couleur personnalisée",
+    "pen": "Stylo",
+    "marker": "Marqueur",
+    "neon": "Néon",
+    "blur": "Spray",
+    "arrow": "Flèche",
+    "eraser": "Gomme",
+    "hint": "Dessinez directement sur le vêtement au stylo, marqueur, néon ou spray.",
+    "new": "Nouveau dessin",
+    "editSelected": "Modifier le dessin sélectionné"
   }
 }
