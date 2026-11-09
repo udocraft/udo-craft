@@ -7,7 +7,6 @@ import { PageTracker } from "@/components/PageTracker";
 import { Toaster } from "@/components/ui/sonner";
 import { ConsentBanner } from "@/components/consent/ConsentBanner";
 import { ConsentScripts } from "@/components/consent/ConsentScripts";
-import { MotionProvider } from "@/components/MotionProvider";
 import { SoundProvider } from "@/app/_components/SoundProvider";
 import { locales } from "@/i18n/routing";
 import "../globals.css";
@@ -88,7 +87,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider locale={locale} messages={messages}>
           <PageTracker />
           <SoundProvider />
-          <MotionProvider>{children}</MotionProvider>
+          {children}
           <Toaster richColors position="top-right" />
           <ConsentScripts />
           <ConsentBanner />

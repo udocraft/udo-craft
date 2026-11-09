@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { buttonVariants } from "@udo-craft/ui/components/ui/button-variants";
 import { getAllImages, resolveProductImages } from "@udo-craft/shared/product-images";
@@ -83,14 +84,13 @@ export async function Hero({ ctx }: { ctx: HomeCtx }) {
         <div className="relative mx-auto w-full max-w-[34rem] lg:mx-0">
           <div className="relative aspect-square overflow-hidden rounded-media bg-white ring-1 ring-foreground/10">
             {image && (
-              <img
+              <Image
                 src={image}
                 alt={productName ?? ""}
-                width={1088}
-                height={1088}
-                fetchPriority="high"
-                decoding="async"
-                className="absolute inset-0 size-full object-contain p-6 sm:p-10"
+                fill
+                priority
+                sizes="(min-width: 1024px) 34rem, 92vw"
+                className="object-contain p-6 sm:p-10"
               />
             )}
             <p className="absolute inset-x-4 bottom-4 truncate rounded-card bg-ink px-4 py-3 text-sm text-foreground">
