@@ -945,5 +945,26 @@
     "hint": "Draw right on the garment with a pen, marker, neon or spray.",
     "new": "New drawing",
     "editSelected": "Edit selected drawing"
+  },
+  "share": {
+    "title": "Share design",
+    "accessTitle": "Access and comments",
+    "copy": "Copy link",
+    "copied": "Copied",
+    "send": "Send…",
+    "creating": "Creating the link…",
+    "accessLabel": "Anyone with the link can",
+    "view": "View and comment",
+    "viewHint": "They see the design. Commenting needs sign-in.",
+    "edit": "Edit",
+    "editHint": "After sign-in they can change the design and save it to this link.",
+    "update": "Save current design to the link",
+    "updated": "Link updated",
+    "error": "Could not create the link. Try again.",
+    "comments": "Comments",
+    "noComments": "No comments yet.",
+    "addComment": "Add a comment",
+    "sendComment": "Send",
+    "commentsOff": "Comments are off for this link."
   }
 }

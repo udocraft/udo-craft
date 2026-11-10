@@ -945,5 +945,26 @@
     "hint": "Zeichnen Sie direkt auf dem Kleidungsstück mit Stift, Marker, Neon oder Spray.",
     "new": "Neue Zeichnung",
     "editSelected": "Ausgewählte Zeichnung bearbeiten"
+  },
+  "share": {
+    "title": "Design teilen",
+    "accessTitle": "Zugriff und Kommentare",
+    "copy": "Link kopieren",
+    "copied": "Kopiert",
+    "send": "Senden…",
+    "creating": "Link wird erstellt…",
+    "accessLabel": "Jeder mit dem Link kann",
+    "view": "Ansehen und kommentieren",
+    "viewHint": "Sie sehen das Design. Kommentieren erfordert eine Anmeldung.",
+    "edit": "Bearbeiten",
+    "editHint": "Nach der Anmeldung können sie das Design ändern und in diesem Link speichern.",
+    "update": "Aktuelles Design im Link speichern",
+    "updated": "Link aktualisiert",
+    "error": "Der Link konnte nicht erstellt werden. Bitte erneut versuchen.",
+    "comments": "Kommentare",
+    "noComments": "Noch keine Kommentare.",
+    "addComment": "Kommentar hinzufügen",
+    "sendComment": "Senden",
+    "commentsOff": "Kommentare sind für diesen Link deaktiviert."
   }
 }

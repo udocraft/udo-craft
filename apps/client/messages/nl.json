@@ -945,5 +945,26 @@
     "hint": "Teken direct op het kledingstuk met pen, marker, neon of spray.",
     "new": "Nieuwe tekening",
     "editSelected": "Geselecteerde tekening bewerken"
+  },
+  "share": {
+    "title": "Ontwerp delen",
+    "accessTitle": "Toegang en reacties",
+    "copy": "Link kopiëren",
+    "copied": "Gekopieerd",
+    "send": "Versturen…",
+    "creating": "Link wordt gemaakt…",
+    "accessLabel": "Iedereen met de link kan",
+    "view": "Bekijken en reageren",
+    "viewHint": "Ze zien het ontwerp. Reageren vereist inloggen.",
+    "edit": "Bewerken",
+    "editHint": "Na inloggen kunnen ze het ontwerp wijzigen en in deze link opslaan.",
+    "update": "Huidig ontwerp in de link opslaan",
+    "updated": "Link bijgewerkt",
+    "error": "De link kon niet worden gemaakt. Probeer het opnieuw.",
+    "comments": "Reacties",
+    "noComments": "Nog geen reacties.",
+    "addComment": "Reactie toevoegen",
+    "sendComment": "Versturen",
+    "commentsOff": "Reacties zijn uitgeschakeld voor deze link."
   }
 }

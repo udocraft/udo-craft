@@ -9,7 +9,7 @@ import { QtyPriceContent } from "./QtyPriceContent";
 import { CustomizerLayout } from "./CustomizerLayout";
 import { CustomizerCanvas } from "./CustomizerCanvas";
 import { Button } from "@/components/ui/button";
-import { Check, Copy, Link2, Loader2, MessageSquare, MirrorRound, PencilLine, Save, Share2, ShieldCheck, X } from "lucide-react";
+import { Check, Copy, Loader2, MessageSquare, MirrorRound, Save, Share2, X } from "lucide-react";
 import { useCustomizerState } from "./useCustomizerState";
 import { GenerationDrawer } from "./GenerationDrawer";
 import EditorSidebar from "./editor/EditorSidebar";
@@ -27,9 +27,10 @@ import { PaywallModal } from "@/components/PaywallModal";
 import { AuthModal } from "@/components/AuthModal";
 import { cancelRemoveBg } from "@/lib/remove-bg-client";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import type { CustomizerShareComment, LoadedCustomizerShare, ShareAccess } from "../_lib/customizerShare";
 import { buildSharePayload } from "../_lib/customizerShare";
 import { isLightSwatch } from "@/lib/canvas-colors";
@@ -114,10 +115,12 @@ export function Customizer({
   const [aiDrawerOpen, setAiDrawerOpen] = useState(false);
   const [mobilePriceOpen, setMobilePriceOpen] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
+  const tShare = useTranslations("share");
   const [shareOpen, setShareOpen] = useState(false);
   const [drawingEditLayerId, setDrawingEditLayerId] = useState<string | null>(null);
   const [shareAccess, setShareAccess] = useState<ShareAccess>(initialShare?.access ?? "comment");
   const [shareUrl, setShareUrl] = useState(initialShare && typeof window !== "undefined" ? `${window.location.origin}/order?share=${initialShare.token}` : "");
+  const [shareToken, setShareToken] = useState<string | null>(initialShare?.token ?? null);
   const [shareLoading, setShareLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [shareAuthOpen, setShareAuthOpen] = useState(false);
@@ -129,12 +132,6 @@ export function Customizer({
   const canEditShare = !initialShare || initialShare.access === "edit";
   const canCommentShare = initialShare?.access === "comment" || initialShare?.access === "edit";
   const isReadOnly = isSharedSession && (!canEditShare || !isAuthenticated);
-  const allowGroupEdit = shareAccess === "edit";
-  const selectedShareAccessTitle = allowGroupEdit ? "редагування" : "перегляд і коментарі";
-  const selectedShareAccessDetail = allowGroupEdit
-    ? "Учасники після входу можуть коментувати, змінювати макет і зберігати оновлення в цьому посиланні."
-    : "Будь-хто з посиланням бачить макет. Коментарі доступні після входу, редагування вимкнено.";
-
   const currentPayload = useMemo(() => buildSharePayload({
     productId: product.id,
     selectedColor: s.selectedColor,
@@ -145,36 +142,58 @@ export function Customizer({
     layers: s.layers,
   }), [product.id, s.selectedColor, s.selectedSize, s.quantity, s.itemNote, s.activeSide, s.layers]);
 
-  const createOrUpdateShare = async () => {
-    if (!isAuthenticated) {
-      setShareOpen(false);
-      setShareAuthOpen(true);
-      return;
+  const copyShareUrl = async (url = shareUrl) => {
+    if (!url) return;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Safari refuses clipboard writes that are not directly inside a tap; the Copy button still works.
     }
+  };
+
+  /** Create the link (first time) or save the current design / access to it. Returns the URL. */
+  const saveShare = async (access: ShareAccess): Promise<string | null> => {
     setShareLoading(true);
     try {
-      const endpoint = initialShare ? `/api/customizer-shares/${initialShare.token}` : "/api/customizer-shares";
-      const res = await fetch(endpoint, {
-        method: initialShare ? "PATCH" : "POST",
+      const res = await fetch(shareToken ? `/api/customizer-shares/${shareToken}` : "/api/customizer-shares", {
+        method: shareToken ? "PATCH" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: product.id, access: shareAccess, payload: currentPayload }),
+        body: JSON.stringify({ productId: product.id, access, payload: currentPayload }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Не вдалося створити посилання");
-      setShareUrl(data.url ?? `${window.location.origin}/order?share=${data.token}`);
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "Не вдалося створити посилання");
+      if (!res.ok) throw new Error(data.error);
+      const url = data.url ?? `${window.location.origin}/order?share=${data.token}`;
+      setShareToken(data.token);
+      setShareUrl(url);
+      return url;
+    } catch {
+      toast.error(tShare("error"));
+      return null;
     } finally {
       setShareLoading(false);
     }
   };
 
-  const copyShareUrl = async () => {
-    if (!shareUrl) return;
-    await navigator.clipboard.writeText(shareUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+  /** One tap: sign-in if needed, then the link is created and copied before any option is asked. */
+  const openShare = async () => {
+    if (isSharedSession) { setShareOpen(true); return; }
+    if (!isAuthenticated) { setShareAuthOpen(true); return; }
+    setShareOpen(true);
+    if (!shareUrl) await copyShareUrl((await saveShare(shareAccess)) ?? "");
   };
+
+  const changeAccess = (access: ShareAccess) => {
+    setShareAccess(access);
+    if (shareToken) void saveShare(access);
+  };
+
+  const updateShare = async () => {
+    if (await saveShare(shareAccess)) toast.success(tShare("updated"));
+  };
+
+  const nativeShare = () => void navigator.share?.({ title: product.name, url: shareUrl }).catch(() => {});
 
   const postComment = async () => {
     if (!initialShare || !commentDraft.trim()) return;
@@ -195,7 +214,7 @@ export function Customizer({
       setComments((prev) => [...prev, data]);
       setCommentDraft("");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Не вдалося додати коментар");
+      toast.error(err instanceof Error ? err.message : tShare("error"));
     } finally {
       setCommentLoading(false);
     }
@@ -496,9 +515,9 @@ export function Customizer({
         type="button"
         variant="outline"
         className="w-full h-11 text-sm font-semibold"
-        onClick={() => setShareOpen(true)}
+        onClick={() => void openShare()}
       >
-        <Share2 className="size-4" /> {isSharedSession ? "Доступ і коментарі" : "Поділитися макетом"}
+        <Share2 className="size-4" /> {isSharedSession ? tShare("accessTitle") : tShare("title")}
       </Button>
     </div>
   );
@@ -618,118 +637,80 @@ export function Customizer({
       {/* PaywallModal — shown when unauthenticated user clicks an AI feature */}
       <PaywallModal open={paywallOpen} onClose={() => setPaywallOpen(false)} onAuthSuccess={onAuthSuccess} />
       <Dialog open={shareOpen} onOpenChange={setShareOpen}>
-        <DialogContent className="bottom-0 left-0 top-auto max-h-[92svh] max-w-none translate-x-0 translate-y-0 gap-4 overflow-y-auto rounded-b-none rounded-t-2xl p-4 pb-[max(16px,env(safe-area-inset-bottom))] sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-w-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-xl sm:p-5">
+        <DialogContent className="bottom-0 left-0 top-auto max-h-[92svh] max-w-none translate-x-0 translate-y-0 gap-5 overflow-y-auto rounded-b-none rounded-t-2xl p-5 pb-[max(20px,env(safe-area-inset-bottom))] sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-w-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-xl">
           <DialogHeader className="pr-8">
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <Share2 className="size-4" />
-              </div>
-              <div className="min-w-0">
-                <DialogTitle>Поділитися макетом</DialogTitle>
-                <DialogDescription className="mt-1 text-sm leading-relaxed">
-                  За замовчуванням люди з посиланням можуть переглядати макет і залишати коментарі. Редагування вмикається окремо.
-                </DialogDescription>
-              </div>
-            </div>
+            <DialogTitle>{isSharedSession ? tShare("accessTitle") : tShare("title")}</DialogTitle>
+            <DialogDescription className="sr-only">{tShare("viewHint")}</DialogDescription>
           </DialogHeader>
-          {!isSharedSession || canEditShare ? (
-            <div className="space-y-3">
-              <div className="rounded-xl border bg-background p-3">
-                <div className="flex items-start gap-3">
-                  <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
-                    <MessageSquare className="size-4" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="text-sm font-semibold">Перегляд і коментарі</p>
-                        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                          Отримувачі бачать макет. Коментувати можна після входу.
-                        </p>
-                      </div>
-                      <Check className="mt-0.5 size-4 shrink-0 text-primary" />
-                    </div>
-                  </div>
-                </div>
-              </div>
 
-              <label className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3 transition-colors ${allowGroupEdit ? "border-primary bg-primary/5" : "border-border bg-background hover:bg-muted/40"}`}>
-                <div className={`flex size-9 shrink-0 items-center justify-center rounded-full ${allowGroupEdit ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
-                  <PencilLine className="size-4" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-sm font-semibold">Дозволити редагування команді</p>
-                    <Switch
-                      checked={allowGroupEdit}
-                      onCheckedChange={(checked) => setShareAccess(checked ? "edit" : "comment")}
-                    />
+          {(!isSharedSession || (canEditShare && isAuthenticated)) && (
+            <div className="space-y-4">
+              {shareUrl ? (
+                <div className="space-y-2">
+                  <div className="flex gap-2">
+                    <Input value={shareUrl} readOnly aria-label={tShare("title")} onFocus={(e) => e.target.select()} className="min-w-0 flex-1" />
+                    <Button type="button" variant="primary" className="shrink-0" onClick={() => void copyShareUrl()}>
+                      {copied ? <Check className="size-4" aria-hidden="true" /> : <Copy className="size-4" aria-hidden="true" />}
+                      {copied ? tShare("copied") : tShare("copy")}
+                    </Button>
                   </div>
-                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                    Увімкніть, якщо менеджер або клієнт має сам змінювати текст, шари, колір чи розмір.
-                  </p>
+                  {typeof navigator !== "undefined" && "share" in navigator && (
+                    <Button type="button" variant="outline" className="w-full" onClick={nativeShare}>
+                      <Share2 className="size-4" aria-hidden="true" /> {tShare("send")}
+                    </Button>
+                  )}
                 </div>
-              </label>
-
-              {!isAuthenticated && (
-                <div className="rounded-xl border bg-muted/30 p-3 text-xs leading-relaxed text-muted-foreground">
-                  Щоб створити посилання або змінити доступ, потрібно увійти.
+              ) : (
+                <div className="flex min-h-11 items-center gap-2 text-sm text-muted-foreground" role="status">
+                  <Loader2 className="size-4 animate-spin" aria-hidden="true" /> {tShare("creating")}
                 </div>
               )}
-              <div className="rounded-xl bg-muted/40 p-3">
-                <div className="flex items-start gap-2.5">
-                  <ShieldCheck className="mt-0.5 size-4 shrink-0 text-primary" />
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium">Доступ: {selectedShareAccessTitle}</p>
-                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{selectedShareAccessDetail}</p>
-                  </div>
-                </div>
-              </div>
-              <Button type="button" className="h-10 w-full text-sm font-semibold" onClick={createOrUpdateShare} disabled={shareLoading}>
-                {shareLoading ? <Loader2 className="size-4 animate-spin" /> : !isAuthenticated ? <ShieldCheck className="size-4" /> : shareUrl ? <Save className="size-4" /> : <Link2 className="size-4" />}
-                {!isAuthenticated ? "Увійти, щоб створити посилання" : shareUrl ? "Оновити доступ і макет" : "Створити посилання"}
-              </Button>
-            </div>
-          ) : null}
-          {shareUrl && (
-            <div className="space-y-2 rounded-xl border bg-background p-3">
-              <div className="flex items-center justify-between gap-3">
-                <p className="text-sm font-medium">Посилання готове</p>
-                <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700">активне</span>
-              </div>
-              <div className="flex gap-2">
-                <Input value={shareUrl} readOnly className="h-9 text-xs" />
-                <Button type="button" variant="outline" size="icon" onClick={copyShareUrl} aria-label="Скопіювати посилання">
-                  {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
-                </Button>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Надішліть це посилання клієнту або менеджеру. Поточний доступ: {selectedShareAccessTitle}.
-              </p>
+
+              <fieldset disabled={shareLoading} className="space-y-2">
+                <legend className="mb-2 text-sm font-medium">{tShare("accessLabel")}</legend>
+                {(["comment", "edit"] as const).map((access) => (
+                  <label key={access} className={`flex min-h-14 cursor-pointer items-center gap-3 rounded-card border p-3 transition-colors duration-fast has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring ${shareAccess === access ? "border-primary bg-primary/5" : "border-border"}`}>
+                    <input type="radio" name="share-access" className="peer sr-only" checked={shareAccess === access} onChange={() => changeAccess(access)} />
+                    <span className="size-5 shrink-0 rounded-full border border-input bg-background transition-[border-width,border-color] duration-fast peer-checked:border-[6px] peer-checked:border-primary" aria-hidden="true" />
+                    <span className="min-w-0">
+                      <span className="block text-sm font-medium">{tShare(access === "edit" ? "edit" : "view")}</span>
+                      <span className="block text-sm text-muted-foreground">{tShare(access === "edit" ? "editHint" : "viewHint")}</span>
+                    </span>
+                  </label>
+                ))}
+              </fieldset>
+
+              {shareUrl && (
+                <button type="button" onClick={() => void updateShare()} disabled={shareLoading}
+                  className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-primary hover:underline disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                  {shareLoading ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : <Save className="size-4" aria-hidden="true" />} {tShare("update")}
+                </button>
+              )}
             </div>
           )}
+
           {isSharedSession && (
-            <div className="space-y-3 border-t pt-3">
-              <p className="text-sm font-medium">Коментарі</p>
+            <div className="space-y-3 border-t border-border pt-4">
+              <p className="text-sm font-medium">{tShare("comments")}</p>
               <div className="max-h-44 space-y-2 overflow-y-auto">
                 {comments.length === 0 ? (
-                  <p className="text-xs text-muted-foreground">Коментарів ще немає.</p>
+                  <p className="text-sm text-muted-foreground">{tShare("noComments")}</p>
                 ) : comments.map((comment) => (
-                  <div key={comment.id} className="rounded-lg border bg-muted/30 p-2">
-                    <p className="text-xs font-medium">{comment.author_label}</p>
+                  <div key={comment.id} className="rounded-lg border border-border bg-muted/30 p-3">
+                    <p className="text-xs font-medium text-muted-foreground">{comment.author_label}</p>
                     <p className="text-sm">{comment.body}</p>
                   </div>
                 ))}
               </div>
               {canCommentShare ? (
                 <div className="space-y-2">
-                  <Textarea value={commentDraft} onChange={(event) => setCommentDraft(event.target.value)} placeholder="Додати коментар" />
-                  <Button type="button" size="sm" onClick={postComment} disabled={commentLoading || !commentDraft.trim()}>
-                    {commentLoading ? <Loader2 className="size-4 animate-spin" /> : <MessageSquare className="size-4" />} Надіслати
+                  <Textarea value={commentDraft} onChange={(event) => setCommentDraft(event.target.value)} placeholder={tShare("addComment")} aria-label={tShare("addComment")} />
+                  <Button type="button" onClick={postComment} disabled={commentLoading || !commentDraft.trim()}>
+                    {commentLoading ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : <MessageSquare className="size-4" aria-hidden="true" />} {tShare("sendComment")}
                   </Button>
                 </div>
               ) : (
-                <p className="text-xs text-muted-foreground">Коментарі вимкнено для цього посилання.</p>
+                <p className="text-sm text-muted-foreground">{tShare("commentsOff")}</p>
               )}
             </div>
           )}
@@ -741,8 +722,10 @@ export function Customizer({
         initialScreen="login"
         onAuthSuccess={() => {
           setShareAuthOpen(false);
-          setShareOpen(true);
           onAuthSuccess?.();
+          // Signed in from the share button: carry on and create the link.
+          if (!isSharedSession) { setShareOpen(true); void saveShare(shareAccess).then((url) => copyShareUrl(url ?? "")); }
+          else setShareOpen(true);
         }}
       />
     </>,

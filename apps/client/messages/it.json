@@ -945,5 +945,26 @@
     "hint": "Disegna direttamente sul capo con penna, pennarello, neon o spray.",
     "new": "Nuovo disegno",
     "editSelected": "Modifica il disegno selezionato"
+  },
+  "share": {
+    "title": "Condividi il design",
+    "accessTitle": "Accesso e commenti",
+    "copy": "Copia link",
+    "copied": "Copiato",
+    "send": "Invia…",
+    "creating": "Creazione del link…",
+    "accessLabel": "Chiunque abbia il link può",
+    "view": "Vedere e commentare",
+    "viewHint": "Vedono il design. Per commentare serve l'accesso.",
+    "edit": "Modificare",
+    "editHint": "Dopo l'accesso possono modificare il design e salvarlo in questo link.",
+    "update": "Salva il design attuale nel link",
+    "updated": "Link aggiornato",
+    "error": "Impossibile creare il link. Riprova.",
+    "comments": "Commenti",
+    "noComments": "Ancora nessun commento.",
+    "addComment": "Aggiungi un commento",
+    "sendComment": "Invia",
+    "commentsOff": "I commenti sono disattivati per questo link."
   }
 }

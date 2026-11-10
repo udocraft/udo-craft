@@ -945,5 +945,26 @@
     "hint": "Rita direkt på plagget med penna, märkpenna, neon eller sprej.",
     "new": "Ny teckning",
     "editSelected": "Redigera vald teckning"
+  },
+  "share": {
+    "title": "Dela design",
+    "accessTitle": "Åtkomst och kommentarer",
+    "copy": "Kopiera länk",
+    "copied": "Kopierad",
+    "send": "Skicka…",
+    "creating": "Skapar länken…",
+    "accessLabel": "Alla med länken kan",
+    "view": "Visa och kommentera",
+    "viewHint": "De ser designen. Inloggning krävs för att kommentera.",
+    "edit": "Redigera",
+    "editHint": "Efter inloggning kan de ändra designen och spara den i den här länken.",
+    "update": "Spara aktuell design i länken",
+    "updated": "Länken uppdaterad",
+    "error": "Det gick inte att skapa länken. Försök igen.",
+    "comments": "Kommentarer",
+    "noComments": "Inga kommentarer än.",
+    "addComment": "Lägg till en kommentar",
+    "sendComment": "Skicka",
+    "commentsOff": "Kommentarer är avstängda för den här länken."
   }
 }
