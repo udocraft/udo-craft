@@ -284,3 +284,28 @@ Motion tokens applied, framer reduced to presence cases, video poster/skip/re-en
 - **D5 Font:** **Geist** (already in repo) for now.
 
 Not covered by this audit: admin app, Telegram mini app, runtime behaviour (no browser run, no Lighthouse), the content of the uncommitted WIP on this branch.
+
+---
+
+## 7. Status (updated 2026-11-10)
+
+| Phase | State |
+|---|---|
+| 0 Security quick wins | Done (merged) |
+| 1 Tokens & primitives | Done (PR #86) |
+| 2 Layout & core components | Done (PR #87) |
+| 3 Page-by-page redesign | Done (PR #88) |
+| 4 Polish, motion, performance | Done except **CSP enforcement** (below). ISR, bundle cuts, SEO checklist: PRs #89, #90. Local Lighthouse mobile: home 93, product 94, order 76. |
+| 5 QA matrix | Automated part done: 48 Playwright tests (axe on home ×3 locales, product, privacy, order, checkout, cart at 375 and 1280; keyboard walk incl. checkout, Nova Poshta picker, cart sheet and mobile menu focus; layout overflow at 375 / 768 / 1280 in en, uk, de; reduced motion), contrast script 36/36. Run with `npm run test:e2e` and `npm run test:contrast`. |
+
+Added after the plan: one-page checkout with Nova Poshta search (PR #91), drawing studio (PR #92), cart page (PR #93), one-tap sharing (PR #94).
+
+### Still open (each needs something outside the code)
+
+1. **CSP enforcement.** The policy is report-only. `'unsafe-eval'` is already removed from the report-only policy so the reports show what would break. Before enforcing: read the reports (Sentry tag `kind:csp-violation`, or function logs), and choose nonce vs hash, because a per-request nonce makes every page dynamic and removes the ISR gain.
+2. **Funnel on staging.** A real order, customizer save, cabinet login and the signed-in share flow have never been run end to end. Needs a test account or a staging database.
+3. **Field Core Web Vitals.** `@vercel/speed-insights` is installed (behind cookie consent); enable Speed Insights in the Vercel project and read p75 after 7 days. Local LCP is about 3 s against the 2.0 s target; `/order` needs its catalog server-rendered.
+4. **Live-host SEO checks.** Rich Results test, OG preview and hreflang validation on u-do-craft.store.
+5. **Manual accessibility.** Screen reader pass, 200 % zoom, and a keyboard path through the customizer canvas (the contact form with file upload is the current alternative).
+6. **Data.** The order endpoint stores a total without print cost; the tested database lacks `name_en` / `description_en` and `cms_published`.
+7. Optional: `/products` index page (§3.3).

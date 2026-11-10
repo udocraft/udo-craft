@@ -1,6 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
-import { STATIC_PAGES, VIEWPORTS, productPath } from "./helpers";
+import { STATIC_PAGES, VIEWPORTS, productPath, seedCart } from "./helpers";
 
 const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"];
 
@@ -31,6 +31,26 @@ for (const viewport of VIEWPORTS) {
         await audit(page, testInfo);
       });
     }
+
+    test("order catalog", async ({ page }, testInfo) => {
+      await page.goto("/order", { waitUntil: "networkidle" });
+      await expect(page.locator("main")).toBeVisible();
+      await audit(page, testInfo);
+    });
+
+    test("checkout", async ({ page }, testInfo) => {
+      await seedCart(page, "contact");
+      await page.goto("/order", { waitUntil: "networkidle" });
+      await expect(page.locator("#order-name")).toBeVisible();
+      await audit(page, testInfo);
+    });
+
+    test("cart", async ({ page }, testInfo) => {
+      await seedCart(page);
+      await page.goto("/cart", { waitUntil: "networkidle" });
+      await expect(page.getByText("Test tee")).toBeVisible();
+      await audit(page, testInfo);
+    });
 
     test("product page", async ({ page, request }, testInfo) => {
       const path = await productPath(request);

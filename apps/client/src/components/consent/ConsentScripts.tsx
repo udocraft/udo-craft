@@ -1,6 +1,7 @@
 "use client";
 
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ClarityInit } from "@udo-craft/ui";
 import { useConsent } from "@/lib/consent";
 
@@ -15,6 +16,8 @@ export function ConsentScripts() {
     <>
       <ClarityInit clarityId={CLARITY_ID} />
       <Analytics />
+      {/* Field Core Web Vitals (Plan.md 4.2). Behind consent like the other measurement scripts. */}
+      <SpeedInsights />
     </>
   );
 }
