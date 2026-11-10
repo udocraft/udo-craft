@@ -21,8 +21,8 @@ export const BASE_CLIENT_NAMESPACES = [
 
 /** Extra namespaces a route subtree adds on top of the base set. */
 export const CABINET_NAMESPACES = ["cabinet"] as const;
-/** Order page only: the customizer's drawing studio. */
-export const ORDER_NAMESPACES = ["drawing"] as const;
+/** Order page only: the customizer's drawing studio and share dialog. */
+export const ORDER_NAMESPACES = ["drawing", "share"] as const;
 
 export function pickMessages(
   messages: AbstractIntlMessages,

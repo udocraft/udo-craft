@@ -945,5 +945,26 @@
     "hint": "Desenhe diretamente na peça com caneta, marcador, néon ou spray.",
     "new": "Novo desenho",
     "editSelected": "Editar o desenho selecionado"
+  },
+  "share": {
+    "title": "Partilhar design",
+    "accessTitle": "Acesso e comentários",
+    "copy": "Copiar link",
+    "copied": "Copiado",
+    "send": "Enviar…",
+    "creating": "A criar o link…",
+    "accessLabel": "Qualquer pessoa com o link pode",
+    "view": "Ver e comentar",
+    "viewHint": "Veem o design. Para comentar é preciso iniciar sessão.",
+    "edit": "Editar",
+    "editHint": "Depois de iniciar sessão podem alterar o design e guardá-lo neste link.",
+    "update": "Guardar o design atual no link",
+    "updated": "Link atualizado",
+    "error": "Não foi possível criar o link. Tente novamente.",
+    "comments": "Comentários",
+    "noComments": "Ainda sem comentários.",
+    "addComment": "Adicionar um comentário",
+    "sendComment": "Enviar",
+    "commentsOff": "Os comentários estão desativados para este link."
   }
 }

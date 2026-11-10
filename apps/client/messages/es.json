@@ -945,5 +945,26 @@
     "hint": "Dibuja directamente sobre la prenda con bolígrafo, rotulador, neón o spray.",
     "new": "Nuevo dibujo",
     "editSelected": "Editar el dibujo seleccionado"
+  },
+  "share": {
+    "title": "Compartir diseño",
+    "accessTitle": "Acceso y comentarios",
+    "copy": "Copiar enlace",
+    "copied": "Copiado",
+    "send": "Enviar…",
+    "creating": "Creando el enlace…",
+    "accessLabel": "Cualquiera con el enlace puede",
+    "view": "Ver y comentar",
+    "viewHint": "Ven el diseño. Para comentar hay que iniciar sesión.",
+    "edit": "Editar",
+    "editHint": "Tras iniciar sesión pueden cambiar el diseño y guardarlo en este enlace.",
+    "update": "Guardar el diseño actual en el enlace",
+    "updated": "Enlace actualizado",
+    "error": "No se pudo crear el enlace. Inténtalo de nuevo.",
+    "comments": "Comentarios",
+    "noComments": "Aún no hay comentarios.",
+    "addComment": "Añadir un comentario",
+    "sendComment": "Enviar",
+    "commentsOff": "Los comentarios están desactivados para este enlace."
   }
 }

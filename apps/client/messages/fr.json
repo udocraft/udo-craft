@@ -945,5 +945,26 @@
     "hint": "Dessinez directement sur le vêtement au stylo, marqueur, néon ou spray.",
     "new": "Nouveau dessin",
     "editSelected": "Modifier le dessin sélectionné"
+  },
+  "share": {
+    "title": "Partager la maquette",
+    "accessTitle": "Accès et commentaires",
+    "copy": "Copier le lien",
+    "copied": "Copié",
+    "send": "Envoyer…",
+    "creating": "Création du lien…",
+    "accessLabel": "Toute personne disposant du lien peut",
+    "view": "Voir et commenter",
+    "viewHint": "Elle voit la maquette. Il faut se connecter pour commenter.",
+    "edit": "Modifier",
+    "editHint": "Après connexion, elle peut modifier la maquette et l'enregistrer dans ce lien.",
+    "update": "Enregistrer la maquette actuelle dans le lien",
+    "updated": "Lien mis à jour",
+    "error": "Impossible de créer le lien. Réessayez.",
+    "comments": "Commentaires",
+    "noComments": "Pas encore de commentaires.",
+    "addComment": "Ajouter un commentaire",
+    "sendComment": "Envoyer",
+    "commentsOff": "Les commentaires sont désactivés pour ce lien."
   }
 }

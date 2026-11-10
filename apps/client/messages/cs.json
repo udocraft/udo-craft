@@ -945,5 +945,26 @@
     "hint": "Kreslete přímo na oblečení perem, fixem, neonem nebo sprejem.",
     "new": "Nová kresba",
     "editSelected": "Upravit vybranou kresbu"
+  },
+  "share": {
+    "title": "Sdílet návrh",
+    "accessTitle": "Přístup a komentáře",
+    "copy": "Kopírovat odkaz",
+    "copied": "Zkopírováno",
+    "send": "Odeslat…",
+    "creating": "Vytváříme odkaz…",
+    "accessLabel": "Kdokoli s odkazem může",
+    "view": "Prohlížet a komentovat",
+    "viewHint": "Vidí návrh. Pro komentování je nutné přihlášení.",
+    "edit": "Upravovat",
+    "editHint": "Po přihlášení mohou návrh měnit a ukládat do tohoto odkazu.",
+    "update": "Uložit aktuální návrh do odkazu",
+    "updated": "Odkaz aktualizován",
+    "error": "Odkaz se nepodařilo vytvořit. Zkuste to znovu.",
+    "comments": "Komentáře",
+    "noComments": "Zatím žádné komentáře.",
+    "addComment": "Přidat komentář",
+    "sendComment": "Odeslat",
+    "commentsOff": "Komentáře jsou pro tento odkaz vypnuté."
   }
 }

@@ -945,5 +945,26 @@
     "hint": "Rysuj bezpośrednio na ubraniu długopisem, markerem, neonem lub sprayem.",
     "new": "Nowy rysunek",
     "editSelected": "Edytuj wybrany rysunek"
+  },
+  "share": {
+    "title": "Udostępnij projekt",
+    "accessTitle": "Dostęp i komentarze",
+    "copy": "Kopiuj link",
+    "copied": "Skopiowano",
+    "send": "Wyślij…",
+    "creating": "Tworzenie linku…",
+    "accessLabel": "Każdy, kto ma link, może",
+    "view": "Oglądać i komentować",
+    "viewHint": "Widzą projekt. Komentowanie wymaga logowania.",
+    "edit": "Edytować",
+    "editHint": "Po zalogowaniu mogą zmieniać projekt i zapisywać go w tym linku.",
+    "update": "Zapisz bieżący projekt w linku",
+    "updated": "Link zaktualizowany",
+    "error": "Nie udało się utworzyć linku. Spróbuj ponownie.",
+    "comments": "Komentarze",
+    "noComments": "Brak komentarzy.",
+    "addComment": "Dodaj komentarz",
+    "sendComment": "Wyślij",
+    "commentsOff": "Komentarze są wyłączone dla tego linku."
   }
 }
