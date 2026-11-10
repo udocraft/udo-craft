@@ -23,3 +23,29 @@ export async function productPath(request: APIRequestContext): Promise<string | 
   const slug = list.find((p) => p.slug)?.slug;
   return slug ? `/products/${slug}` : null;
 }
+
+/** A cart line that needs no catalog: enough for the checkout and cart pages to render. */
+const DRAFT_ITEM = {
+  productId: "00000000-0000-4000-8000-000000000000",
+  productName: "Test tee",
+  productImage: "",
+  productPrice: 34900,
+  unitPriceCents: 34900,
+  printCostCents: 12000,
+  quantity: 2,
+  size: "M",
+  color: "Black",
+  layers: [],
+};
+
+/** Seed the saved order draft before the page loads. `step: "contact"` opens /order on checkout. */
+export async function seedCart(page: import("@playwright/test").Page, step: "select" | "contact" = "select") {
+  await page.addInitScript(
+    ([item, s]) => {
+      sessionStorage.setItem("client-order-draft", JSON.stringify({ step: s, cart: [item] }));
+      // Decline cookies so the consent banner is not part of what is being tested.
+      localStorage.setItem("udo_consent", "denied");
+    },
+    [DRAFT_ITEM, step] as const,
+  );
+}

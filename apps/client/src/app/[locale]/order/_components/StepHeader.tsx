@@ -46,6 +46,8 @@ export function StepHeader({ step, stepIdx, cartLength, onNavigate }: StepHeader
                   onClick={() => canNavigate ? onNavigate(s) : undefined}
                   disabled={!canNavigate}
                   aria-current={isCurrent ? "step" : undefined}
+                  // The text label is hidden below sm; the number alone is not a name.
+                  aria-label={stepLabels[s]}
                   className={`flex min-h-11 items-center gap-1.5 rounded-control transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${canNavigate ? "cursor-pointer hover:opacity-80" : "cursor-default"}`}
                 >
                   <div className={`flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition-colors ${i < stepIdx ? "bg-primary/10 text-primary" : isCurrent ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>

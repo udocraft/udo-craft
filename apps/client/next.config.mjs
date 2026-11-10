@@ -8,10 +8,12 @@ const withBundleAnalyzer = bundleAnalyzer({ enabled: process.env.ANALYZE === "tr
 
 /** @type {import('next').NextConfig} */
 // Report-only for now: violations are logged by the browser, nothing is blocked.
+// 'unsafe-eval' is already dropped here (only 'wasm-unsafe-eval' for onnxruntime), so the
+// reports show what would break before the policy is enforced.
 // Switch the header name to Content-Security-Policy once reports are clean.
 const CSP_REPORT_ONLY = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.clarity.ms https://*.clarity.ms https://va.vercel-scripts.com https://js.sentry-cdn.com",
+  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://www.clarity.ms https://*.clarity.ms https://va.vercel-scripts.com https://js.sentry-cdn.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
   "img-src 'self' data: blob: https:",
