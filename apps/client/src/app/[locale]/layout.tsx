@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { PageTracker } from "@/components/PageTracker";
 import { Toaster } from "@/components/ui/sonner";
 import { ConsentBanner } from "@/components/consent/ConsentBanner";
@@ -90,6 +91,7 @@ export default async function LocaleLayout({
           <Toaster richColors position="top-right" />
           <ConsentScripts />
           <ConsentBanner />
+          <SpeedInsights />
         </NextIntlClientProvider>
       </body>
     </html>
