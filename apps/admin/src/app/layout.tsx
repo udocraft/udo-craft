@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { ClarityInit } from "@/components/clarity";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <Toaster theme="light" toastOptions={{ style: { background: "white", border: "1px solid #e5e7eb", color: "#111827" } }} />
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
