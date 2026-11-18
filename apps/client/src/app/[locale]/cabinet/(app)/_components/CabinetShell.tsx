@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { LogOut, Menu, MessageCircle, Package, Settings } from "lucide-react";
+import { FileImage, LogOut, Menu, MessageCircle, Package, Settings } from "lucide-react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { BrandLogoFull } from "@/components/brand-logo";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
@@ -25,6 +25,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const items = [
     { href: "/cabinet", label: t("nav.orders"), icon: Package, active: pathname === "/cabinet" || pathname.startsWith("/cabinet/orders"), badge: 0 },
     { href: "/cabinet/messages", label: t("nav.messages"), icon: MessageCircle, active: pathname.startsWith("/cabinet/messages"), badge: totalUnread },
+    { href: "/cabinet/prints", label: t("prints.title"), icon: FileImage, active: pathname.startsWith("/cabinet/prints"), badge: 0 },
     { href: "/cabinet/settings", label: t("settings"), icon: Settings, active: pathname.startsWith("/cabinet/settings"), badge: 0 },
   ];
 

@@ -641,6 +641,25 @@
     },
     "breadcrumb": "/ Account",
     "settings": "Settings",
+    "prints": {
+      "title": "My prints",
+      "subtitle": "Files you uploaded for printing. Only you can see them.",
+      "dropHint": "Drop files here",
+      "formats": "JPG, PNG, WebP, GIF or PDF, up to 10 MB",
+      "pickFiles": "Choose files",
+      "uploading": "Uploading…",
+      "empty": "No files yet. Upload your first print.",
+      "delete": "Delete file",
+      "confirmDelete": "Delete this file? This cannot be undone.",
+      "loadError": "Could not load files",
+      "uploadError": "Could not upload file",
+      "deleteError": "Could not delete file",
+      "status": {
+        "uploaded": "Under review",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      }
+    },
     "logout": "Log out",
     "noOrders": "No orders yet",
     "toCatalog": "To catalog",
