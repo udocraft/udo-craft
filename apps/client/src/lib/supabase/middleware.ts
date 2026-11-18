@@ -44,7 +44,8 @@ export async function updateSession(
   } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
-  const isLoginPage = pathname.endsWith("/cabinet/login");
+  // Login and sign-up are both public auth pages (sign-up was redirected to login before).
+  const isLoginPage = pathname.endsWith("/cabinet/login") || pathname.endsWith("/cabinet/register");
 
   // Unauthenticated user trying to access a protected cabinet route → redirect to login
   if (!user && !isLoginPage) {
