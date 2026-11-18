@@ -40,6 +40,8 @@
     "address": "Lwów, ul. Dzherelna 69"
   },
   "hero": {
+    "soundOn": "Włącz dźwięk",
+    "soundOff": "Wyłącz dźwięk",
     "heading": "Odzież, która staje się częścią DNA Twojej firmy",
     "subheading": "Tworzymy rzeczy, które chce się nosić.",
     "ctaPrimary": "Przeglądaj katalog",

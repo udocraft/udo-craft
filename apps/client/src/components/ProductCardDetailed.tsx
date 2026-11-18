@@ -13,6 +13,8 @@ interface ProductCardDetailedProps {
   colorVariants?: ProductColorVariant[];
   materials?: Material[];
   imagePriority?: boolean;
+  /** Dense grid card: image + name/price, full details in a scrollable hover panel. */
+  compact?: boolean;
   onCustomize?: (product: Product, size: string | null, color: string | null, variant: ProductColorVariant | null) => void;
   onAddWithoutPrint?: (product: Product, size: string | null, color: string | null, variant: ProductColorVariant | null) => void;
 }
@@ -32,7 +34,7 @@ function pickMiddleSize(sizes: string[]): string | null {
 }
 
 export function ProductCardDetailed({
-  product, colorVariants, materials, imagePriority = false, onCustomize, onAddWithoutPrint,
+  product, colorVariants, materials, imagePriority = false, compact = false, onCustomize, onAddWithoutPrint,
 }: ProductCardDetailedProps) {
   const t = useTranslations("collections");
   const locale = useLocale();
@@ -80,6 +82,9 @@ export function ProductCardDetailed({
   const visibleSizes = sizes.slice(0, 8);
   const hiddenSizeCount = Math.max(0, sizes.length - visibleSizes.length);
   const actionsVisible = sizes.length === 0 || selectedSize !== null;
+  const priceLabel = product.base_price_cents > 0
+    ? t("fromPrice", { price: (product.base_price_cents / 100).toFixed(0) })
+    : t("priceOnRequest");
 
   const getActiveColor = () => {
     if (!activeVariantId || !hasVariants) return null;
@@ -119,6 +124,111 @@ export function ProductCardDetailed({
     router.push(`/order?${params.toString()}`);
   };
 
+  // Details shared by the default card (below the image) and the compact hover panel.
+  const detailsBlock = (
+    <>
+      {/* Name + price + description */}
+      <div className="flex flex-col gap-1">
+        <div className="flex items-start justify-between gap-2">
+          <p className="text-sm font-semibold text-foreground leading-tight">{productName}</p>
+          <p className="text-sm font-bold text-primary shrink-0">{priceLabel}</p>
+        </div>
+        {productDescription && (
+          <div className="mt-1">
+            <p className={`text-xs text-muted-foreground ${descExpanded ? "" : "line-clamp-2"}`}>
+              {productDescription}
+            </p>
+            {productDescription.length > 80 && (
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); setDescExpanded(!descExpanded); }}
+                className="hit-44 text-xs text-primary font-semibold hover:underline mt-0.5 touch-manipulation cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+              >
+                {descExpanded ? t("collapse") : t("expand")}
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Sizes + Colors */}
+      <div className="flex flex-col gap-3">
+        {sizes.length > 0 && (
+          <div className="grid grid-cols-4 gap-1.5">
+            {visibleSizes.map((size) => (
+              <button
+                key={size}
+                type="button"
+                aria-pressed={selectedSize === size}
+                aria-label={size}
+                onClick={(e) => { e.stopPropagation(); setSelectedSize(selectedSize === size ? null : size); }}
+                className={`h-11 min-w-0 rounded-md border px-1 text-xs font-semibold transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${
+                  selectedSize === size
+                    ? "bg-foreground text-background border-foreground"
+                    : "bg-background text-muted-foreground border-border hover:border-foreground/40 hover:text-foreground"
+                }`}
+              >
+                <span className="block truncate">{size}</span>
+              </button>
+            ))}
+            {hiddenSizeCount > 0 && (
+              <span className="flex h-8 items-center justify-center rounded-md border border-border bg-background px-1 text-[11px] font-semibold text-muted-foreground">
+                +{hiddenSizeCount}
+              </span>
+            )}
+          </div>
+        )}
+        <div className="flex items-center gap-2 flex-wrap">
+          {colorDots.map((c) => (
+            <button
+              key={c.id}
+              type="button"
+              aria-label={c.name}
+              aria-pressed={hasVariants && displayVariantId === c.id}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!hasVariants) return;
+                setActiveVariantId(c.id === activeVariantId ? null : c.id);
+              }}
+              onMouseEnter={() => hasVariants && setHoveredVariantId(c.id)}
+              onMouseLeave={() => setHoveredVariantId(null)}
+              className={`hit-44 w-8 h-8 rounded-full shrink-0 touch-manipulation transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${c.border ? "ring-1 ring-border" : ""} ${
+                hasVariants && displayVariantId === c.id ? "ring-2 ring-offset-2 ring-foreground scale-110" : ""
+              }`}
+              style={{ backgroundColor: c.hex }}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Action buttons */}
+      <div
+        className={`grid grid-cols-1 gap-2 overflow-hidden transition-all duration-200 ease-out ${
+          actionsVisible ? "max-h-28 opacity-100 mt-1" : "max-h-0 opacity-0 pointer-events-none"
+        }`}
+      >
+        <button
+          type="button"
+          onClick={handleAddPrint}
+          disabled={isOutOfStock}
+          className="w-full min-h-11 py-2.5 rounded-full bg-primary text-white text-xs font-bold hover:bg-primary/90 active:scale-[0.98] transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
+        >
+          <ToolCase className="mr-2 inline size-5 align-[-5px]" />
+          {t("addPrint")}
+        </button>
+        <button
+          type="button"
+          onClick={handleAddWithoutPrint}
+          disabled={isOutOfStock}
+          className="w-full min-h-11 py-2.5 rounded-full border border-border bg-background text-foreground text-xs font-bold hover:border-foreground/40 hover:bg-muted active:scale-[0.98] transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
+        >
+          <CircleSlash className="mr-2 inline size-5 align-[-5px]" />
+          {t("withoutPrint")}
+        </button>
+      </div>
+    </>
+  );
+
   return (
     <div
       role="button"
@@ -127,21 +237,25 @@ export function ProductCardDetailed({
       aria-disabled={isOutOfStock}
       onClick={handleCardClick}
       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleCardClick(); }}
-      className={`bg-muted rounded-2xl overflow-hidden flex flex-col h-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${isOutOfStock ? "opacity-60 pointer-events-none" : ""}`}
+      className={`group relative bg-muted rounded-2xl overflow-hidden flex flex-col h-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+        compact ? "transition-all duration-300 ease-out any-hover:hover:-translate-y-1 any-hover:hover:shadow-xl" : ""
+      } ${isOutOfStock ? "opacity-60 pointer-events-none" : ""}`}
     >
       {/* Image */}
-      <div className="p-3 sm:p-4 w-full flex items-center justify-center aspect-square flex-shrink-0 relative overflow-hidden group/img">
+      <div className={`${compact ? "p-2" : "p-3 sm:p-4"} w-full flex items-center justify-center aspect-square flex-shrink-0 relative overflow-hidden group/img`}>
         {imageUrl ? (
           <div className="relative w-full h-full">
             <Image
               src={imageUrl}
               alt={productName}
               fill
-              sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, 50vw"
+              sizes={compact
+                ? "(min-width: 1280px) 16vw, (min-width: 1024px) 20vw, (min-width: 768px) 25vw, 50vw"
+                : "(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, 50vw"}
               priority={imagePriority}
               className="object-contain"
             />
-            {availableImages.length > 1 && (
+            {availableImages.length > 1 && !compact && (
               <div className="absolute inset-y-0 inset-x-1 flex items-center justify-between opacity-0 group-hover/img:opacity-100 transition-opacity pointer-events-none z-10">
                 <button
                   type="button"
@@ -172,112 +286,22 @@ export function ProductCardDetailed({
         )}
       </div>
 
-      {/* Bottom */}
-      <div className="px-3 pb-3 sm:px-4 sm:pb-4 flex flex-col gap-2">
-        {/* Name + price + description */}
-        <div className="flex flex-col gap-1">
-          <div className="flex items-start justify-between gap-2">
-            <p className="text-sm font-semibold text-foreground leading-tight">{productName}</p>
-            <p className="text-sm font-bold text-primary shrink-0">
-              {product.base_price_cents > 0
-                ? t("fromPrice", { price: (product.base_price_cents / 100).toFixed(0) })
-                : t("priceOnRequest")}
-            </p>
+      {compact ? (
+        <>
+          <div className="px-3 py-2.5 flex items-start justify-between gap-2">
+            <p className="text-xs font-semibold text-foreground leading-tight truncate">{productName}</p>
+            <p className="text-xs font-bold text-primary shrink-0">{priceLabel}</p>
           </div>
-          {productDescription && (
-            <div className="mt-1">
-              <p className={`text-xs text-muted-foreground ${descExpanded ? "" : "line-clamp-2"}`}>
-                {productDescription}
-              </p>
-              {productDescription.length > 80 && (
-                <button 
-                  type="button"
-                  onClick={(e) => { e.stopPropagation(); setDescExpanded(!descExpanded); }}
-                  className="hit-44 text-xs text-primary font-semibold hover:underline mt-0.5 touch-manipulation cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
-                >
-                  {descExpanded ? t("collapse") : t("expand")}
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Sizes + Colors */}
-        <div className="flex flex-col gap-3">
-          {sizes.length > 0 && (
-            <div className="grid grid-cols-4 gap-1.5">
-              {visibleSizes.map((size) => (
-                <button
-                  key={size}
-                  type="button"
-                  aria-pressed={selectedSize === size}
-                  aria-label={size}
-                  onClick={(e) => { e.stopPropagation(); setSelectedSize(selectedSize === size ? null : size); }}
-                  className={`h-11 min-w-0 rounded-md border px-1 text-xs font-semibold transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${
-                    selectedSize === size
-                      ? "bg-foreground text-background border-foreground"
-                      : "bg-background text-muted-foreground border-border hover:border-foreground/40 hover:text-foreground"
-                  }`}
-                >
-                  <span className="block truncate">{size}</span>
-                </button>
-              ))}
-              {hiddenSizeCount > 0 && (
-                <span className="flex h-8 items-center justify-center rounded-md border border-border bg-background px-1 text-[11px] font-semibold text-muted-foreground">
-                  +{hiddenSizeCount}
-                </span>
-              )}
-            </div>
-          )}
-          <div className="flex items-center gap-2 flex-wrap">
-            {colorDots.map((c) => (
-              <button
-                key={c.id}
-                type="button"
-                aria-label={c.name}
-                aria-pressed={hasVariants && displayVariantId === c.id}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (!hasVariants) return;
-                  setActiveVariantId(c.id === activeVariantId ? null : c.id);
-                }}
-                onMouseEnter={() => hasVariants && setHoveredVariantId(c.id)}
-                onMouseLeave={() => setHoveredVariantId(null)}
-                className={`hit-44 w-8 h-8 rounded-full shrink-0 touch-manipulation transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${c.border ? "ring-1 ring-border" : ""} ${
-                  hasVariants && displayVariantId === c.id ? "ring-2 ring-offset-2 ring-foreground scale-110" : ""
-                }`}
-                style={{ backgroundColor: c.hex }}
-              />
-            ))}
+          {/* Hover panel: scrollable details + actions */}
+          <div
+            className="absolute inset-0 z-20 flex flex-col gap-3 overflow-y-auto overscroll-contain bg-background/95 backdrop-blur-sm p-3 opacity-0 pointer-events-none transition-opacity duration-200 any-hover:group-hover:opacity-100 any-hover:group-hover:pointer-events-auto"
+          >
+            {detailsBlock}
           </div>
-        </div>
-
-        {/* Action buttons */}
-        <div
-          className={`grid grid-cols-1 gap-2 overflow-hidden transition-all duration-200 ease-out ${
-            actionsVisible ? "max-h-28 opacity-100 mt-1" : "max-h-0 opacity-0 pointer-events-none"
-          }`}
-        >
-          <button
-            type="button"
-            onClick={handleAddPrint}
-            disabled={isOutOfStock}
-            className="w-full min-h-11 py-2.5 rounded-full bg-primary text-white text-xs font-bold hover:bg-primary/90 active:scale-[0.98] transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
-          >
-            <ToolCase className="mr-2 inline size-5 align-[-5px]" />
-            {t("addPrint")}
-          </button>
-          <button
-            type="button"
-            onClick={handleAddWithoutPrint}
-            disabled={isOutOfStock}
-            className="w-full min-h-11 py-2.5 rounded-full border border-border bg-background text-foreground text-xs font-bold hover:border-foreground/40 hover:bg-muted active:scale-[0.98] transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
-          >
-            <CircleSlash className="mr-2 inline size-5 align-[-5px]" />
-            {t("withoutPrint")}
-          </button>
-        </div>
-      </div>
+        </>
+      ) : (
+        <div className="px-3 pb-3 sm:px-4 sm:pb-4 flex flex-col gap-2">{detailsBlock}</div>
+      )}
     </div>
   );
 }

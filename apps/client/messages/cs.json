@@ -40,6 +40,8 @@
     "address": "Lvov, Dzherelna 69"
   },
   "hero": {
+    "soundOn": "Zapnout zvuk",
+    "soundOff": "Vypnout zvuk",
     "heading": "Oblečení, které se stane součástí DNA vaší firmy",
     "subheading": "Vytváříme věci, které lidé rádi nosí.",
     "ctaPrimary": "Prohlédnout katalog",

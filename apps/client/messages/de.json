@@ -40,6 +40,8 @@
     "address": "Lwiw, Dscherelna-Str. 69"
   },
   "hero": {
+    "soundOn": "Ton einschalten",
+    "soundOff": "Ton ausschalten",
     "heading": "Kleidung, die Teil Ihrer Unternehmens-DNA wird",
     "subheading": "Wir gestalten Stücke, die man gerne trägt.",
     "ctaPrimary": "Katalog ansehen",

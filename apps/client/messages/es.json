@@ -40,6 +40,8 @@
     "address": "Leópolis, calle Dzherelna 69"
   },
   "hero": {
+    "soundOn": "Activar sonido",
+    "soundOff": "Desactivar sonido",
     "heading": "Ropa que se convierte en parte del ADN de tu empresa",
     "subheading": "Creamos prendas que la gente quiere llevar.",
     "ctaPrimary": "Ver catálogo",

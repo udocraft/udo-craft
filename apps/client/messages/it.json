@@ -40,6 +40,8 @@
     "address": "Leopoli, via Dzherelna 69"
   },
   "hero": {
+    "soundOn": "Attiva audio",
+    "soundOff": "Disattiva audio",
     "heading": "Abbigliamento che diventa parte del DNA della tua azienda",
     "subheading": "Creiamo capi che si amano indossare.",
     "ctaPrimary": "Sfoglia il catalogo",

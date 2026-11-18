@@ -2,8 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useLocale, useTranslations } from "next-intl";
-import { getAllImages, Product, Material, ProductColorVariant, resolveProductImages } from "@udo-craft/shared";
-import { localizedField } from "@/lib/localized-field";
+import { Product, Material, ProductColorVariant } from "@udo-craft/shared";
 import { useCms } from "@/hooks/useCms";
 import { useSoundInit } from "@/hooks/useSoundInit";
 
@@ -58,30 +57,6 @@ export function HomeClient({
   const tFooter = useTranslations("footer");
 
   useSoundInit();
-  const heroProduct = products.find((product) => {
-    const productImages = resolveProductImages(product.product_images, product.images);
-    return product.is_active && (
-      productImages.length > 0 ||
-      colorVariants.some((variant) => (
-        variant.product_id === product.id &&
-        resolveProductImages(variant.variant_images, variant.images).length > 0
-      ))
-    );
-  });
-  const heroVariant = heroProduct && colorVariants.find((variant) => (
-    variant.product_id === heroProduct.id &&
-    resolveProductImages(variant.variant_images, variant.images).length > 0
-  ));
-  const heroImages = heroVariant
-    ? resolveProductImages(heroVariant.variant_images, heroVariant.images)
-    : heroProduct
-      ? resolveProductImages(heroProduct.product_images, heroProduct.images)
-      : [];
-  const heroImageMap = getAllImages(heroImages);
-  const heroImage = heroImageMap.front ?? Object.values(heroImageMap)[0] ?? null;
-  const heroProductName = heroProduct
-    ? localizedField(heroProduct.name, heroProduct.name_en, locale)
-    : null;
 
   const layout = (cms.home_layout?.sections as unknown as any[]) || [
     { id: "hero", visible: "true" },
@@ -113,8 +88,6 @@ export function HomeClient({
             ctaPrimaryText={locale === "uk" ? get("home_hero", "cta_primary_text", tHero("ctaPrimary")) : tHero("ctaPrimary")}
             ctaPrimaryUrl={get("home_hero", "cta_primary_url", "#catalog")}
             ctaSecondaryText={tHero("contactCta")}
-            visualImage={heroImage}
-            visualAlt={heroProductName ?? ""}
           />
         );
       case "social": return <SocialProofBar key="social" />;

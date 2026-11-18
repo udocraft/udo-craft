@@ -2,13 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { X, ArrowLeft, Mail, Lock, Eye, EyeOff, Loader2, CheckCircle2, User, Building2, Phone } from "lucide-react";
+import { X, ArrowLeft, Mail, Lock, Eye, EyeOff, Loader2, CheckCircle2, User, Building2, Phone, KeyRound } from "lucide-react";
+import { loginWithPasskey, loginWithTelegram, registerWithPasskey, TELEGRAM_BOT_ID } from "@/lib/auth/social-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { sound } from "@/lib/sound";
+import { authCallbackUrl } from "@/lib/auth/redirect";
 
 // ── Types ─────────────────────────────────────────────────────────────────
 
@@ -19,6 +21,72 @@ interface AuthModalProps {
   onAuthSuccess?: () => void;
   /** Which screen to open on: "login" (default) or "register" */
   initialScreen?: "login" | "register";
+}
+
+// ── Social sign-in ────────────────────────────────────────────────────────
+
+function GoogleIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z" />
+      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z" />
+      <path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84z" />
+      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 0 0 2.18 7.06l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z" />
+    </svg>
+  );
+}
+
+function TelegramIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <circle cx="12" cy="12" r="12" fill="#2AABEE" />
+      <path fill="#fff" d="M5.4 11.7l10.9-4.2c.5-.2 1 .1.8.9l-1.9 8.9c-.1.6-.5.8-1 .5l-2.8-2.1-1.3 1.3c-.2.2-.3.3-.6.3l.2-2.9 5.3-4.8c.2-.2 0-.3-.3-.1l-6.6 4.1-2.8-.9c-.6-.2-.6-.6.1-.9z" />
+    </svg>
+  );
+}
+
+const socialButtonClass =
+  "flex size-12 items-center justify-center rounded-full border border-border bg-background transition hover:bg-muted disabled:opacity-50";
+
+function SocialAuthRow({
+  onGoogle,
+  onTelegram,
+  onPasskey,
+  disabled,
+  error,
+  notice,
+}: {
+  onGoogle: () => void;
+  onTelegram?: () => void;
+  onPasskey: () => void;
+  disabled: boolean;
+  error: string | null;
+  notice: string | null;
+}) {
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-center gap-3">
+        <button type="button" onClick={onGoogle} disabled={disabled} aria-label="Продовжити з Google" title="Google" className={socialButtonClass}>
+          <GoogleIcon className="size-5" />
+        </button>
+        {onTelegram && (
+          <button type="button" onClick={onTelegram} disabled={disabled} aria-label="Продовжити з Telegram" title="Telegram" className={socialButtonClass}>
+            <TelegramIcon className="size-6" />
+          </button>
+        )}
+        <button type="button" onClick={onPasskey} disabled={disabled} aria-label="Продовжити з passkey" title="Passkey" className={socialButtonClass}>
+          <KeyRound className="size-5 text-primary" />
+        </button>
+      </div>
+      {error && <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm text-center">{error}</div>}
+      {notice && <div className="p-3 rounded-lg bg-emerald-500/10 text-emerald-700 text-sm text-center">{notice}</div>}
+      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+        <span className="h-px flex-1 bg-border" />
+        або
+        <span className="h-px flex-1 bg-border" />
+      </div>
+    </div>
+  );
 }
 
 // ── OTP input ─────────────────────────────────────────────────────────────
@@ -105,6 +173,10 @@ export function AuthModal({ open, onClose, onAuthSuccess, initialScreen = "login
   const supabase = createClient();
   const [screen, setScreen] = useState<"login" | "register" | "verify" | "forgot" | "forgot-verify" | "new-password">(initialScreen);
 
+  // Social sign-in state
+  const [socialLoading, setSocialLoading] = useState(false);
+  const [socialError, setSocialError] = useState<string | null>(null);
+  const [socialNotice, setSocialNotice] = useState<string | null>(null);
   // Login state
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -158,6 +230,64 @@ export function AuthModal({ open, onClose, onAuthSuccess, initialScreen = "login
   if (!open) return null;
 
   // ── Handlers ────────────────────────────────────────────────────────────
+
+  const handleGoogle = async () => {
+    setSocialLoading(true);
+    setSocialError(null);
+    sound.button();
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: authCallbackUrl("/cabinet") },
+    });
+    if (error) {
+      setSocialError("Не вдалося увійти через Google. Спробуйте ще раз.");
+      sound.caution();
+      setSocialLoading(false);
+    }
+    // On success the browser is redirected to Google, so no further state change here.
+  };
+
+  // Runs a social sign-in that ends with a session; on error shows it in the row.
+  const runSessionLogin = async (task: () => Promise<string | null>) => {
+    setSocialLoading(true);
+    setSocialError(null);
+    setSocialNotice(null);
+    sound.button();
+    const error = await task();
+    if (error) {
+      setSocialError(error);
+      sound.caution();
+      setSocialLoading(false);
+    } else {
+      sound.celebration();
+      onAuthSuccess?.();
+      onClose();
+    }
+  };
+
+  const handleTelegram = () => runSessionLogin(() => loginWithTelegram(supabase));
+
+  const handlePasskeyLogin = () => runSessionLogin(() => loginWithPasskey(supabase));
+
+  const handlePasskeyRegister = async () => {
+    setSocialError(null);
+    setSocialNotice(null);
+    if (!regName.trim() || !regEmail.trim()) {
+      setSocialError("Вкажіть ім'я та email, щоб створити акаунт з passkey.");
+      sound.caution();
+      return;
+    }
+    setSocialLoading(true);
+    sound.button();
+    const error = await registerWithPasskey(supabase, regName.trim(), regEmail.trim());
+    setSocialLoading(false);
+    if (error) {
+      setSocialError(error);
+      sound.caution();
+    } else {
+      setSocialNotice(`Ми надіслали лист на ${regEmail.trim()}. Підтвердьте email, потім увійдіть через passkey.`);
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -304,7 +434,7 @@ export function AuthModal({ open, onClose, onAuthSuccess, initialScreen = "login
       password: regPassword,
       options: {
         data: { full_name: regName, company: regCompany, phone: regPhone },
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=/order`,
+        emailRedirectTo: authCallbackUrl("/order"),
       },
     });
 
@@ -376,6 +506,14 @@ export function AuthModal({ open, onClose, onAuthSuccess, initialScreen = "login
                   </button>
                 </p>
               </div>
+              <SocialAuthRow
+                onGoogle={handleGoogle}
+                onTelegram={TELEGRAM_BOT_ID ? handleTelegram : undefined}
+                onPasskey={handlePasskeyLogin}
+                disabled={socialLoading}
+                error={socialError}
+                notice={socialNotice}
+              />
               <form onSubmit={handleLogin} className="space-y-3">
                 <div className="space-y-1.5">
                   <Label htmlFor="pw-login-email">Email</Label>
@@ -428,6 +566,14 @@ export function AuthModal({ open, onClose, onAuthSuccess, initialScreen = "login
                   </button>
                 </p>
               </div>
+              <SocialAuthRow
+                onGoogle={handleGoogle}
+                onTelegram={TELEGRAM_BOT_ID ? handleTelegram : undefined}
+                onPasskey={handlePasskeyRegister}
+                disabled={socialLoading}
+                error={socialError}
+                notice={socialNotice}
+              />
               <form onSubmit={handleRegister} className="space-y-3">
                 <div className="space-y-1.5">
                   <Label htmlFor="pw-reg-name">Ваше ім&apos;я *</Label>

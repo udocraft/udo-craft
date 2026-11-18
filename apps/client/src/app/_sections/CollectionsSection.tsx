@@ -31,10 +31,14 @@ export function CollectionsSection({ products, categories, materials, colorVaria
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [collPage, setCollPage] = useState(0);
-  const [collPerPage, setCollPerPage] = useState(2);
+  const [collPerPage, setCollPerPage] = useState(4);
 
   useEffect(() => {
-    const update = () => setCollPerPage(window.innerWidth >= 1024 ? 4 : 2);
+    // Two rows per page: 2 cols (mobile), 4 (md), 5 (lg), 6 (xl)
+    const update = () => {
+      const w = window.innerWidth;
+      setCollPerPage(w >= 1280 ? 12 : w >= 1024 ? 10 : w >= 768 ? 8 : 4);
+    };
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
@@ -111,7 +115,7 @@ export function CollectionsSection({ products, categories, materials, colorVaria
               </motion.div>
             ) : (
               <motion.div key={activeCategory ?? "all"} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 items-stretch">
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 items-stretch">
                   {pageItems.map((item, i) => (
                     <motion.div
                       key={item.id}
@@ -122,6 +126,7 @@ export function CollectionsSection({ products, categories, materials, colorVaria
                     >
                       <ProductCardDetailed
                         product={item}
+                        compact
                         colorVariants={colorVariants.filter((v) => v.product_id === item.id)}
                         materials={materials}
                         onAddWithoutPrint={(product, size, color, variant) => {
@@ -160,9 +165,9 @@ export function CollectionsSection({ products, categories, materials, colorVaria
               </motion.div>
             )
           ) : (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
               {fallback.slice(0, collPerPage).map((p) => (
-                <ProductCardDetailed key={p.id} product={p}
+                <ProductCardDetailed key={p.id} product={p} compact
                   onAddWithoutPrint={(product) => {
                     const params = new URLSearchParams({ product: product.slug || product.id, add: "1" });
                     router.push(`/order?${params.toString()}`);

@@ -40,6 +40,8 @@
     "address": "Lviv, Dzherelna 69"
   },
   "hero": {
+    "soundOn": "Geluid aanzetten",
+    "soundOff": "Geluid uitzetten",
     "heading": "Kleding die deel wordt van het DNA van uw bedrijf",
     "subheading": "Wij maken kleding die mensen graag dragen.",
     "ctaPrimary": "Bekijk de catalogus",
