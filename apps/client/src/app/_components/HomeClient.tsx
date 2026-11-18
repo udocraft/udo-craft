@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import dynamic from "next/dynamic";
 import { useLocale, useTranslations } from "next-intl";
 import { getAllImages, Product, Material, ProductColorVariant, resolveProductImages } from "@udo-craft/shared";
@@ -58,8 +57,6 @@ export function HomeClient({
   const tHomeContact = useTranslations("homeContact");
   const tFooter = useTranslations("footer");
 
-  const [cinemaMode, setCinemaMode] = useState(false);
-
   useSoundInit();
   const heroProduct = products.find((product) => {
     const productImages = resolveProductImages(product.product_images, product.images);
@@ -111,9 +108,6 @@ export function HomeClient({
         return (
           <HeroSection
             key="hero"
-            cinemaMode={cinemaMode}
-            onCinemaEnter={() => setCinemaMode(true)}
-            onCinemaExit={() => setCinemaMode(false)}
             heading={locale === "uk" ? get("home_hero", "heading", tHero("heading")) : tHero("heading")}
             subheading={locale === "uk" ? get("home_hero", "subheading", tHero("subheading")) : tHero("subheading")}
             ctaPrimaryText={locale === "uk" ? get("home_hero", "cta_primary_text", tHero("ctaPrimary")) : tHero("ctaPrimary")}
@@ -172,8 +166,8 @@ export function HomeClient({
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden scroll-smooth">
-      <SiteHeader cinemaMode={cinemaMode} />
+    <div className="min-h-screen bg-background text-foreground overflow-x-clip scroll-smooth">
+      <SiteHeader />
 
       <main>
         {layout.map((s) => s.visible !== "false" && renderSection(s.id))}
