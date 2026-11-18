@@ -1,6 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type MutableRefObject,
+  type ReactNode,
+  type RefObject,
+} from "react";
 import { Volume2, VolumeX } from "lucide-react";
 
 interface ScrollExpandMediaProps {
@@ -137,6 +145,94 @@ function StarField({ opacity, reduceMotion }: { opacity: number; reduceMotion: b
       aria-hidden="true"
       className="pointer-events-none absolute inset-0 z-0 h-full w-full"
       style={{ opacity }}
+    />
+  );
+}
+
+const LETTER_SPREAD_X = 260;
+const LETTER_SPREAD_Y = 220;
+const PARTICLES_PER_LETTER = 6;
+
+/** Deterministic pseudo-random value in [0, 1) so each letter always breaks the same way. */
+const hash = (n: number) => {
+  const x = Math.sin(n * 12.9898 + 78.233) * 43758.5453;
+  return x - Math.floor(x);
+};
+
+/** Each letter drifts, spins and shrinks away at its own moment during the expansion. */
+function letterStyle(index: number, p: number): CSSProperties {
+  const delay = hash(index * 3 + 1) * 0.3;
+  const lp = clamp((p - delay) / 0.7);
+  if (lp <= 0) return {};
+  const dx = (hash(index * 3 + 2) * 2 - 1) * LETTER_SPREAD_X * lp;
+  const dy = (hash(index * 3 + 3) * 2 - 1) * LETTER_SPREAD_Y * lp;
+  const rot = (hash(index * 3 + 4) * 2 - 1) * 90 * lp;
+  return {
+    transform: `translate(${dx}px, ${dy}px) rotate(${rot}deg) scale(${1 - 0.7 * lp})`,
+    opacity: 1 - lp,
+  };
+}
+
+/** Dust particles that burst from each letter while it breaks apart. */
+function LetterDust({
+  stageRef,
+  letterRefs,
+  progress,
+}: {
+  stageRef: RefObject<HTMLDivElement>;
+  letterRefs: MutableRefObject<(HTMLSpanElement | null)[]>;
+  progress: number;
+}) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const stage = stageRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !stage || !ctx) return;
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const stageRect = stage.getBoundingClientRect();
+    const width = stageRect.width;
+    const height = stageRect.height;
+    if (canvas.width !== Math.round(width * dpr) || canvas.height !== Math.round(height * dpr)) {
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, width, height);
+
+    // Peaks mid-break and fades out as the starfield takes over.
+    const burst = 4 * progress * (1 - progress);
+    if (burst <= 0.001) return;
+
+    letterRefs.current.forEach((letter, index) => {
+      if (!letter) return;
+      const box = letter.getBoundingClientRect();
+      if (box.width === 0) return;
+      const cx = box.left - stageRect.left + box.width / 2;
+      const cy = box.top - stageRect.top + box.height / 2;
+
+      for (let k = 0; k < PARTICLES_PER_LETTER; k++) {
+        const seed = index * 17 + k * 5;
+        const angle = hash(seed + 1) * Math.PI * 2;
+        const dist = (40 + hash(seed + 2) * 140) * progress;
+        const x = cx + Math.cos(angle) * dist;
+        const y = cy + Math.sin(angle) * dist - 30 * progress * hash(seed + 3);
+        const radius = 0.5 + hash(seed + 4) * 1.6;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${0.9 * burst})`;
+        ctx.fill();
+      }
+    });
+  }, [progress, stageRef, letterRefs]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 z-[11] h-full w-full"
     />
   );
 }
@@ -296,9 +392,20 @@ export function ScrollExpandMedia({
   const radius = (1 - p) * 24;
   const slide = p * (isMobile ? 120 : 150); // rows slide apart (vw); odd rows left, even rows right
   const rows = splitRows(title, 3);
-  // The video card dissolves into the starfield during the second half of the expansion.
-  const cardOpacity = 1 - smoothstep(0.55, 1, p) * 0.9;
+  // The video stays fully visible after the expansion (no fade-out).
+  const cardOpacity = 1;
   const starOpacity = smoothstep(0.35, 1, p);
+
+  // Letters break apart only when motion is allowed.
+  const letterProgress = reduceMotion ? 0 : p;
+  const letterRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const chars = rows.map((row) => Array.from(row));
+  let charOffset = 0;
+  const rowStarts = chars.map((row) => {
+    const start = charOffset;
+    charOffset += row.length;
+    return start;
+  });
 
   return (
     <>
@@ -348,7 +455,7 @@ export function ScrollExpandMedia({
             />
             <div
               className="absolute inset-0 bg-black"
-              style={{ opacity: 0.4 - p * 0.3 }}
+              style={{ opacity: 0.12 }}
               aria-hidden="true"
             />
           </div>
@@ -357,16 +464,32 @@ export function ScrollExpandMedia({
             className="relative z-10 flex flex-col items-center px-4 text-center font-semibold leading-[0.94] tracking-[-0.055em] drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)]"
             style={{ fontSize: "clamp(2.75rem, 6.2vw, 6.5rem)" }}
           >
-            {rows.map((row, i) => (
+            {rows.map((_, i) => (
               <span
                 key={i}
                 className="block whitespace-nowrap will-change-transform"
                 style={{ transform: `translateX(${i % 2 === 0 ? -slide : slide}vw)` }}
               >
-                {row}
+                {chars[i].map((char, j) => {
+                  const index = rowStarts[i] + j;
+                  return (
+                    <span
+                      key={j}
+                      ref={(el) => {
+                        letterRefs.current[index] = el;
+                      }}
+                      className="inline-block will-change-transform"
+                      style={letterStyle(index, letterProgress)}
+                    >
+                      {char === " " ? " " : char}
+                    </span>
+                  );
+                })}
               </span>
             ))}
           </h1>
+
+          <LetterDust stageRef={stageRef} letterRefs={letterRefs} progress={letterProgress} />
 
           {audioOnScroll && (
             <button
