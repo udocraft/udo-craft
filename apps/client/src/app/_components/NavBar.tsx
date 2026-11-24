@@ -3,7 +3,7 @@
 import { Link } from "@/i18n/navigation";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { User, ShoppingBag, Menu, Phone, Mail, Instagram, Send } from "lucide-react";
+import { User, ShoppingBag, Menu, Phone, Mail, Instagram, Send, AtSign } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { buttonVariants } from "@udo-craft/ui/components/ui/button-variants";
 import { BrandLogoFull } from "@/components/brand-logo";
@@ -25,6 +25,15 @@ interface NavBarProps {
 // Long ease-out: fast start, very soft landing.
 const morph = "duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none";
 
+const TikTokIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
+    <path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48z" />
+  </svg>
+);
+
+/** Content inset shared by both rows; the pill's edges sit on the max-w-6xl box. */
+const rowInner = "mx-auto flex max-w-6xl items-center px-gutter md:px-8 lg:px-10";
+
 const iconButton =
   "relative flex size-11 items-center justify-center rounded-full text-muted-foreground transition-colors duration-fast hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 const topLink =
@@ -41,6 +50,12 @@ export function NavBar({ isLoggedIn, cartCount, contacts, onCartOpen, onAuthOpen
     { href: "/#catalog", label: t("catalog") },
     { href: "/#how", label: t("how") },
     { href: "/biz", label: t("business") },
+  ];
+  const socials = [
+    { href: contacts.instagram, label: "Instagram", Icon: Instagram },
+    { href: contacts.telegram, label: "Telegram", Icon: Send },
+    { href: contacts.tiktok, label: "TikTok", Icon: TikTokIcon },
+    { href: contacts.threads, label: "Threads", Icon: AtSign },
   ];
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuMounted, setMenuMounted] = useState(false);
@@ -74,7 +89,7 @@ export function NavBar({ isLoggedIn, cartCount, contacts, onCartOpen, onAuthOpen
 
         {/* Top row: contacts and socials, desktop only */}
         <div className="relative hidden h-9 md:block">
-        <div className="mx-auto flex h-full max-w-6xl items-center justify-between gap-6 px-gutter text-xs">
+        <div className={`${rowInner} h-full justify-between gap-6 text-xs`}>
           <div className="flex items-center gap-5">
             <a href={telHref(contacts.phone)} className={topLink}>
               <Phone className="size-3.5" aria-hidden="true" />
@@ -86,28 +101,30 @@ export function NavBar({ isLoggedIn, cartCount, contacts, onCartOpen, onAuthOpen
             </a>
           </div>
           <div className="flex items-center gap-5">
-            <a href={contacts.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className={topLink}>
-              <Instagram className="size-4" aria-hidden="true" />
-            </a>
-            <a href={contacts.telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className={topLink}>
-              <Send className="size-4" aria-hidden="true" />
-            </a>
+            {socials.map(({ href, label, Icon }) => (
+              <a key={label} href={href} target="_blank" rel="noopener noreferrer" className={topLink}>
+                <Icon className="size-3.5" aria-hidden="true" />
+                {label}
+              </a>
+            ))}
+            <span className="h-4 w-px bg-border" aria-hidden="true" />
+            <LanguageSwitcher />
           </div>
         </div>
         </div>
 
         {/* Main row */}
         <nav aria-label={t("mainNav")} className="relative">
-        <div className="mx-auto flex h-14 max-w-6xl items-center gap-2 px-gutter">
+        <div className={`${rowInner} relative h-14 gap-2`}>
           <Link
             href="/"
             aria-label={t("logoLink")}
-            className="mr-auto inline-flex min-h-11 shrink-0 items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:mr-0"
+            className="mr-auto inline-flex min-h-11 shrink-0 items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <BrandLogoFull className="h-7 w-auto" color="var(--color-primary)" />
           </Link>
 
-          <ul className="mx-auto hidden items-center gap-1 lg:flex">
+          <ul className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 lg:flex">
             {navLinks.map((l) => (
               <li key={l.href}>
                 <Link
@@ -140,7 +157,10 @@ export function NavBar({ isLoggedIn, cartCount, contacts, onCartOpen, onAuthOpen
               )}
             </button>
 
-            <LanguageSwitcher />
+            {/* Language lives in the top row from md; below that the top row is hidden. */}
+            <div className="md:hidden">
+              <LanguageSwitcher />
+            </div>
 
             {/* Wrapper carries the visibility: buttonVariants' own inline-flex would override `hidden`. */}
             <div className="ml-2 hidden md:block">

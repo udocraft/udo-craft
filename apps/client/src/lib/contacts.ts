@@ -6,6 +6,8 @@ export interface SiteContacts {
   email: string;
   instagram: string;
   telegram: string;
+  tiktok: string;
+  threads: string;
 }
 
 export const DEFAULT_CONTACTS: SiteContacts = {
@@ -13,6 +15,8 @@ export const DEFAULT_CONTACTS: SiteContacts = {
   email: "info@udocraft.com",
   instagram: "https://www.instagram.com/u.do.craft/",
   telegram: "https://t.me/udostore",
+  tiktok: "https://www.tiktok.com/@u.do.craft",
+  threads: "https://www.threads.net/@u.do.craft",
 };
 
 const str = (v: unknown) => (typeof v === "string" && v.trim() ? v.trim() : "");
@@ -24,6 +28,8 @@ export function contactsFromCms(body: Record<string, unknown> | null | undefined
     email: str(b.email) || DEFAULT_CONTACTS.email,
     instagram: str(b.instagram) || DEFAULT_CONTACTS.instagram,
     telegram: str(b.telegram) || DEFAULT_CONTACTS.telegram,
+    tiktok: str(b.tiktok) || DEFAULT_CONTACTS.tiktok,
+    threads: str(b.threads) || DEFAULT_CONTACTS.threads,
   };
 }
 
