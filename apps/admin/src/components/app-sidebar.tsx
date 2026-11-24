@@ -6,7 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   BarChart3, Users, MessageCircle, ShoppingBag, ImagePlus,
   Settings, ChevronRight, UserCog, ShelvingUnit,
-  FileEdit, Globe, Search, Tag, Plus,
+  FileEdit, Globe, Search, Tag, Plus, Bot,
 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { NavUser } from "@/components/nav-user";
@@ -84,6 +84,7 @@ const CRM_NAV: NavItem[] = [
 const ANALYTICS_NAV: NavItem[] = [
   { title: "Аналітика", url: "/analytics", icon: BarChart3 },
   { title: "Відвідувачі", url: "/visitors", icon: Globe },
+  { title: "Агенти", url: "/agents", icon: Bot },
 ];
 
 const CATALOG_NAV: NavItem[] = [
