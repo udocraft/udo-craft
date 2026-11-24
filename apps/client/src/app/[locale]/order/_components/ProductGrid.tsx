@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import React from "react";
 import type { Product, Material, ProductColorVariant } from "@udo-craft/shared";
 import { ProductCardDetailed } from "@/components/ProductCardDetailed";
@@ -24,20 +26,21 @@ export function ProductGrid({
   products, variants, materials, categories, activeCategory,
   onCategoryChange, onCustomize, onAddWithoutPrint,
 }: ProductGridProps) {
+  const t = useTranslations("editor");
   const filtered = products.filter((p) => !activeCategory || (p as any).category_id === activeCategory);
 
   return (
     <>
       <div>
-        <h2 className="text-xl font-bold mb-1">Виберіть товари</h2>
-        <p className="text-sm text-muted-foreground">Натисніть на товар, щоб налаштувати та додати до замовлення</p>
+        <h2 className="text-xl font-bold mb-1">{t("grid.title")}</h2>
+        <p className="text-sm text-muted-foreground">{t("grid.subtitle")}</p>
       </div>
 
       {categories.length > 0 && (
         <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
           <button onClick={() => onCategoryChange(null)}
             className={`whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-semibold border transition-all shrink-0 ${activeCategory === null ? "bg-primary text-primary-foreground border-primary" : "bg-card text-muted-foreground border-border hover:border-foreground/40"}`}>
-            Всі
+            {t("common.all")}
           </button>
           {categories.map((cat) => (
             <button key={cat.id} onClick={() => onCategoryChange(cat.id)}
@@ -52,7 +55,7 @@ export function ProductGrid({
         {filtered.length === 0 ? (
           <div className="col-span-full text-center py-16">
             <p className="text-3xl mb-3">🧺</p>
-            <p className="text-muted-foreground text-sm font-medium">У цій категорії поки немає товарів</p>
+            <p className="text-muted-foreground text-sm font-medium">{t("grid.empty")}</p>
           </div>
         ) : filtered.map((product, index) => {
           const prodVariants = variants.filter((v) => v.product_id === product.id);

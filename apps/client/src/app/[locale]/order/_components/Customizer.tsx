@@ -116,6 +116,7 @@ export function Customizer({
   const [mobilePriceOpen, setMobilePriceOpen] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const tShare = useTranslations("share");
+  const t = useTranslations("editor");
   const [shareOpen, setShareOpen] = useState(false);
   const [drawingEditLayerId, setDrawingEditLayerId] = useState<string | null>(null);
   const [shareAccess, setShareAccess] = useState<ShareAccess>(initialShare?.access ?? "comment");
@@ -210,7 +211,7 @@ export function Customizer({
         body: JSON.stringify({ body: commentDraft }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Не вдалося додати коментар");
+      if (!res.ok) throw new Error(t("customizer.commentFailed"));
       setComments((prev) => [...prev, data]);
       setCommentDraft("");
     } catch (err) {
@@ -232,7 +233,7 @@ export function Customizer({
 
   const handleClose = () => {
     if (s.layers.length > 0) {
-      if (!confirm("Повернутися? Незбережені зміни буде втрачено.")) return;
+      if (!confirm(t("common.leaveConfirm"))) return;
     }
     onClose();
   };
@@ -310,14 +311,14 @@ export function Customizer({
     if (isReadOnly) {
       return (
         <div className="p-4 space-y-3">
-          <p className="text-sm font-medium">Перегляд макета</p>
+          <p className="text-sm font-medium">{t("customizer.previewTitle")}</p>
           <p className="text-xs text-muted-foreground">
             {canEditShare && !isAuthenticated
-              ? "Увійдіть в акаунт, щоб редагувати цей макет."
-              : `Це посилання дозволяє перегляд${canCommentShare ? " і коментування" : ""}. Редагування вимкнено власником.`}
+              ? t("customizer.previewSignIn")
+              : canCommentShare ? t("customizer.previewViewComment") : t("customizer.previewViewOnly")}
           </p>
-          {canEditShare && !isAuthenticated && <Button type="button" variant="outline" size="sm" onClick={() => setPaywallOpen(true)}>Увійти для редагування</Button>}
-          {canCommentShare && <Button type="button" variant="outline" size="sm" onClick={() => setShareOpen(true)}><MessageSquare className="size-4" /> Коментарі</Button>}
+          {canEditShare && !isAuthenticated && <Button type="button" variant="outline" size="sm" onClick={() => setPaywallOpen(true)}>{t("customizer.signInToEdit")}</Button>}
+          {canCommentShare && <Button type="button" variant="outline" size="sm" onClick={() => setShareOpen(true)}><MessageSquare className="size-4" /> {t("customizer.comments")}</Button>}
         </div>
       );
     }
@@ -347,9 +348,9 @@ export function Customizer({
     if (tab === "upload") return <UploadPanel activeSide={s.activeSide} onFileAdd={addLayer} />;
     if (tab === "layers") return (
       <div className="p-3">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Шари</p>
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">{t("tabs.layers")}</p>
         {s.layers.filter((l) => l.side === s.activeSide).length === 0 ? (
-          <p className="text-xs text-muted-foreground text-center py-8">Немає шарів. Додайте зображення або текст.</p>
+          <p className="text-xs text-muted-foreground text-center py-8">{t("customizer.noLayers")}</p>
         ) : (
           <LayersList {...layerHandlerProps} />
         )}
@@ -359,11 +360,8 @@ export function Customizer({
   };
 
   const tabLabel = (tab: SidebarTabId | null) => {
-    if (tab === "prints") return "Принти";
-    if (tab === "draw") return "Малюнок";
-    if (tab === "text") return "Текст";
-    if (tab === "upload") return "Завантажити";
-    if (tab === "layers") return "Шари";
+    if (tab === "upload") return t("tabs.uploadTitle");
+    if (tab === "prints" || tab === "draw" || tab === "text" || tab === "layers") return t(`tabs.${tab}`);
     return "";
   };
 
@@ -402,14 +400,14 @@ export function Customizer({
       )}
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold leading-tight truncate">{product.name}</p>
-        <p className="text-xs text-muted-foreground mt-0.5">від {(product.base_price_cents / 100).toFixed(0)} ₴</p>
+        <p className="text-xs text-muted-foreground mt-0.5">{t("common.fromPrice", { price: (product.base_price_cents / 100).toFixed(0) })}</p>
       </div>
       <button
         type="button"
         onClick={handleClose}
         className="shrink-0 text-xs font-medium text-primary hover:underline focus-visible:outline-none whitespace-nowrap"
       >
-        Змінити
+        {t("common.change")}
       </button>
     </div>
   );
@@ -420,7 +418,7 @@ export function Customizer({
       {/* Color picker */}
       {variants.length > 0 && (
         <div className="space-y-1.5 pb-3 mb-1">
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Колір</p>
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t("common.color")}</p>
           <div className="flex gap-2 flex-wrap">
             {variants.map((v) => {
               const mat = materials.find((m) => m.id === v.material_id);
@@ -443,7 +441,7 @@ export function Customizer({
       {/* Size picker */}
       {Array.isArray(product.available_sizes) && (product.available_sizes as string[]).length > 0 && (
         <div className="space-y-1.5 pb-3 mb-3 border-b border-border">
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Розмір</p>
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t("common.size")}</p>
           <div className="flex gap-1.5 flex-wrap">
             {(product.available_sizes as string[]).map((size) => (
               <button key={size} onClick={() => { if (!isReadOnly) s.setSelectedSize(size); }} aria-pressed={s.selectedSize === size}
@@ -473,7 +471,7 @@ export function Customizer({
       loading={s.addingToCart || s.removingBg}
       showTitle={false}
       addDisabled={!!s.addDisabledReason || s.removingBg}
-      addDisabledReason={s.addDisabledReason || (s.removingBg ? "Видаляємо фон..." : null)}
+      addDisabledReason={s.addDisabledReason || (s.removingBg ? t("common.removingBg") : null)}
       disabled={s.removingBg || isReadOnly}
       hideButton
     />
@@ -494,8 +492,8 @@ export function Customizer({
       >
         <MirrorRound className="size-5 text-primary shrink-0" aria-hidden="true" />
         <div className="text-left">
-          <p className="text-sm font-medium text-foreground leading-tight">Приміряти на людину</p>
-          <p className="text-xs text-muted-foreground leading-tight">З допомогою AI</p>
+          <p className="text-sm font-medium text-foreground leading-tight">{t("customizer.tryOn")}</p>
+          <p className="text-xs text-muted-foreground leading-tight">{t("customizer.withAi")}</p>
         </div>
       </button>
 
@@ -508,8 +506,8 @@ export function Customizer({
         onClick={() => void s.handleAddToCart()}
       >
         {(s.addingToCart || s.removingBg)
-          ? <><Loader2 className="size-3.5 animate-spin mr-1.5" />{s.removingBg ? "Видаляємо фон..." : "Додаємо..."}</>
-          : "Додати до замовлення"}
+          ? <><Loader2 className="size-3.5 animate-spin mr-1.5" />{s.removingBg ? t("common.removingBg") : t("common.adding")}</>
+          : t("common.addToOrder")}
       </Button>}
       <Button
         type="button"
@@ -606,8 +604,8 @@ export function Customizer({
             <div className="relative bg-background border-t border-border flex flex-col" style={{ maxHeight: "calc(100dvh - 56px - 44px)" }} onClick={(e) => e.stopPropagation()}>
               <div className="flex justify-center pt-2.5 pb-1 shrink-0"><div className="w-10 h-1 rounded-full bg-border" /></div>
               <div className="flex items-center justify-between px-4 pb-3 shrink-0">
-                <p className="text-sm font-semibold">Тираж та ціна</p>
-                <button onClick={() => setMobilePriceOpen(false)} aria-label="Закрити" className="size-7 rounded-full flex items-center justify-center hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><X className="size-4" /></button>
+                <p className="text-sm font-semibold">{t("common.qtyPrice")}</p>
+                <button onClick={() => setMobilePriceOpen(false)} aria-label={t("common.close")} className="size-7 rounded-full flex items-center justify-center hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><X className="size-4" /></button>
               </div>
               <div className="overflow-y-auto px-4 pb-2">{rightPanel}</div>
               <div className="shrink-0 border-t border-border px-4 py-3 pb-[max(12px,env(safe-area-inset-bottom))]">

@@ -126,12 +126,12 @@
     "prevPage": "Précédent",
     "nextPage": "Suivant",
     "page": "Page {n}",
-    "fromPrice": "from ₴{price}",
+    "fromPrice": "à partir de {price} ₴",
     "priceOnRequest": "Prix sur demande",
-    "expand": "Expand",
-    "collapse": "Collapse",
-    "addPrint": "Add print",
-    "withoutPrint": "Without print"
+    "expand": "Afficher plus",
+    "collapse": "Réduire",
+    "addPrint": "Ajouter un visuel",
+    "withoutPrint": "Sans visuel"
   },
   "process": {
     "heading": "De l'idée au merch — en 4 étapes",
@@ -273,21 +273,21 @@
     "discount": "Remise",
     "mm": "mm",
     "embroidery": "Broderie",
-    "label": "Online constructor",
+    "label": "Éditeur en ligne",
     "heading": "Essayez ici même",
     "desc": "Choisissez une couleur et importez votre image pour voir le rendu de votre pièce.",
-    "openEditor": "Open constructor",
-    "productLabel": "Product",
-    "colorLabel": "Color",
-    "printsLabel": "Prints",
-    "textLabel": "Text",
-    "fileLabel": "File",
-    "volumeLabel": "Volume & price",
+    "openEditor": "Ouvrir l'éditeur",
+    "productLabel": "Produit",
+    "colorLabel": "Couleur",
+    "printsLabel": "Visuels",
+    "textLabel": "Texte",
+    "fileLabel": "Fichier",
+    "volumeLabel": "Quantité et prix",
     "totalLabel": "Total",
-    "saved": "Draft saved",
-    "layersReady": "Layers ready",
-    "priceUpdated": "Price updated",
-    "sizeLabel": "Size"
+    "saved": "Brouillon enregistré",
+    "layersReady": "Calques prêts",
+    "priceUpdated": "Prix mis à jour",
+    "sizeLabel": "Taille"
   },
   "trust": {
     "statsLabel": "Chiffres clés",
@@ -1169,5 +1169,271 @@
     "backToSite": "Retour au site",
     "showcaseItem": "Avis {n}",
     "close": "Fermer"
+  },
+  "editor": {
+    "common": {
+      "addToOrder": "Ajouter à la commande",
+      "adding": "Ajout...",
+      "all": "Tous",
+      "back": "Retour",
+      "cancel": "Annuler",
+      "change": "Modifier",
+      "close": "Fermer",
+      "collapse": "Réduire",
+      "color": "Couleur",
+      "delete": "Supprimer",
+      "expand": "Afficher plus",
+      "fromPrice": "à partir de {price} ₴",
+      "fromPricePer": "à partir de {price} ₴ / pièce",
+      "generate": "Générer",
+      "generating": "Génération…",
+      "home": "Accueil",
+      "leaveConfirm": "Revenir ? Les modifications non enregistrées seront perdues.",
+      "noColors": "Aucune couleur configurée",
+      "perUnit": "/pièce",
+      "print": "Impression",
+      "productSettings": "Réglages du produit",
+      "qty": "Quantité",
+      "qtyPrice": "Quantité et prix",
+      "removingBg": "Suppression de l'arrière-plan...",
+      "resetSearch": "Effacer la recherche",
+      "retry": "Réessayer",
+      "retryShort": "Réessayer",
+      "settings": "Réglages",
+      "size": "Taille"
+    },
+    "tabs": {
+      "prints": "Visuels",
+      "draw": "Dessin",
+      "text": "Texte",
+      "upload": "Fichier",
+      "layers": "Calques",
+      "uploadTitle": "Importer",
+      "toolsLabel": "Outils de l'éditeur"
+    },
+    "errorPage": {
+      "title": "Impossible de charger le catalogue",
+      "text": "La page de commande n'a pas pu se charger. Réessayez ou revenez à l'accueil."
+    },
+    "main": {
+      "restoreFailed": "Impossible de restaurer votre panier. Vos données restent enregistrées.",
+      "linkFailed": "Impossible d'ouvrir le lien",
+      "linkProductGone": "Le produit de ce lien n'est plus disponible",
+      "catalogFailed": "Impossible de charger le catalogue",
+      "catalogFailedReload": "Impossible de charger le catalogue. Actualisez la page."
+    },
+    "grid": {
+      "title": "Choisissez une pièce",
+      "subtitle": "Touchez une pièce pour la personnaliser et l'ajouter à la commande",
+      "empty": "Aucun produit dans cette catégorie pour l'instant"
+    },
+    "genButton": {
+      "label": "Voir sur une personne",
+      "needsDesign": "Ajoutez d'abord un design"
+    },
+    "textPanel": {
+      "search": "Rechercher des compositions…",
+      "add": "Ajouter un bloc de texte"
+    },
+    "shapes": {
+      "title": "Formes",
+      "search": "Rechercher des formes…",
+      "empty": "Aucune forme trouvée.",
+      "resetFilters": "Effacer les filtres"
+    },
+    "ai": {
+      "noImage": "La réponse ne contenait pas d'image.",
+      "timeout": "Délai dépassé. Veuillez réessayer.",
+      "failed": "Impossible de générer l'image. Veuillez réessayer."
+    },
+    "state": {
+      "restored": "Votre session d'édition précédente a été restaurée",
+      "chooseGarmentSize": "Choisissez une taille.",
+      "choosePrintSizes": "Choisissez une taille pour chaque impression."
+    },
+    "qty": {
+      "fromQty": "dès {n}",
+      "methods": {
+        "embroidery": "Broderie",
+        "screen": "Sérigraphie",
+        "sublimation": "Sublimation",
+        "patch": "Écusson"
+      },
+      "product": "Article",
+      "chooseSize": "Choisissez une taille",
+      "savings": "Économie",
+      "total": "Total",
+      "totalLine": "{qty} pièces × {price} ₴",
+      "noteLabel": "Important :",
+      "noteText": "Les prix sont indicatifs. Le prix final peut changer après confirmation par un conseiller.",
+      "itemNote": "Note pour cet article",
+      "notePlaceholder": "Demandes particulières..."
+    },
+    "layout": {
+      "removeBgTitle": "Suppression de l'arrière-plan par IA",
+      "removeBgText": "Veuillez patienter. Le traitement haute qualité prend 15 à 20 secondes."
+    },
+    "customizer": {
+      "commentFailed": "Impossible d'ajouter le commentaire",
+      "previewTitle": "Aperçu du design",
+      "previewSignIn": "Connectez-vous pour modifier ce design.",
+      "previewViewOnly": "Ce lien est en lecture seule. Le propriétaire a désactivé la modification.",
+      "previewViewComment": "Ce lien permet de voir et commenter. Le propriétaire a désactivé la modification.",
+      "signInToEdit": "Se connecter pour modifier",
+      "comments": "Commentaires",
+      "noLayers": "Aucun calque. Ajoutez une image ou du texte.",
+      "tryOn": "Essayer sur une personne",
+      "withAi": "Avec l'IA"
+    },
+    "gen": {
+      "presets": {
+        "0": "des amis à une fête sur un toit",
+        "1": "quelqu'un en balade en ville à l'automne",
+        "2": "un barista dans un café chaleureux",
+        "3": "un musicien à un concert en plein air",
+        "4": "un skateur dans un parc urbain",
+        "5": "une équipe à une soirée d'entreprise",
+        "6": "un étudiant sur le campus",
+        "7": "un couple dans un festival d'été"
+      },
+      "progress": {
+        "0": "Analyse de la demande...",
+        "1": "Choix du style...",
+        "2": "Application du design...",
+        "3": "Dernières retouches..."
+      },
+      "inProgress": "Génération en cours…",
+      "tapToView": "Touchez pour voir",
+      "yourPhoto": "Votre photo",
+      "photoUploaded": "Photo importée",
+      "removePhoto": "Retirer la photo",
+      "uploadPhoto": "Importez votre photo",
+      "cameraOrGallery": "Ouvre l'appareil photo ou la galerie",
+      "title": "Voyez-le porté",
+      "subtitle": "L'IA montre le rendu de votre design en vrai",
+      "alreadyRunning": "Une génération est déjà en cours",
+      "result": "Résultat",
+      "usedFree": "Vous avez déjà utilisé la génération gratuite pour cet article.",
+      "viewResult": "Voir le résultat",
+      "tabSelfie": "Votre photo",
+      "tabScene": "Scène",
+      "sceneLabel": "Description de la scène",
+      "scenePlaceholder": "Décrivez une scène ou choisissez une idée…",
+      "emptySide": "Ce côté est vide. Nous utiliserons le design du côté « {side} ».",
+      "quotaUsed": "Vous avez utilisé vos {n} générations gratuites",
+      "generatingShort": "Génération…"
+    },
+    "toolbar": {
+      "opacity": "Opacité",
+      "fontSearch": "Rechercher une police...",
+      "nothingFound": "Aucun résultat",
+      "bold": "Gras",
+      "italic": "Italique",
+      "textColor": "Couleur du texte",
+      "alignLeft": "Gauche",
+      "alignCenter": "Centre",
+      "alignRight": "Droite",
+      "arc": "Arc",
+      "letterSpacing": "Espacement des lettres",
+      "lineHeight": "Interligne",
+      "fill": "Remplissage",
+      "stroke": "Contour",
+      "fillColor": "Couleur de remplissage",
+      "strokeColor": "Couleur du contour",
+      "removeBg": "Supprimer l'arrière-plan",
+      "editDrawing": "Modifier le dessin",
+      "center": "Centrer",
+      "flip": "Retourner",
+      "duplicate": "Dupliquer",
+      "fontCategories": {
+        "grotesque": "Sans empattement",
+        "condensed": "Condensée",
+        "serif": "Avec empattement",
+        "display": "Titrage",
+        "decorative": "Décorative",
+        "handwritten": "Manuscrite",
+        "technical": "Technique"
+      }
+    },
+    "prints": {
+      "prompts": {
+        "0": "Un chat astronaute style rétro, couleurs vives",
+        "1": "Montagnes et soleil minimalistes, dessin au trait",
+        "2": "Un bouquet de fleurs des champs, aquarelle",
+        "3": "Lettrage « Good vibes » style années 70",
+        "4": "Un dragon en pixels, style jeu rétro",
+        "5": "Une vague style japonais, palette bleue",
+        "6": "Une tasse de café avec un cœur, flat design",
+        "7": "Une chouette avec un livre, illustration vectorielle"
+      },
+      "aiTitle": "Illustration IA",
+      "aiDesc": "Créez des illustrations prêtes à imprimer à partir d'un texte.",
+      "aiLabel": "Description pour l'illustration IA",
+      "loadFailed": "Impossible de charger les visuels",
+      "ready": "Visuels prêts à l'emploi",
+      "search": "Rechercher des visuels…",
+      "empty": "Aucun visuel trouvé."
+    },
+    "upload": {
+      "badType": "Type de fichier non pris en charge « {type} ». Formats acceptés : PNG, JPG/JPEG, SVG, PDF.",
+      "tooLarge": "Fichier trop volumineux ({size} Mo). Maximum : {max}.",
+      "addAgain": "Ajouter « {name} » à nouveau",
+      "addFailed": "Impossible d'ajouter « {name} ». Veuillez réessayer.",
+      "title": "Importer un fichier",
+      "dropLabel": "Importer un fichier : cliquez ou glissez-le ici",
+      "uploading": "Import…",
+      "dropRelease": "Relâchez pour importer",
+      "dropHint": "Cliquez ou glissez un fichier",
+      "formats": "PNG, JPG, SVG, PDF · jusqu'à 20 Mo",
+      "choose": "Choisir un fichier",
+      "recent": "Imports récents",
+      "noRecent": "Aucun import pour l'instant.",
+      "recentHint": "Vos fichiers importés apparaîtront ici pour les réutiliser rapidement."
+    },
+    "canvas": {
+      "defaultText": "Texte",
+      "undo": "Annuler",
+      "undoTitle": "Annuler (Ctrl+Z)",
+      "redo": "Rétablir",
+      "redoTitle": "Rétablir (Ctrl+Maj+Z)",
+      "copy": "Copie",
+      "fontSmaller": "Réduire la police",
+      "fontBigger": "Agrandir la police",
+      "boldShort": "G",
+      "italicShort": "I",
+      "removeBgFailed": "Impossible de supprimer l'arrière-plan. Veuillez réessayer.",
+      "bgShort": "Fond",
+      "edit": "Modifier",
+      "layerOpacity": "Opacité du calque",
+      "deleteLayer": "Supprimer le calque",
+      "loadingImage": "Chargement de l'image...",
+      "sides": {
+        "front": "Devant",
+        "back": "Dos",
+        "left": "Gauche",
+        "right": "Droite"
+      }
+    },
+    "layers": {
+      "layer": "Calque",
+      "setupTitle": "Configurez ce calque",
+      "setupText": "Choisissez le type et la taille d'impression. Le prix se met à jour automatiquement.",
+      "printType": "Type d'impression",
+      "printSize": "Taille d'impression",
+      "image": "Image"
+    },
+    "paywall": {
+      "title": "L'IA nécessite un compte",
+      "text": "Inscrivez-vous gratuitement et obtenez 3 générations IA offertes",
+      "register": "S'inscrire",
+      "login": "Se connecter",
+      "skip": "Continuer sans compte"
+    }
+  },
+  "sizeChart": {
+    "title": "Guide des tailles",
+    "empty": "Le tableau est vide",
+    "schemeAlt": "{name} : schéma des tailles",
+    "note": "Toutes les mesures sont en centimètres. Entre deux tailles, prenez la plus grande."
   }
 }

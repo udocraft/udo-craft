@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useCustomizer, type PrintLayer, type SidebarTabId } from "@udo-craft/shared";
 import type { Product, PrintZone, Material, ProductColorVariant } from "@udo-craft/shared";
@@ -41,6 +43,7 @@ export function useCustomizerState({
   existingMockupUploadedUrl,
   initialSharePayload,
 }: UseCustomizerStateProps) {
+  const t = useTranslations("editor");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasSaveRef = useRef<(() => string) | null>(null);
   const fabricCanvasRef = useRef<import("fabric").fabric.Canvas | null>(null);
@@ -124,7 +127,7 @@ export function useCustomizerState({
     } else if (draft?.layers && draft.layers.length > 0) {
       // Restore draft layers (only uploaded images + text layers survive reload)
       setLayersWithRef(draft.layers);
-      toast.info("Відновлено попередній сеанс редагування", { duration: 3000 });
+      toast.info(t("state.restored"), { duration: 3000 });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -160,8 +163,8 @@ export function useCustomizerState({
   const requiresGarmentSize = Array.isArray(product.available_sizes) && product.available_sizes.length > 0;
   const hasIncompletePrintSizes = layers.some((layer) => !layer.sizeLabel);
   const addDisabledReason = requiresGarmentSize && !selectedSize
-    ? "Оберіть розмір товару."
-    : hasIncompletePrintSizes ? "Оберіть розмір для кожного нанесення." : null;
+    ? t("state.chooseGarmentSize")
+    : hasIncompletePrintSizes ? t("state.choosePrintSizes") : null;
 
   const addLayer = (file: File) => addLayerFromHook(file, activeSide, printPricing);
   const addLayerFull = (file: File, side: string, pricing: typeof printPricing) =>
@@ -254,8 +257,8 @@ export function useCustomizerState({
 
   const handleAddToCart = async () => {
     if (addingToCart) return;
-    if (requiresGarmentSize && !selectedSize) { toast.error("Оберіть розмір товару"); return; }
-    if (hasIncompletePrintSizes) { toast.error("Оберіть розмір для кожного нанесення"); return; }
+    if (requiresGarmentSize && !selectedSize) { toast.error(t("state.chooseGarmentSize")); return; }
+    if (hasIncompletePrintSizes) { toast.error(t("state.choosePrintSizes")); return; }
     setAddingToCart(true);
     try {
       const item = await handleAddToCartFromHook({

@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import React, { useState } from "react";
 import { Search, Type } from "lucide-react";
 import { TEXT_COMPOSITIONS, type TextComposition, type PrintLayer } from "@udo-craft/shared";
@@ -40,6 +42,7 @@ export interface TextPanelProps {
 // ── Main component ────────────────────────────────────────────────────────
 
 export default function TextPanel({ onAddTextLayer, onAddComposition }: TextPanelProps) {
+  const t = useTranslations("editor");
   const [search, setSearch] = useState("");
   const filtered = TEXT_COMPOSITIONS.filter(
     (c) => !search || c.label.toLowerCase().includes(search.toLowerCase())
@@ -53,7 +56,7 @@ export default function TextPanel({ onAddTextLayer, onAddComposition }: TextPane
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
           <input
             type="text"
-            placeholder="Пошук композицій…"
+            placeholder={t("textPanel.search")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-input bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -69,7 +72,7 @@ export default function TextPanel({ onAddTextLayer, onAddComposition }: TextPane
           className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
         >
           <Type className="size-4" />
-          Додати текстовий блок
+          {t("textPanel.add")}
         </button>
       </div>
 

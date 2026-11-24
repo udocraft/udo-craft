@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import React from "react";
 import { ArrowLeft, Layers, LayoutList, Pencil, Type, Upload } from "lucide-react";
 import { type SidebarTabId } from "@udo-craft/shared";
@@ -11,27 +13,28 @@ export interface EditorSidebarProps {
   layerCount?: number;
 }
 
-const TABS: { id: SidebarTabId; label: string; Icon: React.ElementType }[] = [
-  { id: "prints",  label: "Принти",  Icon: Layers      },
-  { id: "draw",    label: "Малюнок", Icon: Pencil      },
-  { id: "text",    label: "Текст",   Icon: Type        },
-  { id: "upload",  label: "Файл",    Icon: Upload      },
-  { id: "layers",  label: "Шари",    Icon: LayoutList  },
+const TABS: { id: SidebarTabId; Icon: React.ElementType }[] = [
+  { id: "prints",  Icon: Layers      },
+  { id: "draw",    Icon: Pencil      },
+  { id: "text",    Icon: Type        },
+  { id: "upload",  Icon: Upload      },
+  { id: "layers",  Icon: LayoutList  },
 ];
 
 export default function EditorSidebar({ activeTab, onTabChange, onBack, layerCount = 0 }: EditorSidebarProps) {
+  const t = useTranslations("editor");
   return (
-    <aside className="hidden lg:flex flex-col w-14 shrink-0 h-full bg-card" aria-label="Інструменти редактора">
+    <aside className="hidden lg:flex flex-col w-14 shrink-0 h-full bg-card" aria-label={t("tabs.toolsLabel")}>
       {/* Back button */}
       <div className="flex items-center justify-center pt-2 pb-1 px-1">
         <button
           type="button"
-          aria-label="Назад"
+          aria-label={t("common.back")}
           onClick={onBack}
           className="flex flex-col items-center justify-center gap-1 w-11 h-11 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         >
           <ArrowLeft className="size-4" />
-          <span className="text-xs font-medium leading-none">Назад</span>
+          <span className="text-xs font-medium leading-none">{t("common.back")}</span>
         </button>
       </div>
 
@@ -39,7 +42,8 @@ export default function EditorSidebar({ activeTab, onTabChange, onBack, layerCou
 
       {/* Tool tabs */}
       <nav className="flex flex-col items-center gap-1 pt-1 px-1">
-        {TABS.map(({ id, label, Icon }) => {
+        {TABS.map(({ id, Icon }) => {
+          const label = t(`tabs.${id}`);
           const isActive = activeTab === id;
           return (
             <button

@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import React from "react";
 import { ImagePlus, Type } from "lucide-react";
 import LayersList from "./LayersList";
@@ -17,6 +19,7 @@ export default function LayersPanel({
   onAddClick, onAddText, fileInputRef, onFileChange, disabled,
   ...listProps
 }: LayersPanelProps) {
+  const t = useTranslations("editor");
   return (
     <div className="space-y-2">
       <div className="grid grid-cols-2 gap-2">
@@ -25,7 +28,7 @@ export default function LayersPanel({
           <div className="size-8 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
             <ImagePlus className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
           </div>
-          <span className="text-xs font-semibold text-muted-foreground group-hover:text-primary transition-colors">Зображення</span>
+          <span className="text-xs font-semibold text-muted-foreground group-hover:text-primary transition-colors">{t("layers.image")}</span>
         </button>
         {onAddText ? (
           <button type="button" onClick={onAddText} disabled={disabled}
@@ -33,7 +36,7 @@ export default function LayersPanel({
             <div className="size-8 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
               <Type className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
             </div>
-            <span className="text-xs font-semibold text-muted-foreground group-hover:text-primary transition-colors">Текст</span>
+            <span className="text-xs font-semibold text-muted-foreground group-hover:text-primary transition-colors">{t("tabs.text")}</span>
           </button>
         ) : (
           <div className="h-24 rounded-xl border-2 border-dashed border-border/30 bg-muted/20" />

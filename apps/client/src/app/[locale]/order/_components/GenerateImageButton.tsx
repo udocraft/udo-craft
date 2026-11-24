@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -12,6 +14,7 @@ interface GenerateImageButtonProps {
 }
 
 export function GenerateImageButton({ onClick, disabled, hasLayers }: GenerateImageButtonProps) {
+  const t = useTranslations("editor");
   if (!process.env.NEXT_PUBLIC_GEMINI_ENABLED) return null;
 
   const isDisabled = disabled || !hasLayers;
@@ -31,10 +34,10 @@ export function GenerateImageButton({ onClick, disabled, hasLayers }: GenerateIm
         disabled={isDisabled}
         className="relative w-full gap-2"
         variant="default"
-        title={!hasLayers ? "Додайте дизайн на полотно, щоб активувати" : undefined}
+        title={!hasLayers ? t("genButton.needsDesign") : undefined}
       >
         <Sparkles className="h-4 w-4" />
-        Побачити мерч на людині
+        {t("genButton.label")}
       </Button>
     </div>
   );

@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useTranslations } from "next-intl";
+
+import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   X, ChevronLeft, Upload,
@@ -19,23 +21,9 @@ import type { AiQuotaState } from "@/hooks/useAiQuota";
 
 const MAX_GENERATIONS = 1;
 
-const ALL_PRESETS = [
-  "команда ІТ-компанії в сучасному офісі",
-  "бариста у затишній кав'ярні",
-  "учасники масштабного бізнес-івенту",
-  "персонал ресторану у фірмовому одязі",
-  "спікер на технологічній конференції",
-  "колеги на корпоративній вечірці",
-  "працівники стартапу в коворкінгу",
-  "студент-розробник на кампусі",
-];
-
-const PROGRESS_PHRASES = [
-  "Аналізуємо запит...",
-  "Підбираємо образ...",
-  "Накладаємо мерч...",
-  "Фінальні штрихи...",
-];
+// Scene ideas and progress phrases live in the "editor.gen" translations.
+const PRESET_COUNT = 8;
+const PROGRESS_COUNT = 4;
 
 const MATRIX_ICONS = [
   Shirt, Scissors, Palette, Brush, Sparkles, Star, Wand2,
@@ -104,8 +92,10 @@ function MatrixIconGrid() {
 }
 
 function RotatingPresets({ onSelect, selected }: { onSelect: (text: string) => void; selected: string }) {
+  const t = useTranslations("editor");
+  const allPresets = useMemo(() => Array.from({ length: PRESET_COUNT }, (_, i) => t(`gen.presets.${i}`)), [t]);
   const [visible, setVisible] = useState<string[]>(() =>
-    [...ALL_PRESETS].sort(() => Math.random() - 0.5).slice(0, 3)
+    [...allPresets].sort(() => Math.random() - 0.5).slice(0, 3)
   );
   const visibleRef = useRef(visible);
   visibleRef.current = visible;
@@ -117,12 +107,12 @@ function RotatingPresets({ onSelect, selected }: { onSelect: (text: string) => v
     if (frozen) return;
     const id = setInterval(() => {
       const current = visibleRef.current;
-      const others = ALL_PRESETS.filter((p) => !current.includes(p));
-      const pool = others.length >= 3 ? others : ALL_PRESETS;
+      const others = allPresets.filter((p) => !current.includes(p));
+      const pool = others.length >= 3 ? others : allPresets;
       setVisible([...pool].sort(() => Math.random() - 0.5).slice(0, 3));
     }, 3000);
     return () => clearInterval(id);
-  }, [frozen]);
+  }, [frozen, allPresets]);
 
   // When a chip is selected, ensure it's in the visible list
   useEffect(() => {
@@ -162,6 +152,7 @@ function RotatingPresets({ onSelect, selected }: { onSelect: (text: string) => v
 }
 
 function GeneratingThumbnail({ onClick }: { onClick: () => void }) {
+  const t = useTranslations("editor");
   return (
     <motion.button
       type="button"
@@ -178,8 +169,8 @@ function GeneratingThumbnail({ onClick }: { onClick: () => void }) {
         </motion.div>
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-xs font-medium text-primary">Генерація в процесі…</p>
-        <p className="text-xs text-muted-foreground truncate">Натисніть, щоб переглянути</p>
+        <p className="text-xs font-medium text-primary">{t("gen.inProgress")}</p>
+        <p className="text-xs text-muted-foreground truncate">{t("gen.tapToView")}</p>
       </div>
     </motion.button>
   );
@@ -194,6 +185,7 @@ function SelfieUpload({
   onUpload: (dataUrl: string) => void;
   onClear: () => void;
 }) {
+  const t = useTranslations("editor");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = (file: File) => {
@@ -209,11 +201,11 @@ function SelfieUpload({
       {selfieDataUrl ? (
         <div className="relative w-full h-full rounded-xl border border-border overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={selfieDataUrl} alt="Ваше фото" className="w-full h-full object-cover" />
+          <img src={selfieDataUrl} alt={t("gen.yourPhoto")} className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center">
-            <p className="text-xs text-white/90 font-medium mb-3">Фото завантажено</p>
-            <Button variant="secondary" size="sm" onClick={onClear} aria-label="Видалити фото">
-              <X className="size-3.5 mr-1.5" /> Видалити
+            <p className="text-xs text-white/90 font-medium mb-3">{t("gen.photoUploaded")}</p>
+            <Button variant="secondary" size="sm" onClick={onClear} aria-label={t("gen.removePhoto")}>
+              <X className="size-3.5 mr-1.5" /> {t("common.delete")}
             </Button>
           </div>
         </div>
@@ -227,8 +219,8 @@ function SelfieUpload({
             <Upload className="size-4 text-muted-foreground" />
           </div>
           <div className="text-center px-4">
-            <p className="text-xs font-semibold text-foreground">Завантажте своє фото</p>
-            <p className="text-xs text-muted-foreground mt-0.5">Відкриє камеру або галерею</p>
+            <p className="text-xs font-semibold text-foreground">{t("gen.uploadPhoto")}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">{t("gen.cameraOrGallery")}</p>
           </div>
         </button>
       )}
@@ -267,6 +259,7 @@ export function GenerationDrawer({
   captureRef, layers, mockups, selectedColor, productImages, productName,
   aiQuota,
 }: GenerationDrawerProps) {
+  const t = useTranslations("editor");
   const [prompt, setPrompt] = useState("");
   // generated + previewImage persist across open/close so user can't re-generate
   const [generated, setGenerated] = useState(false);
@@ -291,7 +284,7 @@ export function GenerationDrawer({
   useEffect(() => {
     if (!loading) return;
     const id = setInterval(() => {
-      setProgressIndex((prev) => (prev + 1) % PROGRESS_PHRASES.length);
+      setProgressIndex((prev) => (prev + 1) % PROGRESS_COUNT);
     }, 2000);
     return () => clearInterval(id);
   }, [loading]);
@@ -359,10 +352,10 @@ export function GenerationDrawer({
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <h2 className="text-base font-semibold">Побачте мерч на людині</h2>
-                          <p className="text-xs text-muted-foreground">AI покаже, як виглядає ваш дизайн у реальному житті</p>
+                          <h2 className="text-base font-semibold">{t("gen.title")}</h2>
+                          <p className="text-xs text-muted-foreground">{t("gen.subtitle")}</p>
                         </div>
-                        <Button variant="ghost" size="icon" onClick={onClose} aria-label="Закрити" className="h-8 w-8 -mr-2 shrink-0 ml-2">
+                        <Button variant="ghost" size="icon" onClick={onClose} aria-label={t("common.close")} className="h-8 w-8 -mr-2 shrink-0 ml-2">
                           <X className="h-5 w-5" />
                         </Button>
                       </div>
@@ -373,16 +366,16 @@ export function GenerationDrawer({
                           {loading ? (
                             <>
                               <GeneratingThumbnail onClick={() => setStep(2)} />
-                              <p className="text-sm text-muted-foreground">Генерація вже запущена</p>
+                              <p className="text-sm text-muted-foreground">{t("gen.alreadyRunning")}</p>
                             </>
                           ) : (
                             <>
                               {previewImage && (
-                                <img src={previewImage} alt="Результат" className="w-40 h-40 rounded-xl object-cover border border-border shadow-sm" />
+                                <img src={previewImage} alt={t("gen.result")} className="w-40 h-40 rounded-xl object-cover border border-border shadow-sm" />
                               )}
-                              <p className="text-sm font-medium text-foreground">Ви вже використали безкоштовну генерацію для цього товару.</p>
+                              <p className="text-sm font-medium text-foreground">{t("gen.usedFree")}</p>
                               <Button className="w-full" onClick={() => setStep(2)}>
-                                Переглянути результат
+                                {t("gen.viewResult")}
                               </Button>
                             </>
                           )}
@@ -391,8 +384,8 @@ export function GenerationDrawer({
                         <>
                           <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as "selfie" | "prompt")} className="w-full mt-2">
                             <TabsList className="w-full grid grid-cols-2">
-                              <TabsTrigger value="selfie" className="text-xs">Своє фото</TabsTrigger>
-                              <TabsTrigger value="prompt" className="text-xs">Сцена</TabsTrigger>
+                              <TabsTrigger value="selfie" className="text-xs">{t("gen.tabSelfie")}</TabsTrigger>
+                              <TabsTrigger value="prompt" className="text-xs">{t("gen.tabScene")}</TabsTrigger>
                             </TabsList>
                           </Tabs>
 
@@ -410,10 +403,10 @@ export function GenerationDrawer({
                             {activeTab === "prompt" && (
                               <div className="space-y-3 pt-1">
                                 <textarea
-                                  aria-label="Опис сцени для генерації"
+                                  aria-label={t("gen.sceneLabel")}
                                   value={prompt}
                                   onChange={(e) => setPrompt(e.target.value)}
-                                  placeholder="Опишіть сцену або оберіть пресет…"
+                                  placeholder={t("gen.scenePlaceholder")}
                                   rows={3}
                                   className="w-full resize-none rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                                 />
@@ -424,13 +417,13 @@ export function GenerationDrawer({
 
                           {showHint && (
                             <p className="text-xs text-muted-foreground mt-2">
-                              Активна сторона порожня. Натхнення буде братись зі сторони «{otherSideWithLayers!.side}».
+                              {t("gen.emptySide", { side: otherSideWithLayers!.side })}
                             </p>
                           )}
 
                           {aiQuota.isExhausted && (
                             <p className="text-xs text-destructive mt-2 text-center">
-                              Ви використали {aiQuota.limit} безкоштовні генерації
+                              {t("gen.quotaUsed", { n: aiQuota.limit })}
                             </p>
                           )}
 
@@ -439,7 +432,7 @@ export function GenerationDrawer({
                             disabled={!canGenerate}
                             onClick={handleGenerateClick}
                           >
-                            {loading ? "Генерація в процесі…" : "Згенерувати"}
+                            {loading ? t("gen.inProgress") : t("common.generate")}
                           </Button>
                         </>
                       )}
@@ -455,14 +448,14 @@ export function GenerationDrawer({
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1 -ml-2">
-                          <Button variant="ghost" size="icon" onClick={() => setStep(1)} aria-label="Назад" className="h-8 w-8">
+                          <Button variant="ghost" size="icon" onClick={() => setStep(1)} aria-label={t("common.back")} className="h-8 w-8">
                             <ChevronLeft className="h-5 w-5" />
                           </Button>
                           <span className="font-semibold text-base">
-                            {loading ? "Генеруємо…" : "Результат"}
+                            {loading ? t("gen.generatingShort") : t("gen.result")}
                           </span>
                         </div>
-                        <Button variant="ghost" size="icon" onClick={onClose} aria-label="Закрити" className="h-8 w-8 -mr-2">
+                        <Button variant="ghost" size="icon" onClick={onClose} aria-label={t("common.close")} className="h-8 w-8 -mr-2">
                           <X className="h-5 w-5" />
                         </Button>
                       </div>
@@ -480,7 +473,7 @@ export function GenerationDrawer({
                                 exit={{ opacity: 0, y: -5 }}
                                 className="text-sm font-medium text-muted-foreground"
                               >
-                                {PROGRESS_PHRASES[progressIndex % PROGRESS_PHRASES.length]}
+                                {t(`gen.progress.${progressIndex % PROGRESS_COUNT}`)}
                               </motion.p>
                             </AnimatePresence>
                           </motion.div>
@@ -492,7 +485,7 @@ export function GenerationDrawer({
                           <div className="p-4 text-center text-sm text-destructive bg-destructive/10 rounded-md m-4">
                             {error}
                             <Button variant="outline" size="sm" className="mt-3 w-full" onClick={() => setStep(1)}>
-                              Спробувати знову
+                              {t("common.retry")}
                             </Button>
                           </div>
                         ) : null}

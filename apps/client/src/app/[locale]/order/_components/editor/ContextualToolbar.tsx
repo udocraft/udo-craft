@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 /**
  * ContextualToolbar — appears above the canvas when a layer is selected.
  * Shows layer-type-specific controls + generic actions.
@@ -106,13 +108,14 @@ function OpacityControl({
   value: number;
   onChange: (v: number) => void;
 }) {
+  const t = useTranslations("editor");
   const [open, setOpen] = useState(false);
   return (
     <div className="relative shrink-0">
       <button
         type="button"
-        title="Прозорість"
-        aria-label="Прозорість"
+        title={t("toolbar.opacity")}
+        aria-label={t("toolbar.opacity")}
         onClick={() => setOpen((v) => !v)}
         className={`h-8 px-2.5 rounded-lg border transition-all flex items-center gap-1.5 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${open ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30 hover:bg-muted/60"}`}
       >
@@ -122,7 +125,7 @@ function OpacityControl({
       {open && (
         <div className="absolute top-full left-0 mt-1 z-50 bg-card border border-border rounded-xl shadow-lg p-3 w-48 flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold">Прозорість</span>
+            <span className="text-xs font-semibold">{t("toolbar.opacity")}</span>
             <span className="text-xs font-mono text-muted-foreground">{Math.round(value * 100)}%</span>
           </div>
           <input
@@ -204,7 +207,17 @@ function ColorSwatch({
 
 // ── Font select ───────────────────────────────────────────────────────────
 
+// Category values are the font data's ids (Ukrainian); labels come from "editor.toolbar.fontCategories".
 const FONT_CATEGORIES = ["Гротеск", "Конденсований", "Антиква", "Дисплейний", "Декоративний", "Рукописний", "Технічний"] as const;
+const FONT_CATEGORY_KEYS: Record<(typeof FONT_CATEGORIES)[number], string> = {
+  "Гротеск": "grotesque",
+  "Конденсований": "condensed",
+  "Антиква": "serif",
+  "Дисплейний": "display",
+  "Декоративний": "decorative",
+  "Рукописний": "handwritten",
+  "Технічний": "technical",
+};
 
 function FontSelect({
   value,
@@ -213,6 +226,7 @@ function FontSelect({
   value: TextFontId;
   onChange: (v: TextFontId) => void;
 }) {
+  const t = useTranslations("editor");
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -267,7 +281,7 @@ function FontSelect({
               <input
                 ref={searchRef}
                 type="text"
-                placeholder="Пошук шрифту..."
+                placeholder={t("toolbar.fontSearch")}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full text-xs rounded-lg border border-input bg-background pl-8 pr-8 py-1.5 focus:outline-none focus:ring-1 focus:ring-primary"
@@ -284,7 +298,7 @@ function FontSelect({
             {grouped.map((group) => (
               <div key={group.category}>
                 <div className="px-3 pt-2.5 pb-1 text-xs font-bold uppercase tracking-wider text-muted-foreground/60 select-none">
-                  {group.category}
+                  {t(`toolbar.fontCategories.${FONT_CATEGORY_KEYS[group.category as keyof typeof FONT_CATEGORY_KEYS] ?? "display"}`)}
                 </div>
                 {group.fonts.map((f) => (
                   <button
@@ -314,7 +328,7 @@ function FontSelect({
             ))}
             {filtered.length === 0 && (
               <div className="px-3 py-4 text-xs text-muted-foreground text-center">
-                Нічого не знайдено
+                {t("toolbar.nothingFound")}
               </div>
             )}
           </div>
@@ -335,6 +349,7 @@ function TextControls({
   fabricCanvasRef: React.RefObject<import("fabric").fabric.Canvas | null>;
   onTextChange: (id: string, patch: TextLayerPatch) => void;
 }) {
+  const t = useTranslations("editor");
   const patch = (p: TextLayerPatch) => onTextChange(layer.id, p);
   const canvas = fabricCanvasRef.current;
 
@@ -361,29 +376,29 @@ function TextControls({
         <button type="button" onClick={() => patch({ textFontSize: Math.min(200, currentSize + 2) })}
           className="size-6 flex items-center justify-center rounded border border-border text-muted-foreground hover:text-foreground hover:bg-muted/60 text-xs font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1">+</button>
       </div>
-      <ToolBtn title="Жирний" active={!!layer.textBold} onClick={() => patch({ textBold: !layer.textBold })}>
+      <ToolBtn title={t("toolbar.bold")} active={!!layer.textBold} onClick={() => patch({ textBold: !layer.textBold })}>
         <Bold className="size-3.5" />
       </ToolBtn>
-      <ToolBtn title="Курсив" active={!!layer.textItalic} onClick={() => patch({ textItalic: !layer.textItalic })}>
+      <ToolBtn title={t("toolbar.italic")} active={!!layer.textItalic} onClick={() => patch({ textItalic: !layer.textItalic })}>
         <Italic className="size-3.5" />
       </ToolBtn>
       <ColorSwatch
         value={layer.textColor ?? INK_BLACK}
         onChange={(v) => patch({ textColor: v })}
-        title="Колір тексту"
+        title={t("toolbar.textColor")}
       />
-      <ToolBtn title="Ліво" active={(layer.textAlign ?? "center") === "left"} onClick={() => patch({ textAlign: "left" })}>
+      <ToolBtn title={t("toolbar.alignLeft")} active={(layer.textAlign ?? "center") === "left"} onClick={() => patch({ textAlign: "left" })}>
         <AlignLeftIcon className="size-3.5" />
       </ToolBtn>
-      <ToolBtn title="Центр" active={(layer.textAlign ?? "center") === "center"} onClick={() => patch({ textAlign: "center" })}>
+      <ToolBtn title={t("toolbar.alignCenter")} active={(layer.textAlign ?? "center") === "center"} onClick={() => patch({ textAlign: "center" })}>
         <AlignCenterIcon className="size-3.5" />
       </ToolBtn>
-      <ToolBtn title="Право" active={(layer.textAlign ?? "center") === "right"} onClick={() => patch({ textAlign: "right" })}>
+      <ToolBtn title={t("toolbar.alignRight")} active={(layer.textAlign ?? "center") === "right"} onClick={() => patch({ textAlign: "right" })}>
         <AlignRightIcon className="size-3.5" />
       </ToolBtn>
       {/* Curve slider */}
       <div className="flex items-center gap-1.5 shrink-0">
-        <span className="text-xs text-muted-foreground whitespace-nowrap">Дуга</span>
+        <span className="text-xs text-muted-foreground whitespace-nowrap">{t("toolbar.arc")}</span>
         <input
           type="range"
           min={-180}
@@ -396,7 +411,7 @@ function TextControls({
       </div>
       {/* Letter spacing */}
       <div className="flex items-center gap-1.5 shrink-0">
-        <span className="text-xs text-muted-foreground whitespace-nowrap" title="Міжлітерний інтервал">AV</span>
+        <span className="text-xs text-muted-foreground whitespace-nowrap" title={t("toolbar.letterSpacing")}>AV</span>
         <input
           type="range"
           min={-10}
@@ -414,7 +429,7 @@ function TextControls({
       </div>
       {/* Line height */}
       <div className="flex items-center gap-1.5 shrink-0">
-        <span className="text-xs text-muted-foreground whitespace-nowrap" title="Міжрядковий інтервал">↕</span>
+        <span className="text-xs text-muted-foreground whitespace-nowrap" title={t("toolbar.lineHeight")}>↕</span>
         <input
           type="range"
           min={50}
@@ -451,6 +466,7 @@ function SvgControls({
   fabricCanvasRef: React.RefObject<import("fabric").fabric.Canvas | null>;
   onTextChange: (id: string, patch: TextLayerPatch) => void;
 }) {
+  const t = useTranslations("editor");
   const canvas = fabricCanvasRef.current;
   const [mode, setMode] = useState<"fill" | "stroke">("fill");
 
@@ -461,12 +477,12 @@ function SvgControls({
         onClick={() => setMode(mode === "fill" ? "stroke" : "fill")}
         className="h-8 px-2.5 rounded-lg border border-border bg-background hover:border-primary/50 transition-colors text-xs font-semibold flex items-center gap-1.5 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
       >
-        <span className="text-muted-foreground">{mode === "fill" ? "Заливка" : "Обводка"}</span>
+        <span className="text-muted-foreground">{mode === "fill" ? t("toolbar.fill") : t("toolbar.stroke")}</span>
       </button>
       <ColorSwatch
         value={(mode === "fill" ? layer.svgFillColor : layer.svgStrokeColor) ?? INK_BLACK}
         onChange={(v) => onTextChange(layer.id, { [mode === "fill" ? "svgFillColor" : "svgStrokeColor"]: v } as any)}
-        title={mode === "fill" ? "Колір заливки" : "Колір обводки"}
+        title={mode === "fill" ? t("toolbar.fillColor") : t("toolbar.strokeColor")}
       />
       <OpacityControl
         value={layer.opacity ?? 1}
@@ -491,6 +507,7 @@ function RasterControls({
   onTextChange: (id: string, patch: TextLayerPatch) => void;
   onRemoveBg?: (id: string, newUrl: string) => void;
 }) {
+  const t = useTranslations("editor");
   const canvas = fabricCanvasRef.current;
   return (
     <>
@@ -508,7 +525,7 @@ function RasterControls({
           onClick={() => onRemoveBg(layer.id, layer.url)}
           className="h-8 px-3 rounded-lg border border-border text-xs font-medium text-muted-foreground hover:text-foreground hover:border-foreground/30 hover:bg-muted/60 transition-all whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
         >
-          Видалити фон
+          {t("toolbar.removeBg")}
         </button>
       )}
     </>
@@ -526,6 +543,7 @@ function DrawingControls({
   onTextChange: (id: string, patch: TextLayerPatch) => void;
   onOpenDrawingStudio?: (layerId: string) => void;
 }) {
+  const t = useTranslations("editor");
   const canvas = fabricCanvasRef.current;
   return (
     <>
@@ -536,7 +554,7 @@ function DrawingControls({
           className="h-8 px-3 rounded-lg border border-border text-xs font-medium text-muted-foreground hover:text-foreground hover:border-foreground/30 hover:bg-muted/60 transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
         >
           <Pencil className="size-3.5" />
-          Редагувати малюнок
+          {t("toolbar.editDrawing")}
         </button>
       )}
       <OpacityControl
@@ -565,6 +583,7 @@ export default function ContextualToolbar({
   onRemoveBg,
   onOpenDrawingStudio,
 }: ContextualToolbarProps) {
+  const t = useTranslations("editor");
   const canvas = fabricCanvasRef.current;
 
   const handleCenter = () => {
@@ -647,16 +666,16 @@ export default function ContextualToolbar({
           className="hidden md:flex items-center gap-1 px-3 py-2 bg-card border border-border rounded-2xl shadow-sm overflow-x-auto max-w-full mb-2"
         >
           {/* Generic actions */}
-          <ToolBtn title="Центрувати" onClick={handleCenter}>
+          <ToolBtn title={t("toolbar.center")} onClick={handleCenter}>
             <MoveHorizontal className="size-3.5" />
           </ToolBtn>
-          <ToolBtn title="Відзеркалити" onClick={handleFlipH}>
+          <ToolBtn title={t("toolbar.flip")} onClick={handleFlipH}>
             <FlipHorizontal className="size-3.5" />
           </ToolBtn>
-          <ToolBtn title="Дублювати" onClick={() => onDuplicate(layer.id)}>
+          <ToolBtn title={t("toolbar.duplicate")} onClick={() => onDuplicate(layer.id)}>
             <Copy className="size-3.5" />
           </ToolBtn>
-          <ToolBtn title="Видалити" danger onClick={() => onDelete(layer.id)}>
+          <ToolBtn title={t("common.delete")} danger onClick={() => onDelete(layer.id)}>
             <Trash2 className="size-3.5" />
           </ToolBtn>
 
@@ -683,16 +702,16 @@ export default function ContextualToolbar({
             <div className="w-8 h-1 rounded-full bg-border" />
           </div>
           <div className="flex items-center gap-1.5 px-3 pb-3 overflow-x-auto">
-            <ToolBtn title="Центрувати" onClick={handleCenter}>
+            <ToolBtn title={t("toolbar.center")} onClick={handleCenter}>
               <MoveHorizontal className="size-3.5" />
             </ToolBtn>
-            <ToolBtn title="Відзеркалити" onClick={handleFlipH}>
+            <ToolBtn title={t("toolbar.flip")} onClick={handleFlipH}>
               <FlipHorizontal className="size-3.5" />
             </ToolBtn>
-            <ToolBtn title="Дублювати" onClick={() => onDuplicate(layer.id)}>
+            <ToolBtn title={t("toolbar.duplicate")} onClick={() => onDuplicate(layer.id)}>
               <Copy className="size-3.5" />
             </ToolBtn>
-            <ToolBtn title="Видалити" danger onClick={() => onDelete(layer.id)}>
+            <ToolBtn title={t("common.delete")} danger onClick={() => onDelete(layer.id)}>
               <Trash2 className="size-3.5" />
             </ToolBtn>
             {typeControls}

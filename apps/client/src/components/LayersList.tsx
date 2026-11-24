@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import React, { useRef, useState, useEffect } from "react";
 import { GripVertical, Trash2, Type, Copy } from "lucide-react";
 import { PRINT_TYPES, type PrintLayer, type PrintTypeId } from "@udo-craft/shared";
@@ -56,6 +58,7 @@ export default function LayersList({
   onSelect, onDelete, onDuplicate, onTypeChange, onSizeLabelChange, onReorder,
   pricing = [], quantity = 1, layerScales = {}, pxToMmRatio = 0,
 }: LayersListProps) {
+  const t = useTranslations("editor");
   const sideLayers = layers.filter((l) => l.side === activeSide);
   const dragItem = useRef<number | null>(null);
   const [dropTarget, setDropTarget] = useState<number | null>(null);
@@ -120,7 +123,7 @@ export default function LayersList({
     const ghost = {
       x: e.touches[0].clientX,
       y: e.touches[0].clientY,
-      text: l.kind === "text" ? (l.textContent ?? "Текст") : (l.file?.name ?? "Шар")
+      text: l.kind === "text" ? (l.textContent ?? t("canvas.defaultText")) : (l.file?.name ?? t("layers.layer"))
     };
     touchGhost.current = ghost;
     setTouchGhostState(ghost);
@@ -223,12 +226,12 @@ export default function LayersList({
                 </div>
                 <div className="flex-1 min-w-0 px-2">
                   <p className="text-xs font-medium truncate leading-tight text-foreground">
-                    {isText ? (layer.textContent?.replace(/\n/g, " ").slice(0, 24) || "Текст") : layer.file?.name}
+                    {isText ? (layer.textContent?.replace(/\n/g, " ").slice(0, 24) || t("canvas.defaultText")) : layer.file?.name}
                   </p>
                   <div className="flex items-center gap-1 mt-0.5">
                     {isText ? (
                       <span className="inline-flex items-center gap-0.5 text-xs px-1.5 py-0.5 rounded-full font-semibold bg-violet-100 text-violet-700">
-                        <Type className="size-2.5" /> Текст
+                        <Type className="size-2.5" /> {t("tabs.text")}
                       </span>
                     ) : (
                       <PrintTypeBadge typeId={layer.type} small />
@@ -237,12 +240,12 @@ export default function LayersList({
                 </div>
                 <div className="flex items-center shrink-0" onPointerDown={(e) => e.stopPropagation()}>
                   {onDuplicate && (
-                    <button type="button" onClick={(e) => { e.stopPropagation(); onDuplicate(layer.id); }} title="Дублювати"
+                    <button type="button" onClick={(e) => { e.stopPropagation(); onDuplicate(layer.id); }} title={t("toolbar.duplicate")}
                       className="size-8 flex items-center justify-center rounded-lg text-muted-foreground/40 hover:text-primary hover:bg-primary/10 transition-all">
                       <Copy className="size-3.5" />
                     </button>
                   )}
-                  <button type="button" onClick={(e) => { e.stopPropagation(); onDelete(layer.id); }} aria-label="Видалити шар"
+                  <button type="button" onClick={(e) => { e.stopPropagation(); onDelete(layer.id); }} aria-label={t("canvas.deleteLayer")}
                     className="size-8 flex items-center justify-center rounded-lg text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-all">
                     <Trash2 className="size-3.5" />
                   </button>
@@ -270,15 +273,15 @@ export default function LayersList({
                       )}
                     </div>
                     <div className="min-w-0 space-y-1">
-                      <p className="text-xs font-semibold text-foreground">Налаштуйте шар</p>
+                      <p className="text-xs font-semibold text-foreground">{t("layers.setupTitle")}</p>
                       <p className="text-xs leading-relaxed text-muted-foreground">
-                        Оберіть тип нанесення та розмір. Вартість оновиться автоматично.
+                        {t("layers.setupText")}
                       </p>
                     </div>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Тип нанесення</label>
+                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t("layers.printType")}</label>
                     <div className="flex flex-wrap gap-1.5">
                       {PRINT_TYPES.map((t) => (
                         <button
@@ -300,7 +303,7 @@ export default function LayersList({
 
                   {sizePriceRows.length > 0 && onSizeLabelChange && (
                     <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Розмір нанесення</label>
+                      <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t("layers.printSize")}</label>
                       <div className="grid grid-cols-5 gap-1.5">
                         {sizePriceRows.map((r) => {
                           const p = calcPrice(r.qty_tiers, quantity);
