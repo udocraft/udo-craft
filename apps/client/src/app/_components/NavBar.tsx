@@ -22,6 +22,9 @@ interface NavBarProps {
   onAuthOpen?: () => void;
 }
 
+// Same easing as the original floating pill.
+const morph = "duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none";
+
 const iconButton =
   "relative flex size-11 items-center justify-center rounded-full text-muted-foreground transition-colors duration-fast hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 const topLink =
@@ -29,8 +32,8 @@ const topLink =
 
 /**
  * Two-level header. Top bar (md+): phone, email and socials. It slides
- * away once the page scrolls, leaving the main bar: logo, navigation, account, cart
- * and the one primary action. `--header-height` in globals.css matches both heights.
+ * away once the page scrolls and the main bar (logo, navigation, account, cart, primary
+ * action) shrinks into a floating pill. `--header-height` in globals.css matches both heights.
  */
 export function NavBar({ isLoggedIn, cartCount, contacts, onCartOpen, onAuthOpen }: NavBarProps) {
   const t = useTranslations("nav");
@@ -52,12 +55,14 @@ export function NavBar({ isLoggedIn, cartCount, contacts, onCartOpen, onAuthOpen
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-transform duration-300 ease-out motion-reduce:transition-none ${
+      className={`fixed inset-x-0 top-0 z-50 transition-transform ${morph} ${
         scrolled ? "md:-translate-y-9" : ""
       }`}
     >
       {/* Top bar: contacts and secondary links, desktop only */}
-      <div className="hidden h-9 border-b border-border/70 bg-background md:block">
+      <div
+        className={`hidden h-9 bg-muted transition-opacity duration-300 md:block ${scrolled ? "opacity-0" : "opacity-100"}`}
+      >
         <div className="mx-auto flex h-full max-w-6xl items-center justify-between gap-6 px-gutter text-xs">
           <div className="flex items-center gap-5">
             <a href={telHref(contacts.phone)} className={topLink}>
@@ -81,8 +86,23 @@ export function NavBar({ isLoggedIn, cartCount, contacts, onCartOpen, onAuthOpen
       </div>
 
       {/* Main bar */}
-      <nav aria-label={t("mainNav")} className="border-b border-border/70 bg-background/85 backdrop-blur-xl">
-        <div className="mx-auto flex h-14 max-w-6xl items-center gap-2 px-gutter">
+      {/* Main bar: full-width white at the top, morphs into a floating pill on scroll */}
+      <nav
+        aria-label={t("mainNav")}
+        className={`transition-[padding] ${morph} ${scrolled ? "px-3 pt-3 sm:px-4" : "px-0 pt-0"}`}
+      >
+        <div
+          className={`mx-auto border transition-[max-width,border-radius,background-color,border-color,box-shadow] ${morph} ${
+            scrolled
+              ? "max-w-5xl rounded-full border-border/80 bg-card/90 shadow-[0_12px_40px_rgba(12,16,34,0.12)] backdrop-blur-2xl"
+              : "max-w-[100vw] rounded-none border-transparent border-b-border/70 bg-card shadow-none"
+          }`}
+        >
+        <div
+          className={`mx-auto flex h-14 max-w-6xl items-center gap-2 transition-[padding] ${morph} ${
+            scrolled ? "pl-4 pr-2" : "px-gutter"
+          }`}
+        >
           <Link
             href="/"
             aria-label={t("logoLink")}
@@ -143,6 +163,7 @@ export function NavBar({ isLoggedIn, cartCount, contacts, onCartOpen, onAuthOpen
               <Menu className="size-6" strokeWidth={1.8} />
             </button>
           </div>
+        </div>
         </div>
       </nav>
 
