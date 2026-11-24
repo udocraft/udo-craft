@@ -54,7 +54,8 @@
   "homeContact": {
     "heading": "Skontaktuj się z nami",
     "subtext": "Opowiedz nam o swoim projekcie — wyślemy ofertę w ciągu 24 godzin.",
-    "address": "Lwów, ul. Dzherelna 69"
+    "address": "Lwów, ul. Dzherelna 69",
+    "visitNote": "wizyta w showroomie po wcześniejszym umówieniu · pn⁠–⁠czw 10:00⁠–⁠18:00, pt 10:00⁠–⁠16:00"
   },
   "hero": {
     "heading": "Odzież, która staje się częścią DNA Twojej firmy",

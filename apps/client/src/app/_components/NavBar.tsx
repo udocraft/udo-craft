@@ -64,15 +64,17 @@ export function NavBar({ isLoggedIn, cartCount, contacts, onCartOpen, onAuthOpen
 
   return (
     <header className="fixed inset-x-0 top-0 z-50">
-      <div className={`relative transition-transform ${morph} ${scrolled ? "translate-y-2 md:translate-y-3" : "translate-y-0"}`}>
-        {/* One surface carries the look: full-width bar at the top, floating pill on scroll.
+      <div className={`relative transition-transform ${morph} ${scrolled ? "md:translate-y-3" : "translate-y-0"}`}>
+        {/* One surface carries the look: full-width bar at the top, floating pill on scroll
+            (md+ only). Phones keep a solid bar flush with the top edge, so in-app browsers
+            and Safari tint their glass toolbars white instead of showing the page through.
             Only its edges, radius and shadow animate; the content does not reflow. The
             gray band at the top is the contact row (md+). */}
         <div
           aria-hidden="true"
           className={`absolute inset-y-0 border bg-[linear-gradient(to_bottom,var(--color-muted)_var(--strip),var(--color-card)_var(--strip))] [--strip:0px] md:[--strip:2.25rem] transition-[left,right,border-radius,border-color,box-shadow] ${morph} ${
             scrolled
-              ? "left-[max(0.375rem,calc(50%_-_36rem))] right-[max(0.375rem,calc(50%_-_36rem))] rounded-[28px] border-border/80 shadow-[0_12px_40px_rgba(12,16,34,0.12)]"
+              ? "left-0 right-0 rounded-none border-transparent border-b-border/70 shadow-[0_4px_16px_rgba(12,16,34,0.06)] md:left-[max(0.375rem,calc(50%_-_36rem))] md:right-[max(0.375rem,calc(50%_-_36rem))] md:rounded-[28px] md:border-border/80 md:shadow-[0_12px_40px_rgba(12,16,34,0.12)]"
               : "left-0 right-0 rounded-none border-transparent border-b-border/70 shadow-none"
           }`}
         />

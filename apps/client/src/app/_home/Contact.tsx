@@ -59,7 +59,10 @@ export async function Contact({ ctx }: { ctx: HomeCtx }) {
             </div>
             <div>
               <dt className="text-sm text-muted-foreground">{tContact("address")}</dt>
-              <dd className="py-2">{address}</dd>
+              <dd className="py-2">
+                {address}
+                <span className="mt-1 block text-sm text-muted-foreground">({t("visitNote")})</span>
+              </dd>
             </div>
           </dl>
 

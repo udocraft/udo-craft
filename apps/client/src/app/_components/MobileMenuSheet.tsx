@@ -73,30 +73,34 @@ export function MobileMenuSheet({ open, onOpenChange, links, contacts }: MobileM
               aria-expanded={askMaps}
               className={`${row} w-full text-left`}
             >
-              <MapPin className={icon} strokeWidth={2} aria-hidden="true" />
-              {tHome("address")}
+              <MapPin className={`${icon} mt-2.5 self-start`} strokeWidth={2} aria-hidden="true" />
+              <span className="flex flex-col py-2">
+                <span>{tHome("address")}</span>
+                <span className="text-sm text-muted-foreground">({tHome("visitNote")})</span>
+              </span>
             </button>
             {askMaps && (
               <div role="group" aria-label={t("directionsPrompt")} className="animate-enter-down mx-1 mb-1 flex flex-col gap-3 rounded-xl border border-border bg-card p-3">
-                <p className="text-sm text-foreground">{t("directionsPrompt")}</p>
-                <div className="flex flex-col gap-2">
-                  <a
-                    href={MAPS_DIRECTIONS_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => setAskMaps(false)}
-                    className={buttonVariants({ variant: "primary", size: "sm", className: "w-full" })}
-                  >
-                    {t("directionsOpen")}
-                  </a>
+                <div className="flex items-start justify-between gap-2">
+                  <p className="pt-1.5 text-sm text-foreground">{t("directionsPrompt")}</p>
                   <button
                     type="button"
                     onClick={() => setAskMaps(false)}
-                    className="inline-flex min-h-9 w-full items-center justify-center rounded-full border border-border px-4 text-sm text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    aria-label={t("directionsCancel")}
+                    className="-mr-1.5 -mt-1 flex size-9 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
-                    {t("directionsCancel")}
+                    <X className="size-4" aria-hidden="true" />
                   </button>
                 </div>
+                <a
+                  href={MAPS_DIRECTIONS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setAskMaps(false)}
+                  className={buttonVariants({ variant: "primary", size: "sm", className: "w-full" })}
+                >
+                  {t("directionsOpen")}
+                </a>
               </div>
             )}
 

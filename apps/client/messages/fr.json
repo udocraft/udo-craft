@@ -54,7 +54,8 @@
   "homeContact": {
     "heading": "Contactez-nous",
     "subtext": "Parlez-nous de votre projet — nous enverrons une proposition sous 24 heures.",
-    "address": "Lviv, rue Dzherelna 69"
+    "address": "Lviv, rue Dzherelna 69",
+    "visitNote": "visite du showroom sur rendez-vous · lun⁠–⁠jeu 10:00⁠–⁠18:00, ven 10:00⁠–⁠16:00"
   },
   "hero": {
     "heading": "Des vêtements qui deviennent l’ADN de votre entreprise",

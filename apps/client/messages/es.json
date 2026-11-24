@@ -54,7 +54,8 @@
   "homeContact": {
     "heading": "Contáctanos",
     "subtext": "Cuéntanos sobre tu proyecto — enviaremos una propuesta en 24 horas.",
-    "address": "Leópolis, calle Dzherelna 69"
+    "address": "Leópolis, calle Dzherelna 69",
+    "visitNote": "visitas al showroom con cita previa · lun⁠–⁠jue 10:00⁠–⁠18:00, vie 10:00⁠–⁠16:00"
   },
   "hero": {
     "heading": "Ropa que se convierte en parte del ADN de tu empresa",
