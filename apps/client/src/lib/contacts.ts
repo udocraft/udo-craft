@@ -35,3 +35,7 @@ export function contactsFromCms(body: Record<string, unknown> | null | undefined
 
 /** Digits and a leading "+" only, for tel: links. */
 export const telHref = (phone: string) => `tel:${phone.replace(/[^+\d]/g, "")}`;
+
+/** Workshop location for Maps. A fixed Latin query, so it resolves the same in every locale. */
+export const MAPS_DIRECTIONS_URL =
+  "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent("Dzherelna St, 69, Lviv, Ukraine");

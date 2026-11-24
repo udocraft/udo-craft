@@ -17,6 +17,7 @@ export const BASE_CLIENT_NAMESPACES = [
   "contactForm",
   "collections",
   "hero",
+  "homeContact", // address line in the mobile menu
 ] as const;
 
 /** Extra namespaces a route subtree adds on top of the base set. */
