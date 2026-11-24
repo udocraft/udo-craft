@@ -671,7 +671,8 @@
       "attachLabel": "Adjuntar archivo",
       "loading": "Cargando mensajes...",
       "empty": "Aún no hay mensajes",
-      "fileTooLarge": "\"{name}\" supera los 10 MB"
+      "fileTooLarge": "\"{name}\" supera los 10 MB",
+      "sendError": "No se pudo enviar el mensaje. Inténtalo de nuevo."
     },
     "files": {
       "empty": "Aún no hay archivos",
@@ -696,6 +697,66 @@
     "order": {
       "back": "Todos los pedidos",
       "notFound": "Pedido no encontrado"
+    },
+    "errorPage": {
+      "title": "Error en tu cuenta",
+      "text": "No se pudo cargar tu cuenta. Inténtalo de nuevo o vuelve al inicio.",
+      "retry": "Intentar de nuevo",
+      "home": "Ir al inicio"
+    },
+    "file": "Archivo",
+    "productFallback": "Producto ({color})",
+    "profile": {
+      "saved": "Perfil actualizado",
+      "saveFailed": "No se pudo guardar el perfil. Revisa tu conexión e inténtalo de nuevo.",
+      "title": "Perfil",
+      "subtitle": "Tus datos de contacto para los pedidos",
+      "name": "Nombre y apellidos",
+      "namePlaceholder": "María García",
+      "company": "Nombre de la empresa",
+      "companyPlaceholder": "Empresa S.L.",
+      "phone": "Teléfono",
+      "edrpou": "NIF / datos de la empresa",
+      "socialPlaceholder": "@usuario o enlace",
+      "saving": "Guardando...",
+      "save": "Guardar perfil"
+    },
+    "security": {
+      "min": "La nueva contraseña debe tener al menos 8 caracteres.",
+      "mismatch": "Las contraseñas no coinciden.",
+      "same": "La nueva contraseña debe ser distinta de la actual.",
+      "wrongCurrent": "La contraseña actual es incorrecta.",
+      "changed": "Contraseña cambiada",
+      "changeFailed": "No se pudo cambiar la contraseña. Revisa tu conexión e inténtalo de nuevo.",
+      "title": "Seguridad",
+      "subtitle": "Cambia la contraseña de tu cuenta",
+      "current": "Contraseña actual",
+      "currentPlaceholder": "Introduce la contraseña actual",
+      "new": "Nueva contraseña",
+      "newPlaceholder": "Mínimo 8 caracteres",
+      "confirm": "Confirma la nueva contraseña",
+      "confirmPlaceholder": "Repite la nueva contraseña",
+      "changing": "Cambiando...",
+      "change": "Cambiar contraseña"
+    },
+    "prints": {
+      "title": "Mis diseños",
+      "subtitle": "Archivos que has subido para imprimir. Solo tú puedes verlos.",
+      "dropHint": "Suelta los archivos aquí",
+      "formats": "JPG, PNG, WebP, GIF o PDF, hasta 10 MB",
+      "pickFiles": "Elegir archivos",
+      "uploading": "Subiendo…",
+      "empty": "Aún no hay archivos. Sube tu primer diseño.",
+      "delete": "Eliminar archivo",
+      "confirmDelete": "¿Eliminar este archivo? No se puede deshacer.",
+      "loadError": "No se pudieron cargar los archivos",
+      "uploadError": "No se pudo subir el archivo",
+      "deleteError": "No se pudo eliminar el archivo",
+      "status": {
+        "uploaded": "En revisión",
+        "approved": "Aprobado",
+        "rejected": "Rechazado"
+      }
     }
   },
   "popup": {
@@ -1013,5 +1074,100 @@
       "heading": "¿Merch para tu equipo o evento?",
       "text": "Ropa corporativa, stands pop-up y personalización: en una página aparte para empresas."
     }
+  },
+  "auth": {
+    "errors": {
+      "googleFailed": "No se pudo iniciar sesión con Google. Inténtalo de nuevo.",
+      "passkeyNeedsNameEmail": "Indica tu nombre y email para crear una cuenta con passkey.",
+      "invalidCredentials": "Email o contraseña incorrectos.",
+      "passwordMin": "La contraseña debe tener al menos 8 caracteres.",
+      "emailExistsRegister": "Este email ya está registrado. Inicia sesión o restablece tu contraseña.",
+      "codeSendFailed": "No se pudo enviar el código. Inténtalo de nuevo.",
+      "codeInvalid": "Código incorrecto. Revisa tu email e inténtalo de nuevo.",
+      "codeExpired": "El código ha caducado. Solicita uno nuevo.",
+      "tooManyAttempts": "Demasiados intentos. Solicita un código nuevo en unos minutos.",
+      "emailExistsLogin": "Este email ya está registrado. Prueba a iniciar sesión.",
+      "registerFailed": "Error en el registro. Inténtalo de nuevo.",
+      "resetSendFailed": "No se pudo enviar el código. Revisa la dirección de email.",
+      "passwordsMismatch": "Las contraseñas no coinciden.",
+      "resetFailed": "Código incorrecto o caducado. Solicita uno nuevo.",
+      "generic": "Algo salió mal. Inténtalo de nuevo.",
+      "emailFormat": "Revisa el formato del email"
+    },
+    "notices": {
+      "passkeyCheckEmail": "Hemos enviado un email a {email}. Confírmalo y luego inicia sesión con tu passkey.",
+      "accountCreated": "Cuenta creada. Inicia sesión con tu email y contraseña.",
+      "passwordChanged": "Contraseña cambiada. Inicia sesión con la nueva contraseña."
+    },
+    "social": {
+      "google": "Continuar con Google",
+      "telegram": "Continuar con Telegram",
+      "passkey": "Continuar con passkey",
+      "or": "o"
+    },
+    "login": {
+      "title": "Hola de nuevo",
+      "subtitle": "Inicia sesión para continuar con tu pedido.",
+      "forgot": "¿Olvidaste la contraseña?",
+      "signingIn": "Iniciando sesión...",
+      "submit": "Iniciar sesión"
+    },
+    "register": {
+      "title": "Crea una cuenta",
+      "subtitle": "Tarda menos de un minuto.",
+      "sendingCode": "Enviando código...",
+      "continue": "Continuar"
+    },
+    "fields": {
+      "name": "Tu nombre",
+      "namePlaceholder": "María García",
+      "company": "Empresa",
+      "companyPlaceholder": "Nombre de la empresa",
+      "phone": "Teléfono",
+      "password": "Contraseña",
+      "passwordMin": "Mínimo 8 caracteres",
+      "confirmPassword": "Confirma la contraseña",
+      "repeatPassword": "Repite la contraseña",
+      "hide": "Ocultar",
+      "show": "Mostrar"
+    },
+    "verify": {
+      "back": "Atrás",
+      "title": "Revisa tu email",
+      "sentTo": "Hemos enviado un código de 6 dígitos a",
+      "checking": "Comprobando...",
+      "confirm": "Confirmar",
+      "digit": "Dígito {n}"
+    },
+    "reset": {
+      "backToLogin": "Volver a iniciar sesión",
+      "title": "Restablecer contraseña",
+      "subtitle": "Indica tu email y te enviaremos un código de 6 dígitos.",
+      "sending": "Enviando...",
+      "sendCode": "Enviar código",
+      "changeEmail": "Cambiar email",
+      "enterCode": "Introduce el código",
+      "newTitle": "Nueva contraseña",
+      "newSubtitle": "Elige una contraseña nueva y segura.",
+      "saving": "Guardando...",
+      "save": "Guardar contraseña"
+    },
+    "modes": {
+      "login": "Entrar",
+      "register": "Registrarse"
+    },
+    "resend": {
+      "noCode": "¿No has recibido el código?",
+      "in": "Reenviar en {s} s",
+      "now": "Enviar de nuevo"
+    },
+    "strength": {
+      "length": "8+ caracteres",
+      "upper": "Mayúscula",
+      "digit": "Número"
+    },
+    "backToSite": "Volver al sitio",
+    "showcaseItem": "Opinión {n}",
+    "close": "Cerrar"
   }
 }

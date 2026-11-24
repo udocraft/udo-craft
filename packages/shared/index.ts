@@ -777,6 +777,17 @@ export const SendOtpRequestSchema = z.object({
   type: z.enum(["register", "reset"]).optional(),
 });
 
+/** POST /api/auth/register: the emailed code plus the signed token from send-otp. */
+export const RegisterRequestSchema = z.object({
+  email: emailField,
+  otp: otpField,
+  token: z.string().min(20).max(2048),
+  password: z.string().min(8, "Пароль має містити щонайменше 8 символів").max(128, "Пароль задовгий"),
+  name: z.string().trim().max(100).optional(),
+  company: z.string().trim().max(200).optional(),
+  phone: z.string().trim().max(40).optional(),
+});
+
 /** POST /api/auth/verify-otp */
 export const VerifyOtpRequestSchema = z.object({
   email: emailField,

@@ -671,7 +671,8 @@
       "attachLabel": "Datei anhängen",
       "loading": "Nachrichten werden geladen...",
       "empty": "Noch keine Nachrichten",
-      "fileTooLarge": "\"{name}\" überschreitet 10 MB"
+      "fileTooLarge": "\"{name}\" überschreitet 10 MB",
+      "sendError": "Nachricht konnte nicht gesendet werden. Bitte erneut versuchen."
     },
     "files": {
       "empty": "Noch keine Dateien",
@@ -696,6 +697,66 @@
     "order": {
       "back": "Alle Bestellungen",
       "notFound": "Bestellung nicht gefunden"
+    },
+    "errorPage": {
+      "title": "Fehler im Kundenkonto",
+      "text": "Dein Konto konnte nicht geladen werden. Versuche es erneut oder gehe zur Startseite.",
+      "retry": "Erneut versuchen",
+      "home": "Zur Startseite"
+    },
+    "file": "Datei",
+    "productFallback": "Produkt ({color})",
+    "profile": {
+      "saved": "Profil aktualisiert",
+      "saveFailed": "Profil konnte nicht gespeichert werden. Prüfe deine Verbindung und versuche es erneut.",
+      "title": "Profil",
+      "subtitle": "Deine Kontaktdaten für Bestellungen",
+      "name": "Vor- und Nachname",
+      "namePlaceholder": "Max Mustermann",
+      "company": "Firmenname",
+      "companyPlaceholder": "Firma GmbH",
+      "phone": "Telefon",
+      "edrpou": "Steuernummer / Firmendaten",
+      "socialPlaceholder": "@username oder Link",
+      "saving": "Wird gespeichert...",
+      "save": "Profil speichern"
+    },
+    "security": {
+      "min": "Das neue Passwort muss mindestens 8 Zeichen haben.",
+      "mismatch": "Die Passwörter stimmen nicht überein.",
+      "same": "Das neue Passwort muss sich vom aktuellen unterscheiden.",
+      "wrongCurrent": "Das aktuelle Passwort ist falsch.",
+      "changed": "Passwort geändert",
+      "changeFailed": "Passwort konnte nicht geändert werden. Prüfe deine Verbindung und versuche es erneut.",
+      "title": "Sicherheit",
+      "subtitle": "Ändere das Passwort für dein Konto",
+      "current": "Aktuelles Passwort",
+      "currentPlaceholder": "Aktuelles Passwort eingeben",
+      "new": "Neues Passwort",
+      "newPlaceholder": "Mindestens 8 Zeichen",
+      "confirm": "Neues Passwort bestätigen",
+      "confirmPlaceholder": "Neues Passwort wiederholen",
+      "changing": "Wird geändert...",
+      "change": "Passwort ändern"
+    },
+    "prints": {
+      "title": "Meine Prints",
+      "subtitle": "Dateien, die du zum Drucken hochgeladen hast. Nur du kannst sie sehen.",
+      "dropHint": "Dateien hier ablegen",
+      "formats": "JPG, PNG, WebP, GIF oder PDF, bis 10 MB",
+      "pickFiles": "Dateien auswählen",
+      "uploading": "Wird hochgeladen…",
+      "empty": "Noch keine Dateien. Lade deinen ersten Print hoch.",
+      "delete": "Datei löschen",
+      "confirmDelete": "Diese Datei löschen? Das kann nicht rückgängig gemacht werden.",
+      "loadError": "Dateien konnten nicht geladen werden",
+      "uploadError": "Datei konnte nicht hochgeladen werden",
+      "deleteError": "Datei konnte nicht gelöscht werden",
+      "status": {
+        "uploaded": "In Prüfung",
+        "approved": "Freigegeben",
+        "rejected": "Abgelehnt"
+      }
     }
   },
   "popup": {
@@ -1013,5 +1074,100 @@
       "heading": "Merch für dein Team oder Event?",
       "text": "Firmenkleidung, Pop-up-Stände und Branding – auf einer eigenen Seite für Unternehmen."
     }
+  },
+  "auth": {
+    "errors": {
+      "googleFailed": "Anmeldung mit Google fehlgeschlagen. Bitte erneut versuchen.",
+      "passkeyNeedsNameEmail": "Gib Namen und E-Mail ein, um ein Passkey-Konto zu erstellen.",
+      "invalidCredentials": "Falsche E-Mail oder falsches Passwort.",
+      "passwordMin": "Das Passwort muss mindestens 8 Zeichen haben.",
+      "emailExistsRegister": "Diese E-Mail ist bereits registriert. Melde dich an oder setze dein Passwort zurück.",
+      "codeSendFailed": "Code konnte nicht gesendet werden. Bitte erneut versuchen.",
+      "codeInvalid": "Falscher Code. Prüfe deine E-Mail und versuche es erneut.",
+      "codeExpired": "Der Code ist abgelaufen. Fordere einen neuen an.",
+      "tooManyAttempts": "Zu viele Versuche. Fordere in ein paar Minuten einen neuen Code an.",
+      "emailExistsLogin": "Diese E-Mail ist bereits registriert. Bitte melde dich an.",
+      "registerFailed": "Registrierung fehlgeschlagen. Bitte erneut versuchen.",
+      "resetSendFailed": "Code konnte nicht gesendet werden. Prüfe die E-Mail-Adresse.",
+      "passwordsMismatch": "Die Passwörter stimmen nicht überein.",
+      "resetFailed": "Falscher oder abgelaufener Code. Fordere einen neuen an.",
+      "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+      "emailFormat": "Prüfe das E-Mail-Format"
+    },
+    "notices": {
+      "passkeyCheckEmail": "Wir haben eine E-Mail an {email} gesendet. Bestätige sie und melde dich dann mit deinem Passkey an.",
+      "accountCreated": "Konto erstellt. Melde dich mit E-Mail und Passwort an.",
+      "passwordChanged": "Passwort geändert. Melde dich mit dem neuen Passwort an."
+    },
+    "social": {
+      "google": "Weiter mit Google",
+      "telegram": "Weiter mit Telegram",
+      "passkey": "Weiter mit Passkey",
+      "or": "oder"
+    },
+    "login": {
+      "title": "Willkommen zurück",
+      "subtitle": "Melde dich an, um deine Bestellung fortzusetzen.",
+      "forgot": "Passwort vergessen?",
+      "signingIn": "Anmeldung...",
+      "submit": "Anmelden"
+    },
+    "register": {
+      "title": "Konto erstellen",
+      "subtitle": "Dauert weniger als eine Minute.",
+      "sendingCode": "Code wird gesendet...",
+      "continue": "Weiter"
+    },
+    "fields": {
+      "name": "Dein Name",
+      "namePlaceholder": "Max Mustermann",
+      "company": "Firma",
+      "companyPlaceholder": "Firmenname",
+      "phone": "Telefon",
+      "password": "Passwort",
+      "passwordMin": "Mindestens 8 Zeichen",
+      "confirmPassword": "Passwort bestätigen",
+      "repeatPassword": "Passwort wiederholen",
+      "hide": "Verbergen",
+      "show": "Anzeigen"
+    },
+    "verify": {
+      "back": "Zurück",
+      "title": "Prüfe deine E-Mails",
+      "sentTo": "Wir haben einen 6-stelligen Code gesendet an",
+      "checking": "Wird geprüft...",
+      "confirm": "Bestätigen",
+      "digit": "Ziffer {n}"
+    },
+    "reset": {
+      "backToLogin": "Zurück zur Anmeldung",
+      "title": "Passwort zurücksetzen",
+      "subtitle": "Gib deine E-Mail ein – wir senden einen 6-stelligen Code.",
+      "sending": "Wird gesendet...",
+      "sendCode": "Code senden",
+      "changeEmail": "E-Mail ändern",
+      "enterCode": "Code eingeben",
+      "newTitle": "Neues Passwort",
+      "newSubtitle": "Wähle ein neues, sicheres Passwort.",
+      "saving": "Wird gespeichert...",
+      "save": "Passwort speichern"
+    },
+    "modes": {
+      "login": "Anmelden",
+      "register": "Registrieren"
+    },
+    "resend": {
+      "noCode": "Keinen Code erhalten?",
+      "in": "Erneut in {s} s",
+      "now": "Erneut senden"
+    },
+    "strength": {
+      "length": "8+ Zeichen",
+      "upper": "Großbuchstabe",
+      "digit": "Ziffer"
+    },
+    "backToSite": "Zur Website",
+    "showcaseItem": "Bewertung {n}",
+    "close": "Schließen"
   }
 }

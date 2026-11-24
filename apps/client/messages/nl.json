@@ -671,7 +671,8 @@
       "attachLabel": "Bestand bijvoegen",
       "loading": "Berichten worden geladen...",
       "empty": "Nog geen berichten",
-      "fileTooLarge": "\"{name}\" overschrijdt 10 MB"
+      "fileTooLarge": "\"{name}\" overschrijdt 10 MB",
+      "sendError": "Het bericht kon niet worden verzonden. Probeer het opnieuw."
     },
     "files": {
       "empty": "Nog geen bestanden",
@@ -696,6 +697,66 @@
     "order": {
       "back": "Alle bestellingen",
       "notFound": "Bestelling niet gevonden"
+    },
+    "errorPage": {
+      "title": "Fout in je account",
+      "text": "Je account kon niet worden geladen. Probeer het opnieuw of ga naar de homepage.",
+      "retry": "Opnieuw proberen",
+      "home": "Naar home"
+    },
+    "file": "Bestand",
+    "productFallback": "Product ({color})",
+    "profile": {
+      "saved": "Profiel bijgewerkt",
+      "saveFailed": "Profiel kon niet worden opgeslagen. Controleer je verbinding en probeer het opnieuw.",
+      "title": "Profiel",
+      "subtitle": "Je contactgegevens voor bestellingen",
+      "name": "Voor- en achternaam",
+      "namePlaceholder": "Jan Jansen",
+      "company": "Bedrijfsnaam",
+      "companyPlaceholder": "Bedrijf B.V.",
+      "phone": "Telefoon",
+      "edrpou": "Btw-nummer / bedrijfsgegevens",
+      "socialPlaceholder": "@gebruikersnaam of link",
+      "saving": "Opslaan...",
+      "save": "Profiel opslaan"
+    },
+    "security": {
+      "min": "Het nieuwe wachtwoord moet minstens 8 tekens hebben.",
+      "mismatch": "De wachtwoorden komen niet overeen.",
+      "same": "Het nieuwe wachtwoord moet anders zijn dan het huidige.",
+      "wrongCurrent": "Het huidige wachtwoord is onjuist.",
+      "changed": "Wachtwoord gewijzigd",
+      "changeFailed": "Wachtwoord kon niet worden gewijzigd. Controleer je verbinding en probeer het opnieuw.",
+      "title": "Beveiliging",
+      "subtitle": "Wijzig het wachtwoord van je account",
+      "current": "Huidig wachtwoord",
+      "currentPlaceholder": "Voer je huidige wachtwoord in",
+      "new": "Nieuw wachtwoord",
+      "newPlaceholder": "Minstens 8 tekens",
+      "confirm": "Bevestig nieuw wachtwoord",
+      "confirmPlaceholder": "Herhaal het nieuwe wachtwoord",
+      "changing": "Wijzigen...",
+      "change": "Wachtwoord wijzigen"
+    },
+    "prints": {
+      "title": "Mijn prints",
+      "subtitle": "Bestanden die je voor druk hebt geüpload. Alleen jij kunt ze zien.",
+      "dropHint": "Zet bestanden hier neer",
+      "formats": "JPG, PNG, WebP, GIF of PDF, tot 10 MB",
+      "pickFiles": "Bestanden kiezen",
+      "uploading": "Uploaden…",
+      "empty": "Nog geen bestanden. Upload je eerste print.",
+      "delete": "Bestand verwijderen",
+      "confirmDelete": "Dit bestand verwijderen? Dit kan niet ongedaan worden gemaakt.",
+      "loadError": "Bestanden konden niet worden geladen",
+      "uploadError": "Bestand kon niet worden geüpload",
+      "deleteError": "Bestand kon niet worden verwijderd",
+      "status": {
+        "uploaded": "Wordt beoordeeld",
+        "approved": "Goedgekeurd",
+        "rejected": "Afgewezen"
+      }
     }
   },
   "popup": {
@@ -1013,5 +1074,100 @@
       "heading": "Merch voor je team of evenement?",
       "text": "Bedrijfskleding, pop-upstands en branding — op een aparte pagina voor bedrijven."
     }
+  },
+  "auth": {
+    "errors": {
+      "googleFailed": "Inloggen met Google is mislukt. Probeer het opnieuw.",
+      "passkeyNeedsNameEmail": "Vul je naam en e-mail in om een account met passkey te maken.",
+      "invalidCredentials": "Onjuist e-mailadres of wachtwoord.",
+      "passwordMin": "Het wachtwoord moet minstens 8 tekens hebben.",
+      "emailExistsRegister": "Dit e-mailadres is al geregistreerd. Log in of stel je wachtwoord opnieuw in.",
+      "codeSendFailed": "De code kon niet worden verzonden. Probeer het opnieuw.",
+      "codeInvalid": "Onjuiste code. Controleer je e-mail en probeer het opnieuw.",
+      "codeExpired": "De code is verlopen. Vraag een nieuwe aan.",
+      "tooManyAttempts": "Te veel pogingen. Vraag over een paar minuten een nieuwe code aan.",
+      "emailExistsLogin": "Dit e-mailadres is al geregistreerd. Probeer in te loggen.",
+      "registerFailed": "Registratie mislukt. Probeer het opnieuw.",
+      "resetSendFailed": "De code kon niet worden verzonden. Controleer het e-mailadres.",
+      "passwordsMismatch": "De wachtwoorden komen niet overeen.",
+      "resetFailed": "Onjuiste of verlopen code. Vraag een nieuwe aan.",
+      "generic": "Er ging iets mis. Probeer het opnieuw.",
+      "emailFormat": "Controleer het e-mailformaat"
+    },
+    "notices": {
+      "passkeyCheckEmail": "We hebben een e-mail gestuurd naar {email}. Bevestig die en log daarna in met je passkey.",
+      "accountCreated": "Account aangemaakt. Log in met je e-mail en wachtwoord.",
+      "passwordChanged": "Wachtwoord gewijzigd. Log in met je nieuwe wachtwoord."
+    },
+    "social": {
+      "google": "Doorgaan met Google",
+      "telegram": "Doorgaan met Telegram",
+      "passkey": "Doorgaan met passkey",
+      "or": "of"
+    },
+    "login": {
+      "title": "Welkom terug",
+      "subtitle": "Log in om je bestelling voort te zetten.",
+      "forgot": "Wachtwoord vergeten?",
+      "signingIn": "Inloggen...",
+      "submit": "Inloggen"
+    },
+    "register": {
+      "title": "Account aanmaken",
+      "subtitle": "Duurt minder dan een minuut.",
+      "sendingCode": "Code wordt verzonden...",
+      "continue": "Doorgaan"
+    },
+    "fields": {
+      "name": "Je naam",
+      "namePlaceholder": "Jan Jansen",
+      "company": "Bedrijf",
+      "companyPlaceholder": "Bedrijfsnaam",
+      "phone": "Telefoon",
+      "password": "Wachtwoord",
+      "passwordMin": "Minstens 8 tekens",
+      "confirmPassword": "Bevestig wachtwoord",
+      "repeatPassword": "Herhaal wachtwoord",
+      "hide": "Verbergen",
+      "show": "Tonen"
+    },
+    "verify": {
+      "back": "Terug",
+      "title": "Controleer je e-mail",
+      "sentTo": "We hebben een 6-cijferige code gestuurd naar",
+      "checking": "Controleren...",
+      "confirm": "Bevestigen",
+      "digit": "Cijfer {n}"
+    },
+    "reset": {
+      "backToLogin": "Terug naar inloggen",
+      "title": "Wachtwoord herstellen",
+      "subtitle": "Vul je e-mail in, dan sturen we een 6-cijferige code.",
+      "sending": "Verzenden...",
+      "sendCode": "Code versturen",
+      "changeEmail": "E-mail wijzigen",
+      "enterCode": "Voer de code in",
+      "newTitle": "Nieuw wachtwoord",
+      "newSubtitle": "Kies een nieuw, sterk wachtwoord.",
+      "saving": "Opslaan...",
+      "save": "Wachtwoord opslaan"
+    },
+    "modes": {
+      "login": "Inloggen",
+      "register": "Registreren"
+    },
+    "resend": {
+      "noCode": "Geen code ontvangen?",
+      "in": "Opnieuw over {s} s",
+      "now": "Opnieuw versturen"
+    },
+    "strength": {
+      "length": "8+ tekens",
+      "upper": "Hoofdletter",
+      "digit": "Cijfer"
+    },
+    "backToSite": "Naar de site",
+    "showcaseItem": "Review {n}",
+    "close": "Sluiten"
   }
 }

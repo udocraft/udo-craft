@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { FileImage, LogOut, Menu, MessageCircle, Package, Settings } from "lucide-react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { BrandLogoFull } from "@/components/brand-logo";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { CabinetProvider, useCabinet } from "../_lib/cabinet";
@@ -31,10 +32,11 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <div className="flex h-full flex-col bg-card">
-      <div className="flex h-14 shrink-0 items-center border-b border-border px-4">
+      <div className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-border pl-4 pr-2">
         <Link href="/" aria-label="U:DO CRAFT" onClick={onNavigate}>
           <BrandLogoFull className="h-6 w-auto text-primary" color="var(--color-primary)" />
         </Link>
+        <LanguageSwitcher />
       </div>
       <nav className="flex-1 space-y-0.5 overflow-y-auto p-2" aria-label={t("breadcrumb")}>
         {items.map((item) => (
@@ -93,9 +95,10 @@ function Frame({ children }: { children: React.ReactNode }) {
           >
             <Menu className="size-5" />
           </button>
-          <Link href="/" aria-label="U:DO CRAFT">
+          <Link href="/" aria-label="U:DO CRAFT" className="mr-auto">
             <BrandLogoFull className="h-5 w-auto text-primary" color="var(--color-primary)" />
           </Link>
+          <LanguageSwitcher />
         </header>
         <main id="main" className="min-h-0 flex-1">{children}</main>
       </div>

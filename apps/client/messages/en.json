@@ -710,11 +710,53 @@
       "attachLabel": "Attach file",
       "loading": "Loading messages...",
       "empty": "No messages yet",
-      "fileTooLarge": "\"{name}\" exceeds 10 MB"
+      "fileTooLarge": "\"{name}\" exceeds 10 MB",
+      "sendError": "Couldn't send the message. Please try again."
     },
     "files": {
       "empty": "No files yet",
       "openFile": "Open file"
+    },
+    "errorPage": {
+      "title": "Account error",
+      "text": "We couldn't load your account. Try again or go back to the home page.",
+      "retry": "Try again",
+      "home": "Home page"
+    },
+    "file": "File",
+    "productFallback": "Product ({color})",
+    "profile": {
+      "saved": "Profile updated",
+      "saveFailed": "Couldn't save your profile. Check your connection and try again.",
+      "title": "Profile",
+      "subtitle": "Your contact details for orders",
+      "name": "Full name",
+      "namePlaceholder": "Jane Smith",
+      "company": "Company name",
+      "companyPlaceholder": "Company Ltd",
+      "phone": "Phone",
+      "edrpou": "Tax ID / company details",
+      "socialPlaceholder": "@username or link",
+      "saving": "Saving...",
+      "save": "Save profile"
+    },
+    "security": {
+      "min": "The new password must be at least 8 characters.",
+      "mismatch": "Passwords don't match.",
+      "same": "The new password must differ from the current one.",
+      "wrongCurrent": "The current password is wrong.",
+      "changed": "Password changed",
+      "changeFailed": "Couldn't change the password. Check your connection and try again.",
+      "title": "Security",
+      "subtitle": "Change the password for your account",
+      "current": "Current password",
+      "currentPlaceholder": "Enter your current password",
+      "new": "New password",
+      "newPlaceholder": "At least 8 characters",
+      "confirm": "Confirm new password",
+      "confirmPlaceholder": "Repeat the new password",
+      "changing": "Changing...",
+      "change": "Change password"
     }
   },
   "popup": {
@@ -1032,5 +1074,100 @@
       "heading": "Merch for your team or event?",
       "text": "Corporate clothing, pop-up stands and branding — on a separate page for companies."
     }
+  },
+  "auth": {
+    "errors": {
+      "googleFailed": "Couldn't sign in with Google. Please try again.",
+      "passkeyNeedsNameEmail": "Enter your name and email to create a passkey account.",
+      "invalidCredentials": "Wrong email or password.",
+      "passwordMin": "The password must be at least 8 characters.",
+      "emailExistsRegister": "This email is already registered. Sign in or reset your password.",
+      "codeSendFailed": "Couldn't send the code. Please try again.",
+      "codeInvalid": "Wrong code. Check your email and try again.",
+      "codeExpired": "The code has expired. Request a new one.",
+      "tooManyAttempts": "Too many attempts. Request a new code in a few minutes.",
+      "emailExistsLogin": "This email is already registered. Try signing in.",
+      "registerFailed": "Sign-up failed. Please try again.",
+      "resetSendFailed": "Couldn't send the code. Check the email address.",
+      "passwordsMismatch": "Passwords don't match.",
+      "resetFailed": "Wrong or expired code. Request a new one.",
+      "generic": "Something went wrong. Please try again.",
+      "emailFormat": "Check the email format"
+    },
+    "notices": {
+      "passkeyCheckEmail": "We sent an email to {email}. Confirm it, then sign in with your passkey.",
+      "accountCreated": "Account created. Sign in with your email and password.",
+      "passwordChanged": "Password changed. Sign in with your new password."
+    },
+    "social": {
+      "google": "Continue with Google",
+      "telegram": "Continue with Telegram",
+      "passkey": "Continue with a passkey",
+      "or": "or"
+    },
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to continue your order.",
+      "forgot": "Forgot password?",
+      "signingIn": "Signing in...",
+      "submit": "Sign in"
+    },
+    "register": {
+      "title": "Create an account",
+      "subtitle": "It takes less than a minute.",
+      "sendingCode": "Sending code...",
+      "continue": "Continue"
+    },
+    "fields": {
+      "name": "Your name",
+      "namePlaceholder": "Jane Smith",
+      "company": "Company",
+      "companyPlaceholder": "Company name",
+      "phone": "Phone",
+      "password": "Password",
+      "passwordMin": "At least 8 characters",
+      "confirmPassword": "Confirm password",
+      "repeatPassword": "Repeat password",
+      "hide": "Hide",
+      "show": "Show"
+    },
+    "verify": {
+      "back": "Back",
+      "title": "Check your email",
+      "sentTo": "We sent a 6-digit code to",
+      "checking": "Checking...",
+      "confirm": "Confirm",
+      "digit": "Digit {n}"
+    },
+    "reset": {
+      "backToLogin": "Back to sign in",
+      "title": "Reset password",
+      "subtitle": "Enter your email and we'll send a 6-digit code.",
+      "sending": "Sending...",
+      "sendCode": "Send code",
+      "changeEmail": "Change email",
+      "enterCode": "Enter the code",
+      "newTitle": "New password",
+      "newSubtitle": "Choose a new, strong password.",
+      "saving": "Saving...",
+      "save": "Save password"
+    },
+    "modes": {
+      "login": "Sign in",
+      "register": "Sign up"
+    },
+    "resend": {
+      "noCode": "Didn't get the code?",
+      "in": "Resend in {s} s",
+      "now": "Send again"
+    },
+    "strength": {
+      "length": "8+ characters",
+      "upper": "Uppercase letter",
+      "digit": "Number"
+    },
+    "backToSite": "Back to site",
+    "showcaseItem": "Review {n}",
+    "close": "Close"
   }
 }

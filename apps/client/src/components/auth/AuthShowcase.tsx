@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
 import { User } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -24,6 +25,7 @@ const ROTATE_MS = 7000;
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 export function AuthShowcase({ items = AUTH_SHOWCASE }: { items?: ShowcaseItem[] }) {
+  const t = useTranslations("auth");
   const [index, setIndex] = useState(0);
   const [broken, setBroken] = useState<Record<string, true>>({});
 
@@ -83,7 +85,7 @@ export function AuthShowcase({ items = AUTH_SHOWCASE }: { items?: ShowcaseItem[]
             <button
               key={it.image}
               type="button"
-              aria-label={`Відгук ${i + 1}`}
+              aria-label={t("showcaseItem", { n: i + 1 })}
               onClick={() => setIndex(i)}
               className={cn(
                 "h-1.5 rounded-full transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-300",

@@ -17,6 +17,8 @@ export const BASE_CLIENT_NAMESPACES = [
   "contactForm",
   "collections",
   "hero",
+  // Sign-in form: full-screen pages and the in-place dialog (customizer, paywall, header).
+  "auth",
 ] as const;
 
 /** Extra namespaces a route subtree adds on top of the base set. */

@@ -671,7 +671,8 @@
       "attachLabel": "Anexar ficheiro",
       "loading": "A carregar mensagens...",
       "empty": "Ainda sem mensagens",
-      "fileTooLarge": "\"{name}\" excede 10 MB"
+      "fileTooLarge": "\"{name}\" excede 10 MB",
+      "sendError": "Não foi possível enviar a mensagem. Tente novamente."
     },
     "files": {
       "empty": "Ainda sem ficheiros",
@@ -696,6 +697,66 @@
     "order": {
       "back": "Todas as encomendas",
       "notFound": "Encomenda não encontrada"
+    },
+    "errorPage": {
+      "title": "Erro na área de cliente",
+      "text": "Não foi possível carregar a sua conta. Tente novamente ou volte à página inicial.",
+      "retry": "Tentar novamente",
+      "home": "Página inicial"
+    },
+    "file": "Ficheiro",
+    "productFallback": "Produto ({color})",
+    "profile": {
+      "saved": "Perfil atualizado",
+      "saveFailed": "Não foi possível guardar o perfil. Verifique a ligação e tente novamente.",
+      "title": "Perfil",
+      "subtitle": "Os seus dados de contacto para encomendas",
+      "name": "Nome completo",
+      "namePlaceholder": "Ana Silva",
+      "company": "Nome da empresa",
+      "companyPlaceholder": "Empresa, Lda.",
+      "phone": "Telefone",
+      "edrpou": "NIF / dados da empresa",
+      "socialPlaceholder": "@utilizador ou link",
+      "saving": "A guardar...",
+      "save": "Guardar perfil"
+    },
+    "security": {
+      "min": "A nova palavra-passe deve ter pelo menos 8 caracteres.",
+      "mismatch": "As palavras-passe não coincidem.",
+      "same": "A nova palavra-passe deve ser diferente da atual.",
+      "wrongCurrent": "A palavra-passe atual está incorreta.",
+      "changed": "Palavra-passe alterada",
+      "changeFailed": "Não foi possível alterar a palavra-passe. Verifique a ligação e tente novamente.",
+      "title": "Segurança",
+      "subtitle": "Altere a palavra-passe da sua conta",
+      "current": "Palavra-passe atual",
+      "currentPlaceholder": "Introduza a palavra-passe atual",
+      "new": "Nova palavra-passe",
+      "newPlaceholder": "Mínimo 8 caracteres",
+      "confirm": "Confirmar nova palavra-passe",
+      "confirmPlaceholder": "Repita a nova palavra-passe",
+      "changing": "A alterar...",
+      "change": "Alterar palavra-passe"
+    },
+    "prints": {
+      "title": "As minhas estampas",
+      "subtitle": "Ficheiros que carregou para impressão. Só você os pode ver.",
+      "dropHint": "Largue os ficheiros aqui",
+      "formats": "JPG, PNG, WebP, GIF ou PDF, até 10 MB",
+      "pickFiles": "Escolher ficheiros",
+      "uploading": "A carregar…",
+      "empty": "Ainda não há ficheiros. Carregue a sua primeira estampa.",
+      "delete": "Eliminar ficheiro",
+      "confirmDelete": "Eliminar este ficheiro? Não é possível anular.",
+      "loadError": "Não foi possível carregar os ficheiros",
+      "uploadError": "Não foi possível carregar o ficheiro",
+      "deleteError": "Não foi possível eliminar o ficheiro",
+      "status": {
+        "uploaded": "Em análise",
+        "approved": "Aprovado",
+        "rejected": "Rejeitado"
+      }
     }
   },
   "popup": {
@@ -1013,5 +1074,100 @@
       "heading": "Merch para a sua equipa ou evento?",
       "text": "Roupa corporativa, stands pop-up e personalização — numa página própria para empresas."
     }
+  },
+  "auth": {
+    "errors": {
+      "googleFailed": "Não foi possível entrar com o Google. Tente novamente.",
+      "passkeyNeedsNameEmail": "Indique o nome e o email para criar uma conta com passkey.",
+      "invalidCredentials": "Email ou palavra-passe incorretos.",
+      "passwordMin": "A palavra-passe deve ter pelo menos 8 caracteres.",
+      "emailExistsRegister": "Este email já está registado. Entre ou reponha a palavra-passe.",
+      "codeSendFailed": "Não foi possível enviar o código. Tente novamente.",
+      "codeInvalid": "Código incorreto. Verifique o email e tente novamente.",
+      "codeExpired": "O código expirou. Peça um novo.",
+      "tooManyAttempts": "Demasiadas tentativas. Peça um novo código dentro de alguns minutos.",
+      "emailExistsLogin": "Este email já está registado. Tente entrar.",
+      "registerFailed": "O registo falhou. Tente novamente.",
+      "resetSendFailed": "Não foi possível enviar o código. Verifique o endereço de email.",
+      "passwordsMismatch": "As palavras-passe não coincidem.",
+      "resetFailed": "Código incorreto ou expirado. Peça um novo.",
+      "generic": "Algo correu mal. Tente novamente.",
+      "emailFormat": "Verifique o formato do email"
+    },
+    "notices": {
+      "passkeyCheckEmail": "Enviámos um email para {email}. Confirme-o e depois entre com a sua passkey.",
+      "accountCreated": "Conta criada. Entre com o seu email e palavra-passe.",
+      "passwordChanged": "Palavra-passe alterada. Entre com a nova palavra-passe."
+    },
+    "social": {
+      "google": "Continuar com Google",
+      "telegram": "Continuar com Telegram",
+      "passkey": "Continuar com passkey",
+      "or": "ou"
+    },
+    "login": {
+      "title": "Bem-vindo de volta",
+      "subtitle": "Entre para continuar a sua encomenda.",
+      "forgot": "Esqueceu-se da palavra-passe?",
+      "signingIn": "A entrar...",
+      "submit": "Entrar"
+    },
+    "register": {
+      "title": "Criar conta",
+      "subtitle": "Demora menos de um minuto.",
+      "sendingCode": "A enviar o código...",
+      "continue": "Continuar"
+    },
+    "fields": {
+      "name": "O seu nome",
+      "namePlaceholder": "Ana Silva",
+      "company": "Empresa",
+      "companyPlaceholder": "Nome da empresa",
+      "phone": "Telefone",
+      "password": "Palavra-passe",
+      "passwordMin": "Mínimo 8 caracteres",
+      "confirmPassword": "Confirmar palavra-passe",
+      "repeatPassword": "Repita a palavra-passe",
+      "hide": "Ocultar",
+      "show": "Mostrar"
+    },
+    "verify": {
+      "back": "Voltar",
+      "title": "Verifique o seu email",
+      "sentTo": "Enviámos um código de 6 dígitos para",
+      "checking": "A verificar...",
+      "confirm": "Confirmar",
+      "digit": "Dígito {n}"
+    },
+    "reset": {
+      "backToLogin": "Voltar a entrar",
+      "title": "Repor palavra-passe",
+      "subtitle": "Indique o seu email e enviaremos um código de 6 dígitos.",
+      "sending": "A enviar...",
+      "sendCode": "Enviar código",
+      "changeEmail": "Alterar email",
+      "enterCode": "Introduza o código",
+      "newTitle": "Nova palavra-passe",
+      "newSubtitle": "Escolha uma palavra-passe nova e segura.",
+      "saving": "A guardar...",
+      "save": "Guardar palavra-passe"
+    },
+    "modes": {
+      "login": "Entrar",
+      "register": "Registar"
+    },
+    "resend": {
+      "noCode": "Não recebeu o código?",
+      "in": "Reenviar em {s} s",
+      "now": "Enviar novamente"
+    },
+    "strength": {
+      "length": "8+ caracteres",
+      "upper": "Letra maiúscula",
+      "digit": "Número"
+    },
+    "backToSite": "Voltar ao site",
+    "showcaseItem": "Opinião {n}",
+    "close": "Fechar"
   }
 }

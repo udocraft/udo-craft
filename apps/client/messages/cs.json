@@ -671,7 +671,8 @@
       "attachLabel": "Připojit soubor",
       "loading": "Načítání zpráv...",
       "empty": "Zatím žádné zprávy",
-      "fileTooLarge": "\"{name}\" překračuje 10 MB"
+      "fileTooLarge": "\"{name}\" překračuje 10 MB",
+      "sendError": "Zprávu se nepodařilo odeslat. Zkuste to znovu."
     },
     "files": {
       "empty": "Zatím žádné soubory",
@@ -696,6 +697,66 @@
     "order": {
       "back": "Všechny objednávky",
       "notFound": "Objednávka nenalezena"
+    },
+    "errorPage": {
+      "title": "Chyba zákaznického účtu",
+      "text": "Účet se nepodařilo načíst. Zkuste to znovu nebo se vraťte na úvodní stránku.",
+      "retry": "Zkusit znovu",
+      "home": "Na úvod"
+    },
+    "file": "Soubor",
+    "productFallback": "Produkt ({color})",
+    "profile": {
+      "saved": "Profil aktualizován",
+      "saveFailed": "Profil se nepodařilo uložit. Zkontrolujte připojení a zkuste to znovu.",
+      "title": "Profil",
+      "subtitle": "Vaše kontaktní údaje pro objednávky",
+      "name": "Jméno a příjmení",
+      "namePlaceholder": "Jan Novák",
+      "company": "Název firmy",
+      "companyPlaceholder": "Firma s.r.o.",
+      "phone": "Telefon",
+      "edrpou": "IČO / údaje o firmě",
+      "socialPlaceholder": "@uživatel nebo odkaz",
+      "saving": "Ukládáme...",
+      "save": "Uložit profil"
+    },
+    "security": {
+      "min": "Nové heslo musí mít alespoň 8 znaků.",
+      "mismatch": "Hesla se neshodují.",
+      "same": "Nové heslo se musí lišit od současného.",
+      "wrongCurrent": "Současné heslo je nesprávné.",
+      "changed": "Heslo změněno",
+      "changeFailed": "Heslo se nepodařilo změnit. Zkontrolujte připojení a zkuste to znovu.",
+      "title": "Zabezpečení",
+      "subtitle": "Změňte heslo ke svému účtu",
+      "current": "Současné heslo",
+      "currentPlaceholder": "Zadejte současné heslo",
+      "new": "Nové heslo",
+      "newPlaceholder": "Alespoň 8 znaků",
+      "confirm": "Potvrďte nové heslo",
+      "confirmPlaceholder": "Zopakujte nové heslo",
+      "changing": "Měníme...",
+      "change": "Změnit heslo"
+    },
+    "prints": {
+      "title": "Moje potisky",
+      "subtitle": "Soubory, které jste nahráli k tisku. Vidíte je jen vy.",
+      "dropHint": "Přetáhněte soubory sem",
+      "formats": "JPG, PNG, WebP, GIF nebo PDF, do 10 MB",
+      "pickFiles": "Vybrat soubory",
+      "uploading": "Nahrávání…",
+      "empty": "Zatím žádné soubory. Nahrajte svůj první potisk.",
+      "delete": "Smazat soubor",
+      "confirmDelete": "Smazat tento soubor? Tuto akci nelze vrátit.",
+      "loadError": "Soubory se nepodařilo načíst",
+      "uploadError": "Soubor se nepodařilo nahrát",
+      "deleteError": "Soubor se nepodařilo smazat",
+      "status": {
+        "uploaded": "Ve schvalování",
+        "approved": "Schváleno",
+        "rejected": "Zamítnuto"
+      }
     }
   },
   "popup": {
@@ -1013,5 +1074,100 @@
       "heading": "Merch pro tým nebo akci?",
       "text": "Firemní oblečení, pop-up stánky a branding — na samostatné stránce pro firmy."
     }
+  },
+  "auth": {
+    "errors": {
+      "googleFailed": "Přihlášení přes Google se nezdařilo. Zkuste to znovu.",
+      "passkeyNeedsNameEmail": "Zadejte jméno a e-mail pro vytvoření účtu s passkey.",
+      "invalidCredentials": "Nesprávný e-mail nebo heslo.",
+      "passwordMin": "Heslo musí mít alespoň 8 znaků.",
+      "emailExistsRegister": "Tento e-mail je už zaregistrován. Přihlaste se nebo si obnovte heslo.",
+      "codeSendFailed": "Kód se nepodařilo odeslat. Zkuste to znovu.",
+      "codeInvalid": "Nesprávný kód. Zkontrolujte e-mail a zkuste to znovu.",
+      "codeExpired": "Platnost kódu vypršela. Vyžádejte si nový.",
+      "tooManyAttempts": "Příliš mnoho pokusů. Vyžádejte si nový kód za pár minut.",
+      "emailExistsLogin": "Tento e-mail je už zaregistrován. Zkuste se přihlásit.",
+      "registerFailed": "Registrace se nezdařila. Zkuste to znovu.",
+      "resetSendFailed": "Kód se nepodařilo odeslat. Zkontrolujte e-mailovou adresu.",
+      "passwordsMismatch": "Hesla se neshodují.",
+      "resetFailed": "Nesprávný nebo neplatný kód. Vyžádejte si nový.",
+      "generic": "Něco se pokazilo. Zkuste to znovu.",
+      "emailFormat": "Zkontrolujte formát e-mailu"
+    },
+    "notices": {
+      "passkeyCheckEmail": "Poslali jsme e-mail na {email}. Potvrďte ho a pak se přihlaste přes passkey.",
+      "accountCreated": "Účet vytvořen. Přihlaste se e-mailem a heslem.",
+      "passwordChanged": "Heslo změněno. Přihlaste se novým heslem."
+    },
+    "social": {
+      "google": "Pokračovat přes Google",
+      "telegram": "Pokračovat přes Telegram",
+      "passkey": "Pokračovat přes passkey",
+      "or": "nebo"
+    },
+    "login": {
+      "title": "Vítejte zpět",
+      "subtitle": "Přihlaste se a pokračujte v objednávce.",
+      "forgot": "Zapomněli jste heslo?",
+      "signingIn": "Přihlašování...",
+      "submit": "Přihlásit se"
+    },
+    "register": {
+      "title": "Vytvořte si účet",
+      "subtitle": "Zabere to méně než minutu.",
+      "sendingCode": "Odesíláme kód...",
+      "continue": "Pokračovat"
+    },
+    "fields": {
+      "name": "Vaše jméno",
+      "namePlaceholder": "Jan Novák",
+      "company": "Firma",
+      "companyPlaceholder": "Název firmy",
+      "phone": "Telefon",
+      "password": "Heslo",
+      "passwordMin": "Alespoň 8 znaků",
+      "confirmPassword": "Potvrďte heslo",
+      "repeatPassword": "Zopakujte heslo",
+      "hide": "Skrýt",
+      "show": "Zobrazit"
+    },
+    "verify": {
+      "back": "Zpět",
+      "title": "Zkontrolujte e-mail",
+      "sentTo": "Poslali jsme 6místný kód na",
+      "checking": "Ověřujeme...",
+      "confirm": "Potvrdit",
+      "digit": "Číslice {n}"
+    },
+    "reset": {
+      "backToLogin": "Zpět na přihlášení",
+      "title": "Obnovení hesla",
+      "subtitle": "Zadejte e-mail a pošleme vám 6místný kód.",
+      "sending": "Odesíláme...",
+      "sendCode": "Odeslat kód",
+      "changeEmail": "Změnit e-mail",
+      "enterCode": "Zadejte kód",
+      "newTitle": "Nové heslo",
+      "newSubtitle": "Zvolte nové, bezpečné heslo.",
+      "saving": "Ukládáme...",
+      "save": "Uložit heslo"
+    },
+    "modes": {
+      "login": "Přihlášení",
+      "register": "Registrace"
+    },
+    "resend": {
+      "noCode": "Nepřišel kód?",
+      "in": "Znovu za {s} s",
+      "now": "Odeslat znovu"
+    },
+    "strength": {
+      "length": "8+ znaků",
+      "upper": "Velké písmeno",
+      "digit": "Číslice"
+    },
+    "backToSite": "Na web",
+    "showcaseItem": "Recenze {n}",
+    "close": "Zavřít"
   }
 }

@@ -671,7 +671,8 @@
       "attachLabel": "Dołącz plik",
       "loading": "Ładowanie wiadomości...",
       "empty": "Brak wiadomości",
-      "fileTooLarge": "\"{name}\" przekracza 10 MB"
+      "fileTooLarge": "\"{name}\" przekracza 10 MB",
+      "sendError": "Nie udało się wysłać wiadomości. Spróbuj ponownie."
     },
     "files": {
       "empty": "Brak plików",
@@ -696,6 +697,66 @@
     "order": {
       "back": "Wszystkie zamówienia",
       "notFound": "Nie znaleziono zamówienia"
+    },
+    "errorPage": {
+      "title": "Błąd konta klienta",
+      "text": "Nie udało się wczytać konta. Spróbuj ponownie lub wróć na stronę główną.",
+      "retry": "Spróbuj ponownie",
+      "home": "Strona główna"
+    },
+    "file": "Plik",
+    "productFallback": "Produkt ({color})",
+    "profile": {
+      "saved": "Profil zaktualizowany",
+      "saveFailed": "Nie udało się zapisać profilu. Sprawdź połączenie i spróbuj ponownie.",
+      "title": "Profil",
+      "subtitle": "Twoje dane kontaktowe do zamówień",
+      "name": "Imię i nazwisko",
+      "namePlaceholder": "Jan Kowalski",
+      "company": "Nazwa firmy",
+      "companyPlaceholder": "Firma sp. z o.o.",
+      "phone": "Telefon",
+      "edrpou": "NIP / dane firmy",
+      "socialPlaceholder": "@nazwa lub link",
+      "saving": "Zapisywanie...",
+      "save": "Zapisz profil"
+    },
+    "security": {
+      "min": "Nowe hasło musi mieć co najmniej 8 znaków.",
+      "mismatch": "Hasła nie są zgodne.",
+      "same": "Nowe hasło musi różnić się od obecnego.",
+      "wrongCurrent": "Obecne hasło jest nieprawidłowe.",
+      "changed": "Hasło zmienione",
+      "changeFailed": "Nie udało się zmienić hasła. Sprawdź połączenie i spróbuj ponownie.",
+      "title": "Bezpieczeństwo",
+      "subtitle": "Zmień hasło do swojego konta",
+      "current": "Obecne hasło",
+      "currentPlaceholder": "Wpisz obecne hasło",
+      "new": "Nowe hasło",
+      "newPlaceholder": "Minimum 8 znaków",
+      "confirm": "Potwierdź nowe hasło",
+      "confirmPlaceholder": "Powtórz nowe hasło",
+      "changing": "Zmienianie...",
+      "change": "Zmień hasło"
+    },
+    "prints": {
+      "title": "Moje nadruki",
+      "subtitle": "Pliki przesłane do druku. Tylko Ty je widzisz.",
+      "dropHint": "Upuść pliki tutaj",
+      "formats": "JPG, PNG, WebP, GIF lub PDF, do 10 MB",
+      "pickFiles": "Wybierz pliki",
+      "uploading": "Przesyłanie…",
+      "empty": "Brak plików. Prześlij swój pierwszy nadruk.",
+      "delete": "Usuń plik",
+      "confirmDelete": "Usunąć ten plik? Tej operacji nie można cofnąć.",
+      "loadError": "Nie udało się wczytać plików",
+      "uploadError": "Nie udało się przesłać pliku",
+      "deleteError": "Nie udało się usunąć pliku",
+      "status": {
+        "uploaded": "W weryfikacji",
+        "approved": "Zatwierdzony",
+        "rejected": "Odrzucony"
+      }
     }
   },
   "popup": {
@@ -1013,5 +1074,100 @@
       "heading": "Merch dla zespołu lub na wydarzenie?",
       "text": "Odzież firmowa, stoiska pop-up i branding — na osobnej stronie dla firm."
     }
+  },
+  "auth": {
+    "errors": {
+      "googleFailed": "Nie udało się zalogować przez Google. Spróbuj ponownie.",
+      "passkeyNeedsNameEmail": "Podaj imię i email, aby utworzyć konto z passkey.",
+      "invalidCredentials": "Nieprawidłowy email lub hasło.",
+      "passwordMin": "Hasło musi mieć co najmniej 8 znaków.",
+      "emailExistsRegister": "Ten email jest już zarejestrowany. Zaloguj się lub zresetuj hasło.",
+      "codeSendFailed": "Nie udało się wysłać kodu. Spróbuj ponownie.",
+      "codeInvalid": "Nieprawidłowy kod. Sprawdź email i spróbuj ponownie.",
+      "codeExpired": "Kod wygasł. Poproś o nowy.",
+      "tooManyAttempts": "Zbyt wiele prób. Poproś o nowy kod za kilka minut.",
+      "emailExistsLogin": "Ten email jest już zarejestrowany. Spróbuj się zalogować.",
+      "registerFailed": "Rejestracja nie powiodła się. Spróbuj ponownie.",
+      "resetSendFailed": "Nie udało się wysłać kodu. Sprawdź adres email.",
+      "passwordsMismatch": "Hasła nie są zgodne.",
+      "resetFailed": "Nieprawidłowy lub wygasły kod. Poproś o nowy.",
+      "generic": "Coś poszło nie tak. Spróbuj ponownie.",
+      "emailFormat": "Sprawdź format emaila"
+    },
+    "notices": {
+      "passkeyCheckEmail": "Wysłaliśmy wiadomość na {email}. Potwierdź ją, a potem zaloguj się przez passkey.",
+      "accountCreated": "Konto utworzone. Zaloguj się emailem i hasłem.",
+      "passwordChanged": "Hasło zmienione. Zaloguj się nowym hasłem."
+    },
+    "social": {
+      "google": "Kontynuuj z Google",
+      "telegram": "Kontynuuj z Telegram",
+      "passkey": "Kontynuuj z passkey",
+      "or": "lub"
+    },
+    "login": {
+      "title": "Witaj ponownie",
+      "subtitle": "Zaloguj się, aby kontynuować zamówienie.",
+      "forgot": "Nie pamiętasz hasła?",
+      "signingIn": "Logowanie...",
+      "submit": "Zaloguj się"
+    },
+    "register": {
+      "title": "Utwórz konto",
+      "subtitle": "To zajmie mniej niż minutę.",
+      "sendingCode": "Wysyłanie kodu...",
+      "continue": "Dalej"
+    },
+    "fields": {
+      "name": "Twoje imię",
+      "namePlaceholder": "Jan Kowalski",
+      "company": "Firma",
+      "companyPlaceholder": "Nazwa firmy",
+      "phone": "Telefon",
+      "password": "Hasło",
+      "passwordMin": "Minimum 8 znaków",
+      "confirmPassword": "Potwierdź hasło",
+      "repeatPassword": "Powtórz hasło",
+      "hide": "Ukryj",
+      "show": "Pokaż"
+    },
+    "verify": {
+      "back": "Wstecz",
+      "title": "Sprawdź email",
+      "sentTo": "Wysłaliśmy 6-cyfrowy kod na",
+      "checking": "Sprawdzanie...",
+      "confirm": "Potwierdź",
+      "digit": "Cyfra {n}"
+    },
+    "reset": {
+      "backToLogin": "Wróć do logowania",
+      "title": "Resetowanie hasła",
+      "subtitle": "Podaj email — wyślemy 6-cyfrowy kod.",
+      "sending": "Wysyłanie...",
+      "sendCode": "Wyślij kod",
+      "changeEmail": "Zmień email",
+      "enterCode": "Wpisz kod",
+      "newTitle": "Nowe hasło",
+      "newSubtitle": "Wymyśl nowe, bezpieczne hasło.",
+      "saving": "Zapisywanie...",
+      "save": "Zapisz hasło"
+    },
+    "modes": {
+      "login": "Logowanie",
+      "register": "Rejestracja"
+    },
+    "resend": {
+      "noCode": "Nie dostałeś kodu?",
+      "in": "Ponownie za {s} s",
+      "now": "Wyślij ponownie"
+    },
+    "strength": {
+      "length": "8+ znaków",
+      "upper": "Wielka litera",
+      "digit": "Cyfra"
+    },
+    "backToSite": "Do strony",
+    "showcaseItem": "Opinia {n}",
+    "close": "Zamknij"
   }
 }

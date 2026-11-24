@@ -1,6 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { AuthForm } from "@/components/auth/AuthForm";
 import { sound } from "@/lib/sound";
@@ -20,6 +21,7 @@ interface AuthModalProps {
  * AuthForm mounts only while open, so each opening starts fresh.
  */
 export function AuthModal({ open, onClose, onAuthSuccess, initialScreen = "login" }: AuthModalProps) {
+  const t = useTranslations("auth");
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
       <DialogContent showCloseButton={false} className="max-w-md border-0 bg-transparent p-0 shadow-none ring-0 sm:max-w-md">
@@ -29,7 +31,7 @@ export function AuthModal({ open, onClose, onAuthSuccess, initialScreen = "login
             type="button"
             onClick={() => { sound.close(); onClose(); }}
             className="absolute right-4 top-4 z-10 flex size-10 items-center justify-center rounded-full text-muted-foreground transition hover:bg-muted hover:text-foreground"
-            aria-label="Закрити"
+            aria-label={t("close")}
           >
             <X className="size-4" />
           </button>
