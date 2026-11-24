@@ -19,7 +19,7 @@ You approve plans for user-facing changes and you merge. Nothing merges or deplo
 "Gated" means the change touches visible UI or copy, a public API route, the DB schema, auth,
 payments or SEO metadata. Internal refactors and test-only changes go straight to build.
 
-## Commands (comments by the repo owner only; anyone else is ignored)
+## Commands (comments by logins in `AGENT_APPROVERS` only; anyone else is ignored)
 
 | Where | Command | Effect |
 |---|---|---|
@@ -33,7 +33,8 @@ payments or SEO metadata. Internal refactors and test-only changes go straight t
 
 - **Stage decisions are code.** Models return JSON (`.github/agent/schemas/`). The workflow
   reads it and sets labels. A model can't approve its own plan or skip a gate.
-- **Owner-only triggers.** Commands need `author_association == OWNER` and a human account.
+- **Approver-only triggers.** Commands need a human account listed in the repo variable
+  `AGENT_APPROVERS` (for this org repo: `andriihukco`).
   Bot-made comments and labels don't trigger anything. `workflow_run` ignores branches
   from forks.
 - **Protected paths.** If a build or fix touches `.github/`, `.claude/`, `scripts/agent/`,
@@ -73,7 +74,7 @@ payments or SEO metadata. Internal refactors and test-only changes go straight t
 8. **Backlog.** Run `node scripts/agent/plan-to-issues.mjs` to review the 16 drafts in
    `.agent/issue-drafts/`, then run it with `--create`. Expect triage to mark several as
    `done-already`: the Plan.md checkboxes weren't kept up to date.
-9. **Start small.** Set `AGENT_MAX_ACTIVE=1` and `AGENT_ENABLED=true`, then queue 2–3 tickets.
+9. **Start small.** Set repo variables `AGENT_APPROVERS=andriihukco`, `AGENT_MAX_ACTIVE=1` and `AGENT_ENABLED=true`, then queue 2–3 tickets.
    Read every plan and review for the first week before raising the WIP limit.
 
 ## Telemetry
