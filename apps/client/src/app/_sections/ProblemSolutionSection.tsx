@@ -48,7 +48,7 @@ export function ProblemSolutionSection() {
             initial={{ opacity: 0, x: 24 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.75, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="bg-[#0a0d1a] px-8 sm:px-12 lg:pr-[max(3rem,calc((100vw-72rem)/2+3rem))] lg:pl-16 py-16 lg:py-28 flex flex-col justify-center"
+            className="bg-surface-dark px-8 sm:px-12 lg:pr-[max(3rem,calc((100vw-72rem)/2+3rem))] lg:pl-16 py-16 lg:py-28 flex flex-col justify-center"
           >
             <h3 className="text-white text-2xl sm:text-3xl font-black tracking-tight leading-tight mb-8">
               {t("solutionHeading")}
@@ -69,7 +69,7 @@ export function ProblemSolutionSection() {
               ))}
             </ul>
             <Link href="#catalog"
-              className="inline-flex w-fit items-center gap-2 bg-primary text-white font-semibold text-sm px-6 py-3 rounded-full hover:bg-primary/90 active:scale-[0.97] transition-all duration-200">
+              className="inline-flex w-fit items-center gap-2 bg-primary text-white font-semibold text-sm px-6 py-3 rounded-full hover:bg-primary/90 active:scale-[0.97] transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200">
               {t("ctaLabel")} <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </Link>
           </motion.div>

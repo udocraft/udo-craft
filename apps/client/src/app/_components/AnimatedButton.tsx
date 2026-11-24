@@ -16,7 +16,7 @@ export function AnimBtn({
   className?: string;
 }) {
   const base =
-    "group inline-flex items-center gap-2 font-semibold text-sm px-7 py-3.5 rounded-full transition-all duration-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+    "group inline-flex items-center gap-2 font-semibold text-sm px-7 py-3.5 rounded-full transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
   const styles = {
     primary:
       "bg-primary text-white hover:bg-primary/90 shadow-lg hover:shadow-xl hover:shadow-primary/20",
@@ -51,7 +51,7 @@ export function AnimBtnWhite({
   return (
     <Link
       href={href}
-      className={`group inline-flex items-center gap-2 bg-white text-primary font-semibold text-sm px-7 py-3.5 rounded-full hover:bg-white/90 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${className}`}
+      className={`group inline-flex items-center gap-2 bg-white text-primary font-semibold text-sm px-7 py-3.5 rounded-full hover:bg-white/90 active:scale-95 transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 shadow-lg hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${className}`}
     >
       <span>{children}</span>
       <motion.span

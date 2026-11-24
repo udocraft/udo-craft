@@ -11,7 +11,7 @@ import { CabinetProvider, useCabinet } from "../_lib/cabinet";
 
 function Spinner() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
+    <div className="flex min-h-[100dvh] items-center justify-center bg-background">
       <div className="size-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
     </div>
   );

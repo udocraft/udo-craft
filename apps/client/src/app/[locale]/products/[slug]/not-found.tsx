@@ -11,7 +11,7 @@ export default function ProductNotFound() {
         </p>
         <Link
           href="/order"
-          className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold text-sm px-8 py-3.5 rounded-full transition-all duration-200"
+          className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold text-sm px-8 py-3.5 rounded-full transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200"
         >
           Переглянути каталог
         </Link>

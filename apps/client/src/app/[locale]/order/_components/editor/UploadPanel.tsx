@@ -57,7 +57,7 @@ function RecentFileThumbnail({
       type="button"
       onClick={onClick}
       title={`Додати "${file.name}" знову`}
-      className="group relative flex items-center justify-center rounded-lg border border-border bg-muted aspect-square overflow-hidden hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all"
+      className="group relative flex items-center justify-center rounded-lg border border-border bg-muted aspect-square overflow-hidden hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-[transform,opacity,background-color,border-color,color,box-shadow]"
     >
       {isImage && objectUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
@@ -205,7 +205,7 @@ export default function UploadPanel({ onFileAdd }: UploadPanelProps) {
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           className={[
-            "relative flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed px-4 py-8 text-center transition-all",
+            "relative flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed px-4 py-8 text-center transition-[transform,opacity,background-color,border-color,color,box-shadow]",
             isDragOver
               ? "border-primary bg-primary/5"
               : "border-border bg-muted/40 hover:border-foreground/30",

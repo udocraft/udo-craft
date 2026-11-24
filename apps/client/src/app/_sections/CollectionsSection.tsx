@@ -77,7 +77,7 @@ export function CollectionsSection({ products, categories, materials, colorVaria
             <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-4">
               <button
                 onClick={() => { setActiveCategory(null); setCollPage(0); }}
-                className={`inline-flex items-center min-h-11 whitespace-nowrap px-4 rounded-full text-xs font-semibold transition-all duration-200 border ${
+                className={`inline-flex items-center min-h-11 whitespace-nowrap px-4 rounded-full text-xs font-semibold transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 border ${
                   activeCategory === null
                     ? "bg-foreground text-background border-foreground"
                     : "border-border text-muted-foreground hover:border-foreground/30 hover:text-foreground"
@@ -89,7 +89,7 @@ export function CollectionsSection({ products, categories, materials, colorVaria
                 <button
                   key={cat.id}
                   onClick={() => { setActiveCategory(cat.id); setCollPage(0); }}
-                  className={`inline-flex items-center gap-1.5 min-h-11 whitespace-nowrap px-4 rounded-full text-xs font-semibold transition-all duration-200 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                  className={`inline-flex items-center gap-1.5 min-h-11 whitespace-nowrap px-4 rounded-full text-xs font-semibold transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                     activeCategory === cat.id
                       ? "bg-foreground text-background border-foreground"
                       : "border-border text-muted-foreground hover:border-foreground/30 hover:text-foreground"
@@ -144,19 +144,19 @@ export function CollectionsSection({ products, categories, materials, colorVaria
                 {totalPages > 1 && (
                   <div className="flex items-center justify-center gap-3 mt-12">
                     <button onClick={() => setCollPage((p) => Math.max(0, p - 1))} disabled={collPage === 0}
-                      className="w-11 h-11 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/40 disabled:opacity-25 disabled:cursor-not-allowed transition-all"
+                      className="w-11 h-11 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/40 disabled:opacity-25 disabled:cursor-not-allowed transition-[transform,opacity,background-color,border-color,color,box-shadow]"
                       aria-label={t("prevPage")}>
                       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7l4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     </button>
                     <div className="flex items-center gap-1.5">
                       {Array.from({ length: totalPages }).map((_, i) => (
                         <button key={i} onClick={() => setCollPage(i)} aria-label={t("page", { n: i + 1 })}
-                          className="hit-44 rounded-full transition-all duration-300"
+                          className="hit-44 rounded-full transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-300"
                           style={{ width: i === collPage ? 24 : 8, height: 8, backgroundColor: i === collPage ? "var(--color-foreground)" : "var(--color-border)" }} />
                       ))}
                     </div>
                     <button onClick={() => setCollPage((p) => Math.min(totalPages - 1, p + 1))} disabled={collPage === totalPages - 1}
-                      className="w-11 h-11 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/40 disabled:opacity-25 disabled:cursor-not-allowed transition-all"
+                      className="w-11 h-11 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/40 disabled:opacity-25 disabled:cursor-not-allowed transition-[transform,opacity,background-color,border-color,color,box-shadow]"
                       aria-label={t("nextPage")}>
                       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     </button>

@@ -32,7 +32,7 @@ function FaqItem({ q, a, index, isInView }: { q: string; a: string; index: numbe
           {q}
         </span>
         <span
-          className="w-7 h-7 rounded-full border border-border flex items-center justify-center shrink-0 text-muted-foreground group-hover:border-primary group-hover:text-primary transition-all duration-200"
+          className="w-7 h-7 rounded-full border border-border flex items-center justify-center shrink-0 text-muted-foreground group-hover:border-primary group-hover:text-primary transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200"
           aria-hidden="true"
         >
           {open ? <Minus className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}

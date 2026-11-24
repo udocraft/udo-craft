@@ -139,7 +139,7 @@ export function HomeClient({
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-clip scroll-smooth">
+    <div className="min-h-[100dvh] bg-background text-foreground overflow-x-clip scroll-smooth">
       <SiteHeader />
 
       <main>

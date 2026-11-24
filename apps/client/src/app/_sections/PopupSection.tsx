@@ -133,7 +133,7 @@ function PopupStepCarousel() {
               key={i}
               onClick={() => goTo(i, i > active ? 1 : -1)}
               aria-label={t("slideLabel", { n: i + 1 })}
-              className="hit-44 transition-all duration-300 rounded-full bg-white/40 hover:bg-white/70"
+              className="hit-44 transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-300 rounded-full bg-white/40 hover:bg-white/70"
               style={{
                 width: i === active ? 20 : 6,
                 height: 6,
@@ -242,7 +242,7 @@ export function PopupSection() {
         <div className="flex items-center gap-5">
           <Link
             href="/popup"
-            className="inline-flex items-center gap-2 bg-white text-[#0c0c0c] font-bold text-sm px-6 py-3 rounded-full hover:bg-white/90 active:scale-95 transition-all duration-200"
+            className="inline-flex items-center gap-2 bg-white text-[#0c0c0c] font-bold text-sm px-6 py-3 rounded-full hover:bg-white/90 active:scale-95 transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200"
           >
             {tPopup("cta")} <ArrowRight className="w-3.5 h-3.5" />
           </Link>

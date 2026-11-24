@@ -68,7 +68,7 @@ function TabsTrigger({ value, className, children, ...props }: TabsTriggerProps)
       data-state={isActive ? "active" : "inactive"}
       onClick={() => ctx.onValueChange(value)}
       className={cn(
-        "inline-flex flex-1 items-center justify-center whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition-all",
+        "inline-flex flex-1 items-center justify-center whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition-[transform,opacity,background-color,border-color,color,box-shadow]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         "disabled:pointer-events-none disabled:opacity-50",
         isActive

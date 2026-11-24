@@ -263,7 +263,7 @@ export function ContactForm({ defaultTopic }: { defaultTopic?: TopicValue }) {
 
       <div className="md:col-span-2">
         <button type="submit" disabled={submitting}
-          className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold text-sm px-8 py-3.5 rounded-full active:scale-95 transition-all duration-200 disabled:opacity-50">
+          className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold text-sm px-8 py-3.5 rounded-full active:scale-95 transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 disabled:opacity-50">
           {submitting ? (
             <><Loader2 className="size-4 animate-spin" aria-hidden="true" />{tForm("submitting")}</>
           ) : tForm("submit")}

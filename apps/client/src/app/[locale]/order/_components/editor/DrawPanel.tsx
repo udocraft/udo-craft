@@ -130,7 +130,7 @@ export default function DrawPanel({
             <button
               type="button"
               onClick={openNewDrawing}
-              className="inline-flex h-11 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="inline-flex h-11 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition-[transform,opacity,background-color,border-color,color,box-shadow] hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               Створити новий малюнок
             </button>
@@ -139,7 +139,7 @@ export default function DrawPanel({
               onClick={openSelectedDrawing}
               disabled={!selectedDrawingLayer}
               className={cn(
-                "inline-flex h-11 items-center justify-center rounded-full border px-5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                "inline-flex h-11 items-center justify-center rounded-full border px-5 text-sm font-semibold transition-[transform,opacity,background-color,border-color,color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
                 selectedDrawingLayer
                   ? "border-border bg-background text-foreground hover:bg-muted"
                   : "cursor-not-allowed border-border bg-muted/40 text-muted-foreground"

@@ -1,6 +1,6 @@
 export default function LocaleLoading() {
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-[100dvh] bg-background p-6">
       <div className="max-w-7xl mx-auto">
         {/* Hero section skeleton */}
         <div className="mb-12 space-y-4">

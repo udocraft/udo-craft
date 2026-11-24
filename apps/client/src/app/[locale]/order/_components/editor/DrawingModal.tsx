@@ -236,7 +236,7 @@ function ToolCard({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "flex w-full items-center gap-4 rounded-3xl border px-4 py-4 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff] focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950",
+        "flex w-full items-center gap-4 rounded-3xl border px-4 py-4 text-left transition-[transform,opacity,background-color,border-color,color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff] focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950",
         active
           ? "border-white/14 bg-white/8 shadow-[0_12px_30px_rgba(0,0,0,0.35)]"
           : "border-transparent bg-white/[0.04] hover:border-white/10 hover:bg-white/[0.06]"
@@ -660,7 +660,7 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
       <div>
         <div className="mb-3 flex items-center justify-between gap-3">
           <span className="text-sm font-medium text-white/72">Color</span>
-          <label className="flex h-10 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 px-3 text-xs font-medium text-white/75 transition-all hover:border-white/20 hover:bg-white/10">
+          <label className="flex h-10 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 px-3 text-xs font-medium text-white/75 transition-[transform,opacity,background-color,border-color,color,box-shadow] hover:border-white/20 hover:bg-white/10">
             Custom
             <input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="sr-only" aria-label="Власний колір" />
           </label>
@@ -673,7 +673,7 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
               aria-label={label}
               onClick={() => setColor(hex)}
               className={cn(
-                "relative size-11 rounded-full border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff] focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950",
+                "relative size-11 rounded-full border transition-[transform,opacity,background-color,border-color,color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff] focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950",
                 color === hex ? "scale-110 border-white shadow-[0_0_0_16px_rgba(255,214,10,0.08)]" : "border-white/10 hover:scale-105"
               )}
               style={{ backgroundColor: hex }}
@@ -718,7 +718,7 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
               onClick={undo}
               disabled={undoStack.length <= 1}
               aria-label="Скасувати"
-              className="flex size-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition-all hover:bg-white/10 disabled:opacity-35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]"
+              className="flex size-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition-[transform,opacity,background-color,border-color,color,box-shadow] hover:bg-white/10 disabled:opacity-35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]"
             >
               <RotateCcw className="size-4" />
             </button>
@@ -727,7 +727,7 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
               onClick={redo}
               disabled={redoStack.length === 0}
               aria-label="Повторити"
-              className="flex size-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition-all hover:bg-white/10 disabled:opacity-35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]"
+              className="flex size-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition-[transform,opacity,background-color,border-color,color,box-shadow] hover:bg-white/10 disabled:opacity-35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]"
             >
               <RotateCw className="size-4" />
             </button>
@@ -735,7 +735,7 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
               type="button"
               onClick={clear}
               aria-label="Очистити"
-              className="flex size-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition-all hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]"
+              className="flex size-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition-[transform,opacity,background-color,border-color,color,box-shadow] hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]"
             >
               <Trash2 className="size-4" />
             </button>
@@ -743,7 +743,7 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
               type="button"
               onClick={onClose}
               aria-label="Закрити"
-              className="flex size-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/80 transition-all hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]"
+              className="flex size-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/80 transition-[transform,opacity,background-color,border-color,color,box-shadow] hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]"
             >
               <X className="size-4" />
             </button>
@@ -760,7 +760,7 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
               onClick={() => setTool(id)}
               aria-pressed={tool === id}
               className={cn(
-                "flex min-w-[72px] flex-col items-center gap-1 rounded-3xl px-3 py-2 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]",
+                "flex min-w-[72px] flex-col items-center gap-1 rounded-3xl px-3 py-2 text-xs font-medium transition-[transform,opacity,background-color,border-color,color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]",
                 tool === id ? "bg-[#2e2e2e] text-[#0a84ff] shadow-[inset_0_-3px_0_0_#0a84ff]" : "text-white/68 hover:bg-white/6"
               )}
             >
@@ -805,7 +805,7 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
             <button
               type="button"
               onClick={onClose}
-              className="inline-flex h-11 items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 text-sm font-semibold text-white/82 transition-all hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]"
+              className="inline-flex h-11 items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 text-sm font-semibold text-white/82 transition-[transform,opacity,background-color,border-color,color,box-shadow] hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]"
             >
               Закрити
             </button>
@@ -813,7 +813,7 @@ export default function DrawingModal({ open, onClose, onPaste, initialImageUrl }
               type="button"
               onClick={() => void handlePaste()}
               disabled={pasting}
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-semibold text-[#1f1f1f] transition-all hover:bg-white/90 disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-semibold text-[#1f1f1f] transition-[transform,opacity,background-color,border-color,color,box-shadow] hover:bg-white/90 disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff]"
             >
               {pasting ? <RefreshCw className="size-4 animate-spin" /> : <Check className="size-4" />}
               Вставити на полотно

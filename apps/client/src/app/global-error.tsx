@@ -14,7 +14,7 @@ export default function GlobalError({
   return (
     <html lang="en">
       <body>
-        <div className="min-h-screen flex flex-col items-center justify-center bg-white text-black p-8 font-sans">
+        <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-white text-black p-8 font-sans">
           <div className="max-w-md text-center space-y-6">
             <h1 className="text-4xl font-bold">Критична помилка</h1>
             <p className="opacity-60 text-lg">

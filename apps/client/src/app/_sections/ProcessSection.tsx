@@ -158,7 +158,7 @@ function DesktopTimeline({ isInView, steps }: { isInView: boolean; steps: Step[]
                 <p className="text-xl font-black text-foreground">{steps[active].time}</p>
               </div>
               <Link href={steps[active].href}
-                className="inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold text-sm px-8 py-4 rounded-full hover:bg-primary/90 hover:scale-105 active:scale-[0.97] transition-all duration-200 whitespace-nowrap w-full sm:w-auto shadow-md shadow-primary/20">
+                className="inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold text-sm px-8 py-4 rounded-full hover:bg-primary/90 hover:scale-105 active:scale-[0.97] transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 whitespace-nowrap w-full sm:w-auto shadow-md shadow-primary/20">
                 {steps[active].cta} <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Link>
             </div>
@@ -213,7 +213,7 @@ function MobileTimeline({ steps }: { steps: Step[] }) {
       <div className="relative mb-10" role="tablist">
         <div className="absolute top-[14px] left-5 right-5 h-3 bg-border/50 rounded-full overflow-hidden" aria-hidden="true">
           <div
-            className="absolute top-0 left-0 h-full bg-primary rounded-full transition-all duration-300 ease-out"
+            className="absolute top-0 left-0 h-full bg-primary rounded-full transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-300 ease-out"
             style={{
               width: `${progressPct}%`,
               backgroundImage: "linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent)",
@@ -281,7 +281,7 @@ function MobileTimeline({ steps }: { steps: Step[] }) {
                      <p className="text-lg font-black text-foreground">{step.time}</p>
                    </div>
                    <Link href={step.href}
-                     className="flex items-center justify-center gap-2 w-full bg-primary text-white hover:bg-primary/90 font-semibold text-sm px-6 py-3.5 rounded-full transition-all duration-200 shadow-md shadow-primary/20">
+                     className="flex items-center justify-center gap-2 w-full bg-primary text-white hover:bg-primary/90 font-semibold text-sm px-6 py-3.5 rounded-full transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 shadow-md shadow-primary/20">
                      {step.cta} <ArrowRight className="w-4 h-4" aria-hidden="true" />
                    </Link>
                 </div>

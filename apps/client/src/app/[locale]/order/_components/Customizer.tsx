@@ -409,7 +409,7 @@ export function Customizer({
               return (
                 <button key={v.id} onClick={() => { if (!isReadOnly) { s.setSelectedColor(mat.name); s.setSelectedVariant(v); } }}
                   title={mat.name} aria-label={mat.name} aria-pressed={isSelected}
-                  className={`relative size-7 rounded-full transition-all flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${isSelected ? "ring-2 ring-primary ring-offset-2 scale-110" : "hover:scale-105"} ${isWhite ? "border border-border" : ""}`}
+                  className={`relative size-7 rounded-full transition-[transform,opacity,background-color,border-color,color,box-shadow] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${isSelected ? "ring-2 ring-primary ring-offset-2 scale-110" : "hover:scale-105"} ${isWhite ? "border border-border" : ""}`}
                   style={{ backgroundColor: mat.hex_code }}>
                   {isSelected && <span className="absolute inset-0 flex items-center justify-center text-xs" style={{ color: isWhite ? "var(--foreground)" : "var(--primary-foreground)" }}>✓</span>}
                 </button>
@@ -426,7 +426,7 @@ export function Customizer({
           <div className="flex gap-1.5 flex-wrap">
             {(product.available_sizes as string[]).map((size) => (
               <button key={size} onClick={() => { if (!isReadOnly) s.setSelectedSize(size); }} aria-pressed={s.selectedSize === size}
-                className={`min-w-[36px] h-9 px-2 rounded-lg text-sm font-semibold border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${s.selectedSize === size ? "bg-foreground text-background border-foreground shadow-sm" : "border-border hover:border-foreground/40 hover:bg-muted/50"}`}>
+                className={`min-w-[36px] h-9 px-2 rounded-lg text-sm font-semibold border transition-[transform,opacity,background-color,border-color,color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${s.selectedSize === size ? "bg-foreground text-background border-foreground shadow-sm" : "border-border hover:border-foreground/40 hover:bg-muted/50"}`}>
                 {size}
               </button>
             ))}

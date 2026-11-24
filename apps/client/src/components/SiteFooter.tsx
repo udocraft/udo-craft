@@ -25,11 +25,11 @@ export function SiteFooter() {
             </p>
             <div className="flex items-center gap-3">
               <a href="https://www.instagram.com/u.do.craft/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
-                className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-200">
+                className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 hover:text-white hover:bg-white/10 hover:border-white/20 transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200">
                 <Instagram className="w-3.5 h-3.5" aria-hidden="true" />
               </a>
               <a href="https://t.me/udostore" target="_blank" rel="noopener noreferrer" aria-label="Telegram"
-                className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-200">
+                className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 hover:text-white hover:bg-white/10 hover:border-white/20 transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200">
                 <Send className="w-3.5 h-3.5" aria-hidden="true" />
               </a>
             </div>

@@ -6,6 +6,7 @@ import { Product, PrintZone, PRINT_TYPES, TEXT_FONTS, type PrintLayer, type Prin
 import { AlignCenter, AlignLeft, AlignRight, Bold, Copy, Eraser, Focus, Italic, Loader2, Pencil, RotateCcw, RotateCw, Shirt, Trash2 } from "lucide-react";
 import { removeBgClient } from "@/lib/remove-bg-client";
 import { toast } from "sonner";
+import { computeWavePlacements, warpLineWidth } from "@/lib/text-warp";
 
 const loadedFonts = new Set<string>();
 
@@ -21,6 +22,125 @@ function ensureFont(fontFamily: string): Promise<void> {
   return new Promise<void>((resolve) => {
     document.fonts.load(`700 48px '${fontFamily}'`).then(() => resolve()).catch(() => resolve());
   });
+}
+
+/**
+ * Applies stroke + effect stack to a Fabric text object.
+ * Fabric 5 supports one shadow per object, so when both glow and drop shadow
+ * are set the drop shadow wins (documented limit; a true two-layer glow needs
+ * a cloned underlay object, which is Phase 2 work).
+ */
+function applyTextEffects(obj: fabric.Object, layer: PrintLayer) {
+  const fx = layer.textEffects;
+  const strokeWidth = layer.textStrokeWidth ?? 0;
+  const strokeColor = layer.textStrokeColor;
+  // Drop shadow wins over glow; glow is a zero-offset shadow.
+  const drop = fx?.shadow;
+  const glow = fx?.glow;
+  const shadow = drop
+    ? new fabric.Shadow({ color: drop.color, blur: drop.blur, offsetX: drop.offsetX, offsetY: drop.offsetY })
+    : glow
+      ? new fabric.Shadow({ color: glow.color, blur: glow.blur, offsetX: 0, offsetY: 0 })
+      : null;
+  obj.set({
+    stroke: strokeWidth > 0 && strokeColor ? strokeColor : undefined,
+    strokeWidth: strokeWidth > 0 && strokeColor ? strokeWidth : 0,
+    paintFirst: fx?.strokeOnTop ? "stroke" : "fill",
+    shadow,
+  } as any);
+}
+
+/**
+ * Clip-to-below masking. Canvas stacking order is the source of truth:
+ * getObjects() is bottom-first, so the layer beneath object i is i-1.
+ * A layer with clipToBelow gets a clone of the layer beneath as its clipPath
+ * (absolutePositioned, so it uses canvas coordinates). Clones are async in Fabric 5,
+ * so the last callback wins, which is fine since each target is set independently.
+ */
+function applyClipMasks(canvas: fabric.Canvas, layers: PrintLayer[]) {
+  const layerObjs = canvas.getObjects().filter((o) => (o as any)._isLayer);
+  layerObjs.forEach((target, i) => {
+    const id = (target as any)._layerId as string;
+    const layer = layers.find((l) => l.id === id);
+    const below = i > 0 ? layerObjs[i - 1] : undefined;
+    if (!layer?.clipToBelow || !below) {
+      if (target.clipPath) { target.clipPath = undefined; }
+      return;
+    }
+    below.clone((cloned: fabric.Object) => {
+      cloned.set({ absolutePositioned: true });
+      target.clipPath = cloned;
+      canvas.requestRenderAll();
+    }, []);
+  });
+}
+
+/** Everything that changes how a text object looks. Used to decide when a warped group must be rebuilt. */
+function textKeyOf(layer: PrintLayer): string {
+  return JSON.stringify([
+    layer.textContent, layer.textFont, layer.textFontSize, layer.textColor, layer.textBold,
+    layer.textItalic, layer.textLetterSpacing, layer.textLineHeight, layer.textAlign,
+    layer.textBoxWidth, layer.textCurve, layer.textWarp, layer.textEffects,
+    layer.textStrokeColor, layer.textStrokeWidth,
+  ]);
+}
+
+/**
+ * Wave-warped text: one fabric.Text per glyph on a sine curve, grouped.
+ * Glyph positions are absolute here; fabric.Group re-bases them, and we set the
+ * group's own left/top afterwards so the saved transform is honoured.
+ */
+function buildWaveGroup(
+  layer: PrintLayer,
+  readOnly: boolean,
+  saved?: { left: number; top: number; scaleX: number; scaleY: number; angle: number; flipX: boolean }
+): fabric.Group {
+  const fontSize = layer.textFontSize ?? 48;
+  const common = {
+    fontFamily: layer.textFont ?? "Montserrat",
+    fontSize,
+    fill: layer.textColor ?? "#000000",
+    fontWeight: layer.textBold ? "bold" : "normal",
+    fontStyle: layer.textItalic ? "italic" : "normal",
+  } as any;
+  // charSpacing is in 1/1000 em (Fabric), and maps from the layer's -10..100 range via *10.
+  const spacingPx = ((layer.textLetterSpacing ?? 0) * 10 / 1000) * fontSize;
+  const chars = Array.from(layer.textContent ?? "Текст");
+  const widths = chars.map((ch) => new fabric.Text(ch, common).width! + spacingPx);
+  const placements = computeWavePlacements(widths, { amount: layer.textWarp?.amount ?? 0, fontSize });
+  const total = warpLineWidth(widths);
+
+  const glyphs = chars.map((ch, i) => {
+    const p = placements[i];
+    const glyph = new fabric.Text(ch, {
+      ...common,
+      originX: "center",
+      originY: "center",
+      left: p.x + widths[i] / 2 - total / 2,
+      top: p.y,
+      angle: p.angle,
+    });
+    applyTextEffects(glyph, layer);
+    return glyph;
+  });
+
+  const group = new fabric.Group(glyphs, {
+    hasControls: !readOnly,
+    hasBorders: !readOnly,
+    selectable: !readOnly,
+    evented: !readOnly,
+    subTargetCheck: false,
+  } as any);
+  group.set({
+    left: saved?.left ?? CANVAS_SIZE / 2 - 80,
+    top: saved?.top ?? CANVAS_SIZE / 2 - 30,
+    scaleX: saved?.scaleX ?? 1,
+    scaleY: saved?.scaleY ?? 1,
+    angle: saved?.angle ?? 0,
+    flipX: saved?.flipX ?? false,
+  } as any);
+  group.setCoords();
+  return group;
 }
 
 interface ProductCanvasProps {
@@ -462,7 +582,7 @@ export default function ProductCanvas({
     setHasObjects(true);
   };
 
-  const buildTextObject = (layer: PrintLayer, saved?: { left: number; top: number; scaleX: number; scaleY: number; angle: number; flipX: boolean }) => {
+  const buildTextObjectBase = (layer: PrintLayer, saved?: { left: number; top: number; scaleX: number; scaleY: number; angle: number; flipX: boolean }) => {
     const fontFamily = layer.textFont ?? "Montserrat";
     const fontSize = layer.textFontSize ?? 48;
     const fill = layer.textColor ?? "#000000";
@@ -552,6 +672,16 @@ export default function ProductCanvas({
     return textbox;
   };
 
+  const buildTextObject = (layer: PrintLayer, saved?: { left: number; top: number; scaleX: number; scaleY: number; angle: number; flipX: boolean }) => {
+    // Wave warp replaces the text object with a glyph group; effects are applied per glyph inside it.
+    if (layer.textWarp?.kind === "wave" && (layer.textCurve ?? 0) === 0) {
+      return buildWaveGroup(layer, readOnly, saved);
+    }
+    const obj = buildTextObjectBase(layer, saved);
+    applyTextEffects(obj, layer);
+    return obj;
+  };
+
   const placeTextLayer = (canvas: fabric.Canvas, layer: PrintLayer) => {
     ensureFont(layer.textFont ?? "Montserrat").then(() => {
       if (!fabricRef.current) return;
@@ -560,6 +690,8 @@ export default function ProductCanvas({
       (text as any)._layerId = layer.id;
       (text as any)._isText = true;
       (text as any)._textCurve = layer.textCurve ?? 0;
+      (text as any)._textKey = textKeyOf(layer);
+      (text as any)._textWarp = !!layer.textWarp;
       syncLayerSizing(text, layer);
       canvas.add(text);
       if (!readOnly) canvas.setActiveObject(text);
@@ -609,7 +741,11 @@ export default function ProductCanvas({
         if (existing && (existing as any)._isText) {
           ensureFont(layer.textFont ?? "Montserrat").then(() => {
             if (!fabricRef.current) return;
-            const needsReplace = (existing as any)._textCurve !== (layer.textCurve ?? 0);
+            // Warp changes (or leaving warp) need a rebuild; other text edits stay in-place.
+            const warpInvolved = !!layer.textWarp || !!(existing as any)._textWarp;
+            const needsReplace =
+              (existing as any)._textCurve !== (layer.textCurve ?? 0) ||
+              (warpInvolved && (existing as any)._textKey !== textKeyOf(layer));
             if (needsReplace) {
               const saved = {
                 left: existing.left ?? 0,
@@ -625,6 +761,8 @@ export default function ProductCanvas({
               (newText as any)._layerId = layer.id;
               (newText as any)._isText = true;
               (newText as any)._textCurve = layer.textCurve ?? 0;
+              (newText as any)._textKey = textKeyOf(layer);
+              (newText as any)._textWarp = !!layer.textWarp;
               syncLayerSizing(newText, layer);
               canvas.add(newText);
               canvas.setActiveObject(newText);
@@ -650,6 +788,7 @@ export default function ProductCanvas({
                   fontWeight,
                   fontStyle,
                 } as any);
+                applyTextEffects(textObj, layer);
                 if (existing instanceof fabric.Textbox && layer.textBoxWidth != null) {
                   existing.set("width", layer.textBoxWidth);
                 }
@@ -739,6 +878,16 @@ export default function ProductCanvas({
       if (obj) canvas.moveTo(obj, total - 1 - index);
     });
     if (overlayRef.current) canvas.bringToFront(overlayRef.current);
+    applyClipMasks(canvas, layers);
+    // Keep masks following moves/scales/rotations of the layer beneath (attached once per canvas).
+    if (!(canvas as any)._clipHandlersAttached) {
+      (canvas as any)._clipHandlersAttached = true;
+      const refreshMasks = () => applyClipMasks(canvas, layersRef.current);
+      canvas.on("object:moving", refreshMasks);
+      canvas.on("object:scaling", refreshMasks);
+      canvas.on("object:rotating", refreshMasks);
+      canvas.on("object:modified", refreshMasks);
+    }
     canvas.renderAll();
   }, [layers, activeSide]);
 
@@ -1029,6 +1178,43 @@ export default function ProductCanvas({
                   <AlignRight className="size-3.5" />
                 </ToolBtn>
                 <div className="w-px h-4 bg-border mx-1 shrink-0" />
+                {/* Stroke */}
+                <div className="flex flex-col items-center gap-0.5 shrink-0 min-w-[44px] min-h-[48px] justify-center">
+                  <input type="color" value={activeLayer.textStrokeColor ?? "#000000"}
+                    onChange={(e) => patch({ textStrokeColor: e.target.value })}
+                    aria-label="Колір обводки"
+                    className="w-6 h-6 rounded border border-border cursor-pointer p-0.5 bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
+                  <span className="text-[9px] leading-none text-muted-foreground">Обводка</span>
+                </div>
+                <input type="range" min={0} max={20} step={0.5} aria-label="Товщина обводки"
+                  value={activeLayer.textStrokeWidth ?? 0}
+                  onChange={(e) => patch({ textStrokeWidth: Number(e.target.value) })}
+                  className="w-14 h-1.5 accent-primary shrink-0" />
+                <ToolBtn title="Обводка поверх заливки" label="Пов" active={!!activeLayer.textEffects?.strokeOnTop}
+                  onClick={() => patch({ textEffects: { ...activeLayer.textEffects, strokeOnTop: !activeLayer.textEffects?.strokeOnTop } })}>
+                  <span className="text-[10px] font-semibold">Поверх</span>
+                </ToolBtn>
+                {/* Effects: glow and drop shadow (one shadow per object on Fabric 5) */}
+                <ToolBtn title="Світіння" label="Глоу" active={!!activeLayer.textEffects?.glow}
+                  onClick={() => patch({ textEffects: { ...activeLayer.textEffects, glow: activeLayer.textEffects?.glow ? undefined : { color: "#60a5fa", blur: 18 } } })}>
+                  <span className="text-[10px] font-semibold">Світіння</span>
+                </ToolBtn>
+                <ToolBtn title="Тінь" label="Тінь" active={!!activeLayer.textEffects?.shadow}
+                  onClick={() => patch({ textEffects: { ...activeLayer.textEffects, shadow: activeLayer.textEffects?.shadow ? undefined : { color: "#000000", blur: 8, offsetX: 4, offsetY: 4 } } })}>
+                  <span className="text-[10px] font-semibold">Тінь</span>
+                </ToolBtn>
+                {/* Wave warp: per-glyph sine. Replaces the arc. Inline editing is off while warped. */}
+                <ToolBtn title="Хвиля (вимикає дугу; текст редагується у панелі)" label="Хвиля" active={!!activeLayer.textWarp}
+                  onClick={() => patch(activeLayer.textWarp ? { textWarp: undefined } : { textWarp: { kind: "wave", amount: 40 }, textCurve: 0 })}>
+                  <span className="text-[10px] font-semibold">Хвиля</span>
+                </ToolBtn>
+                {activeLayer.textWarp && (
+                  <input type="range" min={0} max={100} aria-label="Сила хвилі"
+                    value={activeLayer.textWarp.amount}
+                    onChange={(e) => patch({ textWarp: { kind: "wave", amount: Number(e.target.value) } })}
+                    className="w-14 h-1.5 accent-primary shrink-0" />
+                )}
+                <div className="w-px h-4 bg-border mx-1 shrink-0" />
               </>
             )}
 
@@ -1126,7 +1312,7 @@ export default function ProductCanvas({
                 <span className="text-[11px] font-medium text-muted-foreground/60 tracking-wide select-none">Завантаження зображення...</span>
               </div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-[shimmer_1.4s_ease-in-out_infinite]"
-                style={{ backgroundSize: "200% 100%", animation: "shimmer 1.4s ease-in-out infinite" }}
+                style={{ backgroundSize: "200% 100%", animation: "shimmer 1.4s ease-[cubic-bezier(0.23,1,0.32,1)] infinite" }}
               />
             </div>
           )}
@@ -1149,7 +1335,7 @@ export default function ProductCanvas({
                 type="button"
                 onClick={() => onSideChange(key)}
                 aria-pressed={activeSide === key}
-                className={`shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                className={`shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold border transition-[transform,opacity,background-color,border-color,color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                   activeSide === key ? "bg-primary text-primary-foreground border-primary" : "bg-background text-muted-foreground border-border hover:border-primary/50"
                 }`}
               >

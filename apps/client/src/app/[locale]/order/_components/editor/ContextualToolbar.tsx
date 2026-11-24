@@ -78,7 +78,7 @@ function ToolBtn({
       aria-label={title}
       onClick={onClick}
       className={[
-        "size-8 flex items-center justify-center rounded-lg border transition-all shrink-0",
+        "size-8 flex items-center justify-center rounded-lg border transition-[transform,opacity,background-color,border-color,color,box-shadow] shrink-0",
         active
           ? "bg-primary text-primary-foreground border-primary"
           : danger
@@ -113,7 +113,7 @@ function OpacityControl({
         title="Прозорість"
         aria-label="Прозорість"
         onClick={() => setOpen((v) => !v)}
-        className={`h-8 px-2.5 rounded-lg border transition-all flex items-center gap-1.5 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${open ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30 hover:bg-muted/60"}`}
+        className={`h-8 px-2.5 rounded-lg border transition-[transform,opacity,background-color,border-color,color,box-shadow] flex items-center gap-1.5 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${open ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30 hover:bg-muted/60"}`}
       >
         <Blend className="size-3.5" />
         <span>{Math.round(value * 100)}%</span>
@@ -162,7 +162,7 @@ function ColorSwatch({
         title={title}
         aria-label={title}
         onClick={() => setOpen((v) => !v)}
-        className="size-8 rounded-lg border-2 border-border hover:border-primary/50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+        className="size-8 rounded-lg border-2 border-border hover:border-primary/50 transition-[transform,opacity,background-color,border-color,color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
         style={{ backgroundColor: value }}
       />
       {open && (
@@ -192,7 +192,7 @@ function ColorSwatch({
                 onClick={() => { onChange(s); setOpen(false); }}
                 style={{ backgroundColor: s }}
                 className={[
-                  "w-5 h-5 rounded border transition-all",
+                  "w-5 h-5 rounded border transition-[transform,opacity,background-color,border-color,color,box-shadow]",
                   value === s ? "border-primary ring-1 ring-primary" : "border-border",
                   s === "#ffffff" ? "border-border" : "",
                 ].join(" ")}
@@ -352,7 +352,7 @@ function TextControls({
       {/* Font size */}
       <div className="flex items-center gap-0.5 shrink-0">
         <button type="button" onClick={() => patch({ textFontSize: Math.max(8, currentSize - 2) })}
-          className="size-6 flex items-center justify-center rounded border border-border text-muted-foreground hover:text-foreground hover:bg-muted/60 text-xs font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1">−</button>
+          className="size-6 flex items-center justify-center rounded border border-border text-muted-foreground hover:text-foreground hover:bg-muted/60 text-xs font-bold transition-[transform,opacity,background-color,border-color,color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1">−</button>
         <input
           type="number"
           min={8}
@@ -362,7 +362,7 @@ function TextControls({
           className="w-12 text-xs text-center rounded border border-input bg-background px-1 py-1 focus:outline-none focus:ring-1 focus:ring-primary"
         />
         <button type="button" onClick={() => patch({ textFontSize: Math.min(200, currentSize + 2) })}
-          className="size-6 flex items-center justify-center rounded border border-border text-muted-foreground hover:text-foreground hover:bg-muted/60 text-xs font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1">+</button>
+          className="size-6 flex items-center justify-center rounded border border-border text-muted-foreground hover:text-foreground hover:bg-muted/60 text-xs font-bold transition-[transform,opacity,background-color,border-color,color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1">+</button>
       </div>
       <ToolBtn title="Жирний" active={!!layer.textBold} onClick={() => patch({ textBold: !layer.textBold })}>
         <Bold className="size-3.5" />
@@ -509,7 +509,7 @@ function RasterControls({
         <button
           type="button"
           onClick={() => onRemoveBg(layer.id, layer.url)}
-          className="h-8 px-3 rounded-lg border border-border text-xs font-medium text-muted-foreground hover:text-foreground hover:border-foreground/30 hover:bg-muted/60 transition-all whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+          className="h-8 px-3 rounded-lg border border-border text-xs font-medium text-muted-foreground hover:text-foreground hover:border-foreground/30 hover:bg-muted/60 transition-[transform,opacity,background-color,border-color,color,box-shadow] whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
         >
           Видалити фон
         </button>
@@ -536,7 +536,7 @@ function DrawingControls({
         <button
           type="button"
           onClick={() => onOpenDrawingStudio(layer.id)}
-          className="h-8 px-3 rounded-lg border border-border text-xs font-medium text-muted-foreground hover:text-foreground hover:border-foreground/30 hover:bg-muted/60 transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+          className="h-8 px-3 rounded-lg border border-border text-xs font-medium text-muted-foreground hover:text-foreground hover:border-foreground/30 hover:bg-muted/60 transition-[transform,opacity,background-color,border-color,color,box-shadow] flex items-center gap-1.5 whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
         >
           <Pencil className="size-3.5" />
           Редагувати малюнок

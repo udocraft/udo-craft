@@ -805,7 +805,7 @@ function OTPInput({ value, onChange }: { value: string; onChange: (v: string) =>
             if (e.key === "Backspace" && !d && i > 0) refs[i - 1]?.focus();
           }}
           className={cn(
-            "h-14 w-11 rounded-xl border-2 bg-background text-center text-xl font-bold outline-none transition-all sm:w-12",
+            "h-14 w-11 rounded-xl border-2 bg-background text-center text-xl font-bold outline-none transition-[transform,opacity,background-color,border-color,color,box-shadow] sm:w-12",
             "focus:border-primary focus:ring-4 focus:ring-primary/15",
             d ? "border-primary text-primary" : "border-border text-foreground"
           )}

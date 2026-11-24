@@ -96,7 +96,7 @@ export function SubscriptionSection() {
             <div className="mt-8 flex justify-center">
               <Link
                 href="#contact"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-foreground px-6 text-sm font-semibold text-background transition-all duration-200 hover:bg-foreground/90 active:scale-[0.98]"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-foreground px-6 text-sm font-semibold text-background transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 hover:bg-foreground/90 active:scale-[0.98]"
               >
                 {t("cta")}
                 <ArrowRight className="size-4" />

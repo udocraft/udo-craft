@@ -3,9 +3,25 @@
 import { Link } from "@/i18n/navigation";
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { User, ShoppingBag, ArrowRight, X, Menu } from "lucide-react";
+import {
+  User,
+  ShoppingBag,
+  ArrowRight,
+  X,
+  Menu,
+  LayoutGrid,
+  Info,
+  Workflow,
+  Mail,
+  Phone,
+  MapPin,
+  Send,
+  Instagram,
+  type LucideIcon,
+} from "lucide-react";
 import { BrandLogoFull } from "@/components/brand-logo";
 import { sound } from "@/lib/sound";
+import { CONTACT, telHref } from "@/lib/contact";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
@@ -18,13 +34,24 @@ interface NavBarProps {
   onAuthOpen?: () => void;
 }
 
+const TikTokIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
+    <path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48z" />
+  </svg>
+);
+
+const menuRowClass =
+  "flex min-h-12 items-center gap-3 rounded-xl px-4 text-base font-medium text-muted-foreground transition hover:bg-muted hover:text-foreground";
+
 export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOpen }: NavBarProps) {
   const t = useTranslations("nav");
-  const navLinks = [
-    { href: "/#catalog", label: t("catalog") },
-    { href: "/#about", label: t("about") },
-    { href: "/#how", label: t("how") },
-    { href: "/#contact", label: t("contacts") },
+  const tContact = useTranslations("contact");
+  const tHomeContact = useTranslations("homeContact");
+  const navLinks: { href: string; label: string; Icon: LucideIcon }[] = [
+    { href: "/#catalog", label: t("catalog"), Icon: LayoutGrid },
+    { href: "/#about", label: t("about"), Icon: Info },
+    { href: "/#how", label: t("how"), Icon: Workflow },
+    { href: "/#contact", label: t("contacts"), Icon: Mail },
   ];
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -66,6 +93,11 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
   }, []);
 
   const isLight = true; // always use light nav style
+  const iconButtonClass = `flex items-center justify-center w-11 h-11 rounded-full transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+    isLight
+      ? "text-muted-foreground hover:text-foreground hover:bg-muted"
+      : "text-white/60 hover:text-white hover:bg-white/10"
+  }`;
 
   return (
     <motion.nav
@@ -83,7 +115,7 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
       aria-label={t("mainNav")}
     >
       <div
-        className={`pointer-events-auto inline-flex h-14 items-center gap-1.5 rounded-full border px-3 shadow-[0_12px_40px_rgba(12,16,34,0.12)] backdrop-blur-2xl transition-all duration-300 md:h-12 md:gap-2 ${
+        className={`pointer-events-auto inline-flex h-14 items-center gap-1.5 rounded-full border px-3 shadow-[0_12px_40px_rgba(12,16,34,0.12)] backdrop-blur-2xl transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-300 md:h-12 md:gap-2 ${
           isLight
             ? "bg-background/90 border-border/80"
             : "bg-white/8 backdrop-blur-xl border-white/12 shadow-lg shadow-black/20"
@@ -94,14 +126,14 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
           <BrandLogoFull className="h-8 w-auto" color="var(--color-primary)" />
         </Link>
 
-        {/* Nav links — always visible on desktop */}
+        {/* Nav links — desktop only; mobile uses the sidebar */}
         <div className="hidden md:flex items-center">
           <div className={`w-px h-5 shrink-0 mx-1 ${isLight ? "bg-border" : "bg-white/12"}`} aria-hidden="true" />
           {navLinks.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              className={`inline-flex min-h-11 items-center px-4 text-sm font-medium rounded-full transition-all duration-200 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+              className={`inline-flex min-h-11 items-center px-4 text-sm font-medium rounded-full transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                 isLight
                   ? "text-muted-foreground hover:text-foreground hover:bg-muted"
                   : "text-white/60 hover:text-white hover:bg-white/10"
@@ -113,43 +145,29 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
           <div className={`w-px h-5 shrink-0 mx-1 ${isLight ? "bg-border" : "bg-white/12"}`} aria-hidden="true" />
         </div>
 
-        {/* Actions — always visible */}
+        {/* Actions */}
         <div className="flex items-center gap-1">
-          {/* User icon — opens auth modal if not logged in, navigates to cabinet if logged in */}
-          {isLoggedIn ? (
-            <Link
-              href="/cabinet"
-              aria-label={t("goToAccount")}
-              className={`flex items-center justify-center w-11 h-11 rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                isLight
-                  ? "text-muted-foreground hover:text-foreground hover:bg-muted"
-                  : "text-white/60 hover:text-white hover:bg-white/10"
-              }`}
-            >
-              <User className="w-5 h-5" strokeWidth={2} />
-            </Link>
-          ) : (
-            <button
-              onClick={() => { sound.tap(); onAuthOpen?.(); }}
-              aria-label={t("signIn")}
-              className={`flex items-center justify-center w-11 h-11 rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                isLight
-                  ? "text-muted-foreground hover:text-foreground hover:bg-muted"
-                  : "text-white/60 hover:text-white hover:bg-white/10"
-              }`}
-            >
-              <User className="w-5 h-5" strokeWidth={2} />
-            </button>
-          )}
+          {/* Profile — desktop only; on mobile it lives in the sidebar */}
+          <div className="hidden md:flex">
+            {isLoggedIn ? (
+              <Link href="/cabinet" aria-label={t("goToAccount")} className={iconButtonClass}>
+                <User className="w-5 h-5" strokeWidth={2} />
+              </Link>
+            ) : (
+              <button
+                onClick={() => { sound.tap(); onAuthOpen?.(); }}
+                aria-label={t("signIn")}
+                className={iconButtonClass}
+              >
+                <User className="w-5 h-5" strokeWidth={2} />
+              </button>
+            )}
+          </div>
 
           <button
             onClick={() => { sound.open(); onCartOpen(); }}
             aria-label={t("cartItems", { count: cartCount })}
-            className={`relative flex items-center justify-center w-11 h-11 rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-              isLight
-                ? "text-muted-foreground hover:text-foreground hover:bg-muted"
-                : "text-white/60 hover:text-white hover:bg-white/10"
-            }`}
+            className={`relative ${iconButtonClass}`}
           >
             <ShoppingBag className="w-5 h-5" strokeWidth={2} />
             {cartCount > 0 && (
@@ -164,10 +182,10 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
             )}
           </button>
 
-          {/* CTA — always visible */}
+          {/* CTA — desktop/tablet only */}
           <Link
             href="/order"
-            className={`hidden sm:inline-flex items-center gap-1.5 min-h-11 text-xs font-semibold px-5 py-2.5 rounded-full active:scale-95 transition-all duration-200 whitespace-nowrap ml-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+            className={`hidden sm:inline-flex items-center gap-1.5 min-h-11 text-xs font-semibold px-5 py-2.5 rounded-full active:scale-95 transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 whitespace-nowrap ml-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               scrolled
                 ? "bg-primary text-white hover:bg-primary/90"
                 : "border border-primary text-primary hover:bg-primary hover:text-white"
@@ -176,7 +194,10 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
             {t("startProject")} <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
           </Link>
 
-          <LanguageSwitcher />
+          {/* Language — desktop only; on mobile it lives in the sidebar */}
+          <div className="hidden md:block">
+            <LanguageSwitcher />
+          </div>
 
           <button
             onClick={() => { sound.toggle(!menuOpen); setMenuOpen(!menuOpen); }}
@@ -198,25 +219,98 @@ export function NavBar({ isLoggedIn, cartCount, onCartOpen, cinemaMode, onAuthOp
           </div>
           <SheetTitle className="sr-only">{t("mainNav")}</SheetTitle>
           <SheetDescription className="sr-only">{t("mainNav")}</SheetDescription>
-          <nav className="flex flex-1 flex-col gap-1 p-4" aria-label={t("mainNav")}>
-            {navLinks.map((link) => (
+
+          <div className="flex flex-1 flex-col overflow-y-auto">
+            <nav className="flex flex-col gap-1 p-4" aria-label={t("mainNav")}>
+              {navLinks.map(({ href, label, Icon }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setMenuOpen(false)}
+                  className={menuRowClass}
+                >
+                  <Icon className="size-5 shrink-0" aria-hidden="true" />
+                  {label}
+                </Link>
+              ))}
               <Link
-                key={link.href}
-                href={link.href}
+                href="/order"
                 onClick={() => setMenuOpen(false)}
-                className="flex min-h-12 items-center rounded-xl px-4 text-base font-medium text-muted-foreground transition hover:bg-muted hover:text-foreground"
+                className="mt-3 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
               >
-                {link.label}
+                {t("startProject")} <ArrowRight className="size-4" />
               </Link>
-            ))}
-            <Link
-              href="/order"
-              onClick={() => setMenuOpen(false)}
-              className="mt-3 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
-            >
-              {t("startProject")} <ArrowRight className="size-4" />
-            </Link>
-          </nav>
+            </nav>
+
+            <div className="flex flex-col gap-1 border-t border-border p-4">
+              {isLoggedIn ? (
+                <Link href="/cabinet" onClick={() => setMenuOpen(false)} className={menuRowClass}>
+                  <User className="size-5 shrink-0" aria-hidden="true" />
+                  {t("goToAccount")}
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => { setMenuOpen(false); sound.tap(); onAuthOpen?.(); }}
+                  className={menuRowClass}
+                >
+                  <User className="size-5 shrink-0" aria-hidden="true" />
+                  {t("signIn")}
+                </button>
+              )}
+              <div className="flex min-h-12 items-center px-4">
+                <LanguageSwitcher />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1 border-t border-border p-4">
+              <a href={telHref(CONTACT.phone)} className={menuRowClass}>
+                <Phone className="size-5 shrink-0" aria-hidden="true" />
+                <span className="flex flex-col leading-tight">
+                  <span className="text-xs text-muted-foreground/80">{tContact("phone")}</span>
+                  <span>{CONTACT.phone}</span>
+                </span>
+              </a>
+              <div className="flex min-h-12 items-center gap-3 px-4 text-base text-muted-foreground">
+                <MapPin className="size-5 shrink-0" aria-hidden="true" />
+                <span className="flex flex-col leading-tight">
+                  <span className="text-xs text-muted-foreground/80">{tContact("address")}</span>
+                  <span>{tHomeContact("address")}</span>
+                </span>
+              </div>
+              <div className="flex items-center gap-2 px-4 pt-3">
+                <a
+                  href={CONTACT.telegram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Telegram"
+                  className="flex size-11 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:bg-muted hover:text-foreground"
+                >
+                  <Send className="size-5" aria-hidden="true" />
+                </a>
+                <a
+                  href={CONTACT.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                  className="flex size-11 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:bg-muted hover:text-foreground"
+                >
+                  <Instagram className="size-5" aria-hidden="true" />
+                </a>
+                {CONTACT.tiktok && (
+                  <a
+                    href={CONTACT.tiktok}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="TikTok"
+                    className="flex size-11 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:bg-muted hover:text-foreground"
+                  >
+                    <TikTokIcon className="size-5" />
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
         </SheetContent>
       </Sheet>
     </motion.nav>

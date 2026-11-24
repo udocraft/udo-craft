@@ -24,7 +24,7 @@ export function ContactSection({
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="contact" className="bg-[#0a0d1a]" aria-labelledby="contact-heading">
+    <section id="contact" className="bg-surface-dark" aria-labelledby="contact-heading">
       <div className="max-w-6xl mx-auto px-5 sm:px-10 lg:px-20 py-24 sm:py-32">
 
         {/* Heading — full width, generous space below */}
@@ -82,7 +82,7 @@ export function ContactSection({
                 return (
                   <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
                     aria-label={s.label}
-                    className="inline-flex min-h-11 items-center gap-2 px-4 py-2 rounded-full border border-white/10 text-white/40 hover:text-white hover:border-white/25 transition-all duration-200 text-xs font-medium">
+                    className="inline-flex min-h-11 items-center gap-2 px-4 py-2 rounded-full border border-white/10 text-white/40 hover:text-white hover:border-white/25 transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 text-xs font-medium">
                     <Icon className="w-3.5 h-3.5" aria-hidden="true" />{s.label}
                   </a>
                 );

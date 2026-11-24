@@ -50,7 +50,7 @@ export function FinalCtaSection() {
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/order"
-              className="inline-flex items-center gap-2.5 bg-white text-primary font-bold text-sm px-8 py-4 rounded-full hover:bg-white/90 active:scale-[0.97] transition-all duration-200 shadow-xl shadow-black/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+              className="inline-flex items-center gap-2.5 bg-white text-primary font-bold text-sm px-8 py-4 rounded-full hover:bg-white/90 active:scale-[0.97] transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 shadow-xl shadow-black/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
             >
               {t("cta")} <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </Link>

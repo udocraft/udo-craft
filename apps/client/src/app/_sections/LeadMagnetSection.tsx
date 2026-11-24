@@ -86,11 +86,11 @@ export function LeadMagnetSection() {
                       aria-required="true"
                       aria-invalid={!!error}
                       aria-describedby={error ? "lead-email-error" : undefined}
-                      className="w-full sm:w-64 px-4 py-3 rounded-full bg-white/15 border border-white/25 text-white placeholder:text-white/50 text-sm focus:outline-none focus:border-white/60 focus:bg-white/20 transition-all duration-200"
+                      className="w-full sm:w-64 px-4 py-3 rounded-full bg-white/15 border border-white/25 text-white placeholder:text-white/50 text-sm focus:outline-none focus:border-white/60 focus:bg-white/20 transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200"
                     />
                   </div>
                   <button type="submit" disabled={loading}
-                    className="inline-flex items-center justify-center gap-2 bg-white text-primary font-bold text-sm px-6 py-3 rounded-full hover:bg-white/90 active:scale-[0.97] transition-all duration-200 disabled:opacity-60 whitespace-nowrap">
+                    className="inline-flex items-center justify-center gap-2 bg-white text-primary font-bold text-sm px-6 py-3 rounded-full hover:bg-white/90 active:scale-[0.97] transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 disabled:opacity-60 whitespace-nowrap">
                     {loading
                       ? <span className="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" aria-hidden="true" />
                       : <><span>{t("cta")}</span><ArrowRight className="w-4 h-4" aria-hidden="true" /></>
@@ -118,7 +118,7 @@ export function LeadMagnetSection() {
           <Calculator className="w-5 h-5 text-white/70 shrink-0" aria-hidden="true" />
           <p className="text-white/80 text-sm">
             {t("orCalculate")}{" "}
-            <Link href="/order" className="text-white font-semibold underline underline-offset-2 hover:no-underline transition-all">
+            <Link href="/order" className="text-white font-semibold underline underline-offset-2 hover:no-underline transition-[transform,opacity,background-color,border-color,color,box-shadow]">
               {t("openCalculator")}
             </Link>
           </p>

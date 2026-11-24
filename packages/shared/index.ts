@@ -500,21 +500,38 @@ export const TEXT_FONTS = [
   { id: "Unbounded",         label: "Unbounded",         style: "sans-serif", category: "Дисплейний"    },
   { id: "Dela Gothic One",   label: "Dela Gothic One",   style: "display",    category: "Дисплейний"    },
   { id: "Oi",                label: "Oi",                style: "display",    category: "Дисплейний"    },
+  { id: "Climate Crisis",    label: "Climate Crisis",    style: "display",    category: "Дисплейний"    },
   // ── Декоративний ──────────────────────────────────────────────────────
   { id: "Comfortaa",         label: "Comfortaa",         style: "cursive",    category: "Декоративний"  },
   { id: "Amatic SC",         label: "Amatic SC",         style: "display",    category: "Декоративний"  },
+  { id: "Rubik Glitch",      label: "Rubik Glitch",      style: "display",    category: "Декоративний"  },
+  { id: "Rubik Spray Paint", label: "Rubik Spray Paint", style: "display",    category: "Декоративний"  },
+  { id: "Pangolin",          label: "Pangolin",          style: "display",    category: "Декоративний"  },
   // ── Рукописний ────────────────────────────────────────────────────────
   { id: "Caveat",            label: "Caveat",            style: "cursive",    category: "Рукописний"    },
   { id: "Balsamiq Sans",     label: "Balsamiq Sans",     style: "cursive",    category: "Рукописний"    },
   { id: "Shantell Sans",     label: "Shantell Sans",     style: "cursive",    category: "Рукописний"    },
   { id: "Comforter",         label: "Comforter",         style: "cursive",    category: "Рукописний"    },
   { id: "Great Vibes",       label: "Great Vibes",       style: "cursive",    category: "Рукописний"    },
+  { id: "Bad Script",        label: "Bad Script",        style: "cursive",    category: "Рукописний"    },
   // ── Технічний ─────────────────────────────────────────────────────────
   { id: "Jura",              label: "Jura",              style: "sans-serif", category: "Технічний"     },
   { id: "Press Start 2P",    label: "Press Start 2P",    style: "monospace",  category: "Технічний"     },
+  { id: "Science Gothic",    label: "Science Gothic",    style: "sans-serif", category: "Технічний"     },
+  { id: "Tiny5 Duo",         label: "Tiny5 Duo",         style: "display",    category: "Технічний"     },
 ] as const;
 
 export type TextFontId = typeof TEXT_FONTS[number]["id"];
+
+/** Effects applied to a text layer on canvas. Glow is a zero-offset shadow. */
+export interface TextEffects {
+  /** Outer glow: shadow with zero offset */
+  glow?: { color: string; blur: number };
+  /** Drop shadow with offset */
+  shadow?: { color: string; blur: number; offsetX: number; offsetY: number };
+  /** Draw stroke above fill (paint-order: stroke) instead of below */
+  strokeOnTop?: boolean;
+}
 
 export interface PrintLayer {
   id: string;
@@ -566,6 +583,15 @@ export interface PrintLayer {
   textBoxWidth?: number;
   /** Maps to Fabric.js Textbox height (px) */
   textBoxHeight?: number;
+  /** Text effect stack (Fabric shadow + paint order). Absent = no effects. */
+  textEffects?: TextEffects;
+  /**
+   * Per-glyph wave warp. Rendered as a group of glyphs, so inline editing is off:
+   * edit the text in the text panel instead. Ignored when textCurve != 0.
+   */
+  textWarp?: { kind: "wave"; amount: number };
+  /** Clip this layer to the shape of the layer directly beneath it (Fabric clipPath). */
+  clipToBelow?: boolean;
   /** Layer opacity 0–1 */
   opacity?: number;
   /** Text combo parent grouping ID */

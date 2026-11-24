@@ -1,6 +1,6 @@
 export default function CabinetLoading() {
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-[100dvh] bg-background p-6">
       <div className="max-w-6xl mx-auto">
         {/* Page title skeleton */}
         <div className="h-8 w-56 bg-muted animate-pulse rounded mb-8" />

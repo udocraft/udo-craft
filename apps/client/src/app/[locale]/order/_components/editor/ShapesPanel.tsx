@@ -54,13 +54,13 @@ export default function ShapesPanel({ onAddLayer }: ShapesPanelProps) {
 
         <div className="flex flex-wrap gap-1 mb-3">
           <button type="button" onClick={() => setActiveCategory(null)}
-            className={["px-2 py-0.5 rounded-full text-[10px] font-medium border transition-all",
+            className={["px-2 py-0.5 rounded-full text-[10px] font-medium border transition-[transform,opacity,background-color,border-color,color,box-shadow]",
               activeCategory === null ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground hover:border-foreground/40"].join(" ")}>
             Всі
           </button>
           {SHAPE_CATEGORIES.map((cat) => (
             <button key={cat} type="button" onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
-              className={["px-2 py-0.5 rounded-full text-[10px] font-medium border transition-all",
+              className={["px-2 py-0.5 rounded-full text-[10px] font-medium border transition-[transform,opacity,background-color,border-color,color,box-shadow]",
                 activeCategory === cat ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground hover:border-foreground/40"].join(" ")}>
               {cat}
             </button>
@@ -82,7 +82,7 @@ export default function ShapesPanel({ onAddLayer }: ShapesPanelProps) {
             {filtered.map((shape) => (
               <button key={shape.id} type="button" disabled={addingId === shape.id}
                 onClick={() => handleAdd(shape.svgPath, shape.name, shape.id)}
-                className="group relative flex items-center justify-center rounded-lg border border-border bg-muted aspect-square hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all disabled:opacity-60 p-2"
+                className="group relative flex items-center justify-center rounded-lg border border-border bg-muted aspect-square hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-[transform,opacity,background-color,border-color,color,box-shadow] disabled:opacity-60 p-2"
                 title={shape.name}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={shape.svgPath} alt={shape.name} className="w-full h-full object-contain" />

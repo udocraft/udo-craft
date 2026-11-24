@@ -25,13 +25,13 @@ export default function OrderError({
         <div className="flex gap-3 justify-center">
           <button
             onClick={reset}
-            className="inline-flex items-center bg-primary hover:bg-primary/90 text-white font-bold text-sm px-6 py-3 rounded-full transition-all"
+            className="inline-flex items-center bg-primary hover:bg-primary/90 text-white font-bold text-sm px-6 py-3 rounded-full transition-[transform,opacity,background-color,border-color,color,box-shadow]"
           >
             Спробувати знову
           </button>
           <Link
             href="/"
-            className="inline-flex items-center border border-border hover:bg-accent text-foreground font-medium text-sm px-6 py-3 rounded-full transition-all"
+            className="inline-flex items-center border border-border hover:bg-accent text-foreground font-medium text-sm px-6 py-3 rounded-full transition-[transform,opacity,background-color,border-color,color,box-shadow]"
           >
             На головну
           </Link>

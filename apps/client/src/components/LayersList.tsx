@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import { GripVertical, Trash2, Type, Copy } from "lucide-react";
+import { GripVertical, Trash2, Type, Copy, Scissors } from "lucide-react";
 import { PRINT_TYPES, type PrintLayer, type PrintTypeId } from "@udo-craft/shared";
 
 export interface PrintTypePricingRow {
@@ -16,6 +16,7 @@ export type TextLayerPatch = Partial<Pick<PrintLayer,
   | "textBold" | "textItalic" | "textOverflow"
   | "textBackgroundColor" | "textStrokeColor" | "textStrokeWidth"
   | "textBoxWidth" | "textBoxHeight" | "opacity" | "svgFillColor" | "svgStrokeColor"
+  | "clipToBelow" | "textEffects" | "textWarp"
 >>;
 
 function calcPrice(tiers: { min_qty: number; price_cents: number }[], qty: number): number | null {
@@ -52,7 +53,7 @@ export interface LayersListProps {
 
 export default function LayersList({
   layers, activeSide, activeLayerId,
-  onSelect, onDelete, onDuplicate, onTypeChange, onSizeLabelChange, onReorder,
+  onSelect, onDelete, onDuplicate, onTypeChange, onSizeLabelChange, onReorder, onTextChange,
   pricing = [], quantity = 1, layerScales = {}, pxToMmRatio = 0,
 }: LayersListProps) {
   const sideLayers = layers.filter((l) => l.side === activeSide);
@@ -193,7 +194,7 @@ export default function LayersList({
               onClick={() => onSelect(isActive ? null : layer.id)}
               role="button" aria-pressed={isActive}
               className={[
-                "relative rounded-xl border cursor-pointer select-none transition-all",
+                "relative rounded-xl border cursor-pointer select-none transition-[transform,opacity,background-color,border-color,color,box-shadow]",
                 draggingId === layer.id ? "opacity-30 scale-95" : "",
                 isActive
                   ? isText ? "border-violet-400 shadow-sm shadow-violet-100 bg-violet-50/50" : "border-primary shadow-sm bg-primary/5"
@@ -235,14 +236,23 @@ export default function LayersList({
                   </div>
                 </div>
                 <div className="flex items-center shrink-0" onPointerDown={(e) => e.stopPropagation()}>
+                  {onTextChange && (
+                    <button type="button"
+                      onClick={(e) => { e.stopPropagation(); onTextChange(layer.id, { clipToBelow: !layer.clipToBelow } as TextLayerPatch); }}
+                      title={layer.clipToBelow ? "Маска: обрізано по шару нижче (натисніть, щоб вимкнути)" : "Обрізати по шару нижче"}
+                      aria-pressed={!!layer.clipToBelow}
+                      className={`size-8 flex items-center justify-center rounded-lg transition-[transform,opacity,background-color,border-color,color,box-shadow] ${layer.clipToBelow ? "text-primary bg-primary/10" : "text-muted-foreground/40 hover:text-primary hover:bg-primary/10"}`}>
+                      <Scissors className="size-3.5" />
+                    </button>
+                  )}
                   {onDuplicate && (
                     <button type="button" onClick={(e) => { e.stopPropagation(); onDuplicate(layer.id); }} title="Дублювати"
-                      className="size-8 flex items-center justify-center rounded-lg text-muted-foreground/40 hover:text-primary hover:bg-primary/10 transition-all">
+                      className="size-8 flex items-center justify-center rounded-lg text-muted-foreground/40 hover:text-primary hover:bg-primary/10 transition-[transform,opacity,background-color,border-color,color,box-shadow]">
                       <Copy className="size-3.5" />
                     </button>
                   )}
                   <button type="button" onClick={(e) => { e.stopPropagation(); onDelete(layer.id); }} aria-label="Видалити шар"
-                    className="size-8 flex items-center justify-center rounded-lg text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-all">
+                    className="size-8 flex items-center justify-center rounded-lg text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-[transform,opacity,background-color,border-color,color,box-shadow]">
                     <Trash2 className="size-3.5" />
                   </button>
                 </div>
@@ -284,7 +294,7 @@ export default function LayersList({
                           key={t.id}
                           type="button"
                           onClick={() => onTypeChange(layer.id, t.id as PrintTypeId)}
-                          className={`rounded-full border px-2.5 py-1.5 text-[11px] font-semibold transition-all ${
+                          className={`rounded-full border px-2.5 py-1.5 text-[11px] font-semibold transition-[transform,opacity,background-color,border-color,color,box-shadow] ${
                             layer.type === t.id
                               ? "border-transparent text-white shadow-sm"
                               : "border-border bg-background text-muted-foreground hover:border-foreground/30 hover:text-foreground"
@@ -309,7 +319,7 @@ export default function LayersList({
                               key={r.size_label}
                               type="button"
                               onClick={() => onSizeLabelChange(layer.id, r.size_label ?? "")}
-                              className={`min-w-0 rounded-xl border px-1.5 py-2 text-center transition-all ${
+                              className={`min-w-0 rounded-xl border px-1.5 py-2 text-center transition-[transform,opacity,background-color,border-color,color,box-shadow] ${
                                 selected
                                   ? "border-primary bg-primary text-primary-foreground shadow-sm"
                                   : "border-border bg-background text-foreground hover:border-primary/40 hover:bg-primary/5"

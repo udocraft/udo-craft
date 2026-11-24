@@ -92,7 +92,7 @@ export function CustomizerLeftPanel({
               const isWhite = mat.hex_code.toLowerCase() === "#ffffff" || mat.hex_code.toLowerCase() === "#f5f5f5";
               return (
                 <button key={v.id} onClick={() => onColorSelect(mat.name, v)} title={mat.name}
-                  className={`cursor-pointer relative size-8 rounded-full transition-all ${isSelected ? "ring-2 ring-primary ring-offset-2 scale-110" : "hover:scale-105"} ${isWhite ? "border border-border" : ""}`}
+                  className={`cursor-pointer relative size-8 rounded-full transition-[transform,opacity,background-color,border-color,color,box-shadow] ${isSelected ? "ring-2 ring-primary ring-offset-2 scale-110" : "hover:scale-105"} ${isWhite ? "border border-border" : ""}`}
                   style={{ backgroundColor: mat.hex_code }}>
                   {isSelected && <Check className="absolute inset-0 m-auto size-3" style={{ color: isWhite ? "#1a1a1a" : "#fff" }} />}
                 </button>
@@ -110,7 +110,7 @@ export function CustomizerLeftPanel({
             ? product.available_sizes as string[] : []
           ).map((size) => (
             <button key={size} onClick={() => onSizeSelect(size)}
-              className={`cursor-pointer min-w-[38px] px-2 py-1.5 rounded-lg text-sm font-semibold border transition-all ${selectedSize === size ? "bg-foreground text-background border-foreground shadow-sm" : "border-border hover:border-foreground/40 hover:bg-muted/50"}`}>
+              className={`cursor-pointer min-w-[38px] px-2 py-1.5 rounded-lg text-sm font-semibold border transition-[transform,opacity,background-color,border-color,color,box-shadow] ${selectedSize === size ? "bg-foreground text-background border-foreground shadow-sm" : "border-border hover:border-foreground/40 hover:bg-muted/50"}`}>
               {size}
             </button>
           ))}

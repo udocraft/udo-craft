@@ -233,6 +233,24 @@ export function AppSidebar({ user }: AppSidebarProps) {
     return () => { mounted = false; supabase.removeChannel(channel); };
   }, [supabase, router]);
 
+  // Sections (CRM, Аналітика, Виробництво, Система) are collapsible; open by default.
+  const [openSections, setOpenSections] = React.useState<Record<string, boolean>>({});
+
+  const renderSectionHeader = (key: string, label: string) => {
+    const open = openSections[key] ?? true;
+    return (
+      <button
+        type="button"
+        onClick={() => setOpenSections((prev) => ({ ...prev, [key]: !(prev[key] ?? true) }))}
+        aria-expanded={open}
+        className="mb-0.5 flex h-5 w-full items-center justify-between px-2.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/50 transition-colors hover:text-foreground group-data-[collapsible=icon]:hidden"
+      >
+        {label}
+        <ChevronRight className={`size-3 transition-transform duration-200 ${open ? "rotate-90" : ""}`} />
+      </button>
+    );
+  };
+
   const handleNavClick = (url: string, isActive: boolean) => {
     if (isMobile) setOpenMobile(false);
     const hasDraft = typeof sessionStorage !== "undefined" && !!sessionStorage.getItem("new-order-draft");
@@ -293,7 +311,6 @@ export function AppSidebar({ user }: AppSidebarProps) {
   const renderCollapsibleItem = (item: NavItem) => {
     const isGroupActive = (item.match ?? [item.url]).some((prefix) => pathname.startsWith(prefix));
     const isOpen = openGroups[item.url] ?? isGroupActive;
-    const firstChildUrl = item.children?.[0]?.url ?? item.url;
 
     return (
       <Collapsible
@@ -308,19 +325,9 @@ export function AppSidebar({ user }: AppSidebarProps) {
             isActive={isGroupActive}
             aria-current={isGroupActive ? "page" : undefined}
             aria-expanded={isOpen}
-            onClick={(e) => {
-              if (isGroupActive) {
-                setOpenGroups((prev) => ({ ...prev, [item.url]: !prev[item.url] }));
-                return;
-              }
-              const ok = handleNavClick(firstChildUrl, isGroupActive);
-              if (!ok) {
-                e.preventDefault();
-                return;
-              }
-              setOpenGroups((prev) => ({ ...prev, [item.url]: true }));
-              router.push(firstChildUrl);
-            }}
+            onClick={() =>
+              setOpenGroups((prev) => ({ ...prev, [item.url]: !(prev[item.url] ?? isGroupActive) }))
+            }
             className="h-8 gap-2.5 px-2.5 text-[13px] transition-colors group-data-[collapsible=icon]:mx-auto rounded-lg"
           >
             <item.icon
@@ -430,51 +437,51 @@ export function AppSidebar({ user }: AppSidebarProps) {
 
           {/* CRM & Sales */}
           <SidebarGroup className="p-0">
-            <SidebarGroupLabel className="h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/50 mb-0.5">
-              CRM
-            </SidebarGroupLabel>
-            <SidebarMenu className="gap-px">
-              {(isSeamstress ? CRM_NAV.filter((item) => item.url !== "/clients") : CRM_NAV).map((item) =>
-                item.children ? renderCollapsibleItem(item) : renderSimpleItem(item)
-              )}
-            </SidebarMenu>
+            {renderSectionHeader("crm", "CRM")}
+            {(openSections.crm ?? true) && (
+              <SidebarMenu className="gap-px">
+                {(isSeamstress ? CRM_NAV.filter((item) => item.url !== "/clients") : CRM_NAV).map((item) =>
+                  item.children ? renderCollapsibleItem(item) : renderSimpleItem(item)
+                )}
+              </SidebarMenu>
+            )}
           </SidebarGroup>
 
           {/* Analytics */}
           {!isSeamstress && (
             <SidebarGroup className="p-0">
-              <SidebarGroupLabel className="h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/50 mb-0.5">
-                Аналітика
-              </SidebarGroupLabel>
-              <SidebarMenu className="gap-px">
-                {ANALYTICS_NAV.map(renderSimpleItem)}
-              </SidebarMenu>
+              {renderSectionHeader("analytics", "Аналітика")}
+              {(openSections.analytics ?? true) && (
+                <SidebarMenu className="gap-px">
+                  {ANALYTICS_NAV.map(renderSimpleItem)}
+                </SidebarMenu>
+              )}
             </SidebarGroup>
           )}
 
           {/* Catalog & Production */}
           <SidebarGroup className="p-0">
-            <SidebarGroupLabel className="h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/50 mb-0.5">
-              Виробництво
-            </SidebarGroupLabel>
-            <SidebarMenu className="gap-px">
-              {(isSeamstress ? CATALOG_NAV.filter((item) => item.url === "/erp") : CATALOG_NAV).map((item) =>
-                item.children ? renderCollapsibleItem(item) : renderSimpleItem(item)
-              )}
-            </SidebarMenu>
+            {renderSectionHeader("production", "Виробництво")}
+            {(openSections.production ?? true) && (
+              <SidebarMenu className="gap-px">
+                {(isSeamstress ? CATALOG_NAV.filter((item) => item.url === "/erp") : CATALOG_NAV).map((item) =>
+                  item.children ? renderCollapsibleItem(item) : renderSimpleItem(item)
+                )}
+              </SidebarMenu>
+            )}
           </SidebarGroup>
 
           {/* System */}
           {!isSeamstress && (
             <SidebarGroup className="p-0">
-              <SidebarGroupLabel className="h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/50 mb-0.5">
-                Система
-              </SidebarGroupLabel>
-              <SidebarMenu className="gap-px">
-                {SYSTEM_NAV.map((item) =>
-                  item.children ? renderCollapsibleItem(item) : renderSimpleItem(item)
-                )}
-              </SidebarMenu>
+              {renderSectionHeader("system", "Система")}
+              {(openSections.system ?? true) && (
+                <SidebarMenu className="gap-px">
+                  {SYSTEM_NAV.map((item) =>
+                    item.children ? renderCollapsibleItem(item) : renderSimpleItem(item)
+                  )}
+                </SidebarMenu>
+              )}
             </SidebarGroup>
           )}
 

@@ -26,6 +26,8 @@ export type TextLayerPatch = Partial<
     | "textStrokeWidth"
     | "textBoxWidth"
     | "textBoxHeight"
+    | "textEffects"
+    | "textWarp"
     | "opacity"
     | "svgFillColor"
     | "svgStrokeColor"
@@ -80,7 +82,7 @@ export default function TextPanel({ onAddTextLayer, onAddComposition }: TextPane
             key={comp.id}
             type="button"
             onClick={() => onAddComposition(comp)}
-            className="flex flex-col items-center justify-center gap-1 rounded-xl border border-border bg-muted/30 hover:border-primary hover:bg-primary/5 transition-all p-3 min-h-[80px] text-center"
+            className="flex flex-col items-center justify-center gap-1 rounded-xl border border-border bg-muted/30 hover:border-primary hover:bg-primary/5 transition-[transform,opacity,background-color,border-color,color,box-shadow] p-3 min-h-[80px] text-center"
           >
             {/* Visual preview — CSS only */}
             <span

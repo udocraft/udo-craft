@@ -23,8 +23,9 @@ interface ScrollExpandMediaProps {
   children?: ReactNode;
 }
 
-// Section height: one 100svh sticky stage + 120svh of scroll that drives the expansion.
-const SECTION_HEIGHT = "220svh";
+// Section height: one 100svh sticky stage + 220svh of scroll.
+// Phases over that scroll (0..1): expand 0–0.4, hold 0.4–0.55, zoom + shatter 0.55–0.8, zoom out of the copy 0.82–1.
+const SECTION_HEIGHT = "320svh";
 const BASE_WIDTH = 300;
 const BASE_RATIO = 4 / 3;
 const VIDEO_VOLUME = 0.8;
@@ -151,7 +152,7 @@ function StarField({ opacity, reduceMotion }: { opacity: number; reduceMotion: b
 
 const LETTER_SPREAD_X = 260;
 const LETTER_SPREAD_Y = 220;
-const PARTICLES_PER_LETTER = 6;
+const PARTICLES_PER_LETTER = 14;
 
 /** Deterministic pseudo-random value in [0, 1) so each letter always breaks the same way. */
 const hash = (n: number) => {
@@ -213,17 +214,21 @@ function LetterDust({
       const cx = box.left - stageRect.left + box.width / 2;
       const cy = box.top - stageRect.top + box.height / 2;
 
+      // Small rotated shards that scatter chaotically from each letter.
       for (let k = 0; k < PARTICLES_PER_LETTER; k++) {
-        const seed = index * 17 + k * 5;
+        const seed = index * 31 + k * 7;
         const angle = hash(seed + 1) * Math.PI * 2;
-        const dist = (40 + hash(seed + 2) * 140) * progress;
-        const x = cx + Math.cos(angle) * dist;
-        const y = cy + Math.sin(angle) * dist - 30 * progress * hash(seed + 3);
-        const radius = 0.5 + hash(seed + 4) * 1.6;
-        ctx.beginPath();
-        ctx.arc(x, y, radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${0.9 * burst})`;
-        ctx.fill();
+        const dist = (30 + hash(seed + 2) * 220) * progress;
+        const x = cx + Math.cos(angle) * dist + (hash(seed + 5) - 0.5) * 12 * progress;
+        const y = cy + Math.sin(angle) * dist - 40 * progress * hash(seed + 3);
+        const size = 0.8 + hash(seed + 4) * 2.4;
+        const spin = hash(seed + 6) * Math.PI * 2 + progress * (hash(seed + 7) - 0.5) * 10;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(spin);
+        ctx.fillStyle = `rgba(255, 255, 255, ${0.85 * burst})`;
+        ctx.fillRect(-size, -size * 0.35, size * 2, size * 0.7);
+        ctx.restore();
       }
     });
   }, [progress, stageRef, letterRefs]);
@@ -233,6 +238,107 @@ function LetterDust({
       ref={canvasRef}
       aria-hidden="true"
       className="pointer-events-none absolute inset-0 z-[11] h-full w-full"
+    />
+  );
+}
+
+/**
+ * The full-size video zooms in and shatters into tiles. Tiles are drawn from the
+ * live video frame, so the break-up starts exactly where the card stops.
+ */
+function VideoShatter({
+  videoRef,
+  stageRef,
+  zoom,
+  cardWidth,
+  cardHeight,
+}: {
+  videoRef: RefObject<HTMLVideoElement>;
+  stageRef: RefObject<HTMLDivElement>;
+  zoom: number;
+  cardWidth: number;
+  cardHeight: number;
+}) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const stage = stageRef.current;
+    const video = videoRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !stage || !ctx) return;
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const stageRect = stage.getBoundingClientRect();
+    const width = stageRect.width;
+    const height = stageRect.height;
+    if (canvas.width !== Math.round(width * dpr) || canvas.height !== Math.round(height * dpr)) {
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, width, height);
+
+    if (zoom <= 0 || !video || video.readyState < 2 || video.videoWidth === 0) return;
+
+    // Source crop matching object-cover on the card.
+    const vw = video.videoWidth;
+    const vh = video.videoHeight;
+    const cardRatio = cardWidth / cardHeight;
+    let sx = 0;
+    let sy = 0;
+    let sw = vw;
+    let sh = vh;
+    if (vw / vh > cardRatio) {
+      sw = vh * cardRatio;
+      sx = (vw - sw) / 2;
+    } else {
+      sh = vw / cardRatio;
+      sy = (vh - sh) / 2;
+    }
+
+    const cols = 12;
+    const rows = 18;
+    const cellW = cardWidth / cols;
+    const cellH = cardHeight / rows;
+    const srcW = sw / cols;
+    const srcH = sh / rows;
+    const cx = width / 2;
+    const cy = height / 2;
+    const left = cx - cardWidth / 2;
+    const top = cy - cardHeight / 2;
+    const scale = 1 + 0.6 * zoom; // zoom-in
+    const size = scale * (1 - 0.6 * zoom); // tiles shrink as they fly apart
+
+    for (let j = 0; j < rows; j++) {
+      for (let i = 0; i < cols; i++) {
+        const seed = (j * cols + i) * 13 + 1;
+        const tx = left + (i + 0.5) * cellW;
+        const ty = top + (j + 0.5) * cellH;
+        const dx = tx - cx;
+        const dy = ty - cy;
+        const len = Math.hypot(dx, dy) || 1;
+        const spread = zoom * (120 + hash(seed) * 280);
+        const x = cx + dx * scale + (dx / len) * spread + (hash(seed + 1) - 0.5) * 40 * zoom;
+        const y = cy + dy * scale + (dy / len) * spread - 30 * zoom * hash(seed + 2);
+        const rot = (hash(seed + 3) - 0.5) * 2.4 * zoom;
+
+        ctx.save();
+        ctx.globalAlpha = 1 - 0.85 * zoom;
+        ctx.translate(x, y);
+        ctx.rotate(rot);
+        ctx.scale(size, size);
+        ctx.drawImage(video, sx + i * srcW, sy + j * srcH, srcW, srcH, -cellW / 2, -cellH / 2, cellW, cellH);
+        ctx.restore();
+      }
+    }
+  }, [zoom, cardWidth, cardHeight, stageRef, videoRef]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 z-[12] h-full w-full"
     />
   );
 }
@@ -380,7 +486,10 @@ export function ScrollExpandMedia({
     }
   };
 
-  const p = reduceMotion ? 1 : progress;
+  // Phase values derived from the scroll progress (see SECTION_HEIGHT).
+  const p = reduceMotion ? 1 : smoothstep(0, 0.4, progress); // expansion
+  const zoom = reduceMotion ? 0 : smoothstep(0.55, 0.8, progress); // zoom-in + shatter
+  const zoomOut = reduceMotion ? 1 : smoothstep(0.82, 1, progress); // hero copy zooms out into place
   const vw = viewport.w || 1024;
   const vh = viewport.h || 768;
   const isMobile = vw < 768;
@@ -392,8 +501,8 @@ export function ScrollExpandMedia({
   const radius = (1 - p) * 24;
   const slide = p * (isMobile ? 120 : 150); // rows slide apart (vw); odd rows left, even rows right
   const rows = splitRows(title, 3);
-  // The video stays fully visible after the expansion (no fade-out).
-  const cardOpacity = 1;
+  // The card is replaced by shattering tiles once the zoom starts.
+  const cardOpacity = zoom > 0 ? 0 : 1;
   const starOpacity = smoothstep(0.35, 1, p);
 
   // Letters break apart only when motion is allowed.
@@ -491,6 +600,14 @@ export function ScrollExpandMedia({
 
           <LetterDust stageRef={stageRef} letterRefs={letterRefs} progress={letterProgress} />
 
+          <VideoShatter
+            videoRef={videoRef}
+            stageRef={stageRef}
+            zoom={zoom}
+            cardWidth={width}
+            cardHeight={height}
+          />
+
           {audioOnScroll && (
             <button
               type="button"
@@ -501,10 +618,23 @@ export function ScrollExpandMedia({
               {muted ? <VolumeX className="size-5" aria-hidden="true" /> : <Volume2 className="size-5" aria-hidden="true" />}
             </button>
           )}
+        {/* Hero copy sits in the pinned stage and zooms out into place at the end. */}
+        {!reduceMotion && children && (
+          <div
+            className="absolute inset-0 z-[15] flex items-center justify-center overflow-hidden"
+            style={{
+              opacity: zoomOut,
+              transform: `scale(${1.15 - 0.15 * zoomOut})`,
+              visibility: zoomOut > 0 ? "visible" : "hidden",
+            }}
+          >
+            {children}
+          </div>
+        )}
         </div>
       </section>
 
-      {children && (
+      {reduceMotion && children && (
         <div className="relative z-10 bg-[#0d1020] text-white">{children}</div>
       )}
     </>

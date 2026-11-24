@@ -154,7 +154,7 @@ export function ComparisonSection() {
               {/* 24px hit area (WCAG 2.2 target size); the pill is the visual */}
               <span
                 aria-hidden="true"
-                className={`block h-3 rounded-full transition-all duration-300 ${
+                className={`block h-3 rounded-full transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-300 ${
                   index === selectedIndex ? "bg-primary w-10" : "bg-black/15 hover:bg-black/25 w-3"
                 }`}
               />

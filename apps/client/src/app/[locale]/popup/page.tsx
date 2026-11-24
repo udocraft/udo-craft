@@ -90,7 +90,7 @@ export default function PopupPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white text-gray-900">
+    <div className="min-h-[100dvh] bg-white text-gray-900">
       <motion.div
         initial={{ opacity: 1 }} animate={{ opacity: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
@@ -113,7 +113,7 @@ export default function PopupPage() {
           <div className="hidden md:flex items-center">
             {navLinks.map((l) => (
               <Link key={l.href} href={l.href}
-                className="px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted transition-all duration-200 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                className="px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-full hover:bg-muted transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 {l.label}
               </Link>
             ))}
@@ -121,11 +121,11 @@ export default function PopupPage() {
           <div className="hidden md:block w-px h-5 bg-border shrink-0" />
           <div className="flex items-center gap-0.5">
             <Link href="/" aria-label="Головна"
-              className="flex items-center justify-center w-8 h-8 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              className="flex items-center justify-center w-8 h-8 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
               <User className="w-4 h-4" />
             </Link>
             <Link href="#contact"
-              className="hidden sm:inline-flex items-center gap-1.5 bg-primary text-white text-xs font-bold px-3.5 py-2 rounded-full hover:bg-primary/90 active:scale-95 transition-all duration-200 whitespace-nowrap ml-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              className="hidden sm:inline-flex items-center gap-1.5 bg-primary text-white text-xs font-bold px-3.5 py-2 rounded-full hover:bg-primary/90 active:scale-95 transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 whitespace-nowrap ml-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
               Забронювати
               <ArrowRight className="w-3 h-3" />
             </Link>
@@ -196,11 +196,11 @@ export default function PopupPage() {
             className="flex flex-wrap justify-center gap-3"
           >
             <a href="#contact"
-              className="inline-flex items-center gap-2 bg-primary text-white font-bold text-sm px-7 py-3.5 rounded-full hover:bg-primary/90 hover:scale-105 active:scale-95 transition-all duration-200">
+              className="inline-flex items-center gap-2 bg-primary text-white font-bold text-sm px-7 py-3.5 rounded-full hover:bg-primary/90 hover:scale-105 active:scale-95 transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200">
               Забронювати попап <ArrowRight className="w-4 h-4" />
             </a>
             <a href="#how"
-              className="inline-flex items-center gap-2 border border-white/20 text-white/80 font-semibold text-sm px-7 py-3.5 rounded-full hover:bg-white/10 hover:scale-105 active:scale-95 transition-all duration-200">
+              className="inline-flex items-center gap-2 border border-white/20 text-white/80 font-semibold text-sm px-7 py-3.5 rounded-full hover:bg-white/10 hover:scale-105 active:scale-95 transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200">
               Як це працює
             </a>
           </motion.div>

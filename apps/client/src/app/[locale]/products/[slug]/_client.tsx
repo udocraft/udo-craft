@@ -210,7 +210,7 @@ export function ProductDetailClient({
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-[100dvh] bg-background flex flex-col">
       <SiteHeader />
 
       <main className="flex-1 pt-24">
@@ -250,11 +250,11 @@ export function ProductDetailClient({
                 {imageKeys.length > 1 && (
                   <>
                     <button onClick={prevImage} aria-label="Попереднє фото"
-                      className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-md hover:bg-white hover:scale-105 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                      className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-[transform,opacity,background-color,border-color,color,box-shadow] shadow-md hover:bg-white hover:scale-105 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                       <ChevronLeft className="w-4 h-4" />
                     </button>
                     <button onClick={nextImage} aria-label="Наступне фото"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-md hover:bg-white hover:scale-105 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-[transform,opacity,background-color,border-color,color,box-shadow] shadow-md hover:bg-white hover:scale-105 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                       <ChevronRight className="w-4 h-4" />
                     </button>
                   </>
@@ -274,7 +274,7 @@ export function ProductDetailClient({
                   {imageKeys.map((key) => (
                     <button key={key} onClick={() => setActiveImageKey(key)}
                       aria-label={`Фото ${key}`} aria-pressed={activeImageKey === key}
-                      className={`shrink-0 w-16 h-16 rounded-xl overflow-hidden bg-muted/60 border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                      className={`shrink-0 w-16 h-16 rounded-xl overflow-hidden bg-muted/60 border-2 transition-[transform,opacity,background-color,border-color,color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                         activeImageKey === key ? "border-primary shadow-sm" : "border-transparent hover:border-border"
                       }`}>
                       <img src={currentImages[key]} alt={key} className="w-full h-full object-contain p-1" />
@@ -340,7 +340,7 @@ export function ProductDetailClient({
                         }}
                         aria-label={c.name} aria-pressed={selectedVariantId === c.id}
                         title={c.name}
-                        className={`w-7 h-7 rounded-full shrink-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+                        className={`w-7 h-7 rounded-full shrink-0 transition-[transform,opacity,background-color,border-color,color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
                           selectedVariantId === c.id
                             ? "ring-2 ring-offset-1 ring-foreground scale-110"
                             : "ring-1 ring-border hover:ring-foreground/40 hover:scale-105"
@@ -366,7 +366,7 @@ export function ProductDetailClient({
                       <button key={s}
                         onClick={() => setSelectedSize(s === selectedSize ? null : s)}
                         aria-pressed={selectedSize === s}
-                        className={`h-10 rounded-lg border px-3 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                        className={`h-10 rounded-lg border px-3 text-sm font-semibold transition-[transform,opacity,background-color,border-color,color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                           selectedSize === s
                             ? "bg-foreground text-background border-foreground"
                             : "border-border hover:border-foreground/40 text-foreground hover:bg-muted"
@@ -505,12 +505,12 @@ export function ProductDetailClient({
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <button onClick={handleCustomize}
-                  className="flex-1 inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold text-sm px-6 py-3.5 rounded-full active:scale-95 transition-all duration-200 shadow-md hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                  className="flex-1 inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold text-sm px-6 py-3.5 rounded-full active:scale-95 transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 shadow-md hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                   <ToolCase className="size-5" />
                   Додати принт
                 </button>
                 <button onClick={handleAddToCart}
-                  className="flex-1 inline-flex items-center justify-center gap-2 border-2 border-primary text-primary hover:bg-primary/5 font-bold text-sm px-6 py-3.5 rounded-full active:scale-95 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                  className="flex-1 inline-flex items-center justify-center gap-2 border-2 border-primary text-primary hover:bg-primary/5 font-bold text-sm px-6 py-3.5 rounded-full active:scale-95 transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                   <AnimatePresence mode="wait" initial={false}>
                     {added ? (
                       <motion.span key="added" initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 4 }}
@@ -657,7 +657,7 @@ export function ProductDetailClient({
               <p className="text-white/70 text-sm mt-1">Від {meta.min_order_qty} одиниць · Знижки до {maxDiscountPct}% · {meta.delivery_min_days}–{meta.delivery_max_days} днів виробництво</p>
             </div>
             <Link href="/#contact"
-              className="shrink-0 inline-flex items-center gap-2 bg-white text-primary font-bold text-sm px-7 py-3.5 rounded-full hover:bg-white/90 active:scale-95 transition-all duration-200 shadow-lg">
+              className="shrink-0 inline-flex items-center gap-2 bg-white text-primary font-bold text-sm px-7 py-3.5 rounded-full hover:bg-white/90 active:scale-95 transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 shadow-lg">
               Обговорити проєкт
               <ArrowRight className="w-4 h-4" />
             </Link>

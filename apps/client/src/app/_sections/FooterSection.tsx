@@ -44,7 +44,7 @@ export function FooterSection({ tagline, copyright, instagram, telegram }: Foote
     },
   ];
   return (
-    <footer className="bg-[#0a0d1a]" aria-label={t("ariaLabel")}>
+    <footer className="bg-surface-dark" aria-label={t("ariaLabel")}>
       {/* Pre-footer CTA strip */}
       <div className="border-t border-white/8">
         <div className="max-w-6xl mx-auto px-5 sm:px-10 lg:px-20 py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
@@ -53,7 +53,7 @@ export function FooterSection({ tagline, copyright, instagram, telegram }: Foote
             <p className="text-white/45 text-sm">{t("readyDesc")}</p>
           </div>
           <Link href="/order"
-            className="inline-flex items-center gap-2 bg-primary text-white font-semibold text-sm px-6 py-3 rounded-full hover:bg-primary/90 active:scale-[0.97] transition-all duration-200 shrink-0">
+            className="inline-flex items-center gap-2 bg-primary text-white font-semibold text-sm px-6 py-3 rounded-full hover:bg-primary/90 active:scale-[0.97] transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 shrink-0">
             {t("startProject")} <ArrowRight className="w-4 h-4" aria-hidden="true" />
           </Link>
         </div>
@@ -79,7 +79,7 @@ export function FooterSection({ tagline, copyright, instagram, telegram }: Foote
                   return (
                     <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
                       aria-label={s.label}
-                      className="hit-44 w-8 h-8 rounded-full bg-white/5 border border-white/8 flex items-center justify-center text-white/30 hover:text-white hover:bg-white/10 hover:border-white/15 transition-all duration-200">
+                      className="hit-44 w-8 h-8 rounded-full bg-white/5 border border-white/8 flex items-center justify-center text-white/30 hover:text-white hover:bg-white/10 hover:border-white/15 transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200">
                       <Icon className="w-3.5 h-3.5" aria-hidden="true" />
                     </a>
                   );

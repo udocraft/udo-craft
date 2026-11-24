@@ -14,32 +14,35 @@
   --color-card-foreground: oklch(0.16 0.015 260);
   --color-popover: oklch(1 0 0);
   --color-popover-foreground: oklch(0.16 0.015 260);
-  --color-primary: oklch(0.48 0.22 270);
+  --color-primary: oklch(0.45 0.09 255);
   --color-primary-foreground: oklch(1 0 0);
   --color-secondary: oklch(0.955 0.012 255);
   --color-secondary-foreground: oklch(0.2 0.018 260);
   --color-muted: oklch(0.955 0.01 255);
   --color-muted-foreground: oklch(0.46 0.018 260);
-  --color-accent: oklch(0.94 0.03 270);
+  --color-accent: oklch(0.94 0.012 255);
   --color-accent-foreground: oklch(0.2 0.018 260);
   --color-destructive: oklch(0.55 0.22 27);
   --color-border: oklch(0.89 0.012 255);
   --color-input: oklch(0.72 0.012 255);
-  --color-ring: oklch(0.48 0.22 270);
+  --color-ring: oklch(0.45 0.09 255);
   --radius: 0.875rem;
   --radius-sm: calc(var(--radius) - 6px);
   --radius-md: calc(var(--radius) - 3px);
   --radius-lg: var(--radius);
-  --color-surface-dark: oklch(0.12 0.025 265);
-  --color-surface-dark-2: oklch(0.16 0.03 265);
-  --dark-blue: #101226;
+  --color-surface-dark: oklch(0.15 0.012 260);
+  --color-surface-dark-2: oklch(0.19 0.012 260);
+  --dark-blue: oklch(0.17 0.012 260);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @layer base {
   /* Accessible focus ring — visible on both light and dark */
   :focus-visible {
     outline: 2px solid var(--color-primary);
-    outline-offset: 3px;
+    outline-offset: 2px;
   }
 }
 
@@ -52,6 +55,15 @@
 
   *, *::before, *::after {
     border-color: var(--color-border);
+  }
+
+  h1, h2, h3, h4 {
+    letter-spacing: -0.02em;
+  }
+
+  /* Numeric UI reads as data: tabular figures everywhere numbers align. */
+  table, [data-numeric], .tabular {
+    font-variant-numeric: tabular-nums;
   }
 
   body {
@@ -84,11 +96,11 @@
 }
 
 .animate-accordion-down {
-  animation: accordion-down 0.2s ease-out;
+  animation: accordion-down 0.2s var(--ease-out-strong);
 }
 
 .animate-accordion-up {
-  animation: accordion-up 0.2s ease-out;
+  animation: accordion-up 0.2s var(--ease-out-strong);
 }
 
 /* Safari specific: hide native video controls and play overlays */

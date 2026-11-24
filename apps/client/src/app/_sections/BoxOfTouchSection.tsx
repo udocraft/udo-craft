@@ -36,7 +36,7 @@ export function BoxOfTouchSection() {
     <section
       ref={ref}
       className="border-t border-border overflow-hidden"
-      style={{ backgroundColor: "#0a0d1a" }}
+      style={{ backgroundColor: "var(--color-surface-dark)" }}
       aria-labelledby="box-heading"
     >
       <div className="grid lg:grid-cols-2 min-h-[520px]">
@@ -83,7 +83,7 @@ export function BoxOfTouchSection() {
             <div className="flex items-center gap-4">
               <Link
                 href="#contact?ref=box"
-                className="inline-flex items-center gap-2.5 bg-primary text-white font-semibold text-sm px-7 py-3.5 rounded-full hover:bg-primary/90 active:scale-[0.97] transition-all duration-200 shadow-md shadow-primary/20"
+                className="inline-flex items-center gap-2.5 bg-primary text-white font-semibold text-sm px-7 py-3.5 rounded-full hover:bg-primary/90 active:scale-[0.97] transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 shadow-md shadow-primary/20"
               >
                 {t("cta")} <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Link>

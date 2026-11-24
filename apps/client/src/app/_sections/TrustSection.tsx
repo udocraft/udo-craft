@@ -44,7 +44,7 @@ export function TrustSection() {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section className="bg-[#0a0d1a] py-24 sm:py-32" aria-labelledby="trust-heading">
+    <section className="bg-surface-dark py-24 sm:py-32" aria-labelledby="trust-heading">
       <div className="max-w-6xl mx-auto px-5 sm:px-10 lg:px-20">
 
         <motion.div ref={ref}

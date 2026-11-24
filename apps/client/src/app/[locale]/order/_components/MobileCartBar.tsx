@@ -79,7 +79,7 @@ export function MobileCartBar({ cart, totalCents, onCheckout, onRemove, onEdit }
                 <span className="text-lg font-black text-foreground">{(totalCents / 100).toFixed(0)} ₴</span>
               </div>
               <button onClick={() => { setOpen(false); onCheckout(); }}
-                className="w-full bg-primary text-primary-foreground text-sm font-bold py-4 rounded-2xl hover:bg-primary/90 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                className="w-full bg-primary text-primary-foreground text-sm font-bold py-4 rounded-2xl hover:bg-primary/90 active:scale-[0.98] transition-[transform,opacity,background-color,border-color,color,box-shadow] flex items-center justify-center gap-2">
                 Оформити замовлення <ChevronRight className="size-4" />
               </button>
             </div>

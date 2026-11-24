@@ -143,7 +143,7 @@ export function DesktopCartPanel({ cart, totalCents, onCheckout, onEdit, onRemov
             </div>
           </div>
         </div>
-        <Button className="w-full cursor-pointer rounded-full shadow-md hover:shadow-lg transition-all" onClick={onCheckout}>Оформити замовлення →</Button>
+        <Button className="w-full cursor-pointer rounded-full shadow-md hover:shadow-lg transition-[transform,opacity,background-color,border-color,color,box-shadow]" onClick={onCheckout}>Оформити замовлення →</Button>
       </div>
     </div>
   );

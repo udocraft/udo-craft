@@ -31,7 +31,8 @@ export function AuthPage({ initialScreen = "login" }: { initialScreen?: "login" 
         </div>
       </section>
 
-      <aside className="hidden p-4 lg:block">
+      {/* Phones: showcase sits below the form. Desktop: full-height side panel. */}
+      <aside className="px-4 pb-8 sm:px-10 lg:p-4 lg:pb-4">
         <AuthShowcase />
       </aside>
     </main>

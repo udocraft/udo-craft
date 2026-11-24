@@ -219,7 +219,7 @@ export function CustomizerPreviewSection() {
             <div className="pointer-events-auto absolute inset-x-0 bottom-0 flex min-h-[270px] flex-col items-center justify-end bg-gradient-to-b from-white/0 via-white/88 to-white px-5 pb-10 text-center">
               <Link
                 href="/order"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-foreground px-6 text-sm font-semibold text-background shadow-[0_18px_50px_rgba(15,23,42,0.18)] transition-all duration-200 hover:bg-foreground/90 active:scale-[0.98]"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-foreground px-6 text-sm font-semibold text-background shadow-[0_18px_50px_rgba(15,23,42,0.18)] transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 hover:bg-foreground/90 active:scale-[0.98]"
               >
                 {t("openEditor")}
                 <ArrowRight className="size-4" />

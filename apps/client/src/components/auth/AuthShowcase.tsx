@@ -40,7 +40,7 @@ export function AuthShowcase({ items = AUTH_SHOWCASE }: { items?: ShowcaseItem[]
   if (!item) return null;
 
   return (
-    <div className="relative h-full min-h-[600px] overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary/15 via-muted to-background">
+    <div className="relative h-full min-h-[460px] overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary/15 via-muted to-background lg:min-h-[600px]">
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={index}
@@ -89,7 +89,7 @@ export function AuthShowcase({ items = AUTH_SHOWCASE }: { items?: ShowcaseItem[]
               aria-label={`Відгук ${i + 1}`}
               onClick={() => setIndex(i)}
               className={cn(
-                "h-1.5 rounded-full transition-all duration-300",
+                "h-1.5 rounded-full transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-300",
                 i === index ? "w-6 bg-foreground" : "w-1.5 bg-foreground/30 hover:bg-foreground/50"
               )}
             />

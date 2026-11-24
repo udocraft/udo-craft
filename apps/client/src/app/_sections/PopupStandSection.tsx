@@ -112,7 +112,7 @@ export function PopupStandSection() {
             {/* CTA */}
             <div className="flex items-center gap-4 mt-6 px-4">
               <Link href="/popup"
-                className="inline-flex items-center gap-2 bg-primary text-white font-bold text-sm px-6 py-3 rounded-full hover:bg-primary/90 active:scale-[0.97] transition-all duration-200">
+                className="inline-flex items-center gap-2 bg-primary text-white font-bold text-sm px-6 py-3 rounded-full hover:bg-primary/90 active:scale-[0.97] transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200">
                 {t("cta")} <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Link>
             </div>
@@ -164,7 +164,7 @@ export function PopupStandSection() {
               <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-3">
                 {SLIDES.map((_, i) => (
                   <button key={i} onClick={() => goTo(i, i > active ? 1 : -1)} aria-label={t("slideLabel", { n: i + 1 })}
-                    className={`hit-44 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 h-3`}
+                    className={`hit-44 rounded-full transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 h-3`}
                     style={{
                       width: i === active ? 40 : 12,
                       backgroundColor: i === active ? "var(--color-primary)" : "rgba(0,0,0,0.25)",

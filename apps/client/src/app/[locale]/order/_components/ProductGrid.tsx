@@ -36,12 +36,12 @@ export function ProductGrid({
       {categories.length > 0 && (
         <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
           <button onClick={() => onCategoryChange(null)}
-            className={`whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-semibold border transition-all shrink-0 ${activeCategory === null ? "bg-primary text-primary-foreground border-primary" : "bg-card text-muted-foreground border-border hover:border-foreground/40"}`}>
+            className={`whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-semibold border transition-[transform,opacity,background-color,border-color,color,box-shadow] shrink-0 ${activeCategory === null ? "bg-primary text-primary-foreground border-primary" : "bg-card text-muted-foreground border-border hover:border-foreground/40"}`}>
             Всі
           </button>
           {categories.map((cat) => (
             <button key={cat.id} onClick={() => onCategoryChange(cat.id)}
-              className={`whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-semibold border transition-all shrink-0 ${activeCategory === cat.id ? "bg-primary text-primary-foreground border-primary" : "bg-card text-muted-foreground border-border hover:border-foreground/40"}`}>
+              className={`whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-semibold border transition-[transform,opacity,background-color,border-color,color,box-shadow] shrink-0 ${activeCategory === cat.id ? "bg-primary text-primary-foreground border-primary" : "bg-card text-muted-foreground border-border hover:border-foreground/40"}`}>
               {cat.name}
             </button>
           ))}

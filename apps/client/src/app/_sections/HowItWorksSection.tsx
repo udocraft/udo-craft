@@ -51,7 +51,7 @@ export function HowItWorksSection() {
               <p className="text-white/50 text-base leading-relaxed max-w-sm">{item.desc}</p>
               <Link
                 href={item.href}
-                className="inline-flex items-center gap-1.5 text-primary text-sm font-semibold hover:gap-2.5 transition-all duration-200 mt-2"
+                className="inline-flex items-center gap-1.5 text-primary text-sm font-semibold hover:gap-2.5 transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 mt-2"
               >
                 {item.cta} <ArrowRight className="w-4 h-4" />
               </Link>

@@ -162,7 +162,7 @@ export function ProductCardDetailed({
                 aria-pressed={selectedSize === size}
                 aria-label={size}
                 onClick={(e) => { e.stopPropagation(); setSelectedSize(selectedSize === size ? null : size); }}
-                className={`h-11 min-w-0 rounded-md border px-1 text-xs font-semibold transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${
+                className={`h-11 min-w-0 rounded-md border px-1 text-xs font-semibold transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${
                   selectedSize === size
                     ? "bg-foreground text-background border-foreground"
                     : "bg-background text-muted-foreground border-border hover:border-foreground/40 hover:text-foreground"
@@ -192,7 +192,7 @@ export function ProductCardDetailed({
               }}
               onMouseEnter={() => hasVariants && setHoveredVariantId(c.id)}
               onMouseLeave={() => setHoveredVariantId(null)}
-              className={`hit-44 w-8 h-8 rounded-full shrink-0 touch-manipulation transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${c.border ? "ring-1 ring-border" : ""} ${
+              className={`hit-44 w-8 h-8 rounded-full shrink-0 touch-manipulation transition-[transform,opacity,background-color,border-color,color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${c.border ? "ring-1 ring-border" : ""} ${
                 hasVariants && displayVariantId === c.id ? "ring-2 ring-offset-2 ring-foreground scale-110" : ""
               }`}
               style={{ backgroundColor: c.hex }}
@@ -203,7 +203,7 @@ export function ProductCardDetailed({
 
       {/* Action buttons */}
       <div
-        className={`grid grid-cols-1 gap-2 overflow-hidden transition-all duration-200 ease-out ${
+        className={`grid grid-cols-1 gap-2 overflow-hidden transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200 ease-out ${
           actionsVisible ? "max-h-28 opacity-100 mt-1" : "max-h-0 opacity-0 pointer-events-none"
         }`}
       >
@@ -211,7 +211,7 @@ export function ProductCardDetailed({
           type="button"
           onClick={handleAddPrint}
           disabled={isOutOfStock}
-          className="w-full min-h-11 py-2.5 rounded-full bg-primary text-white text-xs font-bold hover:bg-primary/90 active:scale-[0.98] transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
+          className="w-full min-h-11 py-2.5 rounded-full bg-primary text-white text-xs font-bold hover:bg-primary/90 active:scale-[0.98] transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
         >
           <ToolCase className="mr-2 inline size-5 align-[-5px]" />
           {t("addPrint")}
@@ -220,7 +220,7 @@ export function ProductCardDetailed({
           type="button"
           onClick={handleAddWithoutPrint}
           disabled={isOutOfStock}
-          className="w-full min-h-11 py-2.5 rounded-full border border-border bg-background text-foreground text-xs font-bold hover:border-foreground/40 hover:bg-muted active:scale-[0.98] transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
+          className="w-full min-h-11 py-2.5 rounded-full border border-border bg-background text-foreground text-xs font-bold hover:border-foreground/40 hover:bg-muted active:scale-[0.98] transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
         >
           <CircleSlash className="mr-2 inline size-5 align-[-5px]" />
           {t("withoutPrint")}
@@ -238,7 +238,7 @@ export function ProductCardDetailed({
       onClick={handleCardClick}
       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleCardClick(); }}
       className={`group relative bg-muted rounded-2xl overflow-hidden flex flex-col h-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
-        compact ? "transition-all duration-300 ease-out any-hover:hover:-translate-y-1 any-hover:hover:shadow-xl" : ""
+        compact ? "transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-300 ease-out any-hover:hover:-translate-y-1 any-hover:hover:shadow-xl" : ""
       } ${isOutOfStock ? "opacity-60 pointer-events-none" : ""}`}
     >
       {/* Image */}

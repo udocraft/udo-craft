@@ -272,7 +272,7 @@ export default function PrintsPanel({ onAddLayer, isAuthenticated, aiQuota, onPa
                     <button key={preset.id} type="button" disabled={addingId === preset.id}
                       onClick={() => handleAddPreset(preset)}
                       aria-label={preset.name}
-                      className="group relative rounded-lg overflow-hidden border border-border bg-muted aspect-square hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all disabled:opacity-60"
+                      className="group relative rounded-lg overflow-hidden border border-border bg-muted aspect-square hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-[transform,opacity,background-color,border-color,color,box-shadow] disabled:opacity-60"
                       title={preset.name}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={preset.thumbnail_url} alt={preset.name} className="w-full h-full object-cover" />

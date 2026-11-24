@@ -122,7 +122,7 @@ export function QtyPriceContent({
                 type="button"
                 disabled={disabled}
                 onClick={() => { setQuantity(tier.qty); setQtyStr(String(tier.qty)); }}
-                className={`cursor-pointer rounded-xl border px-1 py-2 text-center text-xs transition-all disabled:cursor-not-allowed disabled:opacity-50 ${
+                className={`cursor-pointer rounded-xl border px-1 py-2 text-center text-xs transition-[transform,opacity,background-color,border-color,color,box-shadow] disabled:cursor-not-allowed disabled:opacity-50 ${
                   active
                     ? "border-primary bg-primary font-semibold text-primary-foreground"
                     : "border-primary/40 text-primary hover:border-primary hover:bg-primary/5"

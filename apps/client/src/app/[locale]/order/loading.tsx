@@ -1,6 +1,6 @@
 export default function OrderLoading() {
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-[100dvh] bg-background p-6">
       {/* Header skeleton */}
       <div className="max-w-7xl mx-auto">
         <div className="h-8 w-48 bg-muted animate-pulse rounded mb-8" />

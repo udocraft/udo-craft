@@ -15,7 +15,7 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-8">
+    <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background text-foreground p-8">
       <div className="max-w-md text-center space-y-6">
         <h1 className="text-4xl font-bold">Щось пішло не так</h1>
         <p className="text-muted-foreground text-lg">
@@ -23,7 +23,7 @@ export default function GlobalError({
         </p>
         <button
           onClick={reset}
-          className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold text-sm px-8 py-3.5 rounded-full transition-all duration-200"
+          className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold text-sm px-8 py-3.5 rounded-full transition-[transform,opacity,background-color,border-color,color,box-shadow] duration-200"
         >
           Спробувати знову
         </button>

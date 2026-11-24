@@ -15,7 +15,7 @@ export async function ContentPageShell({
   const tFooter = await getTranslations("footer");
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-[100dvh] flex-col bg-background">
       <SiteHeader />
       <main className="flex-1 px-4 pb-20 pt-32 sm:px-6">
         <div className="mx-auto max-w-4xl">
