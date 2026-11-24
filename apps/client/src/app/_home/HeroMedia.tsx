@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Play, X } from "lucide-react";
 
-const PEEK_MS = 4000;
+const OPEN_DELAY_MS = 900;
+const HOLD_MS = 3500;
 
 /**
  * Hero client island: the muted background loop and the fullscreen "watch the
@@ -15,19 +16,23 @@ export function HeroMedia() {
   const t = useTranslations("hero");
   const [cinema, setCinema] = useState(false);
   const [showLoop, setShowLoop] = useState(false);
-  // The play button opens as a labelled pill, then folds into a circle once the
-  // hero has been on screen for a few seconds. Hover and focus open it again.
-  const [peek, setPeek] = useState(true);
+  // The play button loads as an icon, opens into "Show the process" once the hero is
+  // on screen, then closes back to the icon. Hover and focus open it again.
+  const [phase, setPhase] = useState<"idle" | "open" | "done">("idle");
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const el = buttonRef.current;
-    if (!el || !peek) return;
+    if (!el || phase === "done") return;
     let timer: ReturnType<typeof setTimeout> | undefined;
     const io = new IntersectionObserver(
       ([entry]) => {
         clearTimeout(timer);
-        if (entry.isIntersecting) timer = setTimeout(() => setPeek(false), PEEK_MS);
+        if (!entry.isIntersecting) return;
+        timer =
+          phase === "idle"
+            ? setTimeout(() => setPhase("open"), OPEN_DELAY_MS)
+            : setTimeout(() => setPhase("done"), HOLD_MS);
       },
       { threshold: 1 },
     );
@@ -36,7 +41,7 @@ export function HeroMedia() {
       io.disconnect();
       clearTimeout(timer);
     };
-  }, [peek]);
+  }, [phase]);
 
   // The background loop is decoration: only load it on wide screens, when the
   // visitor has not asked for reduced motion or reduced data. No bytes otherwise.
@@ -115,23 +120,25 @@ export function HeroMedia() {
       <button
         ref={buttonRef}
         type="button"
-        onClick={() => { setPeek(false); setCinema((v) => !v); }}
+        data-open={phase === "open" || undefined}
+        onClick={() => { setPhase("done"); setCinema((v) => !v); }}
         aria-label={cinema ? t("closeVideo") : undefined}
-        className={`group ${cinema ? "z-[9999]" : "z-10"} flex h-11 items-center rounded-full border border-border bg-background/70 px-[13px] text-foreground backdrop-blur-md transition-colors duration-fast hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-          cinema ? "fixed bottom-6 right-4 md:right-6" : "absolute bottom-6 right-4 md:right-6"
+        className={`group ${cinema ? "z-[9999]" : "z-10"} grid h-11 grid-cols-[1rem_0fr] items-center rounded-full border border-border bg-background/70 px-[13px] text-foreground backdrop-blur-md transition-[grid-template-columns,background-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${
+          cinema
+            ? "fixed bottom-6 right-4 md:right-6"
+            : "absolute bottom-6 right-4 data-[open]:grid-cols-[1rem_1fr] hover:grid-cols-[1rem_1fr] focus-visible:grid-cols-[1rem_1fr] md:right-6"
         }`}
       >
         {cinema ? (
-          <X className="size-4 shrink-0" aria-hidden="true" />
+          <X className="size-4" aria-hidden="true" />
         ) : (
           <>
-            <Play className="size-4 shrink-0 fill-current" aria-hidden="true" />
-            <span
-              className={`overflow-hidden whitespace-nowrap text-sm font-medium transition-[max-width,opacity,margin] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:ml-2 group-hover:mr-1 group-hover:max-w-56 group-hover:opacity-100 group-focus-visible:ml-2 group-focus-visible:mr-1 group-focus-visible:max-w-56 group-focus-visible:opacity-100 motion-reduce:transition-none ${
-                peek ? "ml-2 mr-1 max-w-56 opacity-100" : "ml-0 mr-0 max-w-0 opacity-0"
-              }`}
-            >
-              {t("showProcess")}
+            <Play className="size-4 fill-current" aria-hidden="true" />
+            <span className="min-w-0 overflow-hidden">
+              {/* Text fades in after the width opens and out before it closes. */}
+              <span className="block whitespace-nowrap pl-2 pr-1 text-sm font-medium opacity-0 blur-[2px] transition-[opacity,filter] duration-200 ease-out group-hover:opacity-100 group-hover:blur-0 group-hover:delay-150 group-focus-visible:opacity-100 group-focus-visible:blur-0 group-focus-visible:delay-150 group-data-[open]:opacity-100 group-data-[open]:blur-0 group-data-[open]:delay-150 motion-reduce:transition-none">
+                {t("showProcess")}
+              </span>
             </span>
           </>
         )}
