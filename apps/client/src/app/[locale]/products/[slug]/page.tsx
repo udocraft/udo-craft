@@ -4,7 +4,7 @@ import { createServiceClient } from "@/lib/supabase/service";
 import { jsonLdHtml, localizedUrl, pageMetadata } from "@/lib/seo";
 import { cache } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ArrowRight, BadgeCheck, Clock3, PackageCheck, Shield } from "lucide-react";
+import { ArrowRight, BadgeCheck, Clock3, Shield } from "lucide-react";
 import { Container, Section } from "@udo-craft/ui";
 import { buttonVariants } from "@udo-craft/ui/components/ui/button-variants";
 import { normalizeProductMarketingMeta, DEFAULT_PRODUCT_FEATURE_GROUPS, type Material, type Product, type ProductColorVariant } from "@udo-craft/shared";
@@ -94,13 +94,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const allVariants = (vars ?? []) as ProductColorVariant[];
   const materialsList = (mats ?? []) as Material[];
 
-  const [tHero, tFooter] = await Promise.all([
-    getTranslations({ locale, namespace: "hero" }),
+  const [tFooter, tHome, tNav] = await Promise.all([
     getTranslations({ locale, namespace: "footer" }),
+    getTranslations({ locale, namespace: "home" }),
+    getTranslations({ locale, namespace: "nav" }),
   ]);
   const name = localizedField(prod.name, prod.name_en, locale);
   const meta = normalizeProductMarketingMeta(prod.marketing_meta);
-  const maxDiscountPct = Math.max(0, ...(prod.discount_grid ?? []).map((t) => t.discount_pct));
 
   const productImgs = resolveProductImages(prod.product_images, prod.images as Record<string, string>);
   const colors: PurchaseColor[] = prodVariants.map((v) => {
@@ -151,7 +151,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
   ];
   const deliveryBadges = [
     { icon: Clock3, label: `${meta.delivery_min_days}–${meta.delivery_max_days} днів виробництво` },
-    { icon: PackageCheck, label: `Від ${meta.min_order_qty} одиниць` },
     { icon: Shield, label: "Контроль якості" },
   ];
 
@@ -180,7 +179,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
       panel: (
         <div className="max-w-4xl">
           <RichText text={meta.file_guidelines || ""} />
-          <Link href={meta.guide_url || "/#contact"} className="mt-6 inline-flex min-h-11 items-center gap-2 font-semibold text-primary hover:underline">
+          <Link href={meta.guide_url || "/biz#contact"} className="mt-6 inline-flex min-h-11 items-center gap-2 font-semibold text-primary hover:underline">
             Перейти до консультації <ArrowRight className="size-4" aria-hidden="true" />
           </Link>
         </div>
@@ -215,7 +214,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
             discountGrid={prod.discount_grid ?? []}
             minOrderQty={meta.min_order_qty}
             promoNote={meta.promo_note}
-            guideUrl={meta.guide_url || "/#contact"}
+            guideUrl={meta.guide_url || "/biz#contact"}
             colors={colors}
             defaultImages={getAllImages(productImgs)}
           >
@@ -257,13 +256,11 @@ export default async function ProductDetailPage({ params }: PageProps) {
         <Section tone="inverse" className="py-12 md:py-12" aria-labelledby="bulk-cta-heading">
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
             <div>
-              <h2 id="bulk-cta-heading" className="text-h3 font-semibold">Потрібен корпоративний тираж?</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Від {meta.min_order_qty} одиниць · {maxDiscountPct > 0 ? `Знижки до ${maxDiscountPct}% · ` : ""}{meta.delivery_min_days}–{meta.delivery_max_days} днів виробництво
-              </p>
+              <h2 id="bulk-cta-heading" className="text-h3 font-semibold">{tHome("biz.heading")}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">{tHome("biz.text")}</p>
             </div>
-            <Link href="/#contact" className={buttonVariants({ variant: "primary", size: "lg", className: "shrink-0" })}>
-              Обговорити проєкт <ArrowRight aria-hidden="true" />
+            <Link href="/biz" className={buttonVariants({ variant: "inverse", size: "lg", className: "shrink-0" })}>
+              {tNav("business")} <ArrowRight aria-hidden="true" />
             </Link>
           </div>
         </Section>
@@ -294,7 +291,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
         )}
       </main>
 
-      <FooterSection tagline={tHero("heading")} copyright={tFooter("copyright")} instagram="https://www.instagram.com/u.do.craft/" telegram="https://t.me/udostore" />
+      <FooterSection tagline={tFooter("tagline")} copyright={tFooter("copyright")} instagram="https://www.instagram.com/u.do.craft/" telegram="https://t.me/udostore" />
     </div>
   );
 }

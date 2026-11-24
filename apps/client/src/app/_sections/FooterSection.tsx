@@ -17,32 +17,31 @@ export function FooterSection({ tagline, copyright, instagram, telegram, showCta
   const t = useTranslations("footer");
   const tc = useTranslations("consent");
 
+  // Only links to pages and anchors that exist. Company offers live under /biz.
   const NAV = [
     {
       title: t("columns.products.title"),
       links: [
         { href: "/order",    label: t("columns.products.links.constructor") },
-        { href: "/#catalog",  label: t("columns.products.links.catalog") },
-        { href: "/#contact",  label: t("columns.products.links.box") },
-        { href: "/#contact",  label: t("columns.products.links.designer") },
+        { href: "/#catalog", label: t("columns.products.links.catalog") },
+        { href: "/#how",     label: t("columns.company.links.how") },
       ],
     },
     {
-      title: t("columns.company.title"),
+      title: t("columns.business.title"),
       links: [
-        { href: "/#about",   label: t("columns.company.links.about") },
-        { href: "/#how",     label: t("columns.company.links.how") },
-        { href: "/#contact", label: t("columns.company.links.career") },
-        { href: "/#contact", label: t("columns.company.links.blog") },
+        { href: "/biz",          label: t("columns.business.links.overview") },
+        { href: "/biz#services", label: t("columns.products.links.box") },
+        { href: "/popup",        label: t("columns.products.links.popup") },
+        { href: "/biz#about",    label: t("columns.company.links.about") },
       ],
     },
     {
       title: t("columns.support.title"),
       links: [
-        { href: "/#faq",     label: t("columns.support.links.faq") },
-        { href: "/#contact", label: t("columns.support.links.contact") },
-        { href: "/cabinet", label: t("columns.support.links.cabinet") },
-        { href: "/#contact", label: t("columns.support.links.delivery") },
+        { href: "/#faq",        label: t("columns.support.links.faq") },
+        { href: "/biz#contact", label: t("columns.support.links.contact") },
+        { href: "/cabinet",     label: t("columns.support.links.cabinet") },
       ],
     },
   ];

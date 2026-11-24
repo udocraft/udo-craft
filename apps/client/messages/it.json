@@ -1,12 +1,14 @@
 {
   "meta": {
-    "title": "U:DO CRAFT — Corporate merch",
-    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA.",
+    "title": "U:DO CRAFT — abbigliamento con il tuo design",
+    "description": "Crea online una t-shirt, una felpa o una maglia a maniche lunghe con la tua stampa. Realizzazione in 7–14 giorni, consegna in tutta l'Ucraina.",
     "productTitle": "{name} | Personalizzazione e confezione | U:DO CRAFT",
     "productDescription": "Ordina l'abbigliamento aziendale {name} con stampa o ricamo personalizzato da {min} pezzi.",
     "productNotFound": "Prodotto non trovato | U:DO CRAFT",
     "popupTitle": "Popup merch per il tuo evento | U:DO CRAFT",
-    "popupDescription": "Un popup merch mobile: gli ospiti personalizzano i capi e li portano via subito. Per eventi aziendali, conferenze e festival."
+    "popupDescription": "Un popup merch mobile: gli ospiti personalizzano i capi e li portano via subito. Per eventi aziendali, conferenze e festival.",
+    "bizTitle": "U:DO CRAFT per le aziende — merch aziendale",
+    "bizDescription": "B2B merch platform. We create clothing that becomes part of your corporate DNA."
   },
   "nav": {
     "catalog": "Catalogo",
@@ -24,7 +26,9 @@
     "logoLink": "U:DO CRAFT — torna alla home",
     "skipToContent": "Vai al contenuto principale",
     "designMerch": "Crea il tuo merch",
-    "getQuote": "Richiedi un preventivo"
+    "getQuote": "Richiedi un preventivo",
+    "business": "Aziende",
+    "createDesign": "Crea il tuo design"
   },
   "homeStats": {
     "stat3Suffix": " giorni",
@@ -270,8 +274,8 @@
     "mm": "mm",
     "embroidery": "Ricamo",
     "label": "Online constructor",
-    "heading": "Build your merch right in the interface",
-    "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
+    "heading": "Provalo qui",
+    "desc": "Scegli un colore e carica la tua immagine per vedere come sarà il tuo capo.",
     "openEditor": "Open constructor",
     "productLabel": "Product",
     "colorLabel": "Color",
@@ -419,10 +423,10 @@
     "address": "Address"
   },
   "footer": {
-    "tagline": "Piattaforma B2B di merch per team, brand ed eventi.",
+    "tagline": "Abbigliamento con il tuo design, dal pezzo unico ai grandi ordini.",
     "copyright": "U:DO CRAFT. Tutti i diritti riservati.",
     "readyToStart": "Pronto per iniziare?",
-    "readyDesc": "Da 10 pezzi · 7–14 giorni · Spedizione",
+    "readyDesc": "Da un pezzo · 7–14 giorni · Consegna in tutta l'Ucraina",
     "startProject": "Avvia progetto",
     "ariaLabel": "Piè di pagina",
     "homeLink": "U:DO CRAFT — torna alla home",
@@ -453,6 +457,12 @@
           "contact": "Contatti",
           "cabinet": "Account",
           "delivery": "Spedizione e pagamento"
+        }
+      },
+      "business": {
+        "title": "Aziende",
+        "links": {
+          "overview": "Merch aziendale"
         }
       }
     },
@@ -912,8 +922,8 @@
     "cookieSettings": "Impostazioni cookie"
   },
   "homeDemo": {
-    "upload": "Carica il tuo logo",
-    "remove": "Rimuovi logo",
+    "upload": "Carica immagine",
+    "remove": "Rimuovi immagine",
     "hint": "PNG, JPG, SVG o WebP, fino a 5 MB",
     "note": "Solo un'anteprima. L'editor completo imposta dimensioni e zone di stampa.",
     "tooLarge": "Il file supera i 5 MB. Scegli un'immagine più piccola."
@@ -966,5 +976,42 @@
     "addComment": "Aggiungi un commento",
     "sendComment": "Invia",
     "commentsOff": "I commenti sono disattivati per questo link."
+  },
+  "home": {
+    "hero": {
+      "heading": "Abbigliamento, disegnato da te.",
+      "subheading": "Scegli un capo, aggiungi la tua stampa o un testo nell'editor: lo realizziamo e te lo consegniamo. Anche un solo pezzo."
+    },
+    "steps": {
+      "heading": "Tre passi per il tuo capo",
+      "items": {
+        "0": {
+          "title": "Scegli un capo",
+          "desc": "T-shirt, felpa o maniche lunghe: scegli modello, colore e taglia."
+        },
+        "1": {
+          "title": "Aggiungi il tuo design",
+          "desc": "Carica un'immagine o scrivi il tuo testo nell'editor e vedi subito il risultato."
+        },
+        "2": {
+          "title": "Ricevi l'ordine",
+          "desc": "Lo realizziamo in 7–14 giorni lavorativi e lo consegniamo in tutta l'Ucraina."
+        }
+      }
+    },
+    "faq": {
+      "single": {
+        "question": "Posso ordinare un solo capo?",
+        "answer": "Sì. Ordina quanti capi ti servono, anche uno solo con il tuo design."
+      },
+      "design": {
+        "question": "Come aggiungo il mio design?",
+        "answer": "Nell'editor: carica un'immagine o aggiungi un testo e scegli dove posizionarlo. Il prezzo è visibile subito."
+      }
+    },
+    "biz": {
+      "heading": "Merch per il tuo team o evento?",
+      "text": "Abbigliamento aziendale, stand pop-up e branding: in una pagina dedicata alle aziende."
+    }
   }
 }

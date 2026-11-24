@@ -1,12 +1,14 @@
 {
   "meta": {
-    "title": "U:DO CRAFT — Corporate merch",
-    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA.",
+    "title": "U:DO CRAFT — ubrania z Twoim projektem",
+    "description": "Stwórz online T-shirt, bluzę lub longsleeve z własnym nadrukiem. Realizacja 7–14 dni, dostawa na terenie całej Ukrainy.",
     "productTitle": "{name} | Personalizacja i szycie | U:DO CRAFT",
     "productDescription": "Zamów odzież firmową {name} z indywidualnym nadrukiem lub haftem od {min} sztuk.",
     "productNotFound": "Nie znaleziono produktu | U:DO CRAFT",
     "popupTitle": "Merch popup na Twoje wydarzenie | U:DO CRAFT",
-    "popupDescription": "Mobilny merch popup: goście personalizują ubrania i zabierają je od razu. Na eventy firmowe, konferencje i festiwale."
+    "popupDescription": "Mobilny merch popup: goście personalizują ubrania i zabierają je od razu. Na eventy firmowe, konferencje i festiwale.",
+    "bizTitle": "U:DO CRAFT dla firm — merch firmowy",
+    "bizDescription": "B2B merch platform. We create clothing that becomes part of your corporate DNA."
   },
   "nav": {
     "catalog": "Katalog",
@@ -24,7 +26,9 @@
     "logoLink": "U:DO CRAFT — wróć na stronę główną",
     "skipToContent": "Przejdź do głównej treści",
     "designMerch": "Zaprojektuj swój merch",
-    "getQuote": "Poproś o wycenę"
+    "getQuote": "Poproś o wycenę",
+    "business": "Dla firm",
+    "createDesign": "Stwórz projekt"
   },
   "homeStats": {
     "stat3Suffix": " dni",
@@ -270,8 +274,8 @@
     "mm": "mm",
     "embroidery": "Haft",
     "label": "Online constructor",
-    "heading": "Build your merch right in the interface",
-    "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
+    "heading": "Wypróbuj od razu tutaj",
+    "desc": "Wybierz kolor i wgraj swój obraz, aby zobaczyć, jak będzie wyglądać Twoja rzecz.",
     "openEditor": "Open constructor",
     "productLabel": "Product",
     "colorLabel": "Color",
@@ -419,10 +423,10 @@
     "address": "Address"
   },
   "footer": {
-    "tagline": "Platforma B2B merchu dla zespołów, marek i wydarzeń.",
+    "tagline": "Ubrania z Twoim projektem — od jednej sztuki po duże zamówienia.",
     "copyright": "U:DO CRAFT. Wszelkie prawa zastrzeżone.",
     "readyToStart": "Gotowy do startu?",
-    "readyDesc": "Od 10 sztuk · 7–14 dni · Dostawa",
+    "readyDesc": "Od jednej sztuki · 7–14 dni · Dostawa na terenie całej Ukrainy",
     "startProject": "Rozpocznij projekt",
     "ariaLabel": "Stopka",
     "homeLink": "U:DO CRAFT — powrót na stronę główną",
@@ -453,6 +457,12 @@
           "contact": "Kontakt",
           "cabinet": "Konto",
           "delivery": "Wysyłka i płatność"
+        }
+      },
+      "business": {
+        "title": "Dla firm",
+        "links": {
+          "overview": "Merch firmowy"
         }
       }
     },
@@ -912,8 +922,8 @@
     "cookieSettings": "Ustawienia plików cookie"
   },
   "homeDemo": {
-    "upload": "Prześlij logo",
-    "remove": "Usuń logo",
+    "upload": "Wgraj obraz",
+    "remove": "Usuń obraz",
     "hint": "PNG, JPG, SVG lub WebP, do 5 MB",
     "note": "To tylko podgląd. Rozmiar i strefy druku ustawisz w pełnym edytorze.",
     "tooLarge": "Plik jest większy niż 5 MB. Wybierz mniejszy obraz."
@@ -966,5 +976,42 @@
     "addComment": "Dodaj komentarz",
     "sendComment": "Wyślij",
     "commentsOff": "Komentarze są wyłączone dla tego linku."
+  },
+  "home": {
+    "hero": {
+      "heading": "Ubrania zaprojektowane przez Ciebie.",
+      "subheading": "Wybierz rzecz, dodaj nadruk lub napis w edytorze — wykonamy ją i dostarczymy. Nawet jedną sztukę."
+    },
+    "steps": {
+      "heading": "Trzy kroki do Twojej rzeczy",
+      "items": {
+        "0": {
+          "title": "Wybierz rzecz",
+          "desc": "T-shirt, bluza czy longsleeve — wybierz model, kolor i rozmiar."
+        },
+        "1": {
+          "title": "Dodaj swój projekt",
+          "desc": "Wgraj obraz lub wpisz tekst w edytorze i od razu zobacz efekt."
+        },
+        "2": {
+          "title": "Odbierz zamówienie",
+          "desc": "Wykonujemy w 7–14 dni roboczych i dostarczamy na terenie całej Ukrainy."
+        }
+      }
+    },
+    "faq": {
+      "single": {
+        "question": "Czy mogę zamówić tylko jedną rzecz?",
+        "answer": "Tak. Zamów tyle, ile potrzebujesz — nawet jedną rzecz z własnym projektem."
+      },
+      "design": {
+        "question": "Jak dodać swój projekt?",
+        "answer": "W edytorze: wgraj obraz lub dodaj tekst i wybierz miejsce na ubraniu. Cenę widać od razu."
+      }
+    },
+    "biz": {
+      "heading": "Merch dla zespołu lub na wydarzenie?",
+      "text": "Odzież firmowa, stoiska pop-up i branding — na osobnej stronie dla firm."
+    }
   }
 }

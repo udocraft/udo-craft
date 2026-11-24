@@ -1,12 +1,14 @@
 {
   "meta": {
-    "title": "U:DO CRAFT — Corporate merch",
-    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA.",
+    "title": "U:DO CRAFT — oblečení s vaším designem",
+    "description": "Vytvořte si online tričko, mikinu nebo longsleeve s vlastním potiskem. Výroba za 7–14 dní, doručení po celé Ukrajině.",
     "productTitle": "{name} | Potisk, výšivka a šití | U:DO CRAFT",
     "productDescription": "Objednejte firemní oblečení {name} s vlastním potiskem nebo výšivkou od {min} kusů.",
     "productNotFound": "Produkt nebyl nalezen | U:DO CRAFT",
     "popupTitle": "Merch popup na vaši akci | U:DO CRAFT",
-    "popupDescription": "Mobilní merch popup: hosté si oblečení přizpůsobí a odnesou si ho hned. Pro firemní akce, konference a festivaly."
+    "popupDescription": "Mobilní merch popup: hosté si oblečení přizpůsobí a odnesou si ho hned. Pro firemní akce, konference a festivaly.",
+    "bizTitle": "U:DO CRAFT pro firmy — firemní merch",
+    "bizDescription": "B2B merch platform. We create clothing that becomes part of your corporate DNA."
   },
   "nav": {
     "catalog": "Katalog",
@@ -24,7 +26,9 @@
     "logoLink": "U:DO CRAFT — zpět na úvod",
     "skipToContent": "Přeskočit na hlavní obsah",
     "designMerch": "Navrhněte svůj merch",
-    "getQuote": "Získat nabídku"
+    "getQuote": "Získat nabídku",
+    "business": "Pro firmy",
+    "createDesign": "Vytvořit design"
   },
   "homeStats": {
     "stat3Suffix": " dní",
@@ -270,8 +274,8 @@
     "mm": "mm",
     "embroidery": "Výšivka",
     "label": "Online constructor",
-    "heading": "Build your merch right in the interface",
-    "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
+    "heading": "Vyzkoušejte to přímo tady",
+    "desc": "Vyberte barvu a nahrajte svůj obrázek — uvidíte, jak bude váš kousek vypadat.",
     "openEditor": "Open constructor",
     "productLabel": "Product",
     "colorLabel": "Color",
@@ -419,10 +423,10 @@
     "address": "Address"
   },
   "footer": {
-    "tagline": "B2B platforma merche pro týmy, značky a akce.",
+    "tagline": "Oblečení s vaším designem — od jednoho kusu po velkou objednávku.",
     "copyright": "U:DO CRAFT. Všechna práva vyhrazena.",
     "readyToStart": "Připraven začít?",
-    "readyDesc": "Od 10 kusů · 7–14 dní · Doprava",
+    "readyDesc": "Od jednoho kusu · 7–14 dní · Doručení po celé Ukrajině",
     "startProject": "Spustit projekt",
     "ariaLabel": "Zápatí",
     "homeLink": "U:DO CRAFT — zpět na úvod",
@@ -453,6 +457,12 @@
           "contact": "Kontakt",
           "cabinet": "Účet",
           "delivery": "Doprava a platba"
+        }
+      },
+      "business": {
+        "title": "Pro firmy",
+        "links": {
+          "overview": "Firemní merch"
         }
       }
     },
@@ -912,8 +922,8 @@
     "cookieSettings": "Nastavení cookies"
   },
   "homeDemo": {
-    "upload": "Nahrát logo",
-    "remove": "Odebrat logo",
+    "upload": "Nahrát obrázek",
+    "remove": "Odebrat obrázek",
     "hint": "PNG, JPG, SVG nebo WebP, do 5 MB",
     "note": "Jen náhled. Velikost a tiskové zóny nastavíte v plném editoru.",
     "tooLarge": "Soubor je větší než 5 MB. Vyberte menší obrázek."
@@ -966,5 +976,42 @@
     "addComment": "Přidat komentář",
     "sendComment": "Odeslat",
     "commentsOff": "Komentáře jsou pro tento odkaz vypnuté."
+  },
+  "home": {
+    "hero": {
+      "heading": "Oblečení podle vašeho návrhu.",
+      "subheading": "Vyberte kousek, v editoru přidejte potisk nebo text — vyrobíme ho a doručíme. Klidně jen jeden kus."
+    },
+    "steps": {
+      "heading": "Tři kroky k vašemu kousku",
+      "items": {
+        "0": {
+          "title": "Vyberte kousek",
+          "desc": "Tričko, mikina nebo longsleeve — zvolte model, barvu a velikost."
+        },
+        "1": {
+          "title": "Přidejte svůj design",
+          "desc": "Nahrajte obrázek nebo napište text v editoru a hned uvidíte výsledek."
+        },
+        "2": {
+          "title": "Převezměte objednávku",
+          "desc": "Vyrábíme za 7–14 pracovních dní a doručujeme po celé Ukrajině."
+        }
+      }
+    },
+    "faq": {
+      "single": {
+        "question": "Mohu objednat jen jeden kus?",
+        "answer": "Ano. Objednejte, kolik potřebujete — i jediný kus s vlastním designem."
+      },
+      "design": {
+        "question": "Jak přidám svůj design?",
+        "answer": "V editoru: nahrajte obrázek nebo přidejte text a zvolte umístění na oděvu. Cenu uvidíte hned."
+      }
+    },
+    "biz": {
+      "heading": "Merch pro tým nebo akci?",
+      "text": "Firemní oblečení, pop-up stánky a branding — na samostatné stránce pro firmy."
+    }
   }
 }

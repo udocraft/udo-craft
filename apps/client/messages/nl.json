@@ -1,12 +1,14 @@
 {
   "meta": {
-    "title": "U:DO CRAFT — Corporate merch",
-    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA.",
+    "title": "U:DO CRAFT — kleding met jouw ontwerp",
+    "description": "Maak online een T-shirt, hoodie of longsleeve met je eigen print. Gemaakt in 7–14 dagen, bezorgd in heel Oekraïne.",
     "productTitle": "{name} | Personalisatie en confectie | U:DO CRAFT",
     "productDescription": "Bestel bedrijfskleding {name} met eigen print of borduurwerk vanaf {min} stuks.",
     "productNotFound": "Product niet gevonden | U:DO CRAFT",
     "popupTitle": "Merch-popup voor jouw evenement | U:DO CRAFT",
-    "popupDescription": "Een mobiele merch-popup: gasten personaliseren kleding en nemen die direct mee. Voor bedrijfsevenementen, conferenties en festivals."
+    "popupDescription": "Een mobiele merch-popup: gasten personaliseren kleding en nemen die direct mee. Voor bedrijfsevenementen, conferenties en festivals.",
+    "bizTitle": "U:DO CRAFT zakelijk — bedrijfsmerch",
+    "bizDescription": "B2B merch platform. We create clothing that becomes part of your corporate DNA."
   },
   "nav": {
     "catalog": "Catalogus",
@@ -24,7 +26,9 @@
     "logoLink": "U:DO CRAFT — terug naar home",
     "skipToContent": "Ga naar hoofdinhoud",
     "designMerch": "Ontwerp je merch",
-    "getQuote": "Offerte aanvragen"
+    "getQuote": "Offerte aanvragen",
+    "business": "Zakelijk",
+    "createDesign": "Ontwerp maken"
   },
   "homeStats": {
     "stat3Suffix": " dagen",
@@ -270,8 +274,8 @@
     "mm": "mm",
     "embroidery": "Borduren",
     "label": "Online constructor",
-    "heading": "Build your merch right in the interface",
-    "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
+    "heading": "Probeer het hier",
+    "desc": "Kies een kleur en upload je afbeelding om te zien hoe je item eruitziet.",
     "openEditor": "Open constructor",
     "productLabel": "Product",
     "colorLabel": "Color",
@@ -419,10 +423,10 @@
     "address": "Address"
   },
   "footer": {
-    "tagline": "B2B-merchplatform voor teams, merken en evenementen.",
+    "tagline": "Kleding met jouw ontwerp — van één stuk tot een grote bestelling.",
     "copyright": "U:DO CRAFT. Alle rechten voorbehouden.",
     "readyToStart": "Klaar om te beginnen?",
-    "readyDesc": "Vanaf 10 stuks · 7–14 dagen · Levering",
+    "readyDesc": "Vanaf één stuk · 7–14 dagen · Bezorging in heel Oekraïne",
     "startProject": "Project starten",
     "ariaLabel": "Voettekst",
     "homeLink": "U:DO CRAFT — terug naar home",
@@ -453,6 +457,12 @@
           "contact": "Contact",
           "cabinet": "Account",
           "delivery": "Verzending & betaling"
+        }
+      },
+      "business": {
+        "title": "Zakelijk",
+        "links": {
+          "overview": "Bedrijfsmerch"
         }
       }
     },
@@ -912,8 +922,8 @@
     "cookieSettings": "Cookie-instellingen"
   },
   "homeDemo": {
-    "upload": "Upload je logo",
-    "remove": "Logo verwijderen",
+    "upload": "Afbeelding uploaden",
+    "remove": "Afbeelding verwijderen",
     "hint": "PNG, JPG, SVG of WebP, tot 5 MB",
     "note": "Alleen een voorbeeld. In de volledige editor stel je formaat en drukzones in.",
     "tooLarge": "Het bestand is groter dan 5 MB. Kies een kleinere afbeelding."
@@ -966,5 +976,42 @@
     "addComment": "Reactie toevoegen",
     "sendComment": "Versturen",
     "commentsOff": "Reacties zijn uitgeschakeld voor deze link."
+  },
+  "home": {
+    "hero": {
+      "heading": "Kleding, door jou ontworpen.",
+      "subheading": "Kies een item, voeg je print of tekst toe in de editor — wij maken en bezorgen het. Ook per stuk."
+    },
+    "steps": {
+      "heading": "In drie stappen naar jouw item",
+      "items": {
+        "0": {
+          "title": "Kies een item",
+          "desc": "T-shirt, hoodie of longsleeve — kies model, kleur en maat."
+        },
+        "1": {
+          "title": "Voeg je ontwerp toe",
+          "desc": "Upload een afbeelding of typ je tekst in de editor en zie meteen het resultaat."
+        },
+        "2": {
+          "title": "Ontvang je bestelling",
+          "desc": "We maken het in 7–14 werkdagen en bezorgen in heel Oekraïne."
+        }
+      }
+    },
+    "faq": {
+      "single": {
+        "question": "Kan ik maar één item bestellen?",
+        "answer": "Ja. Bestel zoveel als je nodig hebt — ook één item met je eigen ontwerp."
+      },
+      "design": {
+        "question": "Hoe voeg ik mijn ontwerp toe?",
+        "answer": "In de editor: upload een afbeelding of voeg tekst toe en kies de plek op het kledingstuk. Je ziet de prijs meteen."
+      }
+    },
+    "biz": {
+      "heading": "Merch voor je team of evenement?",
+      "text": "Bedrijfskleding, pop-upstands en branding — op een aparte pagina voor bedrijven."
+    }
   }
 }

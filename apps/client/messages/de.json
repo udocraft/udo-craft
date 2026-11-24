@@ -1,12 +1,14 @@
 {
   "meta": {
-    "title": "U:DO CRAFT — Corporate merch",
-    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA.",
+    "title": "U:DO CRAFT – Kleidung mit deinem Design",
+    "description": "Gestalte T-Shirt, Hoodie oder Longsleeve online mit deinem eigenen Print. Fertigung in 7–14 Tagen, Lieferung in die ganze Ukraine.",
     "productTitle": "{name} | Individuelle Veredelung & Fertigung | U:DO CRAFT",
     "productDescription": "Bestellen Sie Firmenkleidung {name} mit individuellem Druck oder Stickerei ab {min} Stück.",
     "productNotFound": "Produkt nicht gefunden | U:DO CRAFT",
     "popupTitle": "Merch-Popup für Ihre Veranstaltung | U:DO CRAFT",
-    "popupDescription": "Ein mobiles Merch-Popup: Gäste gestalten Kleidung selbst und nehmen sie sofort mit. Für Firmenevents, Konferenzen und Festivals."
+    "popupDescription": "Ein mobiles Merch-Popup: Gäste gestalten Kleidung selbst und nehmen sie sofort mit. Für Firmenevents, Konferenzen und Festivals.",
+    "bizTitle": "U:DO CRAFT für Unternehmen – Corporate Merch",
+    "bizDescription": "B2B merch platform. We create clothing that becomes part of your corporate DNA."
   },
   "nav": {
     "catalog": "Katalog",
@@ -24,7 +26,9 @@
     "logoLink": "U:DO CRAFT — zur Startseite",
     "skipToContent": "Zum Hauptinhalt springen",
     "designMerch": "Merch gestalten",
-    "getQuote": "Angebot anfordern"
+    "getQuote": "Angebot anfordern",
+    "business": "Für Unternehmen",
+    "createDesign": "Design erstellen"
   },
   "homeStats": {
     "stat3Suffix": " Tage",
@@ -270,8 +274,8 @@
     "mm": "mm",
     "embroidery": "Stickerei",
     "label": "Online constructor",
-    "heading": "Build your merch right in the interface",
-    "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
+    "heading": "Gleich hier ausprobieren",
+    "desc": "Wähle eine Farbe und lade dein Bild hoch – so sieht dein Teil aus.",
     "openEditor": "Open constructor",
     "productLabel": "Product",
     "colorLabel": "Color",
@@ -419,10 +423,10 @@
     "address": "Address"
   },
   "footer": {
-    "tagline": "B2B-Merch-Plattform für Teams, Marken und Events.",
+    "tagline": "Kleidung mit deinem Design – vom Einzelstück bis zur Großbestellung.",
     "copyright": "U:DO CRAFT. Alle Rechte vorbehalten.",
     "readyToStart": "Bereit anzufangen?",
-    "readyDesc": "Ab 10 Stück · 7–14 Tage · Lieferung",
+    "readyDesc": "Ab einem Stück · 7–14 Tage · Lieferung in die ganze Ukraine",
     "startProject": "Projekt starten",
     "ariaLabel": "Fußzeile",
     "homeLink": "U:DO CRAFT — zur Startseite",
@@ -453,6 +457,12 @@
           "contact": "Kontakt",
           "cabinet": "Konto",
           "delivery": "Versand & Zahlung"
+        }
+      },
+      "business": {
+        "title": "Für Unternehmen",
+        "links": {
+          "overview": "Corporate Merch"
         }
       }
     },
@@ -912,8 +922,8 @@
     "cookieSettings": "Cookie-Einstellungen"
   },
   "homeDemo": {
-    "upload": "Logo hochladen",
-    "remove": "Logo entfernen",
+    "upload": "Bild hochladen",
+    "remove": "Bild entfernen",
     "hint": "PNG, JPG, SVG oder WebP, bis 5 MB",
     "note": "Nur eine Vorschau. Größe und Druckzonen legen Sie im vollständigen Editor fest.",
     "tooLarge": "Die Datei ist größer als 5 MB. Wählen Sie ein kleineres Bild."
@@ -966,5 +976,42 @@
     "addComment": "Kommentar hinzufügen",
     "sendComment": "Senden",
     "commentsOff": "Kommentare sind für diesen Link deaktiviert."
+  },
+  "home": {
+    "hero": {
+      "heading": "Kleidung, von dir gestaltet.",
+      "subheading": "Wähle ein Teil, füge im Editor deinen Print oder Text hinzu – wir fertigen und liefern. Schon ab einem Stück."
+    },
+    "steps": {
+      "heading": "In drei Schritten zu deinem Teil",
+      "items": {
+        "0": {
+          "title": "Teil auswählen",
+          "desc": "T-Shirt, Hoodie oder Longsleeve – wähle Modell, Farbe und Größe."
+        },
+        "1": {
+          "title": "Design hinzufügen",
+          "desc": "Lade ein Bild hoch oder schreibe einen Text im Editor und sieh sofort das Ergebnis."
+        },
+        "2": {
+          "title": "Bestellung erhalten",
+          "desc": "Wir fertigen in 7–14 Werktagen und liefern in die ganze Ukraine."
+        }
+      }
+    },
+    "faq": {
+      "single": {
+        "question": "Kann ich nur ein Teil bestellen?",
+        "answer": "Ja. Bestelle so viele, wie du brauchst – auch ein einzelnes Teil mit deinem eigenen Design."
+      },
+      "design": {
+        "question": "Wie füge ich mein Design hinzu?",
+        "answer": "Im Editor: Bild hochladen oder Text hinzufügen und die Position auf dem Teil wählen. Den Preis siehst du sofort."
+      }
+    },
+    "biz": {
+      "heading": "Merch für dein Team oder Event?",
+      "text": "Firmenkleidung, Pop-up-Stände und Branding – auf einer eigenen Seite für Unternehmen."
+    }
   }
 }
