@@ -126,12 +126,12 @@
     "prevPage": "Precedente",
     "nextPage": "Successivo",
     "page": "Pagina {n}",
-    "fromPrice": "from ₴{price}",
+    "fromPrice": "da {price} ₴",
     "priceOnRequest": "Prezzo su richiesta",
-    "expand": "Expand",
-    "collapse": "Collapse",
-    "addPrint": "Add print",
-    "withoutPrint": "Without print"
+    "expand": "Mostra di più",
+    "collapse": "Mostra meno",
+    "addPrint": "Aggiungi stampa",
+    "withoutPrint": "Senza stampa"
   },
   "process": {
     "heading": "Dall'idea al merch — in 4 passaggi",
@@ -273,21 +273,21 @@
     "discount": "Sconto",
     "mm": "mm",
     "embroidery": "Ricamo",
-    "label": "Online constructor",
+    "label": "Editor online",
     "heading": "Provalo qui",
     "desc": "Scegli un colore e carica la tua immagine per vedere come sarà il tuo capo.",
-    "openEditor": "Open constructor",
-    "productLabel": "Product",
-    "colorLabel": "Color",
-    "printsLabel": "Prints",
-    "textLabel": "Text",
+    "openEditor": "Apri l'editor",
+    "productLabel": "Prodotto",
+    "colorLabel": "Colore",
+    "printsLabel": "Stampe",
+    "textLabel": "Testo",
     "fileLabel": "File",
-    "volumeLabel": "Volume & price",
-    "totalLabel": "Total",
-    "saved": "Draft saved",
-    "layersReady": "Layers ready",
-    "priceUpdated": "Price updated",
-    "sizeLabel": "Size"
+    "volumeLabel": "Quantità e prezzo",
+    "totalLabel": "Totale",
+    "saved": "Bozza salvata",
+    "layersReady": "Livelli pronti",
+    "priceUpdated": "Prezzo aggiornato",
+    "sizeLabel": "Taglia"
   },
   "trust": {
     "statsLabel": "Dati chiave",
@@ -1169,5 +1169,271 @@
     "backToSite": "Torna al sito",
     "showcaseItem": "Recensione {n}",
     "close": "Chiudi"
+  },
+  "editor": {
+    "common": {
+      "addToOrder": "Aggiungi all'ordine",
+      "adding": "Aggiunta...",
+      "all": "Tutti",
+      "back": "Indietro",
+      "cancel": "Annulla",
+      "change": "Cambia",
+      "close": "Chiudi",
+      "collapse": "Mostra meno",
+      "color": "Colore",
+      "delete": "Elimina",
+      "expand": "Mostra di più",
+      "fromPrice": "da {price} ₴",
+      "fromPricePer": "da {price} ₴ / pz",
+      "generate": "Genera",
+      "generating": "Generazione…",
+      "home": "Home",
+      "leaveConfirm": "Tornare indietro? Le modifiche non salvate andranno perse.",
+      "noColors": "Nessun colore configurato",
+      "perUnit": "/pz",
+      "print": "Stampa",
+      "productSettings": "Impostazioni prodotto",
+      "qty": "Quantità",
+      "qtyPrice": "Quantità e prezzo",
+      "removingBg": "Rimozione dello sfondo...",
+      "resetSearch": "Cancella ricerca",
+      "retry": "Riprova",
+      "retryShort": "Riprova",
+      "settings": "Impostazioni",
+      "size": "Taglia"
+    },
+    "tabs": {
+      "prints": "Stampe",
+      "draw": "Disegno",
+      "text": "Testo",
+      "upload": "File",
+      "layers": "Livelli",
+      "uploadTitle": "Carica",
+      "toolsLabel": "Strumenti dell'editor"
+    },
+    "errorPage": {
+      "title": "Impossibile caricare il catalogo",
+      "text": "La pagina dell'ordine non si è caricata. Riprova o torna alla home."
+    },
+    "main": {
+      "restoreFailed": "Impossibile ripristinare il carrello salvato. I dati restano salvati.",
+      "linkFailed": "Impossibile aprire il link",
+      "linkProductGone": "Il prodotto di questo link non è più disponibile",
+      "catalogFailed": "Impossibile caricare il catalogo",
+      "catalogFailedReload": "Impossibile caricare il catalogo. Prova ad aggiornare la pagina."
+    },
+    "grid": {
+      "title": "Scegli un capo",
+      "subtitle": "Tocca un capo per personalizzarlo e aggiungerlo all'ordine",
+      "empty": "Ancora nessun prodotto in questa categoria"
+    },
+    "genButton": {
+      "label": "Vedilo su una persona",
+      "needsDesign": "Aggiungi prima un design"
+    },
+    "textPanel": {
+      "search": "Cerca composizioni…",
+      "add": "Aggiungi un blocco di testo"
+    },
+    "shapes": {
+      "title": "Forme",
+      "search": "Cerca forme…",
+      "empty": "Nessuna forma trovata.",
+      "resetFilters": "Cancella filtri"
+    },
+    "ai": {
+      "noImage": "La risposta non conteneva immagini.",
+      "timeout": "Tempo scaduto. Riprova.",
+      "failed": "Impossibile generare l'immagine. Riprova."
+    },
+    "state": {
+      "restored": "La sessione di modifica precedente è stata ripristinata",
+      "chooseGarmentSize": "Scegli una taglia.",
+      "choosePrintSizes": "Scegli una dimensione per ogni stampa."
+    },
+    "qty": {
+      "fromQty": "da {n}",
+      "methods": {
+        "embroidery": "Ricamo",
+        "screen": "Serigrafia",
+        "sublimation": "Sublimazione",
+        "patch": "Toppa"
+      },
+      "product": "Articolo",
+      "chooseSize": "Scegli una dimensione",
+      "savings": "Risparmi",
+      "total": "Totale",
+      "totalLine": "{qty} pz × {price} ₴",
+      "noteLabel": "Importante:",
+      "noteText": "I prezzi sono indicativi. Il prezzo finale può cambiare dopo la conferma di un responsabile.",
+      "itemNote": "Nota per questo articolo",
+      "notePlaceholder": "Richieste particolari..."
+    },
+    "layout": {
+      "removeBgTitle": "Rimozione dello sfondo con l'IA",
+      "removeBgText": "Attendi. L'elaborazione in alta qualità richiede 15–20 secondi."
+    },
+    "customizer": {
+      "commentFailed": "Impossibile aggiungere il commento",
+      "previewTitle": "Anteprima del design",
+      "previewSignIn": "Accedi per modificare questo design.",
+      "previewViewOnly": "Questo link è di sola lettura. Il proprietario ha disattivato la modifica.",
+      "previewViewComment": "Questo link consente visualizzazione e commenti. Il proprietario ha disattivato la modifica.",
+      "signInToEdit": "Accedi per modificare",
+      "comments": "Commenti",
+      "noLayers": "Nessun livello. Aggiungi un'immagine o un testo.",
+      "tryOn": "Prova su una persona",
+      "withAi": "Con l'IA"
+    },
+    "gen": {
+      "presets": {
+        "0": "amici a una festa in terrazza",
+        "1": "qualcuno a passeggio in città in autunno",
+        "2": "un barista in un bar accogliente",
+        "3": "un musicista a un concerto all'aperto",
+        "4": "uno skater in un parco cittadino",
+        "5": "un team a una festa aziendale",
+        "6": "uno studente al campus",
+        "7": "una coppia a un festival estivo"
+      },
+      "progress": {
+        "0": "Analisi della richiesta...",
+        "1": "Scelta dello stile...",
+        "2": "Applicazione del design...",
+        "3": "Ultimi ritocchi..."
+      },
+      "inProgress": "Generazione in corso…",
+      "tapToView": "Tocca per vedere",
+      "yourPhoto": "La tua foto",
+      "photoUploaded": "Foto caricata",
+      "removePhoto": "Rimuovi foto",
+      "uploadPhoto": "Carica la tua foto",
+      "cameraOrGallery": "Apre la fotocamera o la galleria",
+      "title": "Guardalo indossato",
+      "subtitle": "L'IA mostra come appare il tuo design nella realtà",
+      "alreadyRunning": "È già in corso una generazione",
+      "result": "Risultato",
+      "usedFree": "Hai già usato la generazione gratuita per questo articolo.",
+      "viewResult": "Vedi risultato",
+      "tabSelfie": "Tua foto",
+      "tabScene": "Scena",
+      "sceneLabel": "Descrizione della scena",
+      "scenePlaceholder": "Descrivi una scena o scegli un'idea…",
+      "emptySide": "Questo lato è vuoto. Useremo il design del lato «{side}».",
+      "quotaUsed": "Hai usato tutte le {n} generazioni gratuite",
+      "generatingShort": "Genero…"
+    },
+    "toolbar": {
+      "opacity": "Opacità",
+      "fontSearch": "Cerca font...",
+      "nothingFound": "Nessun risultato",
+      "bold": "Grassetto",
+      "italic": "Corsivo",
+      "textColor": "Colore del testo",
+      "alignLeft": "Sinistra",
+      "alignCenter": "Centro",
+      "alignRight": "Destra",
+      "arc": "Arco",
+      "letterSpacing": "Spaziatura lettere",
+      "lineHeight": "Interlinea",
+      "fill": "Riempimento",
+      "stroke": "Contorno",
+      "fillColor": "Colore di riempimento",
+      "strokeColor": "Colore del contorno",
+      "removeBg": "Rimuovi sfondo",
+      "editDrawing": "Modifica disegno",
+      "center": "Centra",
+      "flip": "Rifletti",
+      "duplicate": "Duplica",
+      "fontCategories": {
+        "grotesque": "Bastoni",
+        "condensed": "Condensato",
+        "serif": "Graziato",
+        "display": "Display",
+        "decorative": "Decorativo",
+        "handwritten": "Scritto a mano",
+        "technical": "Tecnico"
+      }
+    },
+    "prints": {
+      "prompts": {
+        "0": "Un gatto astronauta in stile retrò, colori vivaci",
+        "1": "Montagne e sole minimal, line art",
+        "2": "Un mazzo di fiori di campo, acquerello",
+        "3": "Scritta «Good vibes» in stile anni '70",
+        "4": "Un drago pixelato, stile videogioco retrò",
+        "5": "Un'onda in stile giapponese, palette blu",
+        "6": "Una tazza di caffè con un cuore, flat design",
+        "7": "Un gufo con un libro, illustrazione vettoriale"
+      },
+      "aiTitle": "Illustrazione IA",
+      "aiDesc": "Crea illustrazioni pronte per la stampa da una descrizione.",
+      "aiLabel": "Descrizione per l'illustrazione IA",
+      "loadFailed": "Impossibile caricare le stampe",
+      "ready": "Stampe pronte",
+      "search": "Cerca stampe…",
+      "empty": "Nessuna stampa trovata."
+    },
+    "upload": {
+      "badType": "Tipo di file non supportato «{type}». Usa PNG, JPG/JPEG, SVG o PDF.",
+      "tooLarge": "Il file è troppo grande ({size} MB). Massimo: {max}.",
+      "addAgain": "Aggiungi di nuovo «{name}»",
+      "addFailed": "Impossibile aggiungere «{name}». Riprova.",
+      "title": "Carica un file",
+      "dropLabel": "Carica un file: fai clic o trascinalo qui",
+      "uploading": "Caricamento…",
+      "dropRelease": "Rilascia per caricare",
+      "dropHint": "Fai clic o trascina un file",
+      "formats": "PNG, JPG, SVG, PDF · fino a 20 MB",
+      "choose": "Scegli un file",
+      "recent": "Caricamenti recenti",
+      "noRecent": "Ancora nessun caricamento.",
+      "recentHint": "I file caricati appariranno qui per riutilizzarli rapidamente."
+    },
+    "canvas": {
+      "defaultText": "Testo",
+      "undo": "Annulla",
+      "undoTitle": "Annulla (Ctrl+Z)",
+      "redo": "Ripeti",
+      "redoTitle": "Ripeti (Ctrl+Maiusc+Z)",
+      "copy": "Copia",
+      "fontSmaller": "Riduci carattere",
+      "fontBigger": "Aumenta carattere",
+      "boldShort": "G",
+      "italicShort": "C",
+      "removeBgFailed": "Impossibile rimuovere lo sfondo. Riprova.",
+      "bgShort": "Sfondo",
+      "edit": "Modifica",
+      "layerOpacity": "Opacità del livello",
+      "deleteLayer": "Elimina livello",
+      "loadingImage": "Caricamento immagine...",
+      "sides": {
+        "front": "Fronte",
+        "back": "Retro",
+        "left": "Sinistra",
+        "right": "Destra"
+      }
+    },
+    "layers": {
+      "layer": "Livello",
+      "setupTitle": "Configura questo livello",
+      "setupText": "Scegli tipo e dimensione di stampa. Il prezzo si aggiorna automaticamente.",
+      "printType": "Tipo di stampa",
+      "printSize": "Dimensione di stampa",
+      "image": "Immagine"
+    },
+    "paywall": {
+      "title": "Per l'IA serve un account",
+      "text": "Registrati gratis e ottieni 3 generazioni IA gratuite",
+      "register": "Registrati",
+      "login": "Accedi",
+      "skip": "Continua senza account"
+    }
+  },
+  "sizeChart": {
+    "title": "Tabella taglie",
+    "empty": "La tabella è vuota",
+    "schemeAlt": "{name}: schema delle taglie",
+    "note": "Tutte le misure sono in centimetri. Se sei tra due taglie, scegli la più grande."
   }
 }

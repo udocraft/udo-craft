@@ -126,12 +126,12 @@
     "prevPage": "Zurück",
     "nextPage": "Weiter",
     "page": "Seite {n}",
-    "fromPrice": "from ₴{price}",
+    "fromPrice": "ab {price} ₴",
     "priceOnRequest": "Preis auf Anfrage",
-    "expand": "Expand",
-    "collapse": "Collapse",
-    "addPrint": "Add print",
-    "withoutPrint": "Without print"
+    "expand": "Mehr anzeigen",
+    "collapse": "Weniger anzeigen",
+    "addPrint": "Print hinzufügen",
+    "withoutPrint": "Ohne Print"
   },
   "process": {
     "heading": "Von der Idee zum Merch — in 4 Schritten",
@@ -273,21 +273,21 @@
     "discount": "Rabatt",
     "mm": "mm",
     "embroidery": "Stickerei",
-    "label": "Online constructor",
+    "label": "Online-Editor",
     "heading": "Gleich hier ausprobieren",
     "desc": "Wähle eine Farbe und lade dein Bild hoch – so sieht dein Teil aus.",
-    "openEditor": "Open constructor",
-    "productLabel": "Product",
-    "colorLabel": "Color",
+    "openEditor": "Editor öffnen",
+    "productLabel": "Produkt",
+    "colorLabel": "Farbe",
     "printsLabel": "Prints",
     "textLabel": "Text",
-    "fileLabel": "File",
-    "volumeLabel": "Volume & price",
-    "totalLabel": "Total",
-    "saved": "Draft saved",
-    "layersReady": "Layers ready",
-    "priceUpdated": "Price updated",
-    "sizeLabel": "Size"
+    "fileLabel": "Datei",
+    "volumeLabel": "Menge und Preis",
+    "totalLabel": "Gesamt",
+    "saved": "Entwurf gespeichert",
+    "layersReady": "Ebenen bereit",
+    "priceUpdated": "Preis aktualisiert",
+    "sizeLabel": "Größe"
   },
   "trust": {
     "statsLabel": "Kennzahlen",
@@ -1169,5 +1169,271 @@
     "backToSite": "Zur Website",
     "showcaseItem": "Bewertung {n}",
     "close": "Schließen"
+  },
+  "editor": {
+    "common": {
+      "addToOrder": "Zur Bestellung hinzufügen",
+      "adding": "Wird hinzugefügt...",
+      "all": "Alle",
+      "back": "Zurück",
+      "cancel": "Abbrechen",
+      "change": "Ändern",
+      "close": "Schließen",
+      "collapse": "Weniger anzeigen",
+      "color": "Farbe",
+      "delete": "Löschen",
+      "expand": "Mehr anzeigen",
+      "fromPrice": "ab {price} ₴",
+      "fromPricePer": "ab {price} ₴ / Stk.",
+      "generate": "Generieren",
+      "generating": "Wird generiert…",
+      "home": "Zur Startseite",
+      "leaveConfirm": "Zurück? Nicht gespeicherte Änderungen gehen verloren.",
+      "noColors": "Keine Farben eingerichtet",
+      "perUnit": "/Stk.",
+      "print": "Druck",
+      "productSettings": "Produkteinstellungen",
+      "qty": "Menge",
+      "qtyPrice": "Menge und Preis",
+      "removingBg": "Hintergrund wird entfernt...",
+      "resetSearch": "Suche zurücksetzen",
+      "retry": "Erneut versuchen",
+      "retryShort": "Wiederholen",
+      "settings": "Einstellungen",
+      "size": "Größe"
+    },
+    "tabs": {
+      "prints": "Prints",
+      "draw": "Zeichnung",
+      "text": "Text",
+      "upload": "Datei",
+      "layers": "Ebenen",
+      "uploadTitle": "Hochladen",
+      "toolsLabel": "Editor-Werkzeuge"
+    },
+    "errorPage": {
+      "title": "Katalog konnte nicht geladen werden",
+      "text": "Die Bestellseite konnte nicht geladen werden. Versuche es erneut oder gehe zur Startseite."
+    },
+    "main": {
+      "restoreFailed": "Gespeicherter Warenkorb konnte nicht wiederhergestellt werden. Deine Daten sind noch gespeichert.",
+      "linkFailed": "Link konnte nicht geöffnet werden",
+      "linkProductGone": "Das Produkt aus dem Link ist nicht mehr verfügbar",
+      "catalogFailed": "Katalog konnte nicht geladen werden",
+      "catalogFailedReload": "Katalog konnte nicht geladen werden. Lade die Seite neu."
+    },
+    "grid": {
+      "title": "Wähle ein Teil",
+      "subtitle": "Tippe auf ein Teil, um es zu gestalten und zur Bestellung hinzuzufügen",
+      "empty": "In dieser Kategorie gibt es noch keine Produkte"
+    },
+    "genButton": {
+      "label": "An einer Person ansehen",
+      "needsDesign": "Füge zuerst ein Design hinzu"
+    },
+    "textPanel": {
+      "search": "Layouts suchen…",
+      "add": "Textblock hinzufügen"
+    },
+    "shapes": {
+      "title": "Formen",
+      "search": "Formen suchen…",
+      "empty": "Keine Formen gefunden.",
+      "resetFilters": "Filter zurücksetzen"
+    },
+    "ai": {
+      "noImage": "Die Antwort enthielt kein Bild.",
+      "timeout": "Zeitüberschreitung. Bitte erneut versuchen.",
+      "failed": "Bild konnte nicht generiert werden. Bitte erneut versuchen."
+    },
+    "state": {
+      "restored": "Deine letzte Bearbeitung wurde wiederhergestellt",
+      "chooseGarmentSize": "Wähle eine Größe.",
+      "choosePrintSizes": "Wähle eine Größe für jeden Druck."
+    },
+    "qty": {
+      "fromQty": "ab {n}",
+      "methods": {
+        "embroidery": "Stickerei",
+        "screen": "Siebdruck",
+        "sublimation": "Sublimation",
+        "patch": "Aufnäher"
+      },
+      "product": "Artikel",
+      "chooseSize": "Größe wählen",
+      "savings": "Du sparst",
+      "total": "Gesamt",
+      "totalLine": "{qty} Stk. × {price} ₴",
+      "noteLabel": "Hinweis:",
+      "noteText": "Die Preise sind Richtwerte. Der Endpreis kann sich nach Bestätigung durch einen Manager ändern.",
+      "itemNote": "Notiz zu diesem Artikel",
+      "notePlaceholder": "Besondere Wünsche..."
+    },
+    "layout": {
+      "removeBgTitle": "Hintergrund wird mit KI entfernt",
+      "removeBgText": "Bitte warten. Die Verarbeitung in hoher Qualität dauert 15–20 Sekunden."
+    },
+    "customizer": {
+      "commentFailed": "Kommentar konnte nicht hinzugefügt werden",
+      "previewTitle": "Designvorschau",
+      "previewSignIn": "Melde dich an, um dieses Design zu bearbeiten.",
+      "previewViewOnly": "Dieser Link ist nur zum Ansehen. Der Eigentümer hat das Bearbeiten deaktiviert.",
+      "previewViewComment": "Dieser Link erlaubt Ansehen und Kommentieren. Der Eigentümer hat das Bearbeiten deaktiviert.",
+      "signInToEdit": "Zum Bearbeiten anmelden",
+      "comments": "Kommentare",
+      "noLayers": "Noch keine Ebenen. Füge ein Bild oder Text hinzu.",
+      "tryOn": "An einer Person anprobieren",
+      "withAi": "Mit KI"
+    },
+    "gen": {
+      "presets": {
+        "0": "Freunde auf einer Dachterrassenparty",
+        "1": "jemand bei einem Herbstspaziergang durch die Stadt",
+        "2": "eine Barista in einem gemütlichen Café",
+        "3": "ein Musiker bei einem Open-Air-Konzert",
+        "4": "ein Skater in einem Stadtpark",
+        "5": "ein Team bei einer Firmenfeier",
+        "6": "ein Student auf dem Campus",
+        "7": "ein Paar auf einem Sommerfestival"
+      },
+      "progress": {
+        "0": "Anfrage wird analysiert...",
+        "1": "Look wird ausgewählt...",
+        "2": "Design wird aufgebracht...",
+        "3": "Letzte Feinschliffe..."
+      },
+      "inProgress": "Wird generiert…",
+      "tapToView": "Zum Ansehen tippen",
+      "yourPhoto": "Dein Foto",
+      "photoUploaded": "Foto hochgeladen",
+      "removePhoto": "Foto entfernen",
+      "uploadPhoto": "Lade dein Foto hoch",
+      "cameraOrGallery": "Öffnet Kamera oder Galerie",
+      "title": "Sieh es an einer Person",
+      "subtitle": "Die KI zeigt, wie dein Design im echten Leben aussieht",
+      "alreadyRunning": "Eine Generierung läuft bereits",
+      "result": "Ergebnis",
+      "usedFree": "Du hast die kostenlose Generierung für diesen Artikel bereits genutzt.",
+      "viewResult": "Ergebnis ansehen",
+      "tabSelfie": "Eigenes Foto",
+      "tabScene": "Szene",
+      "sceneLabel": "Szenenbeschreibung",
+      "scenePlaceholder": "Beschreibe eine Szene oder wähle eine Idee…",
+      "emptySide": "Diese Seite ist leer. Wir nehmen das Design von der Seite „{side}“.",
+      "quotaUsed": "Du hast alle {n} kostenlosen Generierungen genutzt",
+      "generatingShort": "Generiere…"
+    },
+    "toolbar": {
+      "opacity": "Deckkraft",
+      "fontSearch": "Schrift suchen...",
+      "nothingFound": "Nichts gefunden",
+      "bold": "Fett",
+      "italic": "Kursiv",
+      "textColor": "Textfarbe",
+      "alignLeft": "Links",
+      "alignCenter": "Mitte",
+      "alignRight": "Rechts",
+      "arc": "Bogen",
+      "letterSpacing": "Zeichenabstand",
+      "lineHeight": "Zeilenabstand",
+      "fill": "Füllung",
+      "stroke": "Kontur",
+      "fillColor": "Füllfarbe",
+      "strokeColor": "Konturfarbe",
+      "removeBg": "Hintergrund entfernen",
+      "editDrawing": "Zeichnung bearbeiten",
+      "center": "Zentrieren",
+      "flip": "Spiegeln",
+      "duplicate": "Duplizieren",
+      "fontCategories": {
+        "grotesque": "Serifenlos",
+        "condensed": "Schmal",
+        "serif": "Serifen",
+        "display": "Display",
+        "decorative": "Dekorativ",
+        "handwritten": "Handschrift",
+        "technical": "Technisch"
+      }
+    },
+    "prints": {
+      "prompts": {
+        "0": "Eine Astronauten-Katze im Retro-Stil, kräftige Farben",
+        "1": "Minimalistische Berge und Sonne, Line Art",
+        "2": "Ein Strauß Wildblumen, Aquarell",
+        "3": "Schriftzug „Good vibes“ im 70er-Stil",
+        "4": "Ein Pixel-Drache im Retro-Game-Stil",
+        "5": "Eine Welle im japanischen Stil, blaue Palette",
+        "6": "Eine Kaffeetasse mit Herz, Flat Design",
+        "7": "Eine Eule mit Buch, Vektorillustration"
+      },
+      "aiTitle": "KI-Illustration",
+      "aiDesc": "Erstelle druckfertige Illustrationen aus einer Textbeschreibung.",
+      "aiLabel": "Beschreibung für die KI-Illustration",
+      "loadFailed": "Prints konnten nicht geladen werden",
+      "ready": "Fertige Prints",
+      "search": "Prints suchen…",
+      "empty": "Keine Prints gefunden."
+    },
+    "upload": {
+      "badType": "Nicht unterstützter Dateityp „{type}“. Erlaubt: PNG, JPG/JPEG, SVG, PDF.",
+      "tooLarge": "Die Datei ist zu groß ({size} MB). Maximum: {max}.",
+      "addAgain": "„{name}“ erneut hinzufügen",
+      "addFailed": "„{name}“ konnte nicht hinzugefügt werden. Bitte erneut versuchen.",
+      "title": "Datei hochladen",
+      "dropLabel": "Datei hochladen: klicken oder hierher ziehen",
+      "uploading": "Wird hochgeladen…",
+      "dropRelease": "Zum Hochladen loslassen",
+      "dropHint": "Klicken oder Datei ziehen",
+      "formats": "PNG, JPG, SVG, PDF · bis 20 MB",
+      "choose": "Datei auswählen",
+      "recent": "Letzte Uploads",
+      "noRecent": "Noch keine Uploads.",
+      "recentHint": "Hochgeladene Dateien erscheinen hier, damit du sie schnell wiederverwenden kannst."
+    },
+    "canvas": {
+      "defaultText": "Text",
+      "undo": "Rückgängig",
+      "undoTitle": "Rückgängig (Strg+Z)",
+      "redo": "Wiederholen",
+      "redoTitle": "Wiederholen (Strg+Umschalt+Z)",
+      "copy": "Kopie",
+      "fontSmaller": "Schrift verkleinern",
+      "fontBigger": "Schrift vergrößern",
+      "boldShort": "F",
+      "italicShort": "K",
+      "removeBgFailed": "Hintergrund konnte nicht entfernt werden. Bitte erneut versuchen.",
+      "bgShort": "Hintergrund",
+      "edit": "Bearbeiten",
+      "layerOpacity": "Ebenendeckkraft",
+      "deleteLayer": "Ebene löschen",
+      "loadingImage": "Bild wird geladen...",
+      "sides": {
+        "front": "Vorne",
+        "back": "Hinten",
+        "left": "Links",
+        "right": "Rechts"
+      }
+    },
+    "layers": {
+      "layer": "Ebene",
+      "setupTitle": "Ebene einrichten",
+      "setupText": "Wähle Druckart und Größe. Der Preis aktualisiert sich automatisch.",
+      "printType": "Druckart",
+      "printSize": "Druckgröße",
+      "image": "Bild"
+    },
+    "paywall": {
+      "title": "Für KI brauchst du ein Konto",
+      "text": "Registriere dich kostenlos und erhalte 3 kostenlose KI-Generierungen",
+      "register": "Registrieren",
+      "login": "Anmelden",
+      "skip": "Ohne Konto fortfahren"
+    }
+  },
+  "sizeChart": {
+    "title": "Größentabelle",
+    "empty": "Die Tabelle ist leer",
+    "schemeAlt": "{name}: Größenschema",
+    "note": "Alle Maße in Zentimetern. Liegst du zwischen zwei Größen, wähle die größere."
   }
 }

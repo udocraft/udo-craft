@@ -126,12 +126,12 @@
     "prevPage": "Anterior",
     "nextPage": "Seguinte",
     "page": "Página {n}",
-    "fromPrice": "from ₴{price}",
+    "fromPrice": "desde {price} ₴",
     "priceOnRequest": "Preço sob consulta",
-    "expand": "Expand",
-    "collapse": "Collapse",
-    "addPrint": "Add print",
-    "withoutPrint": "Without print"
+    "expand": "Ver mais",
+    "collapse": "Ver menos",
+    "addPrint": "Adicionar estampa",
+    "withoutPrint": "Sem estampa"
   },
   "process": {
     "heading": "Da ideia ao merch — em 4 passos",
@@ -273,21 +273,21 @@
     "discount": "Desconto",
     "mm": "mm",
     "embroidery": "Bordado",
-    "label": "Online constructor",
+    "label": "Editor online",
     "heading": "Experimente aqui mesmo",
     "desc": "Escolha uma cor e carregue a sua imagem para ver como fica a sua peça.",
-    "openEditor": "Open constructor",
-    "productLabel": "Product",
-    "colorLabel": "Color",
-    "printsLabel": "Prints",
-    "textLabel": "Text",
-    "fileLabel": "File",
-    "volumeLabel": "Volume & price",
+    "openEditor": "Abrir o editor",
+    "productLabel": "Produto",
+    "colorLabel": "Cor",
+    "printsLabel": "Estampas",
+    "textLabel": "Texto",
+    "fileLabel": "Ficheiro",
+    "volumeLabel": "Quantidade e preço",
     "totalLabel": "Total",
-    "saved": "Draft saved",
-    "layersReady": "Layers ready",
-    "priceUpdated": "Price updated",
-    "sizeLabel": "Size"
+    "saved": "Rascunho guardado",
+    "layersReady": "Camadas prontas",
+    "priceUpdated": "Preço atualizado",
+    "sizeLabel": "Tamanho"
   },
   "trust": {
     "statsLabel": "Números-chave",
@@ -1169,5 +1169,271 @@
     "backToSite": "Voltar ao site",
     "showcaseItem": "Opinião {n}",
     "close": "Fechar"
+  },
+  "editor": {
+    "common": {
+      "addToOrder": "Adicionar à encomenda",
+      "adding": "A adicionar...",
+      "all": "Todos",
+      "back": "Voltar",
+      "cancel": "Cancelar",
+      "change": "Alterar",
+      "close": "Fechar",
+      "collapse": "Ver menos",
+      "color": "Cor",
+      "delete": "Eliminar",
+      "expand": "Ver mais",
+      "fromPrice": "desde {price} ₴",
+      "fromPricePer": "desde {price} ₴ / un.",
+      "generate": "Gerar",
+      "generating": "A gerar…",
+      "home": "Página inicial",
+      "leaveConfirm": "Voltar? As alterações não guardadas serão perdidas.",
+      "noColors": "Sem cores configuradas",
+      "perUnit": "/un.",
+      "print": "Estampagem",
+      "productSettings": "Definições do produto",
+      "qty": "Quantidade",
+      "qtyPrice": "Quantidade e preço",
+      "removingBg": "A remover o fundo...",
+      "resetSearch": "Limpar pesquisa",
+      "retry": "Tentar novamente",
+      "retryShort": "Repetir",
+      "settings": "Definições",
+      "size": "Tamanho"
+    },
+    "tabs": {
+      "prints": "Estampas",
+      "draw": "Desenho",
+      "text": "Texto",
+      "upload": "Ficheiro",
+      "layers": "Camadas",
+      "uploadTitle": "Carregar",
+      "toolsLabel": "Ferramentas do editor"
+    },
+    "errorPage": {
+      "title": "Não foi possível carregar o catálogo",
+      "text": "A página de encomenda não carregou. Tente novamente ou volte à página inicial."
+    },
+    "main": {
+      "restoreFailed": "Não foi possível restaurar o carrinho guardado. Os dados continuam guardados.",
+      "linkFailed": "Não foi possível abrir a ligação",
+      "linkProductGone": "O produto desta ligação já não está disponível",
+      "catalogFailed": "Não foi possível carregar o catálogo",
+      "catalogFailedReload": "Não foi possível carregar o catálogo. Atualize a página."
+    },
+    "grid": {
+      "title": "Escolha uma peça",
+      "subtitle": "Toque numa peça para a personalizar e adicionar à encomenda",
+      "empty": "Ainda não há produtos nesta categoria"
+    },
+    "genButton": {
+      "label": "Ver numa pessoa",
+      "needsDesign": "Adicione primeiro um design"
+    },
+    "textPanel": {
+      "search": "Pesquisar composições…",
+      "add": "Adicionar bloco de texto"
+    },
+    "shapes": {
+      "title": "Formas",
+      "search": "Pesquisar formas…",
+      "empty": "Nenhuma forma encontrada.",
+      "resetFilters": "Limpar filtros"
+    },
+    "ai": {
+      "noImage": "A resposta não continha imagem.",
+      "timeout": "Demorou demasiado. Tente novamente.",
+      "failed": "Não foi possível gerar a imagem. Tente novamente."
+    },
+    "state": {
+      "restored": "A sessão de edição anterior foi restaurada",
+      "chooseGarmentSize": "Escolha um tamanho.",
+      "choosePrintSizes": "Escolha um tamanho para cada estampagem."
+    },
+    "qty": {
+      "fromQty": "desde {n}",
+      "methods": {
+        "embroidery": "Bordado",
+        "screen": "Serigrafia",
+        "sublimation": "Sublimação",
+        "patch": "Emblema"
+      },
+      "product": "Peça",
+      "chooseSize": "Escolha um tamanho",
+      "savings": "Poupa",
+      "total": "Total",
+      "totalLine": "{qty} un. × {price} ₴",
+      "noteLabel": "Importante:",
+      "noteText": "Os preços são indicativos. O preço final pode mudar após confirmação de um gestor.",
+      "itemNote": "Nota para este artigo",
+      "notePlaceholder": "Pedidos especiais..."
+    },
+    "layout": {
+      "removeBgTitle": "A remover o fundo com IA",
+      "removeBgText": "Aguarde. O processamento em alta qualidade demora 15–20 segundos."
+    },
+    "customizer": {
+      "commentFailed": "Não foi possível adicionar o comentário",
+      "previewTitle": "Pré-visualização do design",
+      "previewSignIn": "Entre para editar este design.",
+      "previewViewOnly": "Esta ligação é só de visualização. O proprietário desativou a edição.",
+      "previewViewComment": "Esta ligação permite ver e comentar. O proprietário desativou a edição.",
+      "signInToEdit": "Entrar para editar",
+      "comments": "Comentários",
+      "noLayers": "Ainda não há camadas. Adicione uma imagem ou texto.",
+      "tryOn": "Experimentar numa pessoa",
+      "withAi": "Com IA"
+    },
+    "gen": {
+      "presets": {
+        "0": "amigos numa festa no terraço",
+        "1": "alguém a passear pela cidade no outono",
+        "2": "um barista num café acolhedor",
+        "3": "um músico num concerto ao ar livre",
+        "4": "um skater num parque urbano",
+        "5": "uma equipa numa festa da empresa",
+        "6": "um estudante no campus",
+        "7": "um casal num festival de verão"
+      },
+      "progress": {
+        "0": "A analisar o pedido...",
+        "1": "A escolher o visual...",
+        "2": "A aplicar o design...",
+        "3": "Últimos retoques..."
+      },
+      "inProgress": "A gerar…",
+      "tapToView": "Toque para ver",
+      "yourPhoto": "A sua foto",
+      "photoUploaded": "Foto carregada",
+      "removePhoto": "Remover foto",
+      "uploadPhoto": "Carregue a sua foto",
+      "cameraOrGallery": "Abre a câmara ou a galeria",
+      "title": "Veja-o vestido",
+      "subtitle": "A IA mostra como fica o seu design na vida real",
+      "alreadyRunning": "Já está a decorrer uma geração",
+      "result": "Resultado",
+      "usedFree": "Já usou a geração gratuita para esta peça.",
+      "viewResult": "Ver resultado",
+      "tabSelfie": "A sua foto",
+      "tabScene": "Cena",
+      "sceneLabel": "Descrição da cena",
+      "scenePlaceholder": "Descreva uma cena ou escolha uma ideia…",
+      "emptySide": "Este lado está vazio. Vamos usar o design do lado «{side}».",
+      "quotaUsed": "Usou todas as {n} gerações gratuitas",
+      "generatingShort": "A gerar…"
+    },
+    "toolbar": {
+      "opacity": "Opacidade",
+      "fontSearch": "Pesquisar fonte...",
+      "nothingFound": "Nada encontrado",
+      "bold": "Negrito",
+      "italic": "Itálico",
+      "textColor": "Cor do texto",
+      "alignLeft": "Esquerda",
+      "alignCenter": "Centro",
+      "alignRight": "Direita",
+      "arc": "Arco",
+      "letterSpacing": "Espaçamento entre letras",
+      "lineHeight": "Entrelinha",
+      "fill": "Preenchimento",
+      "stroke": "Contorno",
+      "fillColor": "Cor de preenchimento",
+      "strokeColor": "Cor do contorno",
+      "removeBg": "Remover fundo",
+      "editDrawing": "Editar desenho",
+      "center": "Centrar",
+      "flip": "Espelhar",
+      "duplicate": "Duplicar",
+      "fontCategories": {
+        "grotesque": "Sem serifa",
+        "condensed": "Condensada",
+        "serif": "Serifada",
+        "display": "Display",
+        "decorative": "Decorativa",
+        "handwritten": "Manuscrita",
+        "technical": "Técnica"
+      }
+    },
+    "prints": {
+      "prompts": {
+        "0": "Um gato astronauta em estilo retro, cores vivas",
+        "1": "Montanhas e sol minimalistas, arte de linha",
+        "2": "Um ramo de flores silvestres, aguarela",
+        "3": "Lettering «Good vibes» ao estilo dos anos 70",
+        "4": "Um dragão pixelizado, estilo jogo retro",
+        "5": "Uma onda em estilo japonês, paleta azul",
+        "6": "Uma chávena de café com um coração, flat design",
+        "7": "Uma coruja com um livro, ilustração vetorial"
+      },
+      "aiTitle": "Ilustração com IA",
+      "aiDesc": "Crie ilustrações prontas a imprimir a partir de um texto.",
+      "aiLabel": "Descrição para a ilustração com IA",
+      "loadFailed": "Não foi possível carregar as estampas",
+      "ready": "Estampas prontas",
+      "search": "Pesquisar estampas…",
+      "empty": "Nenhuma estampa encontrada."
+    },
+    "upload": {
+      "badType": "Tipo de ficheiro não suportado «{type}». Use PNG, JPG/JPEG, SVG ou PDF.",
+      "tooLarge": "O ficheiro é demasiado grande ({size} MB). Máximo: {max}.",
+      "addAgain": "Adicionar «{name}» novamente",
+      "addFailed": "Não foi possível adicionar «{name}». Tente novamente.",
+      "title": "Carregar ficheiro",
+      "dropLabel": "Carregar ficheiro: clique ou arraste-o para aqui",
+      "uploading": "A carregar…",
+      "dropRelease": "Largue para carregar",
+      "dropHint": "Clique ou arraste um ficheiro",
+      "formats": "PNG, JPG, SVG, PDF · até 20 MB",
+      "choose": "Escolher ficheiro",
+      "recent": "Carregamentos recentes",
+      "noRecent": "Ainda não há carregamentos.",
+      "recentHint": "Os ficheiros carregados aparecem aqui para os reutilizar rapidamente."
+    },
+    "canvas": {
+      "defaultText": "Texto",
+      "undo": "Anular",
+      "undoTitle": "Anular (Ctrl+Z)",
+      "redo": "Refazer",
+      "redoTitle": "Refazer (Ctrl+Shift+Z)",
+      "copy": "Cópia",
+      "fontSmaller": "Diminuir fonte",
+      "fontBigger": "Aumentar fonte",
+      "boldShort": "N",
+      "italicShort": "I",
+      "removeBgFailed": "Não foi possível remover o fundo. Tente novamente.",
+      "bgShort": "Fundo",
+      "edit": "Editar",
+      "layerOpacity": "Opacidade da camada",
+      "deleteLayer": "Eliminar camada",
+      "loadingImage": "A carregar imagem...",
+      "sides": {
+        "front": "Frente",
+        "back": "Costas",
+        "left": "Esquerda",
+        "right": "Direita"
+      }
+    },
+    "layers": {
+      "layer": "Camada",
+      "setupTitle": "Configure esta camada",
+      "setupText": "Escolha o tipo e o tamanho da estampagem. O preço atualiza automaticamente.",
+      "printType": "Tipo de estampagem",
+      "printSize": "Tamanho da estampagem",
+      "image": "Imagem"
+    },
+    "paywall": {
+      "title": "A IA requer uma conta",
+      "text": "Registe-se gratuitamente e receba 3 gerações com IA grátis",
+      "register": "Registar",
+      "login": "Entrar",
+      "skip": "Continuar sem conta"
+    }
+  },
+  "sizeChart": {
+    "title": "Tabela de tamanhos",
+    "empty": "A tabela está vazia",
+    "schemeAlt": "{name}: esquema de tamanhos",
+    "note": "Todas as medidas estão em centímetros. Se estiver entre dois tamanhos, escolha o maior."
   }
 }

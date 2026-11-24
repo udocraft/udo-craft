@@ -126,12 +126,12 @@
     "prevPage": "Předchozí",
     "nextPage": "Další",
     "page": "Strana {n}",
-    "fromPrice": "from ₴{price}",
+    "fromPrice": "od {price} ₴",
     "priceOnRequest": "Cena na vyžádání",
-    "expand": "Expand",
-    "collapse": "Collapse",
-    "addPrint": "Add print",
-    "withoutPrint": "Without print"
+    "expand": "Rozbalit",
+    "collapse": "Sbalit",
+    "addPrint": "Přidat potisk",
+    "withoutPrint": "Bez potisku"
   },
   "process": {
     "heading": "Od nápadu k merchi — ve 4 krocích",
@@ -273,21 +273,21 @@
     "discount": "Sleva",
     "mm": "mm",
     "embroidery": "Výšivka",
-    "label": "Online constructor",
+    "label": "Online editor",
     "heading": "Vyzkoušejte to přímo tady",
     "desc": "Vyberte barvu a nahrajte svůj obrázek — uvidíte, jak bude váš kousek vypadat.",
-    "openEditor": "Open constructor",
-    "productLabel": "Product",
-    "colorLabel": "Color",
-    "printsLabel": "Prints",
+    "openEditor": "Otevřít editor",
+    "productLabel": "Produkt",
+    "colorLabel": "Barva",
+    "printsLabel": "Potisky",
     "textLabel": "Text",
-    "fileLabel": "File",
-    "volumeLabel": "Volume & price",
-    "totalLabel": "Total",
-    "saved": "Draft saved",
-    "layersReady": "Layers ready",
-    "priceUpdated": "Price updated",
-    "sizeLabel": "Size"
+    "fileLabel": "Soubor",
+    "volumeLabel": "Množství a cena",
+    "totalLabel": "Celkem",
+    "saved": "Koncept uložen",
+    "layersReady": "Vrstvy připraveny",
+    "priceUpdated": "Cena aktualizována",
+    "sizeLabel": "Velikost"
   },
   "trust": {
     "statsLabel": "Klíčová čísla",
@@ -1169,5 +1169,271 @@
     "backToSite": "Na web",
     "showcaseItem": "Recenze {n}",
     "close": "Zavřít"
+  },
+  "editor": {
+    "common": {
+      "addToOrder": "Přidat do objednávky",
+      "adding": "Přidáváme...",
+      "all": "Vše",
+      "back": "Zpět",
+      "cancel": "Zrušit",
+      "change": "Změnit",
+      "close": "Zavřít",
+      "collapse": "Sbalit",
+      "color": "Barva",
+      "delete": "Smazat",
+      "expand": "Rozbalit",
+      "fromPrice": "od {price} ₴",
+      "fromPricePer": "od {price} ₴ / ks",
+      "generate": "Vygenerovat",
+      "generating": "Generuji…",
+      "home": "Na úvod",
+      "leaveConfirm": "Vrátit se? Neuložené změny budou ztraceny.",
+      "noColors": "Barvy nejsou nastaveny",
+      "perUnit": "/ks",
+      "print": "Potisk",
+      "productSettings": "Nastavení produktu",
+      "qty": "Množství",
+      "qtyPrice": "Množství a cena",
+      "removingBg": "Odstraňujeme pozadí...",
+      "resetSearch": "Vymazat hledání",
+      "retry": "Zkusit znovu",
+      "retryShort": "Znovu",
+      "settings": "Nastavení",
+      "size": "Velikost"
+    },
+    "tabs": {
+      "prints": "Potisky",
+      "draw": "Kresba",
+      "text": "Text",
+      "upload": "Soubor",
+      "layers": "Vrstvy",
+      "uploadTitle": "Nahrát",
+      "toolsLabel": "Nástroje editoru"
+    },
+    "errorPage": {
+      "title": "Katalog se nepodařilo načíst",
+      "text": "Stránka objednávky se nenačetla. Zkuste to znovu nebo se vraťte na úvod."
+    },
+    "main": {
+      "restoreFailed": "Uložený košík se nepodařilo obnovit. Data zůstala uložena.",
+      "linkFailed": "Odkaz se nepodařilo otevřít",
+      "linkProductGone": "Produkt z odkazu už není dostupný",
+      "catalogFailed": "Katalog se nepodařilo načíst",
+      "catalogFailedReload": "Katalog se nepodařilo načíst. Obnovte stránku."
+    },
+    "grid": {
+      "title": "Vyberte kousek",
+      "subtitle": "Klepněte na kousek, upravte ho a přidejte do objednávky",
+      "empty": "V této kategorii zatím nejsou produkty"
+    },
+    "genButton": {
+      "label": "Zobrazit na člověku",
+      "needsDesign": "Nejdřív přidejte design"
+    },
+    "textPanel": {
+      "search": "Hledat kompozice…",
+      "add": "Přidat textový blok"
+    },
+    "shapes": {
+      "title": "Tvary",
+      "search": "Hledat tvary…",
+      "empty": "Žádné tvary nenalezeny.",
+      "resetFilters": "Zrušit filtry"
+    },
+    "ai": {
+      "noImage": "Odpověď neobsahovala obrázek.",
+      "timeout": "Vypršel časový limit. Zkuste to znovu.",
+      "failed": "Obrázek se nepodařilo vygenerovat. Zkuste to znovu."
+    },
+    "state": {
+      "restored": "Předchozí úpravy byly obnoveny",
+      "chooseGarmentSize": "Vyberte velikost.",
+      "choosePrintSizes": "Vyberte velikost pro každý potisk."
+    },
+    "qty": {
+      "fromQty": "od {n}",
+      "methods": {
+        "embroidery": "Výšivka",
+        "screen": "Sítotisk",
+        "sublimation": "Sublimace",
+        "patch": "Nášivka"
+      },
+      "product": "Kousek",
+      "chooseSize": "Vyberte velikost",
+      "savings": "Ušetříte",
+      "total": "Celkem",
+      "totalLine": "{qty} ks × {price} ₴",
+      "noteLabel": "Upozornění:",
+      "noteText": "Ceny jsou orientační. Konečná cena se může změnit po potvrzení manažerem.",
+      "itemNote": "Poznámka k položce",
+      "notePlaceholder": "Zvláštní přání..."
+    },
+    "layout": {
+      "removeBgTitle": "Odstraňujeme pozadí pomocí AI",
+      "removeBgText": "Chvíli strpení. Zpracování ve vysoké kvalitě trvá 15–20 sekund."
+    },
+    "customizer": {
+      "commentFailed": "Komentář se nepodařilo přidat",
+      "previewTitle": "Náhled návrhu",
+      "previewSignIn": "Přihlaste se a upravte tento návrh.",
+      "previewViewOnly": "Tento odkaz je jen pro čtení. Vlastník vypnul úpravy.",
+      "previewViewComment": "Tento odkaz umožňuje prohlížení a komentáře. Vlastník vypnul úpravy.",
+      "signInToEdit": "Přihlásit se k úpravám",
+      "comments": "Komentáře",
+      "noLayers": "Zatím žádné vrstvy. Přidejte obrázek nebo text.",
+      "tryOn": "Vyzkoušet na člověku",
+      "withAi": "Pomocí AI"
+    },
+    "gen": {
+      "presets": {
+        "0": "přátelé na večírku na střeše",
+        "1": "člověk na podzimní procházce městem",
+        "2": "barista v útulné kavárně",
+        "3": "hudebník na koncertě pod širým nebem",
+        "4": "skejťák v městském parku",
+        "5": "tým na firemním večírku",
+        "6": "student na kampusu",
+        "7": "pár na letním festivalu"
+      },
+      "progress": {
+        "0": "Analyzujeme zadání...",
+        "1": "Vybíráme vzhled...",
+        "2": "Umisťujeme design...",
+        "3": "Poslední úpravy..."
+      },
+      "inProgress": "Probíhá generování…",
+      "tapToView": "Klepnutím zobrazíte",
+      "yourPhoto": "Vaše fotka",
+      "photoUploaded": "Fotka nahrána",
+      "removePhoto": "Odebrat fotku",
+      "uploadPhoto": "Nahrajte svou fotku",
+      "cameraOrGallery": "Otevře fotoaparát nebo galerii",
+      "title": "Prohlédněte si to na člověku",
+      "subtitle": "AI ukáže, jak váš design vypadá ve skutečnosti",
+      "alreadyRunning": "Generování už probíhá",
+      "result": "Výsledek",
+      "usedFree": "Bezplatné generování pro tento kousek jste už využili.",
+      "viewResult": "Zobrazit výsledek",
+      "tabSelfie": "Vlastní fotka",
+      "tabScene": "Scéna",
+      "sceneLabel": "Popis scény",
+      "scenePlaceholder": "Popište scénu nebo vyberte nápad…",
+      "emptySide": "Tato strana je prázdná. Použijeme design ze strany „{side}“.",
+      "quotaUsed": "Využili jste všechna bezplatná generování ({n})",
+      "generatingShort": "Generujeme…"
+    },
+    "toolbar": {
+      "opacity": "Průhlednost",
+      "fontSearch": "Hledat písmo...",
+      "nothingFound": "Nic nenalezeno",
+      "bold": "Tučné",
+      "italic": "Kurzíva",
+      "textColor": "Barva textu",
+      "alignLeft": "Vlevo",
+      "alignCenter": "Na střed",
+      "alignRight": "Vpravo",
+      "arc": "Oblouk",
+      "letterSpacing": "Mezery mezi písmeny",
+      "lineHeight": "Řádkování",
+      "fill": "Výplň",
+      "stroke": "Obrys",
+      "fillColor": "Barva výplně",
+      "strokeColor": "Barva obrysu",
+      "removeBg": "Odstranit pozadí",
+      "editDrawing": "Upravit kresbu",
+      "center": "Vycentrovat",
+      "flip": "Zrcadlit",
+      "duplicate": "Duplikovat",
+      "fontCategories": {
+        "grotesque": "Bezpatkové",
+        "condensed": "Zúžené",
+        "serif": "Patkové",
+        "display": "Titulkové",
+        "decorative": "Dekorativní",
+        "handwritten": "Ručně psané",
+        "technical": "Technické"
+      }
+    },
+    "prints": {
+      "prompts": {
+        "0": "Kočka astronautka v retro stylu, výrazné barvy",
+        "1": "Minimalistické hory a slunce, linková kresba",
+        "2": "Kytice lučních květin, akvarel",
+        "3": "Nápis „Good vibes“ ve stylu 70. let",
+        "4": "Pixelový drak ve stylu retro her",
+        "5": "Vlna v japonském stylu, modrá paleta",
+        "6": "Hrnek kávy se srdcem, flat design",
+        "7": "Sova s knihou, vektorová ilustrace"
+      },
+      "aiTitle": "AI ilustrace",
+      "aiDesc": "Vytvářejte ilustrace k tisku podle textového popisu.",
+      "aiLabel": "Popis pro AI ilustraci",
+      "loadFailed": "Potisky se nepodařilo načíst",
+      "ready": "Hotové potisky",
+      "search": "Hledat potisky…",
+      "empty": "Žádné potisky nenalezeny."
+    },
+    "upload": {
+      "badType": "Nepodporovaný typ souboru „{type}“. Použijte PNG, JPG/JPEG, SVG nebo PDF.",
+      "tooLarge": "Soubor je příliš velký ({size} MB). Maximum: {max}.",
+      "addAgain": "Znovu přidat „{name}“",
+      "addFailed": "„{name}“ se nepodařilo přidat. Zkuste to znovu.",
+      "title": "Nahrát soubor",
+      "dropLabel": "Nahrát soubor: klikněte nebo ho přetáhněte sem",
+      "uploading": "Nahrávání…",
+      "dropRelease": "Pusťte pro nahrání",
+      "dropHint": "Klikněte nebo přetáhněte soubor",
+      "formats": "PNG, JPG, SVG, PDF · až 20 MB",
+      "choose": "Vybrat soubor",
+      "recent": "Nedávno nahrané",
+      "noRecent": "Zatím nic nenahráno.",
+      "recentHint": "Nahrané soubory se objeví tady, abyste je mohli rychle použít znovu."
+    },
+    "canvas": {
+      "defaultText": "Text",
+      "undo": "Zpět",
+      "undoTitle": "Zpět (Ctrl+Z)",
+      "redo": "Znovu",
+      "redoTitle": "Znovu (Ctrl+Shift+Z)",
+      "copy": "Kopie",
+      "fontSmaller": "Zmenšit písmo",
+      "fontBigger": "Zvětšit písmo",
+      "boldShort": "T",
+      "italicShort": "K",
+      "removeBgFailed": "Pozadí se nepodařilo odstranit. Zkuste to znovu.",
+      "bgShort": "Pozadí",
+      "edit": "Upravit",
+      "layerOpacity": "Průhlednost vrstvy",
+      "deleteLayer": "Smazat vrstvu",
+      "loadingImage": "Načítání obrázku...",
+      "sides": {
+        "front": "Přední",
+        "back": "Zadní",
+        "left": "Levá",
+        "right": "Pravá"
+      }
+    },
+    "layers": {
+      "layer": "Vrstva",
+      "setupTitle": "Nastavte vrstvu",
+      "setupText": "Vyberte typ a velikost potisku. Cena se aktualizuje automaticky.",
+      "printType": "Typ potisku",
+      "printSize": "Velikost potisku",
+      "image": "Obrázek"
+    },
+    "paywall": {
+      "title": "AI vyžaduje účet",
+      "text": "Zaregistrujte se zdarma a získejte 3 bezplatná AI generování",
+      "register": "Zaregistrovat se",
+      "login": "Přihlásit se",
+      "skip": "Pokračovat bez účtu"
+    }
+  },
+  "sizeChart": {
+    "title": "Tabulka velikostí",
+    "empty": "Tabulka je prázdná",
+    "schemeAlt": "{name}: schéma velikostí",
+    "note": "Všechny rozměry jsou v centimetrech. Pokud jste mezi dvěma velikostmi, zvolte větší."
   }
 }

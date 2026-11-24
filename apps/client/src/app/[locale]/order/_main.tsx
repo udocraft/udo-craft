@@ -80,6 +80,7 @@ export function OrderPageInner({
 
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const t = useTranslations("checkout");
+  const tE = useTranslations("editor");
   // "contact" is the single checkout page (contact, delivery, payment, summary).
   const [step, setStep] = useState<"select" | "contact">("select");
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -123,7 +124,7 @@ export function OrderPageInner({
       if (!legacyRaw) return;
       const migratedCart = migrateLegacyCheckoutCart(JSON.parse(legacyRaw));
       if (!migratedCart) {
-        toast.error("Не вдалося відновити збережений кошик. Дані залишилися збереженими.");
+        toast.error(tE("main.restoreFailed"));
         return;
       }
 
@@ -140,7 +141,7 @@ export function OrderPageInner({
       setCart(migratedCart);
     } catch (error) {
       console.error("Failed to restore the saved order cart", error);
-      toast.error("Не вдалося відновити збережений кошик. Дані залишилися збереженими.");
+      toast.error(tE("main.restoreFailed"));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -168,13 +169,13 @@ export function OrderPageInner({
     if (shareToken) {
       fetch(`/api/customizer-shares/${encodeURIComponent(shareToken)}`)
         .then(async (r) => {
-          if (!r.ok) throw new Error((await r.json()).error ?? "Не вдалося відкрити посилання");
+          if (!r.ok) throw new Error((await r.json()).error ?? tE("main.linkFailed"));
           return r.json() as Promise<LoadedCustomizerShare>;
         })
         .then((share) => {
           const p = products.find((x) => x.id === share.productId);
           if (!p) {
-            toast.error("Товар із посилання більше недоступний");
+            toast.error(tE("main.linkProductGone"));
             return;
           }
           setActiveShare(share);
@@ -182,7 +183,7 @@ export function OrderPageInner({
           setCustomizerInitialColor(share.payload.selectedColor);
           setCustomizing(p);
         })
-        .catch((err) => toast.error(err instanceof Error ? err.message : "Не вдалося відкрити посилання"));
+        .catch((err) => toast.error(err instanceof Error ? err.message : tE("main.linkFailed")));
       return;
     }
     const pid = searchParams.get("product");
@@ -255,14 +256,14 @@ export function OrderPageInner({
   if (loadError && products.length === 0) {
     return (
       <main id="main" className="flex min-h-[60vh] flex-col items-center justify-center gap-3 px-6 text-center">
-        <p className="text-lg font-bold">Не вдалося завантажити каталог</p>
+        <p className="text-lg font-bold">{tE("main.catalogFailed")}</p>
         <p className="max-w-md text-sm text-muted-foreground">{loadError}</p>
         <button
           type="button"
           onClick={() => window.location.reload()}
           className="mt-2 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90"
         >
-          Спробувати ще раз
+          {tE("common.retry")}
         </button>
       </main>
     );
