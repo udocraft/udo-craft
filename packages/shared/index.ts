@@ -787,6 +787,30 @@ export const VerifyOtpRequestSchema = z.object({
     .max(128, "Пароль задовгий"),
 });
 
+/** POST /api/auth/passkey/register/options */
+export const PasskeyRegisterOptionsRequestSchema = z.object({
+  email: emailField,
+  name: z.string().trim().min(1, "Name is required").max(100),
+});
+
+/** POST /api/auth/passkey/{register,login}/verify. The WebAuthn response is checked by @simplewebauthn/server. */
+export const PasskeyVerifyRequestSchema = z.object({
+  response: z.object({ id: z.string().min(1).max(1024) }).passthrough(),
+});
+
+/** POST /api/auth/telegram: the Telegram Login widget payload. Extra fields are kept for the signature check. */
+export const TelegramLoginRequestSchema = z
+  .object({
+    id: z.number().int().positive(),
+    auth_date: z.number().int().positive(),
+    hash: z.string().regex(/^[0-9a-f]{64}$/, "Invalid Telegram login"),
+    first_name: z.string().max(256).optional(),
+    last_name: z.string().max(256).optional(),
+    username: z.string().max(64).optional(),
+    photo_url: z.string().max(2048).optional(),
+  })
+  .passthrough();
+
 /** POST /api/cabinet/messages */
 export const CabinetMessageRequestSchema = z
   .object({
