@@ -671,7 +671,8 @@
       "attachLabel": "Joindre un fichier",
       "loading": "Chargement des messages...",
       "empty": "Pas encore de messages",
-      "fileTooLarge": "\"{name}\" dépasse 10 Mo"
+      "fileTooLarge": "\"{name}\" dépasse 10 Mo",
+      "sendError": "Impossible d'envoyer le message. Veuillez réessayer."
     },
     "files": {
       "empty": "Pas encore de fichiers",
@@ -696,6 +697,66 @@
     "order": {
       "back": "Toutes les commandes",
       "notFound": "Commande introuvable"
+    },
+    "errorPage": {
+      "title": "Erreur de l'espace client",
+      "text": "Impossible de charger votre espace. Réessayez ou revenez à l'accueil.",
+      "retry": "Réessayer",
+      "home": "Accueil"
+    },
+    "file": "Fichier",
+    "productFallback": "Produit ({color})",
+    "profile": {
+      "saved": "Profil mis à jour",
+      "saveFailed": "Impossible d'enregistrer le profil. Vérifiez votre connexion et réessayez.",
+      "title": "Profil",
+      "subtitle": "Vos coordonnées pour les commandes",
+      "name": "Nom et prénom",
+      "namePlaceholder": "Marie Dupont",
+      "company": "Nom de l'entreprise",
+      "companyPlaceholder": "Société SARL",
+      "phone": "Téléphone",
+      "edrpou": "N° fiscal / coordonnées de l'entreprise",
+      "socialPlaceholder": "@utilisateur ou lien",
+      "saving": "Enregistrement...",
+      "save": "Enregistrer le profil"
+    },
+    "security": {
+      "min": "Le nouveau mot de passe doit contenir au moins 8 caractères.",
+      "mismatch": "Les mots de passe ne correspondent pas.",
+      "same": "Le nouveau mot de passe doit être différent de l'actuel.",
+      "wrongCurrent": "Le mot de passe actuel est incorrect.",
+      "changed": "Mot de passe modifié",
+      "changeFailed": "Impossible de modifier le mot de passe. Vérifiez votre connexion et réessayez.",
+      "title": "Sécurité",
+      "subtitle": "Modifiez le mot de passe de votre espace",
+      "current": "Mot de passe actuel",
+      "currentPlaceholder": "Saisissez le mot de passe actuel",
+      "new": "Nouveau mot de passe",
+      "newPlaceholder": "Au moins 8 caractères",
+      "confirm": "Confirmer le nouveau mot de passe",
+      "confirmPlaceholder": "Répétez le nouveau mot de passe",
+      "changing": "Modification...",
+      "change": "Modifier le mot de passe"
+    },
+    "prints": {
+      "title": "Mes visuels",
+      "subtitle": "Fichiers que vous avez importés pour l'impression. Vous seul pouvez les voir.",
+      "dropHint": "Déposez vos fichiers ici",
+      "formats": "JPG, PNG, WebP, GIF ou PDF, jusqu'à 10 Mo",
+      "pickFiles": "Choisir des fichiers",
+      "uploading": "Import…",
+      "empty": "Aucun fichier pour l'instant. Importez votre premier visuel.",
+      "delete": "Supprimer le fichier",
+      "confirmDelete": "Supprimer ce fichier ? Cette action est irréversible.",
+      "loadError": "Impossible de charger les fichiers",
+      "uploadError": "Impossible d'importer le fichier",
+      "deleteError": "Impossible de supprimer le fichier",
+      "status": {
+        "uploaded": "En cours de vérification",
+        "approved": "Approuvé",
+        "rejected": "Refusé"
+      }
     }
   },
   "popup": {
@@ -1013,5 +1074,100 @@
       "heading": "Du merch pour votre équipe ou votre événement ?",
       "text": "Vêtements d'entreprise, stands pop-up et personnalisation : sur une page dédiée aux entreprises."
     }
+  },
+  "auth": {
+    "errors": {
+      "googleFailed": "Connexion avec Google impossible. Veuillez réessayer.",
+      "passkeyNeedsNameEmail": "Saisissez votre nom et votre e-mail pour créer un compte avec passkey.",
+      "invalidCredentials": "E-mail ou mot de passe incorrect.",
+      "passwordMin": "Le mot de passe doit contenir au moins 8 caractères.",
+      "emailExistsRegister": "Cet e-mail est déjà enregistré. Connectez-vous ou réinitialisez votre mot de passe.",
+      "codeSendFailed": "Impossible d'envoyer le code. Veuillez réessayer.",
+      "codeInvalid": "Code incorrect. Vérifiez votre e-mail et réessayez.",
+      "codeExpired": "Le code a expiré. Demandez-en un nouveau.",
+      "tooManyAttempts": "Trop de tentatives. Demandez un nouveau code dans quelques minutes.",
+      "emailExistsLogin": "Cet e-mail est déjà enregistré. Essayez de vous connecter.",
+      "registerFailed": "L'inscription a échoué. Veuillez réessayer.",
+      "resetSendFailed": "Impossible d'envoyer le code. Vérifiez l'adresse e-mail.",
+      "passwordsMismatch": "Les mots de passe ne correspondent pas.",
+      "resetFailed": "Code incorrect ou expiré. Demandez-en un nouveau.",
+      "generic": "Une erreur s'est produite. Veuillez réessayer.",
+      "emailFormat": "Vérifiez le format de l'e-mail"
+    },
+    "notices": {
+      "passkeyCheckEmail": "Nous avons envoyé un e-mail à {email}. Confirmez-le, puis connectez-vous avec votre passkey.",
+      "accountCreated": "Compte créé. Connectez-vous avec votre e-mail et votre mot de passe.",
+      "passwordChanged": "Mot de passe modifié. Connectez-vous avec le nouveau mot de passe."
+    },
+    "social": {
+      "google": "Continuer avec Google",
+      "telegram": "Continuer avec Telegram",
+      "passkey": "Continuer avec une passkey",
+      "or": "ou"
+    },
+    "login": {
+      "title": "Bon retour",
+      "subtitle": "Connectez-vous pour poursuivre votre commande.",
+      "forgot": "Mot de passe oublié ?",
+      "signingIn": "Connexion...",
+      "submit": "Se connecter"
+    },
+    "register": {
+      "title": "Créer un compte",
+      "subtitle": "Cela prend moins d'une minute.",
+      "sendingCode": "Envoi du code...",
+      "continue": "Continuer"
+    },
+    "fields": {
+      "name": "Votre nom",
+      "namePlaceholder": "Marie Dupont",
+      "company": "Entreprise",
+      "companyPlaceholder": "Nom de l'entreprise",
+      "phone": "Téléphone",
+      "password": "Mot de passe",
+      "passwordMin": "Au moins 8 caractères",
+      "confirmPassword": "Confirmer le mot de passe",
+      "repeatPassword": "Répétez le mot de passe",
+      "hide": "Masquer",
+      "show": "Afficher"
+    },
+    "verify": {
+      "back": "Retour",
+      "title": "Vérifiez vos e-mails",
+      "sentTo": "Nous avons envoyé un code à 6 chiffres à",
+      "checking": "Vérification...",
+      "confirm": "Confirmer",
+      "digit": "Chiffre {n}"
+    },
+    "reset": {
+      "backToLogin": "Retour à la connexion",
+      "title": "Réinitialiser le mot de passe",
+      "subtitle": "Saisissez votre e-mail : nous vous enverrons un code à 6 chiffres.",
+      "sending": "Envoi...",
+      "sendCode": "Envoyer le code",
+      "changeEmail": "Changer d'e-mail",
+      "enterCode": "Saisissez le code",
+      "newTitle": "Nouveau mot de passe",
+      "newSubtitle": "Choisissez un nouveau mot de passe sécurisé.",
+      "saving": "Enregistrement...",
+      "save": "Enregistrer le mot de passe"
+    },
+    "modes": {
+      "login": "Connexion",
+      "register": "Inscription"
+    },
+    "resend": {
+      "noCode": "Vous n'avez pas reçu le code ?",
+      "in": "Renvoyer dans {s} s",
+      "now": "Renvoyer"
+    },
+    "strength": {
+      "length": "8+ caractères",
+      "upper": "Majuscule",
+      "digit": "Chiffre"
+    },
+    "backToSite": "Retour au site",
+    "showcaseItem": "Avis {n}",
+    "close": "Fermer"
   }
 }

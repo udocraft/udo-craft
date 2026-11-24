@@ -671,7 +671,8 @@
       "attachLabel": "Bifoga fil",
       "loading": "Laddar meddelanden...",
       "empty": "Inga meddelanden ännu",
-      "fileTooLarge": "\"{name}\" överstiger 10 MB"
+      "fileTooLarge": "\"{name}\" överstiger 10 MB",
+      "sendError": "Det gick inte att skicka meddelandet. Försök igen."
     },
     "files": {
       "empty": "Inga filer ännu",
@@ -696,6 +697,66 @@
     "order": {
       "back": "Alla beställningar",
       "notFound": "Beställningen hittades inte"
+    },
+    "errorPage": {
+      "title": "Fel i kundkontot",
+      "text": "Det gick inte att läsa in kontot. Försök igen eller gå till startsidan.",
+      "retry": "Försök igen",
+      "home": "Till startsidan"
+    },
+    "file": "Fil",
+    "productFallback": "Produkt ({color})",
+    "profile": {
+      "saved": "Profilen har uppdaterats",
+      "saveFailed": "Det gick inte att spara profilen. Kontrollera anslutningen och försök igen.",
+      "title": "Profil",
+      "subtitle": "Dina kontaktuppgifter för beställningar",
+      "name": "För- och efternamn",
+      "namePlaceholder": "Anna Andersson",
+      "company": "Företagsnamn",
+      "companyPlaceholder": "Företag AB",
+      "phone": "Telefon",
+      "edrpou": "Org.nr / företagsuppgifter",
+      "socialPlaceholder": "@användarnamn eller länk",
+      "saving": "Sparar...",
+      "save": "Spara profil"
+    },
+    "security": {
+      "min": "Det nya lösenordet måste ha minst 8 tecken.",
+      "mismatch": "Lösenorden matchar inte.",
+      "same": "Det nya lösenordet måste skilja sig från det nuvarande.",
+      "wrongCurrent": "Det nuvarande lösenordet är fel.",
+      "changed": "Lösenordet har ändrats",
+      "changeFailed": "Det gick inte att ändra lösenordet. Kontrollera anslutningen och försök igen.",
+      "title": "Säkerhet",
+      "subtitle": "Ändra lösenordet till ditt konto",
+      "current": "Nuvarande lösenord",
+      "currentPlaceholder": "Ange ditt nuvarande lösenord",
+      "new": "Nytt lösenord",
+      "newPlaceholder": "Minst 8 tecken",
+      "confirm": "Bekräfta nytt lösenord",
+      "confirmPlaceholder": "Upprepa det nya lösenordet",
+      "changing": "Ändrar...",
+      "change": "Ändra lösenord"
+    },
+    "prints": {
+      "title": "Mina tryck",
+      "subtitle": "Filer du har laddat upp för tryck. Bara du kan se dem.",
+      "dropHint": "Släpp filerna här",
+      "formats": "JPG, PNG, WebP, GIF eller PDF, upp till 10 MB",
+      "pickFiles": "Välj filer",
+      "uploading": "Laddar upp…",
+      "empty": "Inga filer än. Ladda upp ditt första tryck.",
+      "delete": "Ta bort fil",
+      "confirmDelete": "Ta bort den här filen? Det går inte att ångra.",
+      "loadError": "Det gick inte att läsa in filerna",
+      "uploadError": "Det gick inte att ladda upp filen",
+      "deleteError": "Det gick inte att ta bort filen",
+      "status": {
+        "uploaded": "Granskas",
+        "approved": "Godkänd",
+        "rejected": "Avvisad"
+      }
     }
   },
   "popup": {
@@ -1013,5 +1074,100 @@
       "heading": "Merch till ditt team eller event?",
       "text": "Företagskläder, popup-montrar och branding — på en egen sida för företag."
     }
+  },
+  "auth": {
+    "errors": {
+      "googleFailed": "Det gick inte att logga in med Google. Försök igen.",
+      "passkeyNeedsNameEmail": "Ange namn och e-post för att skapa ett konto med passkey.",
+      "invalidCredentials": "Fel e-post eller lösenord.",
+      "passwordMin": "Lösenordet måste ha minst 8 tecken.",
+      "emailExistsRegister": "E-postadressen är redan registrerad. Logga in eller återställ lösenordet.",
+      "codeSendFailed": "Det gick inte att skicka koden. Försök igen.",
+      "codeInvalid": "Fel kod. Kontrollera din e-post och försök igen.",
+      "codeExpired": "Koden har gått ut. Begär en ny.",
+      "tooManyAttempts": "För många försök. Begär en ny kod om några minuter.",
+      "emailExistsLogin": "E-postadressen är redan registrerad. Försök logga in.",
+      "registerFailed": "Registreringen misslyckades. Försök igen.",
+      "resetSendFailed": "Det gick inte att skicka koden. Kontrollera e-postadressen.",
+      "passwordsMismatch": "Lösenorden matchar inte.",
+      "resetFailed": "Fel eller utgången kod. Begär en ny.",
+      "generic": "Något gick fel. Försök igen.",
+      "emailFormat": "Kontrollera e-postformatet"
+    },
+    "notices": {
+      "passkeyCheckEmail": "Vi har skickat ett mejl till {email}. Bekräfta det och logga sedan in med din passkey.",
+      "accountCreated": "Kontot har skapats. Logga in med e-post och lösenord.",
+      "passwordChanged": "Lösenordet har ändrats. Logga in med det nya lösenordet."
+    },
+    "social": {
+      "google": "Fortsätt med Google",
+      "telegram": "Fortsätt med Telegram",
+      "passkey": "Fortsätt med passkey",
+      "or": "eller"
+    },
+    "login": {
+      "title": "Välkommen tillbaka",
+      "subtitle": "Logga in för att fortsätta din beställning.",
+      "forgot": "Glömt lösenordet?",
+      "signingIn": "Loggar in...",
+      "submit": "Logga in"
+    },
+    "register": {
+      "title": "Skapa konto",
+      "subtitle": "Det tar mindre än en minut.",
+      "sendingCode": "Skickar kod...",
+      "continue": "Fortsätt"
+    },
+    "fields": {
+      "name": "Ditt namn",
+      "namePlaceholder": "Anna Andersson",
+      "company": "Företag",
+      "companyPlaceholder": "Företagsnamn",
+      "phone": "Telefon",
+      "password": "Lösenord",
+      "passwordMin": "Minst 8 tecken",
+      "confirmPassword": "Bekräfta lösenord",
+      "repeatPassword": "Upprepa lösenordet",
+      "hide": "Dölj",
+      "show": "Visa"
+    },
+    "verify": {
+      "back": "Tillbaka",
+      "title": "Kolla din e-post",
+      "sentTo": "Vi har skickat en 6-siffrig kod till",
+      "checking": "Kontrollerar...",
+      "confirm": "Bekräfta",
+      "digit": "Siffra {n}"
+    },
+    "reset": {
+      "backToLogin": "Tillbaka till inloggning",
+      "title": "Återställ lösenord",
+      "subtitle": "Ange din e-post så skickar vi en 6-siffrig kod.",
+      "sending": "Skickar...",
+      "sendCode": "Skicka kod",
+      "changeEmail": "Ändra e-post",
+      "enterCode": "Ange koden",
+      "newTitle": "Nytt lösenord",
+      "newSubtitle": "Välj ett nytt, säkert lösenord.",
+      "saving": "Sparar...",
+      "save": "Spara lösenord"
+    },
+    "modes": {
+      "login": "Logga in",
+      "register": "Registrera"
+    },
+    "resend": {
+      "noCode": "Fick du ingen kod?",
+      "in": "Skicka igen om {s} s",
+      "now": "Skicka igen"
+    },
+    "strength": {
+      "length": "8+ tecken",
+      "upper": "Stor bokstav",
+      "digit": "Siffra"
+    },
+    "backToSite": "Till webbplatsen",
+    "showcaseItem": "Omdöme {n}",
+    "close": "Stäng"
   }
 }
