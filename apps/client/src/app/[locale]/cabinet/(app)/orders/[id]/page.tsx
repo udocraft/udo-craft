@@ -76,7 +76,7 @@ export default function OrderPage({ params }: { params: Promise<{ id: string }> 
       const totalQty = lead.order_items?.reduce((s, i) => s + i.quantity, 0) || 1;
       await generateInvoicePDF({
         items: (lead.order_items || []).map((item) => ({
-          productName: `Товар (${item.color})`,
+          productName: t("productFallback", { color: item.color }),
           size: item.size,
           color: item.color,
           quantity: item.quantity,
@@ -211,7 +211,7 @@ export default function OrderPage({ params }: { params: Promise<{ id: string }> 
                   ) : (
                     <button key={i} onClick={() => setViewerUrl(url)} aria-label={t("files.openFile")} className="flex aspect-square flex-col items-center justify-center gap-1.5 rounded-md border border-border bg-muted p-2 transition-colors hover:bg-muted/70">
                       <FileText className="size-6 shrink-0 text-muted-foreground" />
-                      <span className="w-full truncate text-center text-xs leading-tight text-muted-foreground">{decodeURIComponent(url.split("/").pop()?.split("?")[0] || "Файл")}</span>
+                      <span className="w-full truncate text-center text-xs leading-tight text-muted-foreground">{decodeURIComponent(url.split("/").pop()?.split("?")[0] || t("file"))}</span>
                     </button>
                   ),
                 )}

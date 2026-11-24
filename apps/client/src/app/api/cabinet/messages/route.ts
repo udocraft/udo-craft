@@ -2,6 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { CabinetMessageRequestSchema } from "@udo-craft/shared";
 import { parseJsonBody } from "@/lib/api/request";
+import { ilikeExact } from "@/lib/auth/email-match";
+import { createServiceClient } from "@/lib/supabase/service";
 
 // This route reads and writes messages for the currently authenticated user's leads.
 // We use the session-based createClient() throughout so that Supabase RLS policies
@@ -24,7 +26,7 @@ export async function GET(request: NextRequest) {
     .from("leads")
     .select("id, customer_data")
     .eq("id", leadId)
-    .eq("customer_data->>email", user.email)
+    .ilike("customer_data->>email", ilikeExact(user.email ?? ""))
     .single();
 
   if (!lead) return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -37,12 +39,16 @@ export async function GET(request: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  // Mark unread manager messages as read
+  // Mark unread manager messages as read. Customers have no UPDATE policy on messages
+  // (they must not edit text), so this runs with the service role after the ownership
+  // check above, and only touches read_at on this lead's manager messages.
   const unread = (data || []).filter((m) => m.sender === "manager" && !m.read_at);
   if (unread.length) {
-    await supabase
+    await createServiceClient()
       .from("messages")
       .update({ read_at: new Date().toISOString() })
+      .eq("lead_id", leadId)
+      .eq("sender", "manager")
       .in("id", unread.map((m) => m.id));
     unread.forEach((m) => { m.read_at = new Date().toISOString(); });
   }
@@ -64,7 +70,7 @@ export async function POST(request: NextRequest) {
     .from("leads")
     .select("id")
     .eq("id", lead_id)
-    .eq("customer_data->>email", user.email)
+    .ilike("customer_data->>email", ilikeExact(user.email ?? ""))
     .single();
 
   if (!lead) return NextResponse.json({ error: "Not found" }, { status: 404 });

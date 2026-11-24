@@ -132,7 +132,7 @@ export function OrderChat({ lead, onOpenFile }: { lead: Lead; onOpenFile: (url: 
       setInput("");
       setPendingFiles([]);
     } catch (error) {
-      toast.error(`Помилка при відправці: ${error instanceof Error ? error.message : "невідома"}`);
+      toast.error(t("chat.sendError"));
     } finally {
       setSending(false);
       setUploading(false);
@@ -185,7 +185,7 @@ export function OrderChat({ lead, onOpenFile }: { lead: Lead; onOpenFile: (url: 
                             ) : (
                               <button key={i} onClick={() => onOpenFile(url)} className={`flex items-center gap-2 rounded-lg border px-2.5 py-2 text-xs transition-colors ${mine ? "border-primary-foreground/20 text-primary-foreground/80 hover:bg-primary-foreground/10" : "border-border text-foreground hover:bg-background"}`}>
                                 <FileText className="size-3.5 shrink-0" />
-                                <span className="truncate">{decodeURIComponent(url.split("/").pop()?.split("?")[0] || "Файл").slice(0, 20)}</span>
+                                <span className="truncate">{decodeURIComponent(url.split("/").pop()?.split("?")[0] || t("file")).slice(0, 20)}</span>
                               </button>
                             ),
                           )}

@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import type { Product, PrintZone, Material, ProductColorVariant } from "@udo-craft/shared";
@@ -25,6 +27,7 @@ interface ProductWithConfig extends Product {
 interface SizeChart { id: string; name: string; rows: Record<string, string>[]; }
 
 function OrderPageLoader() {
+  const t = useTranslations("editor");
   const searchParams = useSearchParams();
 
   const [products, setProducts] = useState<ProductWithConfig[]>([]);
@@ -86,7 +89,7 @@ function OrderPageLoader() {
     };
     load().catch(() => {
       if (cancelled) return;
-      setLoadError("Не вдалося завантажити каталог. Спробуйте оновити сторінку.");
+      setLoadError(t("main.catalogFailedReload"));
       setLoading(false);
     });
 

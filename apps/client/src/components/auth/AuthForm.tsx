@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type ComponentProps, type FormEvent, type ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, CheckCircle2, Loader2, Mail } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -28,16 +29,19 @@ const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
 export interface AuthFormProps {
   initialScreen?: AuthMode;
+  /** Prefills the email field (e.g. from the order the visitor just placed). */
+  initialEmail?: string;
   /** Called once after a successful sign-in or sign-up. */
   onAuthSuccess?: () => void;
 }
 
-export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormProps) {
+export function AuthForm({ initialScreen = "login", initialEmail = "", onAuthSuccess }: AuthFormProps) {
+  const t = useTranslations("auth");
   const [supabase] = useState(createClient);
   const [screen, setScreen] = useState<Screen>(initialScreen);
 
   // Shared credentials: switching login <-> register keeps what the user already typed.
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
   // Register-only fields
@@ -49,8 +53,8 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
 
-  // Email verification (register)
-  const [sentOtp, setSentOtp] = useState("");
+  // Email verification (register): the server emails the code and returns a signed token.
+  const [regToken, setRegToken] = useState("");
   const [otpInput, setOtpInput] = useState("");
   const [verifying, setVerifying] = useState(false);
 
@@ -99,7 +103,7 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
       options: { redirectTo: authCallbackUrl("/cabinet") },
     });
     if (err) {
-      fail("Не вдалося увійти через Google. Спробуйте ще раз.");
+      fail(t("errors.googleFailed"));
       setBusy(false);
     }
     // On success the browser leaves for Google, so busy stays set.
@@ -126,7 +130,7 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
     setError(null);
     setNotice(null);
     if (!name.trim() || !email.trim()) {
-      fail("Вкажіть ім'я та email, щоб створити акаунт з passkey.");
+      fail(t("errors.passkeyNeedsNameEmail"));
       return;
     }
     setBusy(true);
@@ -134,7 +138,7 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
     const err = await registerWithPasskey(supabase, name.trim(), email.trim());
     setBusy(false);
     if (err) fail(err);
-    else setNotice(`Ми надіслали лист на ${email.trim()}. Підтвердьте email, потім увійдіть через passkey.`);
+    else setNotice(t("notices.passkeyCheckEmail", { email: email.trim() }));
   };
 
   // ── Login ───────────────────────────────────────────────────────────────
@@ -147,7 +151,7 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
     sound.button();
     const { error: err } = await supabase.auth.signInWithPassword({ email, password });
     if (err) {
-      fail("Невірний email або пароль.");
+      fail(t("errors.invalidCredentials"));
       setBusy(false);
     } else {
       finish();
@@ -156,21 +160,23 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
 
   // ── Register: check email, send code, verify, create account ───────────
 
+  /** Asks the server to email a sign-up code; returns the signed token it hands back. */
   const sendOtp = async (): Promise<string> => {
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-    await fetch("/api/auth/send-otp", {
+    const res = await fetch("/api/auth/send-otp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, otp: code, name, type: "register" }),
+      body: JSON.stringify({ email, name, type: "register" }),
     });
-    return code;
+    const data = (await res.json().catch(() => ({}))) as { token?: string };
+    if (!res.ok || !data.token) throw new Error("send failed");
+    return data.token;
   };
 
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
     setNotice(null);
-    if (password.length < 8) return fail("Пароль має містити щонайменше 8 символів.");
+    if (password.length < 8) return fail(t("errors.passwordMin"));
     setBusy(true);
     sound.button();
     try {
@@ -182,18 +188,18 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
       if (checkRes.ok) {
         const { exists } = await checkRes.json();
         if (exists) {
-          fail("Цей email вже зареєстровано. Увійдіть або скористайтесь відновленням паролю.");
+          fail(t("errors.emailExistsRegister"));
           setBusy(false);
           return;
         }
       }
-      setSentOtp(await sendOtp());
+      setRegToken(await sendOtp());
       setOtpInput("");
       setResendCooldown(60);
       sound.open();
       setScreen("verify");
     } catch {
-      fail("Не вдалося надіслати код. Спробуйте ще раз.");
+      fail(t("errors.codeSendFailed"));
     } finally {
       setBusy(false);
     }
@@ -204,26 +210,21 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
     setVerifying(true);
     setError(null);
 
-    if (otpInput !== sentOtp) {
-      fail("Невірний код. Перевірте email та спробуйте ще раз.");
-      setVerifying(false);
-      return;
-    }
-
-    const { error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { full_name: name, company, phone },
-        emailRedirectTo: authCallbackUrl("/order"),
-      },
+    // The server checks the code against the token and creates a confirmed account.
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, otp: otpInput, token: regToken, password, name, company, phone }),
     });
-    if (signUpError) {
-      fail(
-        signUpError.message.includes("already registered")
-          ? "Цей email вже зареєстровано. Спробуйте увійти."
-          : "Помилка реєстрації. Спробуйте ще раз."
-      );
+    if (!res.ok) {
+      const { error: code } = (await res.json().catch(() => ({}))) as { error?: string };
+      const key =
+        code === "email_exists" ? "errors.emailExistsLogin"
+        : code === "code_expired" ? "errors.codeExpired"
+        : code === "too_many_attempts" ? "errors.tooManyAttempts"
+        : code === "code_invalid" ? "errors.codeInvalid"
+        : "errors.registerFailed";
+      fail(t(key));
       setVerifying(false);
       return;
     }
@@ -233,9 +234,8 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
     if (!signInError) {
       finish();
     } else {
-      // Account exists but could not sign in yet (e.g. email confirmation required).
       setPassword("");
-      setNotice("Акаунт створено. Увійдіть з вашим email і паролем.");
+      setNotice(t("notices.accountCreated"));
       setScreen("login");
     }
   };
@@ -244,7 +244,11 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
     if (resendCooldown > 0) return;
     setResendCooldown(60);
     setError(null);
-    setSentOtp(await sendOtp());
+    try {
+      setRegToken(await sendOtp());
+    } catch {
+      fail(t("errors.codeSendFailed"));
+    }
   };
 
   // ── Password reset ─────────────────────────────────────────────────────
@@ -265,7 +269,7 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
       setResendCooldown(60);
       setScreen("forgot-verify");
     } catch {
-      fail("Не вдалося надіслати код. Перевірте email.");
+      fail(t("errors.resetSendFailed"));
     } finally {
       setBusy(false);
     }
@@ -280,8 +284,8 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
   const handleResetPassword = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
-    if (resetPassword !== resetConfirm) return fail("Паролі не збігаються");
-    if (resetPassword.length < 8) return fail("Мінімум 8 символів");
+    if (resetPassword !== resetConfirm) return fail(t("errors.passwordsMismatch"));
+    if (resetPassword.length < 8) return fail(t("errors.passwordMin"));
 
     setBusy(true);
     sound.button();
@@ -293,7 +297,7 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
       });
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Помилка");
+        throw new Error(t("errors.resetFailed"));
       }
       const { error: err } = await supabase.auth.signInWithPassword({ email: resetEmail, password: resetPassword });
       if (!err) {
@@ -301,11 +305,11 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
       } else {
         setEmail(resetEmail);
         setPassword("");
-        setNotice("Пароль змінено. Увійдіть з новим паролем.");
+        setNotice(t("notices.passwordChanged"));
         setScreen("login");
       }
     } catch (err) {
-      fail(err instanceof Error ? err.message : "Помилка");
+      fail(err instanceof Error ? err.message : t("errors.generic"));
     } finally {
       setBusy(false);
     }
@@ -340,18 +344,18 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
     <div className="space-y-5">
       <div className="flex justify-center gap-3">
         {GOOGLE_ENABLED && (
-          <SocialButton label="Продовжити з Google" onClick={handleGoogle} disabled={busy}>
+          <SocialButton label={t("social.google")} onClick={handleGoogle} disabled={busy}>
             <GoogleIcon className="size-5" />
           </SocialButton>
         )}
         {TELEGRAM_BOT_ID && (
-          <SocialButton label="Продовжити з Telegram" onClick={handleTelegram} disabled={busy}>
+          <SocialButton label={t("social.telegram")} onClick={handleTelegram} disabled={busy}>
             <TelegramIcon className="size-6" />
           </SocialButton>
         )}
         {PASSKEY_ENABLED && (
           <SocialButton
-            label="Продовжити з passkey"
+            label={t("social.passkey")}
             onClick={screen === "register" ? handlePasskeyRegister : handlePasskeyLogin}
             disabled={busy}
           >
@@ -361,7 +365,7 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
       </div>
       <div className="flex items-center gap-3 text-xs text-muted-foreground">
         <span className="h-px flex-1 bg-border" />
-        або
+        {t("social.or")}
         <span className="h-px flex-1 bg-border" />
       </div>
     </div>
@@ -373,8 +377,8 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
       <div className="space-y-6">
         <div className="space-y-2">
           <AnimatedTitle
-            title={isRegister ? "Створіть акаунт" : "З поверненням"}
-            subtitle={isRegister ? "Це займе менше хвилини." : "Увійдіть, щоб продовжити замовлення."}
+            title={isRegister ? t("register.title") : t("login.title")}
+            subtitle={isRegister ? t("register.subtitle") : t("login.subtitle")}
           />
         </div>
 
@@ -395,9 +399,9 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
               >
                 {/* px/-mx keep the focus ring from being clipped by overflow-hidden */}
                 <div className="-mx-1 space-y-4 px-1 pb-4">
-                  <Field id="auth-name" label="Ваше ім'я" autoComplete="name" required value={name} onChange={setName} placeholder="Іван Петренко" />
-                  <Field id="auth-company" label="Компанія" autoComplete="organization" value={company} onChange={setCompany} placeholder="Назва компанії" />
-                  <Field id="auth-phone" label="Телефон" type="tel" autoComplete="tel" inputMode="tel" value={phone} onChange={setPhone} placeholder="+380 XX XXX XX XX" />
+                  <Field id="auth-name" label={t("fields.name")} autoComplete="name" required value={name} onChange={setName} placeholder={t("fields.namePlaceholder")} />
+                  <Field id="auth-company" label={t("fields.company")} autoComplete="organization" value={company} onChange={setCompany} placeholder={t("fields.companyPlaceholder")} />
+                  <Field id="auth-phone" label={t("fields.phone")} type="tel" autoComplete="tel" inputMode="tel" value={phone} onChange={setPhone} placeholder="+380 XX XXX XX XX" />
                 </div>
               </motion.div>
             )}
@@ -418,13 +422,13 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
 
           <Field
             id="auth-password"
-            label="Пароль"
+            label={t("fields.password")}
             type={showPw ? "text" : "password"}
             autoComplete={isRegister ? "new-password" : "current-password"}
             required
             value={password}
             onChange={setPassword}
-            placeholder={isRegister ? "Мінімум 8 символів" : "••••••••"}
+            placeholder={isRegister ? t("fields.passwordMin") : "••••••••"}
             labelRight={
               !isRegister ? (
                 <button
@@ -432,7 +436,7 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
                   onClick={() => { sound.select(); setResetEmail(email); setScreen("forgot"); }}
                   className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  Забули пароль?
+                  {t("login.forgot")}
                 </button>
               ) : null
             }
@@ -451,7 +455,7 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
 
           <Button type="submit" className="h-12 w-full rounded-xl text-base" disabled={busy}>
             {busy && <Loader2 className="mr-2 size-4 animate-spin" />}
-            {busy ? (isRegister ? "Надсилаємо код..." : "Входимо...") : isRegister ? "Продовжити" : "Увійти"}
+            {busy ? (isRegister ? t("register.sendingCode") : t("login.signingIn")) : isRegister ? t("register.continue") : t("login.submit")}
           </Button>
         </form>
       </div>
@@ -460,19 +464,19 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
 
   const renderVerify = () => (
     <div className="space-y-6">
-      <BackLink onClick={() => { sound.close(); setScreen("register"); }}>Назад</BackLink>
+      <BackLink onClick={() => { sound.close(); setScreen("register"); }}>{t("verify.back")}</BackLink>
       <div className="space-y-2 text-center">
         <IconBubble><Mail className="size-6 text-primary" /></IconBubble>
-        <h1 className="text-2xl font-bold tracking-tight">Перевірте email</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{t("verify.title")}</h1>
         <p className="text-sm text-muted-foreground">
-          Ми надіслали 6-значний код на <span className="font-medium text-foreground">{email}</span>
+          {t("verify.sentTo")} <span className="font-medium text-foreground">{email}</span>
         </p>
       </div>
       <OTPInput value={otpInput} onChange={(v) => { setOtpInput(v); setError(null); }} />
       {alerts()}
       <Button className="h-12 w-full rounded-xl text-base" onClick={() => { sound.button(); handleVerify(); }} disabled={otpInput.length !== 6 || verifying}>
         {verifying ? <Loader2 className="mr-2 size-4 animate-spin" /> : <CheckCircle2 className="mr-2 size-4" />}
-        {verifying ? "Перевіряємо..." : "Підтвердити"}
+        {verifying ? t("verify.checking") : t("verify.confirm")}
       </Button>
       <ResendLine cooldown={resendCooldown} onResend={handleResend} />
     </div>
@@ -480,17 +484,17 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
 
   const renderForgot = () => (
     <div className="space-y-6">
-      <BackLink onClick={() => { sound.close(); setScreen("login"); }}>Назад до входу</BackLink>
+      <BackLink onClick={() => { sound.close(); setScreen("login"); }}>{t("reset.backToLogin")}</BackLink>
       <div className="space-y-2">
-        <h1 className="text-2xl font-bold tracking-tight">Відновлення пароля</h1>
-        <p className="text-sm text-muted-foreground">Вкажіть email — ми надішлемо 6-значний код.</p>
+        <h1 className="text-2xl font-bold tracking-tight">{t("reset.title")}</h1>
+        <p className="text-sm text-muted-foreground">{t("reset.subtitle")}</p>
       </div>
       <form onSubmit={(e) => { e.preventDefault(); void sendResetCode(); }} className="space-y-4">
         <Field id="auth-reset-email" label="Email" type="email" autoComplete="email" required value={resetEmail} onChange={setResetEmail} placeholder="you@company.com" />
         {alerts()}
         <Button type="submit" className="h-12 w-full rounded-xl text-base" disabled={busy}>
           {busy && <Loader2 className="mr-2 size-4 animate-spin" />}
-          {busy ? "Надсилаємо..." : "Надіслати код"}
+          {busy ? t("reset.sending") : t("reset.sendCode")}
         </Button>
       </form>
     </div>
@@ -498,19 +502,19 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
 
   const renderForgotVerify = () => (
     <div className="space-y-6">
-      <BackLink onClick={() => { sound.close(); setScreen("forgot"); }}>Змінити email</BackLink>
+      <BackLink onClick={() => { sound.close(); setScreen("forgot"); }}>{t("reset.changeEmail")}</BackLink>
       <div className="space-y-2 text-center">
         <IconBubble><Mail className="size-6 text-primary" /></IconBubble>
-        <h1 className="text-2xl font-bold tracking-tight">Введіть код</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{t("reset.enterCode")}</h1>
         <p className="text-sm text-muted-foreground">
-          Ми надіслали 6-значний код на <span className="font-medium text-foreground">{resetEmail}</span>
+          {t("verify.sentTo")} <span className="font-medium text-foreground">{resetEmail}</span>
         </p>
       </div>
       <OTPInput value={otpInput} onChange={(v) => { setOtpInput(v); setError(null); }} />
       {alerts()}
       <Button className="h-12 w-full rounded-xl text-base" onClick={() => { sound.button(); handleForgotVerify(); }} disabled={otpInput.length !== 6}>
         <CheckCircle2 className="mr-2 size-4" />
-        Підтвердити
+        {t("verify.confirm")}
       </Button>
       <ResendLine cooldown={resendCooldown} onResend={() => void sendResetCode()} />
     </div>
@@ -519,36 +523,36 @@ export function AuthForm({ initialScreen = "login", onAuthSuccess }: AuthFormPro
   const renderNewPassword = () => (
     <div className="space-y-6">
       <div className="space-y-2">
-        <h1 className="text-2xl font-bold tracking-tight">Новий пароль</h1>
-        <p className="text-sm text-muted-foreground">Придумайте новий надійний пароль.</p>
+        <h1 className="text-2xl font-bold tracking-tight">{t("reset.newTitle")}</h1>
+        <p className="text-sm text-muted-foreground">{t("reset.newSubtitle")}</p>
       </div>
       <form onSubmit={handleResetPassword} className="space-y-4">
         <Field
           id="auth-new-password"
-          label="Пароль"
+          label={t("fields.password")}
           type={showResetPw ? "text" : "password"}
           autoComplete="new-password"
           required
           value={resetPassword}
           onChange={setResetPassword}
-          placeholder="Мінімум 8 символів"
+          placeholder={t("fields.passwordMin")}
           endAction={<ShowToggle shown={showResetPw} onToggle={() => setShowResetPw((v) => !v)} />}
         />
         {resetPassword && <PasswordStrength password={resetPassword} />}
         <Field
           id="auth-confirm-password"
-          label="Підтвердьте пароль"
+          label={t("fields.confirmPassword")}
           type={showResetPw ? "text" : "password"}
           autoComplete="new-password"
           required
           value={resetConfirm}
           onChange={setResetConfirm}
-          placeholder="Повторіть пароль"
+          placeholder={t("fields.repeatPassword")}
         />
         {alerts()}
         <Button type="submit" className="h-12 w-full rounded-xl text-base" disabled={busy}>
           {busy && <Loader2 className="mr-2 size-4 animate-spin" />}
-          {busy ? "Зберігаємо..." : "Зберегти пароль"}
+          {busy ? t("reset.saving") : t("reset.save")}
         </Button>
       </form>
     </div>
@@ -597,9 +601,10 @@ function AnimatedTitle({ title, subtitle }: { title: string; subtitle: string })
 }
 
 function ModeSwitch({ mode, onChange }: { mode: AuthMode; onChange: (m: AuthMode) => void }) {
+  const t = useTranslations("auth");
   const tabs: { value: AuthMode; label: string }[] = [
-    { value: "login", label: "Вхід" },
-    { value: "register", label: "Реєстрація" },
+    { value: "login", label: t("modes.login") },
+    { value: "register", label: t("modes.register") },
   ];
   return (
     <div role="tablist" className="relative grid grid-cols-2 rounded-full bg-muted p-1">
@@ -650,6 +655,7 @@ function Field({
   endAction?: ReactNode;
   invalid?: boolean;
 }) {
+  const t = useTranslations("auth");
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between">
@@ -671,19 +677,20 @@ function Field({
         />
         {endAction && <div className="absolute right-2 top-1/2 -translate-y-1/2">{endAction}</div>}
       </div>
-      {invalid && <p className="text-xs text-destructive">Перевірте формат email</p>}
+      {invalid && <p className="text-xs text-destructive">{t("errors.emailFormat")}</p>}
     </div>
   );
 }
 
 function ShowToggle({ shown, onToggle }: { shown: boolean; onToggle: () => void }) {
+  const t = useTranslations("auth");
   return (
     <button
       type="button"
       onClick={onToggle}
       className="rounded-lg px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
     >
-      {shown ? "Сховати" : "Показати"}
+      {shown ? t("fields.hide") : t("fields.show")}
     </button>
   );
 }
@@ -739,14 +746,15 @@ function BackLink({ onClick, children }: { onClick: () => void; children: ReactN
 }
 
 function ResendLine({ cooldown, onResend }: { cooldown: number; onResend: () => void }) {
+  const t = useTranslations("auth");
   return (
     <p className="text-center text-sm text-muted-foreground">
-      Не отримали код?{" "}
+      {t("resend.noCode")}{" "}
       {cooldown > 0 ? (
-        <span className="tabular-nums">Повторно через {cooldown}с</span>
+        <span className="tabular-nums">{t("resend.in", { s: cooldown })}</span>
       ) : (
         <button type="button" onClick={onResend} className="font-medium text-primary hover:underline">
-          Надіслати ще раз
+          {t("resend.now")}
         </button>
       )}
     </p>
@@ -754,10 +762,11 @@ function ResendLine({ cooldown, onResend }: { cooldown: number; onResend: () => 
 }
 
 function PasswordStrength({ password }: { password: string }) {
+  const t = useTranslations("auth");
   const checks = [
-    { label: "8+ символів", ok: password.length >= 8 },
-    { label: "Велика літера", ok: /[A-Z]/.test(password) },
-    { label: "Цифра", ok: /\d/.test(password) },
+    { label: t("strength.length"), ok: password.length >= 8 },
+    { label: t("strength.upper"), ok: /[A-Z]/.test(password) },
+    { label: t("strength.digit"), ok: /\d/.test(password) },
   ];
   const score = checks.filter((c) => c.ok).length;
   const colors = ["bg-destructive", "bg-orange-400", "bg-yellow-400", "bg-emerald-500"];
@@ -781,6 +790,7 @@ function PasswordStrength({ password }: { password: string }) {
 }
 
 function OTPInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const t = useTranslations("auth");
   const refs: (HTMLInputElement | null)[] = [];
   const digits = value.padEnd(6, " ").split("").slice(0, 6).map((d) => (d === " " ? "" : d));
 
@@ -804,7 +814,7 @@ function OTPInput({ value, onChange }: { value: string; onChange: (v: string) =>
           type="text"
           inputMode="numeric"
           autoComplete={i === 0 ? "one-time-code" : "off"}
-          aria-label={`Цифра ${i + 1}`}
+          aria-label={t("verify.digit", { n: i + 1 })}
           maxLength={1}
           value={d}
           onChange={(e) => {

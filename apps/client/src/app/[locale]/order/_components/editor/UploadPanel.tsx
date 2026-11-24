@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import React, { useCallback, useRef, useState } from "react";
 import { File, FileImage, RefreshCw, Upload, X } from "lucide-react";
 
@@ -29,12 +31,13 @@ function isImageMime(mime: string): boolean {
   return mime === "image/png" || mime === "image/jpeg" || mime === "image/svg+xml";
 }
 
-function validateFile(file: File): string | null {
+/** Returns a translation key ("editor.upload.*") with its values, or null when the file is fine. */
+function validateFile(file: File): { key: "badType" | "tooLarge"; values: Record<string, string> } | null {
   if (!ACCEPTED_MIME_TYPES.includes(file.type as (typeof ACCEPTED_MIME_TYPES)[number])) {
-    return `Непідтримуваний тип файлу "${file.type || file.name.split(".").pop()}". Accepted formats: PNG, JPG/JPEG, SVG, PDF.`;
+    return { key: "badType", values: { type: file.type || file.name.split(".").pop() || "?" } };
   }
   if (file.size > MAX_FILE_SIZE_BYTES) {
-    return `Файл занадто великий (${(file.size / 1024 / 1024).toFixed(1)} MB). Максимальний розмір: ${MAX_FILE_SIZE_LABEL}.`;
+    return { key: "tooLarge", values: { size: (file.size / 1024 / 1024).toFixed(1), max: MAX_FILE_SIZE_LABEL } };
   }
   return null;
 }
@@ -50,13 +53,14 @@ function RecentFileThumbnail({
   objectUrl: string | null;
   onClick: () => void;
 }) {
+  const t = useTranslations("editor");
   const isImage = isImageMime(file.type);
 
   return (
     <button
       type="button"
       onClick={onClick}
-      title={`Додати "${file.name}" знову`}
+      title={t("upload.addAgain", { name: file.name })}
       className="group relative flex items-center justify-center rounded-lg border border-border bg-muted aspect-square overflow-hidden hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all"
     >
       {isImage && objectUrl ? (
@@ -93,6 +97,7 @@ const globalObjectUrls = new Map<File, string>();
 // ── Main component ────────────────────────────────────────────────────────
 
 export default function UploadPanel({ onFileAdd }: UploadPanelProps) {
+  const t = useTranslations("editor");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [recentFiles, setRecentFiles] = useState<File[]>(globalRecentFiles);
@@ -112,7 +117,7 @@ export default function UploadPanel({ onFileAdd }: UploadPanelProps) {
 
       const validationError = validateFile(file);
       if (validationError) {
-        setError(validationError);
+        setError(t(`upload.${validationError.key}`, validationError.values));
         return;
       }
 
@@ -141,7 +146,7 @@ export default function UploadPanel({ onFileAdd }: UploadPanelProps) {
           });
         }
       } catch {
-        setError(`Не вдалося додати "${file.name}". Спробуйте ще раз.`);
+        setError(t("upload.addFailed", { name: file.name }));
         setRetryFile(file);
       } finally {
         setUploading(false);
@@ -196,7 +201,7 @@ export default function UploadPanel({ onFileAdd }: UploadPanelProps) {
       {/* ── Upload zone section ── */}
       <section className="px-3 pt-3 pb-4 border-b border-border space-y-3">
         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-          Завантажити файл
+          {t("upload.title")}
         </h3>
 
         {/* Drag-and-drop zone */}
@@ -214,7 +219,7 @@ export default function UploadPanel({ onFileAdd }: UploadPanelProps) {
           onClick={() => !uploading && fileInputRef.current?.click()}
           role="button"
           tabIndex={uploading ? -1 : 0}
-          aria-label="Завантажити файл — натисніть або перетягніть"
+          aria-label={t("upload.dropLabel")}
           onKeyDown={(e) => {
             if ((e.key === "Enter" || e.key === " ") && !uploading) {
               fileInputRef.current?.click();
@@ -224,7 +229,7 @@ export default function UploadPanel({ onFileAdd }: UploadPanelProps) {
           {uploading ? (
             <>
               <RefreshCw className="size-8 text-primary animate-spin" />
-              <p className="text-xs text-muted-foreground">Завантаження…</p>
+              <p className="text-xs text-muted-foreground">{t("upload.uploading")}</p>
             </>
           ) : (
             <>
@@ -236,10 +241,10 @@ export default function UploadPanel({ onFileAdd }: UploadPanelProps) {
               />
               <div>
                 <p className="text-xs font-medium text-foreground">
-                  {isDragOver ? "Відпустіть для завантаження" : "Натисніть або перетягніть"}
+                  {isDragOver ? t("upload.dropRelease") : t("upload.dropHint")}
                 </p>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  PNG, JPG, SVG, PDF · макс. 20 МБ
+                  {t("upload.formats")}
                 </p>
               </div>
             </>
@@ -269,7 +274,7 @@ export default function UploadPanel({ onFileAdd }: UploadPanelProps) {
           ) : (
             <Upload className="size-3.5" />
           )}
-          {uploading ? "Завантаження…" : "Обрати файл"}
+          {uploading ? t("upload.uploading") : t("upload.choose")}
         </button>
 
         {/* Error state */}
@@ -285,7 +290,7 @@ export default function UploadPanel({ onFileAdd }: UploadPanelProps) {
                     onClick={handleRetry}
                     className="text-xs font-medium underline hover:no-underline"
                   >
-                    Повторити
+                    {t("common.retryShort")}
                   </button>
                 )}
                 <button
@@ -293,7 +298,7 @@ export default function UploadPanel({ onFileAdd }: UploadPanelProps) {
                   onClick={() => { setError(null); setRetryFile(null); }}
                   className="text-xs underline hover:no-underline"
                 >
-                  Закрити
+                  {t("common.close")}
                 </button>
               </div>
             </div>
@@ -304,15 +309,15 @@ export default function UploadPanel({ onFileAdd }: UploadPanelProps) {
       {/* ── Recent uploads section ── */}
       <section className="px-3 pt-3 pb-4">
         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
-          Нещодавні завантаження
+          {t("upload.recent")}
         </h3>
 
         {recentFiles.length === 0 ? (
           <div className="flex flex-col items-center gap-2 py-8 text-center">
             <FileImage className="size-8 text-muted-foreground/50" />
-            <p className="text-xs text-muted-foreground">Ще немає завантажень.</p>
+            <p className="text-xs text-muted-foreground">{t("upload.noRecent")}</p>
             <p className="text-xs text-muted-foreground/70 leading-snug max-w-[180px]">
-              Завантажені файли з'являться тут для швидкого повторного використання.
+              {t("upload.recentHint")}
             </p>
           </div>
         ) : (

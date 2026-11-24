@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AlertCircle, RefreshCw, Search, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -24,24 +26,15 @@ function SkeletonCard() {
   return <div className="rounded-lg bg-muted animate-pulse aspect-square" />;
 }
 
-// ── B2B prompt placeholders ───────────────────────────────────────────────
+// ── Prompt placeholders: "editor.prints.prompts.0..7" ────────────────────
 
-const AI_PROMPTS = [
-  "Принт до 20-річчя IT-компанії: мінімалістичний герб з кодом і зіркою, темно-синій на білому",
-  "Логотип-ілюстрація для корпоративного мерчу кав'ярні: зерно кави у вигляді серця, flat design",
-  "Принт для команди стартапу: ракета зі шестернями, bold graphic, чорно-жовта палітра",
-  "Ілюстрація для мерчу ресторану: шеф-кухар з тарілкою, лінійний стиль, монохром",
-  "Принт для корпоративного івенту: абстрактні хвилі з написом «Team 2025», градієнт синій-фіолетовий",
-  "Мерч для IT-конференції: піксельний дракон з ноутбуком, ретро-гейм стиль",
-  "Принт для HoReCa: виноградна лоза з бокалом, елегантний лінійний арт",
-  "Ілюстрація для університетського мерчу: сова з книгою та шестернею, flat vector",
-];
+const AI_PROMPT_COUNT = 8;
 
 function useRotatingIndex(active: boolean, interval = 7000) {
-  const [idx, setIdx] = useState(() => Math.floor(Math.random() * AI_PROMPTS.length));
+  const [idx, setIdx] = useState(() => Math.floor(Math.random() * AI_PROMPT_COUNT));
   useEffect(() => {
     if (!active) return;
-    const id = setInterval(() => setIdx((i) => (i + 1) % AI_PROMPTS.length), interval);
+    const id = setInterval(() => setIdx((i) => (i + 1) % AI_PROMPT_COUNT), interval);
     return () => clearInterval(id);
   }, [active, interval]);
   return idx;
@@ -57,6 +50,7 @@ interface AIIllustrationSectionProps {
 }
 
 function AIIllustrationSection({ onAddLayer, isAuthenticated, aiQuota, onPaywall }: AIIllustrationSectionProps) {
+  const t = useTranslations("editor");
   const [aiPrompt, setAiPrompt] = useState("");
   const [focused, setFocused] = useState(false);
   const ai = useAIIllustration();
@@ -83,10 +77,10 @@ function AIIllustrationSection({ onAddLayer, isAuthenticated, aiQuota, onPaywall
   return (
     <section className="px-3 pt-3 pb-4 border-b border-border">
       <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
-        AI Ілюстрація
+        {t("prints.aiTitle")}
       </h3>
       <p className="text-xs text-muted-foreground mb-2">
-        Генеруйте ілюстрації для друку за текстовим описом.
+        {t("prints.aiDesc")}
       </p>
 
       {/* Textarea with animated placeholder overlay */}
@@ -100,7 +94,7 @@ function AIIllustrationSection({ onAddLayer, isAuthenticated, aiQuota, onPaywall
           rows={4}
           placeholder=""
           className="w-full px-3 py-2.5 text-xs font-sans rounded-xl border border-input bg-background resize-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary leading-relaxed"
-          aria-label="Запит для AI ілюстрації"
+          aria-label={t("prints.aiLabel")}
         />
 
         {/* Animated placeholder — only when empty and not focused */}
@@ -116,7 +110,7 @@ function AIIllustrationSection({ onAddLayer, isAuthenticated, aiQuota, onPaywall
               className="absolute inset-0 px-3 py-2.5 text-xs font-sans text-muted-foreground/60 leading-relaxed pointer-events-none select-none overflow-hidden"
               aria-hidden="true"
             >
-              {AI_PROMPTS[idx]}
+              {t(`prints.prompts.${idx}`)}
             </motion.div>
           )}
         </AnimatePresence>
@@ -129,13 +123,13 @@ function AIIllustrationSection({ onAddLayer, isAuthenticated, aiQuota, onPaywall
         className="w-full flex items-center justify-center gap-2 py-2 rounded-full bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 disabled:opacity-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
         {ai.loading && <RefreshCw className="size-3.5 animate-spin" />}
-        {ai.loading ? "Генерація…" : "Згенерувати"}
+        {ai.loading ? t("common.generating") : t("common.generate")}
       </button>
 
       {/* Quota-exhausted message */}
       {aiQuota.isExhausted && (
         <p className="text-xs text-muted-foreground mt-2 text-center">
-          Ви використали 3 безкоштовні генерації
+          {t("gen.quotaUsed", { n: 3 })}
         </p>
       )}
 
@@ -144,7 +138,7 @@ function AIIllustrationSection({ onAddLayer, isAuthenticated, aiQuota, onPaywall
           <AlertCircle className="size-3.5 mt-0.5 shrink-0" />
           <div className="flex-1 min-w-0">
             <p className="text-xs">{ai.error}</p>
-            <button type="button" onClick={ai.clearError} className="text-xs underline mt-0.5">Закрити</button>
+            <button type="button" onClick={ai.clearError} className="text-xs underline mt-0.5">{t("common.close")}</button>
           </div>
         </div>
       )}
@@ -155,6 +149,7 @@ function AIIllustrationSection({ onAddLayer, isAuthenticated, aiQuota, onPaywall
 // ── Main component ────────────────────────────────────────────────────────
 
 export default function PrintsPanel({ onAddLayer, isAuthenticated, aiQuota, onPaywall }: PrintsPanelProps) {
+  const t = useTranslations("editor");
   const [presets, setPresets] = useState<PrintPreset[]>([]);
   const [loading, setLoading] = useState(true);
   // null = not yet tried, string = error, false = table doesn't exist (silent)
@@ -184,7 +179,7 @@ export default function PrintsPanel({ onAddLayer, isAuthenticated, aiQuota, onPa
         setPresets((data as PrintPreset[]) ?? []);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Не вдалося завантажити принти");
+      setError(err instanceof Error ? err.message : t("prints.loadFailed"));
     } finally {
       setLoading(false);
     }
@@ -220,17 +215,17 @@ export default function PrintsPanel({ onAddLayer, isAuthenticated, aiQuota, onPa
       {tableExists && (
         <section className="px-3 pt-3 pb-4">
           <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
-            Готові принти
+            {t("prints.ready")}
           </h3>
 
           <div className="relative mb-3">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground pointer-events-none" />
-            <input type="text" placeholder="Пошук принтів…" value={presetsSearch}
+            <input type="text" placeholder={t("prints.search")} value={presetsSearch}
               onChange={(e) => setPresetsSearch(e.target.value)}
               className="w-full pl-8 pr-8 py-1.5 text-xs rounded-md border border-input bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
             {presetsSearch && (
               <button type="button" onClick={() => setPresetsSearch("")}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label="Скинути пошук">
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label={t("common.resetSearch")}>
                 <X className="size-3.5" />
               </button>
             )}
@@ -249,7 +244,7 @@ export default function PrintsPanel({ onAddLayer, isAuthenticated, aiQuota, onPa
               <button type="button" onClick={fetchPresets}
                 className="flex items-center gap-1.5 text-xs font-medium text-primary hover:underline">
                 <RefreshCw className="size-3" />
-                Повторити
+                {t("common.retryShort")}
               </button>
             </div>
           )}
@@ -258,11 +253,11 @@ export default function PrintsPanel({ onAddLayer, isAuthenticated, aiQuota, onPa
             <>
               {filteredPresets.length === 0 ? (
                 <div className="py-4 text-center">
-                  <p className="text-xs text-muted-foreground">Принтів не знайдено.</p>
+                  <p className="text-xs text-muted-foreground">{t("prints.empty")}</p>
                   {presetsSearch && (
                     <button type="button" onClick={() => setPresetsSearch("")}
                       className="mt-1 text-xs text-primary hover:underline">
-                      Скинути пошук
+                      {t("common.resetSearch")}
                     </button>
                   )}
                 </div>

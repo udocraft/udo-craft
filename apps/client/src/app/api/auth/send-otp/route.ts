@@ -3,6 +3,7 @@ import { Resend } from "resend";
 import { createServiceClient } from "@/lib/supabase/service";
 import { findUserByEmail } from "@/lib/supabase/users";
 import { emailLimitKey, generateOtp, hashOtp, OTP_TTL_MS } from "@/lib/auth/otp";
+import { sealRegisterToken } from "@/lib/auth/register-token";
 import { consumeLimit } from "@/lib/rate-limit";
 import { SendOtpRequestSchema } from "@udo-craft/shared";
 import { parseJsonBody } from "@/lib/api/request";
@@ -27,7 +28,7 @@ function escapeHtml(value: string): string {
 export async function POST(req: NextRequest) {
   const parsedBody = await parseJsonBody(req, SendOtpRequestSchema);
   if (!parsedBody.ok) return parsedBody.response;
-  const { email, otp: clientOtp, name, type } = parsedBody.data;
+  const { email, name, type } = parsedBody.data;
 
   try {
 
@@ -37,7 +38,8 @@ export async function POST(req: NextRequest) {
 
     const isReset = type === "reset";
     const safeName = escapeHtml(String(name ?? ""));
-    let otp = clientOtp;
+    let otp: string;
+    let registerToken: string | null = null;
 
     // For password reset, generate OTP on the server securely
     if (isReset) {
@@ -58,9 +60,11 @@ export async function POST(req: NextRequest) {
           reset_otp_attempts: 0,
         },
       });
-    } else if (!otp) {
-      // For registration, client provides OTP for now
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    } else {
+      // Registration: the code is made here and only emailed. The browser gets a signed
+      // token that /api/auth/register checks together with the code the user types.
+      otp = generateOtp();
+      registerToken = sealRegisterToken(email, otp);
     }
 
     const subject = isReset ? "Відновлення паролю — U:DO CRAFT" : "Підтвердження email — U:DO CRAFT";
@@ -135,7 +139,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Failed to send email" }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json(registerToken ? { success: true, token: registerToken } : { success: true });
   } catch (err) {
     console.error("Send OTP error:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

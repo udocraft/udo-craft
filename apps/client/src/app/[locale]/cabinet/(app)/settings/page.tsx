@@ -96,10 +96,10 @@ export default function SettingsPage() {
       });
 
       if (error) throw error;
-      toast.success("Профіль оновлено");
+      toast.success(t("profile.saved"));
     } catch (error) {
       console.error("[cabinet/settings] save profile failed", error);
-      toast.error("Не вдалося зберегти профіль. Перевірте з'єднання і спробуйте ще раз.");
+      toast.error(t("profile.saveFailed"));
     } finally {
       setSaving(false);
     }
@@ -109,18 +109,18 @@ export default function SettingsPage() {
     e.preventDefault();
     setPasswordError(null);
 
-    if (!newPassword || newPassword.length < 6) {
-      setPasswordError("Новий пароль має бути не менше 6 символів");
+    if (!newPassword || newPassword.length < 8) {
+      setPasswordError(t("security.min"));
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setPasswordError("Паролі не збігаються");
+      setPasswordError(t("security.mismatch"));
       return;
     }
 
     if (newPassword === currentPassword) {
-      setPasswordError("Новий пароль має відрізнятися від поточного");
+      setPasswordError(t("security.same"));
       return;
     }
 
@@ -135,7 +135,7 @@ export default function SettingsPage() {
         });
 
         if (signInError) {
-          setPasswordError("Поточний пароль невірний");
+          setPasswordError(t("security.wrongCurrent"));
           setChangingPassword(false);
           return;
         }
@@ -151,10 +151,10 @@ export default function SettingsPage() {
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
-      toast.success("Пароль змінено");
+      toast.success(t("security.changed"));
     } catch (error) {
       console.error("[cabinet/settings] change password failed", error);
-      setPasswordError("Не вдалося змінити пароль. Перевірте з'єднання і спробуйте ще раз.");
+      setPasswordError(t("security.changeFailed"));
     } finally {
       setChangingPassword(false);
     }
@@ -171,8 +171,8 @@ export default function SettingsPage() {
           {/* Profile Section */}
           <div className="bg-card rounded-2xl border border-border p-6 space-y-4">
             <div>
-              <h2 className="font-semibold text-lg">Профіль</h2>
-              <p className="text-sm text-muted-foreground mt-1">Ваші контактні дані для замовлень</p>
+              <h2 className="font-semibold text-lg">{t("profile.title")}</h2>
+              <p className="text-sm text-muted-foreground mt-1">{t("profile.subtitle")}</p>
             </div>
 
             <form onSubmit={handleSaveProfile} className="space-y-4">
@@ -183,28 +183,28 @@ export default function SettingsPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="contact-name">Ім'я та прізвище</Label>
+                  <Label htmlFor="contact-name">{t("profile.name")}</Label>
                   <Input
                     id="contact-name"
                     value={contactName}
                     onChange={(e) => setContactName(e.target.value)}
-                    placeholder="Іван Петренко"
+                    placeholder={t("profile.namePlaceholder")}
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="company">Назва компанії</Label>
+                  <Label htmlFor="company">{t("profile.company")}</Label>
                   <Input
                     id="company"
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
-                    placeholder="ТОВ «Назва»"
+                    placeholder={t("profile.companyPlaceholder")}
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="phone">Телефон</Label>
+                  <Label htmlFor="phone">{t("profile.phone")}</Label>
                   <Input
                     id="phone"
                     type="tel"
@@ -214,7 +214,7 @@ export default function SettingsPage() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="edrpou">ЄДРПОУ / Реквізити</Label>
+                  <Label htmlFor="edrpou">{t("profile.edrpou")}</Label>
                   <Input
                     id="edrpou"
                     value={edrpou}
@@ -230,13 +230,13 @@ export default function SettingsPage() {
                   id="social"
                   value={socialChannel}
                   onChange={(e) => setSocialChannel(e.target.value)}
-                  placeholder="@username або посилання"
+                  placeholder={t("profile.socialPlaceholder")}
                 />
               </div>
 
               <Button type="submit" disabled={saving} className="w-full">
                 {saving ? <Loader2 className="size-4 animate-spin mr-2" /> : null}
-                {saving ? "Зберігаємо..." : "Зберегти профіль"}
+                {saving ? t("profile.saving") : t("profile.save")}
               </Button>
             </form>
           </div>
@@ -244,20 +244,20 @@ export default function SettingsPage() {
           {/* Password Section */}
           <div className="bg-card rounded-2xl border border-border p-6 space-y-4">
             <div>
-              <h2 className="font-semibold text-lg">Безпека</h2>
-              <p className="text-sm text-muted-foreground mt-1">Змініть пароль до вашого кабінету</p>
+              <h2 className="font-semibold text-lg">{t("security.title")}</h2>
+              <p className="text-sm text-muted-foreground mt-1">{t("security.subtitle")}</p>
             </div>
 
             <form onSubmit={handleChangePassword} className="space-y-4">
               <div className="space-y-1.5">
-                <Label htmlFor="current-password">Поточний пароль</Label>
+                <Label htmlFor="current-password">{t("security.current")}</Label>
                 <div className="relative">
                   <Input
                     id="current-password"
                     type={showCurrentPassword ? "text" : "password"}
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
-                    placeholder="Введіть поточний пароль"
+                    placeholder={t("security.currentPlaceholder")}
                     className="pr-10"
                   />
                   <button
@@ -272,14 +272,14 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="new-password">Новий пароль</Label>
+                <Label htmlFor="new-password">{t("security.new")}</Label>
                 <div className="relative">
                   <Input
                     id="new-password"
                     type={showNewPassword ? "text" : "password"}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Мінімум 6 символів"
+                    placeholder={t("security.newPlaceholder")}
                     className="pr-10"
                   />
                   <button
@@ -294,14 +294,14 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="confirm-password">Підтвердіть новий пароль</Label>
+                <Label htmlFor="confirm-password">{t("security.confirm")}</Label>
                 <div className="relative">
                   <Input
                     id="confirm-password"
                     type={showConfirmPassword ? "text" : "password"}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Повторіть новий пароль"
+                    placeholder={t("security.confirmPlaceholder")}
                     className="pr-10"
                   />
                   <button
@@ -319,7 +319,7 @@ export default function SettingsPage() {
 
               <Button type="submit" disabled={changingPassword} className="w-full">
                 {changingPassword ? <Loader2 className="size-4 animate-spin mr-2" /> : null}
-                {changingPassword ? "Змінюємо..." : "Змінити пароль"}
+                {changingPassword ? t("security.changing") : t("security.change")}
               </Button>
             </form>
           </div>

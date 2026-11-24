@@ -23,7 +23,9 @@ export async function POST(request: NextRequest) {
 
   const parsedBody = await parseJsonBody(request, CreateLeadRequestSchema);
   if (!parsedBody.ok) return parsedBody.response;
-  const { status, customer_data, order_items, initial_message, visitor_id, session_id } = parsedBody.data;
+  const { status, customer_data: rawCustomer, order_items, initial_message, visitor_id, session_id } = parsedBody.data;
+  // Stored lower-case so the customer cabinet finds the order whatever case was typed.
+  const customer_data = rawCustomer.email ? { ...rawCustomer, email: rawCustomer.email.trim().toLowerCase() } : rawCustomer;
 
   try {
     const serviceEnv = getSupabaseServiceEnv();

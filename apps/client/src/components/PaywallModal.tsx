@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { X, Sparkles } from "lucide-react";
@@ -17,6 +19,7 @@ interface PaywallModalProps {
 }
 
 export function PaywallModal({ open, onClose, onAuthSuccess }: PaywallModalProps) {
+  const t = useTranslations("editor");
   const [mounted, setMounted] = useState(false);
   const [authScreen, setAuthScreen] = useState<"login" | "register" | null>(null);
 
@@ -55,29 +58,29 @@ export function PaywallModal({ open, onClose, onAuthSuccess }: PaywallModalProps
       <div className="relative bg-card rounded-2xl w-full max-w-md shadow-xl p-6 space-y-5">
         <button type="button" onClick={() => { sound.close(); onClose(); }}
           className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
-          aria-label="Закрити">
+          aria-label={t("common.close")}>
           <X className="w-4 h-4" />
         </button>
         <div className="text-center">
           <div className="inline-flex items-center justify-center size-14 rounded-full bg-primary/10 mb-3">
             <Sparkles className="size-7 text-primary" />
           </div>
-          <h2 className="text-xl font-bold">Для використання AI потрібна реєстрація</h2>
+          <h2 className="text-xl font-bold">{t("paywall.title")}</h2>
           <p className="text-sm text-muted-foreground mt-2">
-            Зареєструйтесь безкоштовно та отримайте 3 безкоштовні AI-генерації
+            {t("paywall.text")}
           </p>
         </div>
         <div className="flex flex-col gap-3 pt-1">
           <Button className="w-full" onClick={() => { sound.button(); setAuthScreen("register"); }}>
-            Зареєструватись
+            {t("paywall.register")}
           </Button>
           <Button variant="outline" className="w-full" onClick={() => { sound.button(); setAuthScreen("login"); }}>
-            Увійти
+            {t("paywall.login")}
           </Button>
         </div>
         <button type="button" onClick={() => { sound.close(); onClose(); }}
           className="w-full text-xs text-muted-foreground hover:text-foreground transition-colors text-center">
-          Продовжити без реєстрації
+          {t("paywall.skip")}
         </button>
       </div>
     </div>,

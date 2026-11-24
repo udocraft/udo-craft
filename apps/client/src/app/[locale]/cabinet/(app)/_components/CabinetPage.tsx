@@ -45,27 +45,28 @@ export function CabinetPage<T extends string = string>({
   return (
     <div className="flex h-full min-h-0 flex-col bg-background">
       <div className="shrink-0 border-b border-border bg-card">
-        <div className="flex items-start justify-between gap-4 px-4 pb-4 pt-5 md:px-6">
-          <div className="min-w-0 space-y-1">
-            <div className="flex min-w-0 items-center gap-3">
-              {backHref && (
-                <Link
-                  href={backHref}
-                  aria-label={backLabel}
-                  className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <ChevronLeft className="size-4" />
-                </Link>
-              )}
-              <h1 className="truncate text-xl font-semibold leading-none tracking-tight md:text-2xl">{title}</h1>
+        {/* h-14 matches the sidebar header, so both header lines meet. */}
+        <div className="flex h-14 items-center gap-3 px-4 md:px-6">
+          {backHref && (
+            <Link
+              href={backHref}
+              aria-label={backLabel}
+              className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              <ChevronLeft className="size-4" />
+            </Link>
+          )}
+          <div className="min-w-0 flex-1">
+            <div className="flex min-w-0 items-center gap-2">
+              <h1 className="truncate text-base font-semibold leading-tight tracking-tight">{title}</h1>
               {status}
             </div>
-            {subtitle && <p className="text-sm leading-snug text-muted-foreground">{subtitle}</p>}
+            {subtitle && <p className="truncate text-xs leading-snug text-muted-foreground">{subtitle}</p>}
           </div>
           {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
         </div>
         {tabs && tab !== undefined && onTabChange && (
-          <nav className="flex gap-6 overflow-x-auto px-4 md:px-6" aria-label={title}>
+          <nav className="flex gap-6 overflow-x-auto border-t border-border px-4 md:px-6" aria-label={title}>
             {tabs.map((item) => (
               <button
                 key={item.key}

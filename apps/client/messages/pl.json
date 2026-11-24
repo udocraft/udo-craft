@@ -133,12 +133,12 @@
     "prevPage": "Poprzednia",
     "nextPage": "Następna",
     "page": "Strona {n}",
-    "fromPrice": "from ₴{price}",
+    "fromPrice": "od {price} ₴",
     "priceOnRequest": "Cena na zapytanie",
-    "expand": "Expand",
-    "collapse": "Collapse",
-    "addPrint": "Add print",
-    "withoutPrint": "Without print"
+    "expand": "Rozwiń",
+    "collapse": "Zwiń",
+    "addPrint": "Dodaj nadruk",
+    "withoutPrint": "Bez nadruku"
   },
   "process": {
     "heading": "Od pomysłu do merchu — w 4 krokach",
@@ -280,21 +280,21 @@
     "discount": "Rabat",
     "mm": "mm",
     "embroidery": "Haft",
-    "label": "Online constructor",
+    "label": "Edytor online",
     "heading": "Wypróbuj od razu tutaj",
     "desc": "Wybierz kolor i wgraj swój obraz, aby zobaczyć, jak będzie wyglądać Twoja rzecz.",
-    "openEditor": "Open constructor",
-    "productLabel": "Product",
-    "colorLabel": "Color",
-    "printsLabel": "Prints",
-    "textLabel": "Text",
-    "fileLabel": "File",
-    "volumeLabel": "Volume & price",
-    "totalLabel": "Total",
-    "saved": "Draft saved",
-    "layersReady": "Layers ready",
-    "priceUpdated": "Price updated",
-    "sizeLabel": "Size"
+    "openEditor": "Otwórz edytor",
+    "productLabel": "Produkt",
+    "colorLabel": "Kolor",
+    "printsLabel": "Nadruki",
+    "textLabel": "Tekst",
+    "fileLabel": "Plik",
+    "volumeLabel": "Ilość i cena",
+    "totalLabel": "Razem",
+    "saved": "Szkic zapisany",
+    "layersReady": "Warstwy gotowe",
+    "priceUpdated": "Cena zaktualizowana",
+    "sizeLabel": "Rozmiar"
   },
   "trust": {
     "statsLabel": "Kluczowe liczby",
@@ -678,7 +678,8 @@
       "attachLabel": "Dołącz plik",
       "loading": "Ładowanie wiadomości...",
       "empty": "Brak wiadomości",
-      "fileTooLarge": "\"{name}\" przekracza 10 MB"
+      "fileTooLarge": "\"{name}\" przekracza 10 MB",
+      "sendError": "Nie udało się wysłać wiadomości. Spróbuj ponownie."
     },
     "files": {
       "empty": "Brak plików",
@@ -703,6 +704,66 @@
     "order": {
       "back": "Wszystkie zamówienia",
       "notFound": "Nie znaleziono zamówienia"
+    },
+    "errorPage": {
+      "title": "Błąd konta klienta",
+      "text": "Nie udało się wczytać konta. Spróbuj ponownie lub wróć na stronę główną.",
+      "retry": "Spróbuj ponownie",
+      "home": "Strona główna"
+    },
+    "file": "Plik",
+    "productFallback": "Produkt ({color})",
+    "profile": {
+      "saved": "Profil zaktualizowany",
+      "saveFailed": "Nie udało się zapisać profilu. Sprawdź połączenie i spróbuj ponownie.",
+      "title": "Profil",
+      "subtitle": "Twoje dane kontaktowe do zamówień",
+      "name": "Imię i nazwisko",
+      "namePlaceholder": "Jan Kowalski",
+      "company": "Nazwa firmy",
+      "companyPlaceholder": "Firma sp. z o.o.",
+      "phone": "Telefon",
+      "edrpou": "NIP / dane firmy",
+      "socialPlaceholder": "@nazwa lub link",
+      "saving": "Zapisywanie...",
+      "save": "Zapisz profil"
+    },
+    "security": {
+      "min": "Nowe hasło musi mieć co najmniej 8 znaków.",
+      "mismatch": "Hasła nie są zgodne.",
+      "same": "Nowe hasło musi różnić się od obecnego.",
+      "wrongCurrent": "Obecne hasło jest nieprawidłowe.",
+      "changed": "Hasło zmienione",
+      "changeFailed": "Nie udało się zmienić hasła. Sprawdź połączenie i spróbuj ponownie.",
+      "title": "Bezpieczeństwo",
+      "subtitle": "Zmień hasło do swojego konta",
+      "current": "Obecne hasło",
+      "currentPlaceholder": "Wpisz obecne hasło",
+      "new": "Nowe hasło",
+      "newPlaceholder": "Minimum 8 znaków",
+      "confirm": "Potwierdź nowe hasło",
+      "confirmPlaceholder": "Powtórz nowe hasło",
+      "changing": "Zmienianie...",
+      "change": "Zmień hasło"
+    },
+    "prints": {
+      "title": "Moje nadruki",
+      "subtitle": "Pliki przesłane do druku. Tylko Ty je widzisz.",
+      "dropHint": "Upuść pliki tutaj",
+      "formats": "JPG, PNG, WebP, GIF lub PDF, do 10 MB",
+      "pickFiles": "Wybierz pliki",
+      "uploading": "Przesyłanie…",
+      "empty": "Brak plików. Prześlij swój pierwszy nadruk.",
+      "delete": "Usuń plik",
+      "confirmDelete": "Usunąć ten plik? Tej operacji nie można cofnąć.",
+      "loadError": "Nie udało się wczytać plików",
+      "uploadError": "Nie udało się przesłać pliku",
+      "deleteError": "Nie udało się usunąć pliku",
+      "status": {
+        "uploaded": "W weryfikacji",
+        "approved": "Zatwierdzony",
+        "rejected": "Odrzucony"
+      }
     }
   },
   "popup": {
@@ -1020,5 +1081,366 @@
       "heading": "Merch dla zespołu lub na wydarzenie?",
       "text": "Odzież firmowa, stoiska pop-up i branding — na osobnej stronie dla firm."
     }
+  },
+  "auth": {
+    "errors": {
+      "googleFailed": "Nie udało się zalogować przez Google. Spróbuj ponownie.",
+      "passkeyNeedsNameEmail": "Podaj imię i email, aby utworzyć konto z passkey.",
+      "invalidCredentials": "Nieprawidłowy email lub hasło.",
+      "passwordMin": "Hasło musi mieć co najmniej 8 znaków.",
+      "emailExistsRegister": "Ten email jest już zarejestrowany. Zaloguj się lub zresetuj hasło.",
+      "codeSendFailed": "Nie udało się wysłać kodu. Spróbuj ponownie.",
+      "codeInvalid": "Nieprawidłowy kod. Sprawdź email i spróbuj ponownie.",
+      "codeExpired": "Kod wygasł. Poproś o nowy.",
+      "tooManyAttempts": "Zbyt wiele prób. Poproś o nowy kod za kilka minut.",
+      "emailExistsLogin": "Ten email jest już zarejestrowany. Spróbuj się zalogować.",
+      "registerFailed": "Rejestracja nie powiodła się. Spróbuj ponownie.",
+      "resetSendFailed": "Nie udało się wysłać kodu. Sprawdź adres email.",
+      "passwordsMismatch": "Hasła nie są zgodne.",
+      "resetFailed": "Nieprawidłowy lub wygasły kod. Poproś o nowy.",
+      "generic": "Coś poszło nie tak. Spróbuj ponownie.",
+      "emailFormat": "Sprawdź format emaila"
+    },
+    "notices": {
+      "passkeyCheckEmail": "Wysłaliśmy wiadomość na {email}. Potwierdź ją, a potem zaloguj się przez passkey.",
+      "accountCreated": "Konto utworzone. Zaloguj się emailem i hasłem.",
+      "passwordChanged": "Hasło zmienione. Zaloguj się nowym hasłem."
+    },
+    "social": {
+      "google": "Kontynuuj z Google",
+      "telegram": "Kontynuuj z Telegram",
+      "passkey": "Kontynuuj z passkey",
+      "or": "lub"
+    },
+    "login": {
+      "title": "Witaj ponownie",
+      "subtitle": "Zaloguj się, aby kontynuować zamówienie.",
+      "forgot": "Nie pamiętasz hasła?",
+      "signingIn": "Logowanie...",
+      "submit": "Zaloguj się"
+    },
+    "register": {
+      "title": "Utwórz konto",
+      "subtitle": "To zajmie mniej niż minutę.",
+      "sendingCode": "Wysyłanie kodu...",
+      "continue": "Dalej"
+    },
+    "fields": {
+      "name": "Twoje imię",
+      "namePlaceholder": "Jan Kowalski",
+      "company": "Firma",
+      "companyPlaceholder": "Nazwa firmy",
+      "phone": "Telefon",
+      "password": "Hasło",
+      "passwordMin": "Minimum 8 znaków",
+      "confirmPassword": "Potwierdź hasło",
+      "repeatPassword": "Powtórz hasło",
+      "hide": "Ukryj",
+      "show": "Pokaż"
+    },
+    "verify": {
+      "back": "Wstecz",
+      "title": "Sprawdź email",
+      "sentTo": "Wysłaliśmy 6-cyfrowy kod na",
+      "checking": "Sprawdzanie...",
+      "confirm": "Potwierdź",
+      "digit": "Cyfra {n}"
+    },
+    "reset": {
+      "backToLogin": "Wróć do logowania",
+      "title": "Resetowanie hasła",
+      "subtitle": "Podaj email — wyślemy 6-cyfrowy kod.",
+      "sending": "Wysyłanie...",
+      "sendCode": "Wyślij kod",
+      "changeEmail": "Zmień email",
+      "enterCode": "Wpisz kod",
+      "newTitle": "Nowe hasło",
+      "newSubtitle": "Wymyśl nowe, bezpieczne hasło.",
+      "saving": "Zapisywanie...",
+      "save": "Zapisz hasło"
+    },
+    "modes": {
+      "login": "Logowanie",
+      "register": "Rejestracja"
+    },
+    "resend": {
+      "noCode": "Nie dostałeś kodu?",
+      "in": "Ponownie za {s} s",
+      "now": "Wyślij ponownie"
+    },
+    "strength": {
+      "length": "8+ znaków",
+      "upper": "Wielka litera",
+      "digit": "Cyfra"
+    },
+    "backToSite": "Do strony",
+    "showcaseItem": "Opinia {n}",
+    "close": "Zamknij"
+  },
+  "editor": {
+    "common": {
+      "addToOrder": "Dodaj do zamówienia",
+      "adding": "Dodawanie...",
+      "all": "Wszystkie",
+      "back": "Wstecz",
+      "cancel": "Anuluj",
+      "change": "Zmień",
+      "close": "Zamknij",
+      "collapse": "Zwiń",
+      "color": "Kolor",
+      "delete": "Usuń",
+      "expand": "Rozwiń",
+      "fromPrice": "od {price} ₴",
+      "fromPricePer": "od {price} ₴ / szt.",
+      "generate": "Generuj",
+      "generating": "Generowanie…",
+      "home": "Strona główna",
+      "leaveConfirm": "Wrócić? Niezapisane zmiany zostaną utracone.",
+      "noColors": "Brak skonfigurowanych kolorów",
+      "perUnit": "/szt.",
+      "print": "Nadruk",
+      "productSettings": "Ustawienia produktu",
+      "qty": "Ilość",
+      "qtyPrice": "Ilość i cena",
+      "removingBg": "Usuwanie tła...",
+      "resetSearch": "Wyczyść wyszukiwanie",
+      "retry": "Spróbuj ponownie",
+      "retryShort": "Ponów",
+      "settings": "Ustawienia",
+      "size": "Rozmiar"
+    },
+    "tabs": {
+      "prints": "Nadruki",
+      "draw": "Rysunek",
+      "text": "Tekst",
+      "upload": "Plik",
+      "layers": "Warstwy",
+      "uploadTitle": "Prześlij",
+      "toolsLabel": "Narzędzia edytora"
+    },
+    "errorPage": {
+      "title": "Nie udało się wczytać katalogu",
+      "text": "Strona zamówienia się nie wczytała. Spróbuj ponownie lub wróć na stronę główną."
+    },
+    "main": {
+      "restoreFailed": "Nie udało się przywrócić zapisanego koszyka. Dane nadal są zapisane.",
+      "linkFailed": "Nie udało się otworzyć linku",
+      "linkProductGone": "Produkt z tego linku nie jest już dostępny",
+      "catalogFailed": "Nie udało się wczytać katalogu",
+      "catalogFailedReload": "Nie udało się wczytać katalogu. Odśwież stronę."
+    },
+    "grid": {
+      "title": "Wybierz rzecz",
+      "subtitle": "Kliknij rzecz, aby ją dostosować i dodać do zamówienia",
+      "empty": "Brak produktów w tej kategorii"
+    },
+    "genButton": {
+      "label": "Zobacz na osobie",
+      "needsDesign": "Najpierw dodaj projekt"
+    },
+    "textPanel": {
+      "search": "Szukaj kompozycji…",
+      "add": "Dodaj blok tekstu"
+    },
+    "shapes": {
+      "title": "Kształty",
+      "search": "Szukaj kształtów…",
+      "empty": "Nie znaleziono kształtów.",
+      "resetFilters": "Wyczyść filtry"
+    },
+    "ai": {
+      "noImage": "Odpowiedź nie zawierała obrazu.",
+      "timeout": "Przekroczono czas oczekiwania. Spróbuj ponownie.",
+      "failed": "Nie udało się wygenerować obrazu. Spróbuj ponownie."
+    },
+    "state": {
+      "restored": "Przywrócono poprzednią sesję edycji",
+      "chooseGarmentSize": "Wybierz rozmiar.",
+      "choosePrintSizes": "Wybierz rozmiar dla każdego nadruku."
+    },
+    "qty": {
+      "fromQty": "od {n}",
+      "methods": {
+        "embroidery": "Haft",
+        "screen": "Sitodruk",
+        "sublimation": "Sublimacja",
+        "patch": "Naszywka"
+      },
+      "product": "Rzecz",
+      "chooseSize": "Wybierz rozmiar",
+      "savings": "Oszczędzasz",
+      "total": "Razem",
+      "totalLine": "{qty} szt. × {price} ₴",
+      "noteLabel": "Ważne:",
+      "noteText": "Ceny są orientacyjne. Ostateczna cena może się zmienić po potwierdzeniu przez menedżera.",
+      "itemNote": "Uwaga do pozycji",
+      "notePlaceholder": "Specjalne życzenia..."
+    },
+    "layout": {
+      "removeBgTitle": "Usuwanie tła za pomocą AI",
+      "removeBgText": "Proszę czekać. Przetwarzanie w wysokiej jakości trwa 15–20 sekund."
+    },
+    "customizer": {
+      "commentFailed": "Nie udało się dodać komentarza",
+      "previewTitle": "Podgląd projektu",
+      "previewSignIn": "Zaloguj się, aby edytować ten projekt.",
+      "previewViewOnly": "Ten link pozwala tylko na podgląd. Właściciel wyłączył edycję.",
+      "previewViewComment": "Ten link pozwala oglądać i komentować. Właściciel wyłączył edycję.",
+      "signInToEdit": "Zaloguj się, aby edytować",
+      "comments": "Komentarze",
+      "noLayers": "Brak warstw. Dodaj obraz lub tekst.",
+      "tryOn": "Przymierz na osobie",
+      "withAi": "Z pomocą AI"
+    },
+    "gen": {
+      "presets": {
+        "0": "przyjaciele na imprezie na dachu",
+        "1": "ktoś na jesiennym spacerze po mieście",
+        "2": "barista w przytulnej kawiarni",
+        "3": "muzyk na koncercie plenerowym",
+        "4": "skater w miejskim parku",
+        "5": "zespół na imprezie firmowej",
+        "6": "student na kampusie",
+        "7": "para na letnim festiwalu"
+      },
+      "progress": {
+        "0": "Analizujemy prośbę...",
+        "1": "Dobieramy styl...",
+        "2": "Nakładamy projekt...",
+        "3": "Ostatnie poprawki..."
+      },
+      "inProgress": "Trwa generowanie…",
+      "tapToView": "Kliknij, aby zobaczyć",
+      "yourPhoto": "Twoje zdjęcie",
+      "photoUploaded": "Zdjęcie przesłane",
+      "removePhoto": "Usuń zdjęcie",
+      "uploadPhoto": "Prześlij swoje zdjęcie",
+      "cameraOrGallery": "Otworzy aparat lub galerię",
+      "title": "Zobacz na osobie",
+      "subtitle": "AI pokaże, jak Twój projekt wygląda w rzeczywistości",
+      "alreadyRunning": "Generowanie już trwa",
+      "result": "Wynik",
+      "usedFree": "Darmowe generowanie dla tej rzeczy zostało już wykorzystane.",
+      "viewResult": "Zobacz wynik",
+      "tabSelfie": "Własne zdjęcie",
+      "tabScene": "Scena",
+      "sceneLabel": "Opis sceny",
+      "scenePlaceholder": "Opisz scenę lub wybierz pomysł…",
+      "emptySide": "Ta strona jest pusta. Użyjemy projektu ze strony „{side}”.",
+      "quotaUsed": "Wykorzystano wszystkie darmowe generowania ({n})",
+      "generatingShort": "Generujemy…"
+    },
+    "toolbar": {
+      "opacity": "Przezroczystość",
+      "fontSearch": "Szukaj czcionki...",
+      "nothingFound": "Nic nie znaleziono",
+      "bold": "Pogrubienie",
+      "italic": "Kursywa",
+      "textColor": "Kolor tekstu",
+      "alignLeft": "Do lewej",
+      "alignCenter": "Do środka",
+      "alignRight": "Do prawej",
+      "arc": "Łuk",
+      "letterSpacing": "Odstęp między literami",
+      "lineHeight": "Interlinia",
+      "fill": "Wypełnienie",
+      "stroke": "Obrys",
+      "fillColor": "Kolor wypełnienia",
+      "strokeColor": "Kolor obrysu",
+      "removeBg": "Usuń tło",
+      "editDrawing": "Edytuj rysunek",
+      "center": "Wyśrodkuj",
+      "flip": "Odbij",
+      "duplicate": "Duplikuj",
+      "fontCategories": {
+        "grotesque": "Bezszeryfowe",
+        "condensed": "Wąskie",
+        "serif": "Szeryfowe",
+        "display": "Ozdobne nagłówkowe",
+        "decorative": "Dekoracyjne",
+        "handwritten": "Odręczne",
+        "technical": "Techniczne"
+      }
+    },
+    "prints": {
+      "prompts": {
+        "0": "Kot astronauta w stylu retro, żywe kolory",
+        "1": "Minimalistyczne góry i słońce, line art",
+        "2": "Bukiet polnych kwiatów, akwarela",
+        "3": "Napis „Good vibes” w stylu lat 70.",
+        "4": "Pikselowy smok w stylu retro gier",
+        "5": "Fala w japońskim stylu, niebieska paleta",
+        "6": "Filiżanka kawy z sercem, flat design",
+        "7": "Sowa z książką, ilustracja wektorowa"
+      },
+      "aiTitle": "Ilustracja AI",
+      "aiDesc": "Twórz ilustracje do druku na podstawie opisu.",
+      "aiLabel": "Opis ilustracji AI",
+      "loadFailed": "Nie udało się wczytać nadruków",
+      "ready": "Gotowe nadruki",
+      "search": "Szukaj nadruków…",
+      "empty": "Nie znaleziono nadruków."
+    },
+    "upload": {
+      "badType": "Nieobsługiwany typ pliku „{type}”. Użyj PNG, JPG/JPEG, SVG lub PDF.",
+      "tooLarge": "Plik jest za duży ({size} MB). Maksymalnie: {max}.",
+      "addAgain": "Dodaj „{name}” ponownie",
+      "addFailed": "Nie udało się dodać „{name}”. Spróbuj ponownie.",
+      "title": "Prześlij plik",
+      "dropLabel": "Prześlij plik: kliknij lub przeciągnij tutaj",
+      "uploading": "Przesyłanie…",
+      "dropRelease": "Upuść, aby przesłać",
+      "dropHint": "Kliknij lub przeciągnij plik",
+      "formats": "PNG, JPG, SVG, PDF · do 20 MB",
+      "choose": "Wybierz plik",
+      "recent": "Ostatnio przesłane",
+      "noRecent": "Brak przesłanych plików.",
+      "recentHint": "Przesłane pliki pojawią się tutaj, aby łatwo użyć ich ponownie."
+    },
+    "canvas": {
+      "defaultText": "Tekst",
+      "undo": "Cofnij",
+      "undoTitle": "Cofnij (Ctrl+Z)",
+      "redo": "Ponów",
+      "redoTitle": "Ponów (Ctrl+Shift+Z)",
+      "copy": "Kopia",
+      "fontSmaller": "Zmniejsz czcionkę",
+      "fontBigger": "Powiększ czcionkę",
+      "boldShort": "B",
+      "italicShort": "K",
+      "removeBgFailed": "Nie udało się usunąć tła. Spróbuj ponownie.",
+      "bgShort": "Tło",
+      "edit": "Edytuj",
+      "layerOpacity": "Przezroczystość warstwy",
+      "deleteLayer": "Usuń warstwę",
+      "loadingImage": "Wczytywanie obrazu...",
+      "sides": {
+        "front": "Przód",
+        "back": "Tył",
+        "left": "Lewo",
+        "right": "Prawo"
+      }
+    },
+    "layers": {
+      "layer": "Warstwa",
+      "setupTitle": "Skonfiguruj warstwę",
+      "setupText": "Wybierz typ i rozmiar nadruku. Cena zaktualizuje się automatycznie.",
+      "printType": "Typ nadruku",
+      "printSize": "Rozmiar nadruku",
+      "image": "Obraz"
+    },
+    "paywall": {
+      "title": "AI wymaga konta",
+      "text": "Zarejestruj się za darmo i otrzymaj 3 darmowe generowania AI",
+      "register": "Zarejestruj się",
+      "login": "Zaloguj się",
+      "skip": "Kontynuuj bez konta"
+    }
+  },
+  "sizeChart": {
+    "title": "Tabela rozmiarów",
+    "empty": "Tabela jest pusta",
+    "schemeAlt": "{name}: schemat rozmiarów",
+    "note": "Wszystkie wymiary w centymetrach. Jeśli jesteś pomiędzy rozmiarami, wybierz większy."
   }
 }
