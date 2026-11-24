@@ -17,8 +17,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <SidebarProvider className="bg-background">
       <AppSidebar user={sidebarUser} />
-      <SidebarInset className="overflow-hidden flex flex-col bg-surface">
-        <main className="flex-1 flex flex-col overflow-hidden bg-surface">
+      <SidebarInset className="overflow-hidden flex flex-col bg-white">
+        <main className="flex-1 flex flex-col overflow-hidden bg-white">
           {children}
         </main>
       </SidebarInset>
