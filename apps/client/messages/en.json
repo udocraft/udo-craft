@@ -475,7 +475,18 @@
     },
     "privacy": "Privacy",
     "terms": "Terms",
-    "cookies": "Cookies"
+    "cookies": "Cookies",
+    "newsletter": {
+      "title": "Get {pct}% off your first order",
+      "desc": "Join the newsletter: new pieces, print ideas and limited drops once a month. No spam.",
+      "placeholder": "Your email",
+      "label": "Newsletter email",
+      "submit": "Subscribe",
+      "success": "Done. Your {pct}% code is on its way.",
+      "error": "Could not subscribe. Please try again.",
+      "invalid": "Please check your email.",
+      "consent": "By subscribing you agree to the privacy policy."
+    }
   },
   "cart": {
     "title": "Cart",
@@ -1418,7 +1429,10 @@
         "front": "Front",
         "back": "Back",
         "left": "Left",
-        "right": "Right"
+        "right": "Right",
+        "neck_inner": "Inner label",
+        "sleeve_left": "Left sleeve",
+        "sleeve_right": "Right sleeve"
       }
     },
     "layers": {
@@ -1435,6 +1449,70 @@
       "register": "Sign up",
       "login": "Sign in",
       "skip": "Continue without an account"
+    },
+    "mode": {
+      "label": "View mode",
+      "edit": "Design",
+      "preview": "Preview"
+    },
+    "tour": {
+      "replay": "Show tips",
+      "counter": "{n} of {total}",
+      "close": "Close",
+      "back": "Back",
+      "next": "Next",
+      "done": "Done",
+      "tools": {
+        "title": "Design tools",
+        "body": "Upload your own file, pick a ready-made print, add text or draw something. Everything starts here."
+      },
+      "canvas": {
+        "title": "Canvas",
+        "body": "Drag, scale and rotate elements right on the garment. The buttons below switch sides: front, back, sleeves."
+      },
+      "layers": {
+        "title": "Layers",
+        "body": "Every element of your design in one list. Reorder, duplicate, delete. The selected layer gets its own toolbar above the canvas."
+      },
+      "mode": {
+        "title": "Design and preview",
+        "body": "Switch to Preview to see the garment from several angles without the editing tools."
+      },
+      "price": {
+        "title": "Quantity and price",
+        "body": "Choose colour, size and quantity. The price includes the volume discount and the print cost of each element."
+      },
+      "actions": {
+        "title": "Order and sharing",
+        "body": "When the design is ready, add it to your order or send a link for comments."
+      }
+    },
+    "preview": {
+      "close": "Close",
+      "prev": "Previous",
+      "next": "Next",
+      "withPrint": "With your print",
+      "noPrint": "No print",
+      "sides": {
+        "front": "Front",
+        "back": "Back",
+        "chest": "Chest",
+        "neck_inner": "Inner label",
+        "sleeve_left": "Left sleeve",
+        "sleeve_right": "Right sleeve"
+      },
+      "tiles": {
+        "zone": "Print close-up",
+        "zoneHint": "Print area",
+        "collar": "Collar and cut",
+        "collarHint": "Garment detail",
+        "flat": "Flat lay",
+        "flatHint": "Flat lay"
+      },
+      "emptyTitle": "Your garment will appear here",
+      "emptyBody": "Add an image, text or print in design mode and we'll show the garment from several angles.",
+      "backToDesign": "Back to design",
+      "readOnly": "Preview only."
     }
   },
   "sizeChart": {
@@ -1442,5 +1520,21 @@
     "empty": "The chart is empty",
     "schemeAlt": "{name}: size diagram",
     "note": "All measurements are in centimetres. If you're between two sizes, pick the larger one."
+  },
+  "editorial": {
+    "statement": {
+      "eyebrow": "U:DO CRAFT",
+      "part1": "We blend craft with technology so clothing with your design",
+      "part2": "gets worn, not stored in a drawer —",
+      "part3": "pieces you are proud of every day.",
+      "cta": "Create your design"
+    },
+    "pair": {
+      "title1": "Made to be worn,",
+      "accent": "perfected",
+      "title2": "in every detail",
+      "desc": "Heavy cotton, precise print and embroidery that lasts hundreds of washes. Pick the base, we handle the rest.",
+      "from": "from ₴{price}"
+    }
   }
 }

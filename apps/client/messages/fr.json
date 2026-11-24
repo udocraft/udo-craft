@@ -475,7 +475,18 @@
     },
     "privacy": "Confidentialité",
     "terms": "Conditions",
-    "cookies": "Cookies"
+    "cookies": "Cookies",
+    "newsletter": {
+      "title": "−{pct} % sur votre première commande",
+      "desc": "Abonnez-vous : nouvelles pièces, idées d’imprimés et éditions limitées une fois par mois. Sans spam.",
+      "placeholder": "Votre e-mail",
+      "label": "E-mail pour la newsletter",
+      "submit": "S’abonner",
+      "success": "C’est fait. Votre code −{pct} % arrive.",
+      "error": "Inscription impossible. Réessayez.",
+      "invalid": "Vérifiez votre e-mail.",
+      "consent": "En vous abonnant, vous acceptez la politique de confidentialité."
+    }
   },
   "cart": {
     "title": "Panier",
@@ -1418,7 +1429,10 @@
         "front": "Devant",
         "back": "Dos",
         "left": "Gauche",
-        "right": "Droite"
+        "right": "Droite",
+        "neck_inner": "Étiquette intérieure",
+        "sleeve_left": "Manche gauche",
+        "sleeve_right": "Manche droite"
       }
     },
     "layers": {
@@ -1435,6 +1449,70 @@
       "register": "S'inscrire",
       "login": "Se connecter",
       "skip": "Continuer sans compte"
+    },
+    "mode": {
+      "label": "Mode d’affichage",
+      "edit": "Design",
+      "preview": "Aperçu"
+    },
+    "tour": {
+      "replay": "Afficher l’aide",
+      "counter": "{n} sur {total}",
+      "close": "Fermer",
+      "back": "Retour",
+      "next": "Suivant",
+      "done": "Terminé",
+      "tools": {
+        "title": "Outils de design",
+        "body": "Importez votre fichier, choisissez un imprimé prêt à l’emploi, ajoutez du texte ou dessinez. Tout commence ici."
+      },
+      "canvas": {
+        "title": "Zone de travail",
+        "body": "Déplacez, redimensionnez et faites pivoter les éléments directement sur le vêtement. Les boutons dessous changent de face : devant, dos, manches."
+      },
+      "layers": {
+        "title": "Calques",
+        "body": "Tous les éléments de votre design dans une liste. Réordonnez, dupliquez, supprimez. Le calque sélectionné a sa propre barre au-dessus."
+      },
+      "mode": {
+        "title": "Design et aperçu",
+        "body": "Passez en Aperçu pour voir le vêtement sous plusieurs angles, sans les outils d’édition."
+      },
+      "price": {
+        "title": "Quantité et prix",
+        "body": "Choisissez la couleur, la taille et la quantité. Le prix inclut la remise sur volume et le coût d’impression de chaque élément."
+      },
+      "actions": {
+        "title": "Commande et partage",
+        "body": "Quand le design est prêt, ajoutez-le à la commande ou envoyez un lien pour recueillir des commentaires."
+      }
+    },
+    "preview": {
+      "close": "Fermer",
+      "prev": "Précédent",
+      "next": "Suivant",
+      "withPrint": "Avec votre imprimé",
+      "noPrint": "Sans imprimé",
+      "sides": {
+        "front": "Devant",
+        "back": "Dos",
+        "chest": "Poitrine",
+        "neck_inner": "Étiquette intérieure",
+        "sleeve_left": "Manche gauche",
+        "sleeve_right": "Manche droite"
+      },
+      "tiles": {
+        "zone": "Imprimé en gros plan",
+        "zoneHint": "Zone d’impression",
+        "collar": "Col et coupe",
+        "collarHint": "Détail du vêtement",
+        "flat": "À plat",
+        "flatHint": "Flat lay"
+      },
+      "emptyTitle": "Votre vêtement apparaîtra ici",
+      "emptyBody": "Ajoutez une image, du texte ou un imprimé en mode design et nous montrerons le vêtement sous plusieurs angles.",
+      "backToDesign": "Retour au design",
+      "readOnly": "Aperçu uniquement."
     }
   },
   "sizeChart": {
@@ -1442,5 +1520,21 @@
     "empty": "Le tableau est vide",
     "schemeAlt": "{name} : schéma des tailles",
     "note": "Toutes les mesures sont en centimètres. Entre deux tailles, prenez la plus grande."
+  },
+  "editorial": {
+    "statement": {
+      "eyebrow": "U:DO CRAFT",
+      "part1": "Nous allions artisanat et technologie pour que les vêtements à votre design",
+      "part2": "soient portés, pas rangés au placard —",
+      "part3": "des pièces dont vous êtes fier chaque jour.",
+      "cta": "Créer votre design"
+    },
+    "pair": {
+      "title1": "Fait pour être porté,",
+      "accent": "soigné",
+      "title2": "jusqu’au détail",
+      "desc": "Coton épais, impression précise et broderie qui résistent à des centaines de lavages. Choisissez la base, on s’occupe du reste.",
+      "from": "dès {price} ₴"
+    }
   }
 }

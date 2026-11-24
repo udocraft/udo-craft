@@ -475,7 +475,18 @@
     },
     "privacy": "Datenschutz",
     "terms": "AGB",
-    "cookies": "Cookies"
+    "cookies": "Cookies",
+    "newsletter": {
+      "title": "{pct}% Rabatt auf deine erste Bestellung",
+      "desc": "Newsletter abonnieren: neue Teile, Print-Ideen und limitierte Drops einmal im Monat. Kein Spam.",
+      "placeholder": "Deine E-Mail",
+      "label": "E-Mail für den Newsletter",
+      "submit": "Abonnieren",
+      "success": "Fertig. Dein {pct}%-Code ist unterwegs.",
+      "error": "Anmeldung fehlgeschlagen. Bitte versuche es erneut.",
+      "invalid": "Bitte prüfe deine E-Mail.",
+      "consent": "Mit der Anmeldung stimmst du der Datenschutzerklärung zu."
+    }
   },
   "cart": {
     "title": "Warenkorb",
@@ -1418,7 +1429,10 @@
         "front": "Vorne",
         "back": "Hinten",
         "left": "Links",
-        "right": "Rechts"
+        "right": "Rechts",
+        "neck_inner": "Innenetikett",
+        "sleeve_left": "Linker Ärmel",
+        "sleeve_right": "Rechter Ärmel"
       }
     },
     "layers": {
@@ -1435,6 +1449,70 @@
       "register": "Registrieren",
       "login": "Anmelden",
       "skip": "Ohne Konto fortfahren"
+    },
+    "mode": {
+      "label": "Ansicht",
+      "edit": "Design",
+      "preview": "Vorschau"
+    },
+    "tour": {
+      "replay": "Tipps anzeigen",
+      "counter": "{n} von {total}",
+      "close": "Schließen",
+      "back": "Zurück",
+      "next": "Weiter",
+      "done": "Fertig",
+      "tools": {
+        "title": "Design-Werkzeuge",
+        "body": "Lade deine eigene Datei hoch, wähle einen fertigen Print, füge Text hinzu oder zeichne etwas. Hier fängt alles an."
+      },
+      "canvas": {
+        "title": "Arbeitsfläche",
+        "body": "Ziehe, skaliere und drehe Elemente direkt auf dem Kleidungsstück. Die Buttons darunter wechseln die Seite: vorne, hinten, Ärmel."
+      },
+      "layers": {
+        "title": "Ebenen",
+        "body": "Alle Elemente deines Designs in einer Liste. Neu ordnen, duplizieren, löschen. Die gewählte Ebene hat eine eigene Leiste über der Fläche."
+      },
+      "mode": {
+        "title": "Design und Vorschau",
+        "body": "Wechsle zur Vorschau, um das Kleidungsstück aus mehreren Blickwinkeln ohne Werkzeuge zu sehen."
+      },
+      "price": {
+        "title": "Menge und Preis",
+        "body": "Wähle Farbe, Größe und Menge. Der Preis enthält den Mengenrabatt und die Druckkosten jedes Elements."
+      },
+      "actions": {
+        "title": "Bestellen und teilen",
+        "body": "Ist das Design fertig, lege es in die Bestellung oder sende einen Link für Kommentare."
+      }
+    },
+    "preview": {
+      "close": "Schließen",
+      "prev": "Zurück",
+      "next": "Weiter",
+      "withPrint": "Mit deinem Print",
+      "noPrint": "Ohne Print",
+      "sides": {
+        "front": "Vorne",
+        "back": "Hinten",
+        "chest": "Brust",
+        "neck_inner": "Innenetikett",
+        "sleeve_left": "Linker Ärmel",
+        "sleeve_right": "Rechter Ärmel"
+      },
+      "tiles": {
+        "zone": "Print in Nahaufnahme",
+        "zoneHint": "Druckbereich",
+        "collar": "Kragen und Schnitt",
+        "collarHint": "Detail",
+        "flat": "Flat Lay",
+        "flatHint": "Flat Lay"
+      },
+      "emptyTitle": "Hier erscheint dein Kleidungsstück",
+      "emptyBody": "Füge im Designmodus ein Bild, Text oder einen Print hinzu, und wir zeigen das Kleidungsstück aus mehreren Blickwinkeln.",
+      "backToDesign": "Zurück zum Design",
+      "readOnly": "Nur Vorschau."
     }
   },
   "sizeChart": {
@@ -1442,5 +1520,21 @@
     "empty": "Die Tabelle ist leer",
     "schemeAlt": "{name}: Größenschema",
     "note": "Alle Maße in Zentimetern. Liegst du zwischen zwei Größen, wähle die größere."
+  },
+  "editorial": {
+    "statement": {
+      "eyebrow": "U:DO CRAFT",
+      "part1": "Wir verbinden Handwerk und Technologie, damit Kleidung mit deinem Design",
+      "part2": "getragen wird und nicht im Schrank liegt —",
+      "part3": "Teile, auf die du jeden Tag stolz bist.",
+      "cta": "Design erstellen"
+    },
+    "pair": {
+      "title1": "Gemacht zum Tragen,",
+      "accent": "perfektioniert",
+      "title2": "bis ins Detail",
+      "desc": "Schwere Baumwolle, präziser Druck und Stickerei, die Hunderte Wäschen hält. Wähle die Basis, den Rest machen wir.",
+      "from": "ab {price} ₴"
+    }
   }
 }

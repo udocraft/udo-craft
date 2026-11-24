@@ -475,7 +475,18 @@
     },
     "privacy": "Privacy",
     "terms": "Voorwaarden",
-    "cookies": "Cookies"
+    "cookies": "Cookies",
+    "newsletter": {
+      "title": "{pct}% korting op je eerste bestelling",
+      "desc": "Schrijf je in: nieuwe items, printideeën en beperkte drops, één keer per maand. Geen spam.",
+      "placeholder": "Je e-mail",
+      "label": "E-mail voor de nieuwsbrief",
+      "submit": "Inschrijven",
+      "success": "Klaar. Je code voor {pct}% is onderweg.",
+      "error": "Inschrijven mislukt. Probeer het opnieuw.",
+      "invalid": "Controleer je e-mail.",
+      "consent": "Door je in te schrijven ga je akkoord met het privacybeleid."
+    }
   },
   "cart": {
     "title": "Winkelwagen",
@@ -1418,7 +1429,10 @@
         "front": "Voorkant",
         "back": "Achterkant",
         "left": "Links",
-        "right": "Rechts"
+        "right": "Rechts",
+        "neck_inner": "Binnenlabel",
+        "sleeve_left": "Linkermouw",
+        "sleeve_right": "Rechtermouw"
       }
     },
     "layers": {
@@ -1435,6 +1449,70 @@
       "register": "Aanmelden",
       "login": "Inloggen",
       "skip": "Doorgaan zonder account"
+    },
+    "mode": {
+      "label": "Weergave",
+      "edit": "Ontwerp",
+      "preview": "Voorbeeld"
+    },
+    "tour": {
+      "replay": "Tips tonen",
+      "counter": "{n} van {total}",
+      "close": "Sluiten",
+      "back": "Terug",
+      "next": "Volgende",
+      "done": "Klaar",
+      "tools": {
+        "title": "Ontwerptools",
+        "body": "Upload je eigen bestand, kies een kant-en-klare print, voeg tekst toe of teken iets. Alles begint hier."
+      },
+      "canvas": {
+        "title": "Canvas",
+        "body": "Sleep, schaal en draai elementen direct op het kledingstuk. De knoppen eronder wisselen van kant: voor, achter, mouwen."
+      },
+      "layers": {
+        "title": "Lagen",
+        "body": "Alle elementen van je ontwerp in één lijst. Herschikken, dupliceren, verwijderen. De gekozen laag heeft een eigen balk boven het canvas."
+      },
+      "mode": {
+        "title": "Ontwerp en voorbeeld",
+        "body": "Schakel naar Voorbeeld om het kledingstuk vanuit meerdere hoeken te zien, zonder bewerkingstools."
+      },
+      "price": {
+        "title": "Aantal en prijs",
+        "body": "Kies kleur, maat en aantal. De prijs bevat de staffelkorting en de printkosten van elk element."
+      },
+      "actions": {
+        "title": "Bestellen en delen",
+        "body": "Is het ontwerp klaar, voeg het toe aan je bestelling of stuur een link voor opmerkingen."
+      }
+    },
+    "preview": {
+      "close": "Sluiten",
+      "prev": "Vorige",
+      "next": "Volgende",
+      "withPrint": "Met jouw print",
+      "noPrint": "Zonder print",
+      "sides": {
+        "front": "Voor",
+        "back": "Achter",
+        "chest": "Borst",
+        "neck_inner": "Binnenlabel",
+        "sleeve_left": "Linkermouw",
+        "sleeve_right": "Rechtermouw"
+      },
+      "tiles": {
+        "zone": "Print van dichtbij",
+        "zoneHint": "Printgebied",
+        "collar": "Kraag en snit",
+        "collarHint": "Detail",
+        "flat": "Flat lay",
+        "flatHint": "Flat lay"
+      },
+      "emptyTitle": "Hier verschijnt je kledingstuk",
+      "emptyBody": "Voeg in ontwerpmodus een afbeelding, tekst of print toe en we tonen het kledingstuk vanuit meerdere hoeken.",
+      "backToDesign": "Terug naar ontwerp",
+      "readOnly": "Alleen voorbeeld."
     }
   },
   "sizeChart": {
@@ -1442,5 +1520,21 @@
     "empty": "De tabel is leeg",
     "schemeAlt": "{name}: maatschema",
     "note": "Alle maten zijn in centimeters. Zit je tussen twee maten, kies dan de grotere."
+  },
+  "editorial": {
+    "statement": {
+      "eyebrow": "U:DO CRAFT",
+      "part1": "We combineren vakmanschap met technologie, zodat kleding met jouw ontwerp",
+      "part2": "gedragen wordt en niet in de kast blijft —",
+      "part3": "items waar je elke dag trots op bent.",
+      "cta": "Maak je ontwerp"
+    },
+    "pair": {
+      "title1": "Gemaakt om te dragen,",
+      "accent": "verfijnd",
+      "title2": "tot in detail",
+      "desc": "Zwaar katoen, precieze print en borduurwerk die honderden wasbeurten doorstaan. Kies de basis, wij doen de rest.",
+      "from": "vanaf {price} ₴"
+    }
   }
 }

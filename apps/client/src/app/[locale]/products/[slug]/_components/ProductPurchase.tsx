@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ImageOff, ArrowLeft, ArrowRight, BadgePercent, Check, ChevronDown, ChevronLeft, ChevronRight, CircleSlash, Minus, Plus, Tags, ToolCase } from "lucide-react";
+import { ArrowRight, BadgePercent, Check, ChevronDown, Clock3, Minus, Plus, ShieldCheck, Tags, Truck } from "lucide-react";
 import { Button } from "@udo-craft/ui";
 import { Link } from "@/i18n/navigation";
 import { SizeChartModal } from "@/components/SizeChartModal";
+import { ProductGallery } from "../_gallery";
 
 const SESSION_KEY = "client-order-draft";
 
@@ -31,7 +31,9 @@ export interface PurchaseProps {
   colors: PurchaseColor[];
   /** Used when the product has no colour variants. */
   defaultImages: Record<string, string>;
-  /** Server-rendered title and badges, shown above the price. */
+  /** Production lead time label, e.g. "7–14 дн."; null when the data has none. */
+  leadLabel: string | null;
+  /** Server-rendered breadcrumb, title, rating and stock line, shown above the price. */
   children: React.ReactNode;
 }
 
@@ -42,8 +44,8 @@ function discountFor(grid: PurchaseProps["discountGrid"], qty: number) {
 }
 
 /**
- * Client island for the product page: gallery, colour/size/quantity pickers,
- * live price and add-to-cart. Everything static (title, description, specs)
+ * Client island for the product page: full-height gallery on the left, sticky buy column on the
+ * right (colour/size/quantity pickers, live price, add-to-cart). Everything static (title, description, specs)
  * is rendered by the server page around it.
  */
 export function ProductPurchase(p: PurchaseProps) {
@@ -51,7 +53,6 @@ export function ProductPurchase(p: PurchaseProps) {
   const [colorId, setColorId] = useState<string | null>(p.colors[0]?.id ?? null);
   const [size, setSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
-  const [imageKey, setImageKey] = useState<string | null>(null);
   const [added, setAdded] = useState(false);
   const [bulkOpen, setBulkOpen] = useState(false);
   const [showBar, setShowBar] = useState(false);
@@ -59,15 +60,14 @@ export function ProductPurchase(p: PurchaseProps) {
 
   const color = p.colors.find((c) => c.id === colorId) ?? null;
   const images = color && Object.keys(color.images).length > 0 ? color.images : p.defaultImages;
-  const keys = Object.keys(images);
-  const activeKey = imageKey && images[imageKey] ? imageKey : keys[0];
-  const activeUrl = activeKey ? images[activeKey] : "";
-  const step = (delta: number) => setImageKey(keys[(keys.indexOf(activeKey) + delta + keys.length) % keys.length]);
+  const galleryImages = Object.entries(images).map(([key, url]) => ({ key, url }));
 
   const discountPct = discountFor(p.discountGrid, quantity);
   const unitCents = Math.round(p.basePriceCents * (1 - discountPct / 100));
   const tiers = [...p.discountGrid].sort((a, b) => a.qty - b.qty);
   const nextTier = tiers.find((tier) => quantity < tier.qty);
+  const topTier = tiers[tiers.length - 1];
+  const topTierCents = topTier ? Math.round(p.basePriceCents * (1 - topTier.discount_pct / 100)) : 0;
   const sliderMax = Math.max(100, p.minOrderQty, quantity, tiers[tiers.length - 1]?.qty ?? 0);
   const marks = Array.from(new Set([1, p.minOrderQty, ...tiers.map((t) => t.qty), sliderMax])).sort((a, b) => a - b);
   const chosenSize = size ?? p.sizes[Math.floor(p.sizes.length / 2)] ?? "";
@@ -114,127 +114,120 @@ export function ProductPurchase(p: PurchaseProps) {
   }, [p, images, unitCents, quantity, chosenSize, color]);
 
   const round = "flex size-11 items-center justify-center rounded-full border border-border transition-colors duration-fast hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+  const rule = "border-t border-border";
 
   return (
-    <div className="grid items-start gap-8 lg:grid-cols-2 lg:gap-16">
-      {/* Gallery */}
-      <div className="flex flex-col gap-3 lg:sticky lg:top-24">
-        <div className="group relative aspect-square overflow-hidden rounded-media border border-border bg-white">
-          {!activeUrl && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-muted-foreground">
-              <ImageOff className="size-10" aria-hidden="true" />
-              <p className="text-sm">Фото незабаром</p>
-            </div>
-          )}
-          {activeUrl && (
-            <Image src={activeUrl} alt={p.name} fill priority sizes="(min-width: 1024px) 33rem, 92vw" className="object-contain p-4 sm:p-8" />
-          )}
-          {keys.length > 1 && (
-            <>
-              <button type="button" onClick={() => step(-1)} aria-label="Попереднє фото" className={`${round} absolute left-3 top-1/2 -translate-y-1/2 bg-background/90 lg:opacity-0 lg:group-hover:opacity-100 focus-visible:opacity-100`}>
-                <ChevronLeft className="size-4" aria-hidden="true" />
-              </button>
-              <button type="button" onClick={() => step(1)} aria-label="Наступне фото" className={`${round} absolute right-3 top-1/2 -translate-y-1/2 bg-background/90 lg:opacity-0 lg:group-hover:opacity-100 focus-visible:opacity-100`}>
-                <ChevronRight className="size-4" aria-hidden="true" />
-              </button>
-              <p className="absolute bottom-3 right-3 inverse rounded-full bg-background px-2.5 py-1 text-xs font-medium text-foreground" aria-live="polite">
-                {keys.indexOf(activeKey) + 1} / {keys.length}
-              </p>
-            </>
-          )}
-        </div>
-
-        {keys.length > 1 && (
-          <div className="flex gap-2 overflow-x-auto pb-1">
-            {keys.map((key) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setImageKey(key)}
-                aria-label={`Фото ${key}`}
-                aria-pressed={activeKey === key}
-                className={`relative size-16 shrink-0 overflow-hidden rounded-card border-2 bg-white transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                  activeKey === key ? "border-primary" : "border-transparent hover:border-border"
-                }`}
-              >
-                <Image src={images[key]} alt="" fill sizes="64px" className="object-contain p-1" />
-              </button>
-            ))}
-          </div>
-        )}
+    <div className="lg:grid lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start">
+      {/* Gallery: edge to edge, full height */}
+      <div className="lg:sticky lg:top-24 lg:self-start">
+        <ProductGallery images={galleryImages} alt={p.name} resetKey={colorId ?? "default"} />
       </div>
 
-      {/* Purchase panel */}
-      <div className="flex flex-col gap-6">
-        <div>
-          {p.children}
-          <div className="mt-3 flex flex-wrap items-baseline gap-3">
-            <span className="text-h2 font-semibold text-primary">{fmtPrice(unitCents)}</span>
-            {discountPct > 0 && (
-              <>
-                <span className="text-muted-foreground line-through">{fmtPrice(p.basePriceCents)}</span>
-                <span className="rounded-full bg-success/10 px-2.5 py-1 text-xs font-semibold text-success">-{discountPct}%</span>
-              </>
-            )}
+      {/* Buy column: no card, just type and hairlines */}
+      <div className="flex flex-col gap-7 px-gutter py-8 lg:px-12 lg:py-12 xl:px-16">
+        <div className="max-w-xl">{p.children}</div>
+
+        <div className="max-w-xl space-y-3">
+          <div ref={ctaRef} className="flex items-center gap-4">
+            <div className="shrink-0">
+              <span className="block text-h2 font-medium tabular-nums">{fmtPrice(unitCents)}</span>
+              {discountPct > 0 && (
+                <span className="flex items-center gap-2 text-xs">
+                  <span className="text-muted-foreground line-through">{fmtPrice(p.basePriceCents)}</span>
+                  <span className="rounded-full bg-success/10 px-2 py-0.5 font-semibold text-success">-{discountPct}%</span>
+                </span>
+              )}
+            </div>
+            <Button type="button" size="lg" onClick={customize} variant="primary" className="h-14 flex-1 rounded-full text-base">
+              Додати принт +
+            </Button>
           </div>
+          <button
+            type="button"
+            onClick={addWithoutPrint}
+            className="mx-auto flex min-h-11 items-center justify-center gap-1.5 text-sm text-muted-foreground underline-offset-4 transition-colors duration-fast hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {added && <Check className="size-4 text-success" aria-hidden="true" />}
+            {added ? "Додано до кошика" : "або додати без принту"}
+          </button>
+          <span role="status" className="sr-only">{added ? "Додано до кошика" : ""}</span>
           {quantity > 1 && (
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="text-center text-sm text-muted-foreground">
               Разом: <span className="font-semibold text-foreground">{fmtPrice(unitCents * quantity)}</span> за {quantity} шт
             </p>
           )}
         </div>
 
-        {p.colors.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-sm font-semibold">
-              Колір: <span className="font-normal text-muted-foreground">{color?.name ?? "—"}</span>
-            </p>
-            <div className="flex flex-wrap gap-1">
-              {p.colors.map((c) => (
-                <button
-                  key={c.id}
-                  type="button"
-                  onClick={() => { setColorId(c.id); setImageKey(null); }}
-                  aria-label={c.name}
-                  aria-pressed={colorId === c.id}
-                  title={c.name}
-                  className="flex size-11 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  <span
-                    className={`size-7 rounded-full border border-border transition-shadow duration-fast ${colorId === c.id ? "ring-2 ring-foreground ring-offset-2 ring-offset-background" : ""}`}
-                    style={{ backgroundColor: c.hex }}
-                  />
-                </button>
-              ))}
-            </div>
+        <div className={`${rule} max-w-xl space-y-4 pt-6`}>
+          {topTier ? (
+            <p className="text-sm font-medium">Від {topTier.qty} шт — {fmtPrice(topTierCents)} за одиницю</p>
+          ) : p.minOrderQty > 1 ? (
+            <p className="text-sm font-medium">Від {p.minOrderQty} шт — {fmtPrice(p.basePriceCents)} за одиницю</p>
+          ) : null}
+          <ul className="space-y-3 text-sm text-foreground/85">
+            <li className="flex items-center gap-3"><Truck className="size-5 shrink-0" strokeWidth={1.5} aria-hidden="true" /> Доставка по Україні</li>
+            <li className="flex items-center gap-3"><ShieldCheck className="size-5 shrink-0" strokeWidth={1.5} aria-hidden="true" /> Перевіряємо макет перед друком</li>
+            {p.leadLabel && (
+              <li className="flex items-center gap-3"><Clock3 className="size-5 shrink-0" strokeWidth={1.5} aria-hidden="true" /> Виробництво {p.leadLabel}</li>
+            )}
+          </ul>
+        </div>
+
+        {(p.colors.length > 0 || p.sizes.length > 0) && (
+          <div className={`${rule} max-w-xl space-y-6 pt-6`}>
+            {p.colors.length > 0 && (
+              <div className="space-y-1">
+                <p className="text-sm font-semibold">
+                  Колір: <span className="font-normal text-muted-foreground">{color?.name ?? "—"}</span>
+                </p>
+                <div className="-ml-1 flex flex-wrap gap-0.5">
+                  {p.colors.map((c) => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => setColorId(c.id)}
+                      aria-label={c.name}
+                      aria-pressed={colorId === c.id}
+                      title={c.name}
+                      className="flex size-11 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      <span
+                        className={`size-7 rounded-full border border-border transition-shadow duration-fast ${colorId === c.id ? "ring-2 ring-foreground ring-offset-2 ring-offset-background" : ""}`}
+                        style={{ backgroundColor: c.hex }}
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {p.sizes.length > 0 && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-semibold">Розмір</p>
+                  {p.sizeChartId && <SizeChartModal chartId={p.sizeChartId} />}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {p.sizes.map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => setSize(s === size ? null : s)}
+                      aria-pressed={size === s}
+                      className={`h-11 min-w-12 rounded-control border px-4 text-sm font-semibold transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                        size === s ? "border-foreground bg-foreground text-background" : "border-border text-foreground hover:border-foreground/40 hover:bg-muted"
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
-        {p.sizes.length > 0 && (
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-semibold">Розмір</p>
-              {p.sizeChartId && <SizeChartModal chartId={p.sizeChartId} />}
-            </div>
-            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-              {p.sizes.map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => setSize(s === size ? null : s)}
-                  aria-pressed={size === s}
-                  className={`h-11 rounded-card border px-3 text-sm font-semibold transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                    size === s ? "border-foreground bg-foreground text-background" : "border-border text-foreground hover:border-foreground/40 hover:bg-muted"
-                  }`}
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div className="space-y-2">
+        <div className={`${rule} max-w-xl space-y-2 pt-6`}>
           <label htmlFor="product-quantity" className="text-sm font-semibold">Кількість</label>
           <div className="flex flex-wrap items-center gap-2">
             <button type="button" className={round} aria-label="Зменшити кількість" onClick={() => setQuantity((q) => Math.max(1, q - 1))}>
@@ -253,20 +246,20 @@ export function ProductPurchase(p: PurchaseProps) {
               <Plus className="size-4" aria-hidden="true" />
             </button>
             {quantity >= 10 && (
-              <span className="rounded-card bg-success/10 px-2.5 py-1 text-xs font-semibold text-success">
+              <span className="rounded-full bg-success/10 px-2.5 py-1 text-xs font-semibold text-success">
                 Знижка {discountPct > 0 ? `-${discountPct}%` : "доступна"}
               </span>
             )}
           </div>
         </div>
 
-        <div className="rounded-card border border-border bg-muted/40">
+        <div className={`${rule} max-w-xl border-b`}>
           <button
             type="button"
             onClick={() => setBulkOpen((v) => !v)}
             aria-expanded={bulkOpen}
             aria-controls="bulk-calculator"
-            className="flex w-full items-start justify-between gap-3 p-4 text-left transition-colors duration-fast hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex min-h-11 w-full items-start justify-between gap-3 py-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <span>
               <span className="flex items-center gap-2 text-sm font-semibold">
@@ -278,7 +271,7 @@ export function ProductPurchase(p: PurchaseProps) {
           </button>
 
           {bulkOpen && (
-            <div id="bulk-calculator" className="space-y-4 border-t border-border p-4">
+            <div id="bulk-calculator" className="space-y-4 pb-5">
               <div className="flex items-center justify-between gap-4">
                 <input
                   type="range"
@@ -328,21 +321,6 @@ export function ProductPurchase(p: PurchaseProps) {
             </div>
           )}
         </div>
-
-        <div ref={ctaRef} className="flex flex-col gap-3 pt-2 sm:flex-row">
-          <Button type="button" onClick={customize} variant="primary" className="flex-1">
-            <ToolCase aria-hidden="true" /> Додати принт
-          </Button>
-          <Button type="button" onClick={addWithoutPrint} variant="outline" className="flex-1">
-            {added ? <Check aria-hidden="true" /> : <CircleSlash aria-hidden="true" />}
-            {added ? "Додано до кошика" : "Без принту"}
-          </Button>
-          <span role="status" className="sr-only">{added ? "Додано до кошика" : ""}</span>
-        </div>
-
-        <Link href="/#catalog" className="inline-flex min-h-11 w-fit items-center gap-1.5 text-sm text-muted-foreground transition-colors duration-fast hover:text-foreground">
-          <ArrowLeft className="size-3.5" aria-hidden="true" /> Повернутись до каталогу
-        </Link>
       </div>
 
       {showBar && (
@@ -351,8 +329,8 @@ export function ProductPurchase(p: PurchaseProps) {
             <p className="truncate text-sm font-medium">{p.name}</p>
             <p className="text-sm font-semibold text-primary">{fmtPrice(unitCents)}</p>
           </div>
-          <Button type="button" onClick={customize} variant="primary">
-            <ToolCase aria-hidden="true" /> Додати принт
+          <Button type="button" onClick={customize} variant="primary" className="rounded-full">
+            Додати принт +
           </Button>
         </div>
       )}

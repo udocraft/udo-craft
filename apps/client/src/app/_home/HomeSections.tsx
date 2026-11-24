@@ -18,6 +18,8 @@ import { Faq } from "./Faq";
 import { HomeFaq } from "./HomeFaq";
 import { Contact } from "./Contact";
 import { BizBand } from "./BizBand";
+import { Statement } from "./Statement";
+import { FeaturedPair } from "./FeaturedPair";
 
 /** Sections on the shopper home. The CMS `home_layout` still orders and hides them. */
 const B2C_SECTIONS: readonly HomeSectionId[] = ["hero", "collections", "demo", "process", "faq"];
@@ -28,8 +30,9 @@ type FaqItems = { question: string; answer: string }[];
 
 function renderB2c(id: HomeSectionId, ctx: HomeCtx, faqItems: FaqItems): ReactNode {
   switch (id) {
-    case "hero": return <Hero ctx={ctx} />;
-    case "collections": return <Collections ctx={ctx} />;
+    // Editorial sections ride with the hero and catalog so the CMS layout keeps working.
+    case "hero": return <><Hero ctx={ctx} /><Statement ctx={ctx} /></>;
+    case "collections": return <><FeaturedPair ctx={ctx} /><Collections ctx={ctx} /></>;
     case "demo": return <LiveDemo ctx={ctx} />;
     case "process": return <Steps locale={ctx.locale} />;
     case "faq":

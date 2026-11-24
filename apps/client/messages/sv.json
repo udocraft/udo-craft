@@ -475,7 +475,18 @@
     },
     "privacy": "Integritet",
     "terms": "Villkor",
-    "cookies": "Cookies"
+    "cookies": "Cookies",
+    "newsletter": {
+      "title": "{pct}% rabatt på din första beställning",
+      "desc": "Prenumerera: nya plagg, tryckidéer och begränsade släpp en gång i månaden. Ingen spam.",
+      "placeholder": "Din e-post",
+      "label": "E-post för nyhetsbrevet",
+      "submit": "Prenumerera",
+      "success": "Klart. Din kod på {pct}% är på väg.",
+      "error": "Det gick inte att prenumerera. Försök igen.",
+      "invalid": "Kontrollera din e-post.",
+      "consent": "Genom att prenumerera godkänner du integritetspolicyn."
+    }
   },
   "cart": {
     "title": "Kundvagn",
@@ -1418,7 +1429,10 @@
         "front": "Fram",
         "back": "Bak",
         "left": "Vänster",
-        "right": "Höger"
+        "right": "Höger",
+        "neck_inner": "Innerlapp",
+        "sleeve_left": "Vänster ärm",
+        "sleeve_right": "Höger ärm"
       }
     },
     "layers": {
@@ -1435,6 +1449,70 @@
       "register": "Registrera",
       "login": "Logga in",
       "skip": "Fortsätt utan konto"
+    },
+    "mode": {
+      "label": "Visningsläge",
+      "edit": "Design",
+      "preview": "Förhandsvisning"
+    },
+    "tour": {
+      "replay": "Visa tips",
+      "counter": "{n} av {total}",
+      "close": "Stäng",
+      "back": "Tillbaka",
+      "next": "Nästa",
+      "done": "Klar",
+      "tools": {
+        "title": "Designverktyg",
+        "body": "Ladda upp din egen fil, välj ett färdigt tryck, lägg till text eller rita något. Allt börjar här."
+      },
+      "canvas": {
+        "title": "Arbetsyta",
+        "body": "Dra, skala och rotera element direkt på plagget. Knapparna nedanför byter sida: fram, bak, ärmar."
+      },
+      "layers": {
+        "title": "Lager",
+        "body": "Alla element i designen i en lista. Ändra ordning, duplicera, ta bort. Det valda lagret har en egen verktygsrad ovanför ytan."
+      },
+      "mode": {
+        "title": "Design och förhandsvisning",
+        "body": "Byt till Förhandsvisning för att se plagget från flera vinklar utan redigeringsverktygen."
+      },
+      "price": {
+        "title": "Antal och pris",
+        "body": "Välj färg, storlek och antal. Priset inkluderar mängdrabatt och tryckkostnad för varje element."
+      },
+      "actions": {
+        "title": "Beställning och delning",
+        "body": "När designen är klar, lägg den i beställningen eller skicka en länk för kommentarer."
+      }
+    },
+    "preview": {
+      "close": "Stäng",
+      "prev": "Föregående",
+      "next": "Nästa",
+      "withPrint": "Med ditt tryck",
+      "noPrint": "Utan tryck",
+      "sides": {
+        "front": "Fram",
+        "back": "Bak",
+        "chest": "Bröst",
+        "neck_inner": "Innerlapp",
+        "sleeve_left": "Vänster ärm",
+        "sleeve_right": "Höger ärm"
+      },
+      "tiles": {
+        "zone": "Trycket på nära håll",
+        "zoneHint": "Tryckyta",
+        "collar": "Krage och passform",
+        "collarHint": "Detalj",
+        "flat": "Platt",
+        "flatHint": "Flat lay"
+      },
+      "emptyTitle": "Ditt plagg visas här",
+      "emptyBody": "Lägg till en bild, text eller ett tryck i designläget så visar vi plagget från flera vinklar.",
+      "backToDesign": "Tillbaka till design",
+      "readOnly": "Endast förhandsvisning."
     }
   },
   "sizeChart": {
@@ -1442,5 +1520,21 @@
     "empty": "Tabellen är tom",
     "schemeAlt": "{name}: storleksschema",
     "note": "Alla mått är i centimeter. Om du är mellan två storlekar, välj den större."
+  },
+  "editorial": {
+    "statement": {
+      "eyebrow": "U:DO CRAFT",
+      "part1": "Vi förenar hantverk och teknik så att kläder med din design",
+      "part2": "blir burna, inte bortglömda i garderoben —",
+      "part3": "plagg du är stolt över varje dag.",
+      "cta": "Skapa din design"
+    },
+    "pair": {
+      "title1": "Gjort för att bäras,",
+      "accent": "fulländat",
+      "title2": "in i detalj",
+      "desc": "Tjock bomull, exakt tryck och brodyr som klarar hundratals tvättar. Välj basen, vi fixar resten.",
+      "from": "från {price} ₴"
+    }
   }
 }

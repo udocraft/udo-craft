@@ -475,7 +475,18 @@
     },
     "privacy": "Privacidade",
     "terms": "Termos",
-    "cookies": "Cookies"
+    "cookies": "Cookies",
+    "newsletter": {
+      "title": "−{pct}% na primeira encomenda",
+      "desc": "Subscreva: peças novas, ideias de estampas e edições limitadas uma vez por mês. Sem spam.",
+      "placeholder": "O seu email",
+      "label": "Email para a newsletter",
+      "submit": "Subscrever",
+      "success": "Feito. O seu código de {pct}% está a caminho.",
+      "error": "Não foi possível subscrever. Tente novamente.",
+      "invalid": "Verifique o email.",
+      "consent": "Ao subscrever, aceita a política de privacidade."
+    }
   },
   "cart": {
     "title": "Carrinho",
@@ -1418,7 +1429,10 @@
         "front": "Frente",
         "back": "Costas",
         "left": "Esquerda",
-        "right": "Direita"
+        "right": "Direita",
+        "neck_inner": "Etiqueta interior",
+        "sleeve_left": "Manga esquerda",
+        "sleeve_right": "Manga direita"
       }
     },
     "layers": {
@@ -1435,6 +1449,70 @@
       "register": "Registar",
       "login": "Entrar",
       "skip": "Continuar sem conta"
+    },
+    "mode": {
+      "label": "Modo de visualização",
+      "edit": "Design",
+      "preview": "Pré-visualização"
+    },
+    "tour": {
+      "replay": "Mostrar dicas",
+      "counter": "{n} de {total}",
+      "close": "Fechar",
+      "back": "Voltar",
+      "next": "Seguinte",
+      "done": "Concluir",
+      "tools": {
+        "title": "Ferramentas de design",
+        "body": "Carregue o seu ficheiro, escolha uma estampa pronta, adicione texto ou desenhe algo. Tudo começa aqui."
+      },
+      "canvas": {
+        "title": "Tela",
+        "body": "Arraste, redimensione e rode elementos diretamente na peça. Os botões abaixo mudam de lado: frente, costas, mangas."
+      },
+      "layers": {
+        "title": "Camadas",
+        "body": "Todos os elementos do design numa lista. Reordene, duplique, elimine. A camada selecionada tem a sua própria barra acima da tela."
+      },
+      "mode": {
+        "title": "Design e pré-visualização",
+        "body": "Mude para Pré-visualização para ver a peça de vários ângulos, sem as ferramentas de edição."
+      },
+      "price": {
+        "title": "Quantidade e preço",
+        "body": "Escolha cor, tamanho e quantidade. O preço inclui o desconto por volume e o custo de impressão de cada elemento."
+      },
+      "actions": {
+        "title": "Encomenda e partilha",
+        "body": "Quando o design estiver pronto, adicione-o à encomenda ou envie um link para comentários."
+      }
+    },
+    "preview": {
+      "close": "Fechar",
+      "prev": "Anterior",
+      "next": "Seguinte",
+      "withPrint": "Com a sua estampa",
+      "noPrint": "Sem estampa",
+      "sides": {
+        "front": "Frente",
+        "back": "Costas",
+        "chest": "Peito",
+        "neck_inner": "Etiqueta interior",
+        "sleeve_left": "Manga esquerda",
+        "sleeve_right": "Manga direita"
+      },
+      "tiles": {
+        "zone": "Estampa de perto",
+        "zoneHint": "Área de impressão",
+        "collar": "Gola e corte",
+        "collarHint": "Detalhe da peça",
+        "flat": "Em plano",
+        "flatHint": "Flat lay"
+      },
+      "emptyTitle": "A sua peça aparecerá aqui",
+      "emptyBody": "Adicione uma imagem, texto ou estampa no modo de design e mostramos a peça de vários ângulos.",
+      "backToDesign": "Voltar ao design",
+      "readOnly": "Apenas pré-visualização."
     }
   },
   "sizeChart": {
@@ -1442,5 +1520,21 @@
     "empty": "A tabela está vazia",
     "schemeAlt": "{name}: esquema de tamanhos",
     "note": "Todas as medidas estão em centímetros. Se estiver entre dois tamanhos, escolha o maior."
+  },
+  "editorial": {
+    "statement": {
+      "eyebrow": "U:DO CRAFT",
+      "part1": "Juntamos artesanato e tecnologia para que a roupa com o seu design",
+      "part2": "seja usada, não guardada no armário —",
+      "part3": "peças de que se orgulha todos os dias.",
+      "cta": "Criar o seu design"
+    },
+    "pair": {
+      "title1": "Feito para usar,",
+      "accent": "aperfeiçoado",
+      "title2": "ao detalhe",
+      "desc": "Algodão espesso, impressão precisa e bordado que aguentam centenas de lavagens. Escolha a base, nós tratamos do resto.",
+      "from": "desde {price} ₴"
+    }
   }
 }
