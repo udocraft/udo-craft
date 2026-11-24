@@ -3,7 +3,8 @@
 import { Link } from "@/i18n/navigation";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { User, ShoppingBag, Menu, Phone, Mail, Instagram, Send } from "lucide-react";
+import { User, ShoppingBag, Menu, Phone, Mail, Shirt, ListChecks, Briefcase } from "lucide-react";
+import { socialLinks } from "@/components/social-links";
 import { useTranslations } from "next-intl";
 import { buttonVariants } from "@udo-craft/ui/components/ui/button-variants";
 import { BrandLogoFull } from "@/components/brand-logo";
@@ -22,43 +23,65 @@ interface NavBarProps {
   onAuthOpen?: () => void;
 }
 
+// Long ease-out: fast start, very soft landing.
+const morph = "duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none";
+
+/** Content inset shared by both rows; the pill's edges sit on the max-w-6xl box. */
+const rowInner = "mx-auto flex max-w-6xl items-center px-gutter md:px-8 lg:px-10";
+
 const iconButton =
   "relative flex size-11 items-center justify-center rounded-full text-muted-foreground transition-colors duration-fast hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 const topLink =
   "inline-flex min-h-8 items-center gap-1.5 rounded-control text-muted-foreground transition-colors duration-fast hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
 /**
- * Two-level header. Top bar (md+): phone, email and socials. It slides
- * away once the page scrolls, leaving the main bar: logo, navigation, account, cart
- * and the one primary action. `--header-height` in globals.css matches both heights.
+ * Two-level header. Top row (md+): phone, email and socials; main row: logo,
+ * navigation, account, cart and the primary action. On scroll both rows float as one
+ * rounded pill. `--header-height` in globals.css matches the full height. `--header-height` in globals.css matches both heights.
  */
 export function NavBar({ isLoggedIn, cartCount, contacts, onCartOpen, onAuthOpen }: NavBarProps) {
   const t = useTranslations("nav");
   const navLinks = [
-    { href: "/#catalog", label: t("catalog") },
-    { href: "/#how", label: t("how") },
-    { href: "/biz", label: t("business") },
+    { href: "/#catalog", label: t("catalog"), Icon: Shirt },
+    { href: "/#how", label: t("how"), Icon: ListChecks },
+    { href: "/biz", label: t("business"), Icon: Briefcase },
   ];
+  const socials = socialLinks(contacts);
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuMounted, setMenuMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    // Hysteresis: morph past 24px, unmorph under 4px, so it never flickers at the edge.
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled((prev) => (prev ? y > 4 : y > 24));
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-transform duration-300 ease-out motion-reduce:transition-none ${
-        scrolled ? "md:-translate-y-9" : ""
-      }`}
-    >
-      {/* Top bar: contacts and secondary links, desktop only */}
-      <div className="hidden h-9 border-b border-border/70 bg-background md:block">
-        <div className="mx-auto flex h-full max-w-6xl items-center justify-between gap-6 px-gutter text-xs">
+    <header className="fixed inset-x-0 top-0 z-50">
+      <div className={`relative transition-transform ${morph} ${scrolled ? "md:translate-y-3" : "translate-y-0"}`}>
+        {/* One surface carries the look: full-width bar at the top, floating pill on scroll
+            (md+ only). Phones keep a solid bar flush with the top edge, so in-app browsers
+            and Safari tint their glass toolbars white instead of showing the page through.
+            Only its edges, radius and shadow animate; the content does not reflow. The
+            gray band at the top is the contact row (md+). */}
+        <div
+          aria-hidden="true"
+          className={`absolute inset-y-0 border bg-[linear-gradient(to_bottom,var(--color-muted)_var(--strip),var(--color-card)_var(--strip))] [--strip:0px] md:[--strip:2.25rem] transition-[left,right,border-radius,border-color,box-shadow] ${morph} ${
+            scrolled
+              ? "left-0 right-0 rounded-none border-transparent border-b-border/70 shadow-[0_4px_16px_rgba(12,16,34,0.06)] md:left-[max(0.375rem,calc(50%_-_36rem))] md:right-[max(0.375rem,calc(50%_-_36rem))] md:rounded-[28px] md:border-border/80 md:shadow-[0_12px_40px_rgba(12,16,34,0.12)]"
+              : "left-0 right-0 rounded-none border-transparent border-b-border/70 shadow-none"
+          }`}
+        />
+
+        {/* Top row: contacts and socials, desktop only */}
+        <div className="relative hidden h-9 md:block">
+        <div className={`${rowInner} h-full justify-between gap-6 text-xs`}>
           <div className="flex items-center gap-5">
             <a href={telHref(contacts.phone)} className={topLink}>
               <Phone className="size-3.5" aria-hidden="true" />
@@ -70,28 +93,30 @@ export function NavBar({ isLoggedIn, cartCount, contacts, onCartOpen, onAuthOpen
             </a>
           </div>
           <div className="flex items-center gap-5">
-            <a href={contacts.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className={topLink}>
-              <Instagram className="size-4" aria-hidden="true" />
-            </a>
-            <a href={contacts.telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className={topLink}>
-              <Send className="size-4" aria-hidden="true" />
-            </a>
+            {socials.map(({ href, label, Icon }) => (
+              <a key={label} href={href} target="_blank" rel="noopener noreferrer" className={topLink}>
+                <Icon className="size-3.5" aria-hidden="true" />
+                {label}
+              </a>
+            ))}
+            <span className="h-4 w-px bg-border" aria-hidden="true" />
+            <LanguageSwitcher />
           </div>
         </div>
-      </div>
+        </div>
 
-      {/* Main bar */}
-      <nav aria-label={t("mainNav")} className="border-b border-border/70 bg-background/85 backdrop-blur-xl">
-        <div className="mx-auto flex h-14 max-w-6xl items-center gap-2 px-gutter">
+        {/* Main row */}
+        <nav aria-label={t("mainNav")} className="relative">
+        <div className={`${rowInner} relative h-14 gap-2`}>
           <Link
             href="/"
             aria-label={t("logoLink")}
-            className="mr-auto inline-flex min-h-11 shrink-0 items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:mr-0"
+            className="mr-auto inline-flex min-h-11 shrink-0 items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <BrandLogoFull className="h-7 w-auto" color="var(--color-primary)" />
           </Link>
 
-          <ul className="mx-auto hidden items-center gap-1 lg:flex">
+          <ul className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 lg:flex">
             {navLinks.map((l) => (
               <li key={l.href}>
                 <Link
@@ -124,8 +149,6 @@ export function NavBar({ isLoggedIn, cartCount, contacts, onCartOpen, onAuthOpen
               )}
             </button>
 
-            <LanguageSwitcher />
-
             {/* Wrapper carries the visibility: buttonVariants' own inline-flex would override `hidden`. */}
             <div className="ml-2 hidden md:block">
               <Link href="/order" prefetch={false} className={buttonVariants({ variant: "primary", size: "sm" })}>
@@ -144,7 +167,8 @@ export function NavBar({ isLoggedIn, cartCount, contacts, onCartOpen, onAuthOpen
             </button>
           </div>
         </div>
-      </nav>
+        </nav>
+      </div>
 
       {menuMounted && <MobileMenuSheet open={menuOpen} onOpenChange={setMenuOpen} links={navLinks} contacts={contacts} />}
     </header>

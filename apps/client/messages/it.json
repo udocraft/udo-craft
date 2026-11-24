@@ -18,6 +18,11 @@
     "contacts": "Contatti",
     "startProject": "Avvia progetto",
     "openMenu": "Apri menu",
+    "menu": "Menu",
+    "language": "Lingua",
+    "directionsPrompt": "Aprire le indicazioni in Mappe?",
+    "directionsOpen": "Apri Mappe",
+    "directionsCancel": "Annulla",
     "closeMenu": "Chiudi menu",
     "goToAccount": "Vai all'account",
     "signIn": "Accedi",
@@ -49,7 +54,8 @@
   "homeContact": {
     "heading": "Contattaci",
     "subtext": "Raccontaci il tuo progetto — invieremo una proposta entro 24 ore.",
-    "address": "Leopoli, via Dzherelna 69"
+    "address": "Leopoli, via Dzherelna 69",
+    "visitNote": "visita allo showroom su appuntamento · lun⁠–⁠gio 10:00⁠–⁠18:00, ven 10:00⁠–⁠16:00"
   },
   "hero": {
     "heading": "Abbigliamento che diventa parte del DNA della tua azienda",
@@ -57,6 +63,7 @@
     "ctaPrimary": "Sfoglia il catalogo",
     "skipToCatalog": "Al catalogo",
     "watchVideo": "Guarda il video",
+    "showProcess": "Guarda il processo",
     "closeVideo": "Chiudi il video",
     "mainSection": "Hero section",
     "fullscreenVideo": "Video in fullscreen mode",

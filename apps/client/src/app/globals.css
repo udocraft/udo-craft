@@ -205,6 +205,8 @@
     /* In-page anchors (#catalog, #contact, #main) land below the fixed header. */
     scroll-padding-top: var(--header-height);
     min-height: 100%;
+    /* Shows in overscroll and around browser toolbars: match the white header. */
+    background-color: var(--color-card);
     overflow-x: clip;
   }
 

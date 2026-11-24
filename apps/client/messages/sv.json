@@ -18,6 +18,11 @@
     "contacts": "Kontakt",
     "startProject": "Starta projekt",
     "openMenu": "Öppna meny",
+    "menu": "Meny",
+    "language": "Språk",
+    "directionsPrompt": "Öppna vägbeskrivning i Kartor?",
+    "directionsOpen": "Öppna Kartor",
+    "directionsCancel": "Avbryt",
     "closeMenu": "Stäng meny",
     "goToAccount": "Till kontot",
     "signIn": "Logga in",
@@ -49,7 +54,8 @@
   "homeContact": {
     "heading": "Kontakta oss",
     "subtext": "Berätta om ditt projekt — vi skickar ett förslag inom 24 timmar.",
-    "address": "Lviv, Dzherelna 69"
+    "address": "Lviv, Dzherelna 69",
+    "visitNote": "besök i showroomet efter bokning · mån⁠–⁠tor 10:00⁠–⁠18:00, fre 10:00⁠–⁠16:00"
   },
   "hero": {
     "heading": "Kläder som blir en del av ditt företags DNA",
@@ -57,6 +63,7 @@
     "ctaPrimary": "Bläddra i katalogen",
     "skipToCatalog": "Till katalog",
     "watchVideo": "Se video",
+    "showProcess": "Se processen",
     "closeVideo": "Stäng video",
     "mainSection": "Hero section",
     "fullscreenVideo": "Video in fullscreen mode",

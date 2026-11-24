@@ -17,6 +17,7 @@ export const BASE_CLIENT_NAMESPACES = [
   "contactForm",
   "collections",
   "hero",
+  "homeContact", // address line in the mobile menu
   // Sign-in form: full-screen pages and the in-place dialog (customizer, paywall, header).
   "auth",
   // Size chart dialog (product page).

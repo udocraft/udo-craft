@@ -4,14 +4,8 @@ import { useState } from "react";
 import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { locales, type Locale } from "@/i18n/routing";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Check } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { FLAGS, TRIGGER_CLASS, TriggerBody } from "./LanguageTrigger";
 
 const NAMES: Record<Locale, string> = {
@@ -20,62 +14,66 @@ const NAMES: Record<Locale, string> = {
   cs: "Čeština", sv: "Svenska",
 };
 
+/** Plain substring match on code and native name (cmdk's default fuzzy match finds "Español" for "pol"). */
+const substringFilter = (value: string, search: string, keywords?: string[]) => {
+  const q = search.trim().toLowerCase();
+  return [value, ...(keywords ?? [])].some((v) => v.toLowerCase().includes(q)) ? 1 : 0;
+};
+
 export function LanguageSwitcherMenu({ defaultOpen = false }: { defaultOpen?: boolean }) {
   const rawLocale = useLocale();
-  const locale = (rawLocale && locales.includes(rawLocale as any) ? rawLocale : "en") as Locale;
+  const locale = (rawLocale && (locales as readonly string[]).includes(rawLocale) ? rawLocale : "en") as Locale;
   const router = useRouter();
   const pathname = usePathname();
   const [open, setOpen] = useState(defaultOpen);
-  const [search, setSearch] = useState("");
-
-  const filteredLocales = locales.filter((l) =>
-    (NAMES[l] || l).toLowerCase().includes(search.toLowerCase()) ||
-    l.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const handleSelect = (next: Locale) => {
-    router.replace(pathname, { locale: next });
-    setOpen(false);
-    setSearch("");
+  // cmdk always keeps a row "selected" for Enter (the first one on open). Only paint
+  // that cursor once the visitor uses the keyboard; the mouse paints the hovered row.
+  const [usingKeys, setUsingKeys] = useState(false);
+  const onOpenChange = (next: boolean) => {
+    setOpen(next);
+    if (!next) setUsingKeys(false);
   };
 
+  const handleSelect = (next: Locale) => {
+    onOpenChange(false);
+    if (next !== locale) router.replace(pathname, { locale: next });
+  };
+
+  // Popover + Command, not a dropdown menu: a menu moves focus onto items on hover
+  // and handles letter/Space keys itself, which fights a search field inside it.
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger aria-label="Language" className={TRIGGER_CLASS}>
+    <Popover open={open} onOpenChange={onOpenChange}>
+      <PopoverTrigger aria-label="Language" className={TRIGGER_CLASS}>
         <TriggerBody locale={locale} />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48 p-2">
-        <div className="mb-2">
-          <Input
-            placeholder="Search..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="h-8 text-sm"
-            autoFocus
-          />
-        </div>
-        <div className="max-h-60 overflow-y-auto">
-          {filteredLocales.length === 0 ? (
-            <div className="text-sm text-muted-foreground text-center py-2">
-              No languages found
-            </div>
-          ) : (
-            filteredLocales.map((l) => (
-              <DropdownMenuItem
+      </PopoverTrigger>
+      <PopoverContent align="end" className="w-52 gap-0 p-1">
+        <Command
+          loop
+          filter={substringFilter}
+          onKeyDown={() => setUsingKeys(true)}
+          className={usingKeys ? undefined : "[&_[data-slot=command-item][data-selected=true]:not(:hover)]:bg-transparent"}
+        >
+          <CommandInput placeholder="Search..." autoFocus />
+          <CommandList className="max-h-64">
+            <CommandEmpty>No languages found</CommandEmpty>
+            {locales.map((l) => (
+              <CommandItem
                 key={l}
-                onClick={() => handleSelect(l)}
-                className="flex items-center justify-between cursor-pointer"
+                value={l}
+                keywords={[NAMES[l]]}
+                onSelect={() => handleSelect(l)}
+                data-checked={locale === l}
+                className="cursor-pointer *:[svg]:text-primary"
               >
-                <div className="flex items-center gap-2">
+                <span className="flex items-center gap-2">
                   <span className="text-lg">{FLAGS[l]}</span>
                   <span className="text-sm">{NAMES[l]}</span>
-                </div>
-                {locale === l && <Check className="w-4 h-4 text-primary" />}
-              </DropdownMenuItem>
-            ))
-          )}
-        </div>
-      </DropdownMenuContent>
-    </DropdownMenu>
+                </span>
+              </CommandItem>
+            ))}
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 }
