@@ -1,102 +1,38 @@
-import Image from "next/image";
 import { getTranslations } from "next-intl/server";
+import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "@udo-craft/ui/components/ui/button-variants";
-import { getAllImages, resolveProductImages } from "@udo-craft/shared/product-images";
 import { Link } from "@/i18n/navigation";
-import { localizedField } from "@/lib/localized-field";
 import { HeroMedia } from "./HeroMedia";
-import { cmsAttrs, cmsText, cmsValue, type HomeCtx } from "./context";
+import type { HomeCtx } from "./context";
 
-function pickHeroProduct(ctx: HomeCtx) {
-  const imagesOf = (p: HomeCtx["products"][number]) => resolveProductImages(p.product_images, p.images);
-  const product = ctx.products.find(
-    (p) =>
-      p.is_active &&
-      (imagesOf(p).length > 0 ||
-        ctx.colorVariants.some(
-          (v) => v.product_id === p.id && resolveProductImages(v.variant_images, v.images).length > 0,
-        )),
-  );
-  if (!product) return { product: null, image: null as string | null };
-  const variant = ctx.colorVariants.find(
-    (v) => v.product_id === product.id && resolveProductImages(v.variant_images, v.images).length > 0,
-  );
-  const images = variant ? resolveProductImages(variant.variant_images, variant.images) : imagesOf(product);
-  const map = getAllImages(images);
-  return { product, image: map.front ?? Object.values(map)[0] ?? null };
-}
-
+/**
+ * B2C home hero: one message, one primary action, one quiet link. Copy comes from
+ * translations (the admin CMS `home_hero` block holds the B2B copy and drives /biz).
+ */
 export async function Hero({ ctx }: { ctx: HomeCtx }) {
-  const t = await getTranslations({ locale: ctx.locale, namespace: "hero" });
-  const tNav = await getTranslations({ locale: ctx.locale, namespace: "nav" });
-  const tStats = await getTranslations({ locale: ctx.locale, namespace: "homeStats" });
-  const { product, image } = pickHeroProduct(ctx);
-  const productName = product ? localizedField(product.name, product.name_en, ctx.locale) : null;
-
-  const primaryText = cmsText(ctx, "home_hero", "cta_primary_text", tNav("designMerch"));
-  const primaryUrl = ctx.locale === "uk" ? cmsValue(ctx, "home_hero", "cta_primary_url", "/order") : "/order";
-  const primaryIsRoute = primaryUrl.startsWith("/") && !primaryUrl.startsWith("//");
-
-  const statValue = cmsValue(ctx, "home_stats", "stat1_value", "500");
-  const statSuffix = cmsValue(ctx, "home_stats", "stat1_suffix", "+");
-  const statLabel = cmsText(ctx, "home_stats", "stat1_label", tStats("stat1Label"));
+  const [t, tHero, tNav] = await Promise.all([
+    getTranslations({ locale: ctx.locale, namespace: "home" }),
+    getTranslations({ locale: ctx.locale, namespace: "hero" }),
+    getTranslations({ locale: ctx.locale, namespace: "nav" }),
+  ]);
 
   return (
-    <section className="inverse relative overflow-hidden bg-background text-foreground" aria-label={t("mainSection")}>
+    <section className="inverse relative overflow-hidden bg-background text-foreground" aria-label={tHero("mainSection")}>
       <HeroMedia />
-
-      <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-gutter pb-20 pt-32 lg:min-h-[44rem] lg:grid-cols-[1.1fr_0.9fr] lg:gap-16 lg:py-36">
-        <div className="max-w-2xl">
-          <h1 className="text-display font-semibold text-balance" {...cmsAttrs(ctx, "home_hero", "heading")}>
-            {cmsText(ctx, "home_hero", "heading", t("heading"))}
-          </h1>
-          <p className="mt-6 max-w-xl text-lede text-muted-foreground" {...cmsAttrs(ctx, "home_hero", "subheading")}>
-            {cmsText(ctx, "home_hero", "subheading", t("subheading"))}
-          </p>
-
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            {primaryIsRoute ? (
-              <Link href={primaryUrl} prefetch={false} className={buttonVariants({ variant: "primary", size: "lg", className: "shadow-glow" })}>
-                {primaryText}
-              </Link>
-            ) : (
-              <a href={primaryUrl} className={buttonVariants({ variant: "primary", size: "lg", className: "shadow-glow" })}>
-                {primaryText}
-              </a>
-            )}
-            <a href="#contact" className={buttonVariants({ variant: "outline", size: "lg" })}>
-              {tNav("getQuote")}
-            </a>
-          </div>
-
-          <p className="mt-8 inline-flex items-center gap-2 text-sm text-muted-foreground">
-            <span className="size-1.5 rounded-full bg-brand" aria-hidden="true" />
-            <span>
-              <strong className="font-semibold text-foreground">
-                {statValue}
-                {statSuffix}
-              </strong>{" "}
-              {statLabel}
-            </span>
-          </p>
-        </div>
-
-        <div className="relative mx-auto w-full max-w-[34rem] lg:mx-0">
-          <div className="relative aspect-square overflow-hidden rounded-media bg-white ring-1 ring-foreground/10">
-            {image && (
-              <Image
-                src={image}
-                alt={productName ?? ""}
-                fill
-                priority
-                sizes="(min-width: 1024px) 34rem, 92vw"
-                className="object-contain p-6 sm:p-10"
-              />
-            )}
-            <p className="absolute inset-x-4 bottom-4 truncate rounded-card bg-ink px-4 py-3 text-sm text-foreground">
-              {productName ?? "U:DO CRAFT"}
-            </p>
-          </div>
+      <div className="relative mx-auto flex min-h-[78svh] w-full max-w-4xl flex-col items-center justify-center px-gutter pb-24 pt-40 text-center md:min-h-[44rem]">
+        <h1 className="text-display font-semibold text-balance">{t("hero.heading")}</h1>
+        <p className="mt-6 max-w-2xl text-lede text-muted-foreground text-pretty">{t("hero.subheading")}</p>
+        <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
+          <Link href="/order" prefetch={false} className={buttonVariants({ variant: "primary", size: "lg" })}>
+            {tNav("createDesign")}
+          </Link>
+          <a
+            href="#catalog"
+            className="group inline-flex min-h-11 items-center gap-1.5 rounded-control text-base font-medium text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {tHero("ctaPrimary")}
+            <ArrowRight className="size-4 transition-transform duration-fast group-hover:translate-x-0.5" aria-hidden="true" />
+          </a>
         </div>
       </div>
     </section>

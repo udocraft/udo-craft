@@ -1,12 +1,14 @@
 {
   "meta": {
-    "title": "U:DO CRAFT — Corporate merch",
-    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA.",
+    "title": "U:DO CRAFT — des vêtements à votre image",
+    "description": "Créez en ligne un t-shirt, un sweat ou un manches longues avec votre propre visuel. Fabrication en 7 à 14 jours, livraison en Ukraine.",
     "productTitle": "{name} | Personnalisation et confection | U:DO CRAFT",
     "productDescription": "Commandez le vêtement d'entreprise {name} avec impression ou broderie personnalisée à partir de {min} pièces.",
     "productNotFound": "Produit introuvable | U:DO CRAFT",
     "popupTitle": "Popup merch pour votre événement | U:DO CRAFT",
-    "popupDescription": "Un popup merch mobile : les invités personnalisent leurs vêtements et repartent avec sur place. Pour événements d'entreprise, conférences et festivals."
+    "popupDescription": "Un popup merch mobile : les invités personnalisent leurs vêtements et repartent avec sur place. Pour événements d'entreprise, conférences et festivals.",
+    "bizTitle": "U:DO CRAFT pour les entreprises — merch d'entreprise",
+    "bizDescription": "B2B merch platform. We create clothing that becomes part of your corporate DNA."
   },
   "nav": {
     "catalog": "Catalogue",
@@ -24,7 +26,9 @@
     "logoLink": "U:DO CRAFT — retour à l'accueil",
     "skipToContent": "Aller au contenu principal",
     "designMerch": "Créez votre merch",
-    "getQuote": "Demander un devis"
+    "getQuote": "Demander un devis",
+    "business": "Entreprises",
+    "createDesign": "Créer mon design"
   },
   "homeStats": {
     "stat3Suffix": " j",
@@ -270,8 +274,8 @@
     "mm": "mm",
     "embroidery": "Broderie",
     "label": "Online constructor",
-    "heading": "Build your merch right in the interface",
-    "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
+    "heading": "Essayez ici même",
+    "desc": "Choisissez une couleur et importez votre image pour voir le rendu de votre pièce.",
     "openEditor": "Open constructor",
     "productLabel": "Product",
     "colorLabel": "Color",
@@ -419,10 +423,10 @@
     "address": "Address"
   },
   "footer": {
-    "tagline": "Plateforme B2B de merch pour équipes, marques et événements.",
+    "tagline": "Des vêtements à votre image, de la pièce unique à la grande commande.",
     "copyright": "U:DO CRAFT. Tous droits réservés.",
     "readyToStart": "Prêt à commencer ?",
-    "readyDesc": "Dès 10 unités · 7–14 jours · Livraison",
+    "readyDesc": "Dès une pièce · 7 à 14 jours · Livraison partout en Ukraine",
     "startProject": "Démarrer le projet",
     "ariaLabel": "Pied de page",
     "homeLink": "U:DO CRAFT — retour à l'accueil",
@@ -453,6 +457,12 @@
           "contact": "Contact",
           "cabinet": "Compte",
           "delivery": "Livraison et paiement"
+        }
+      },
+      "business": {
+        "title": "Entreprises",
+        "links": {
+          "overview": "Merch d'entreprise"
         }
       }
     },
@@ -912,8 +922,8 @@
     "cookieSettings": "Paramètres des cookies"
   },
   "homeDemo": {
-    "upload": "Importer votre logo",
-    "remove": "Retirer le logo",
+    "upload": "Importer une image",
+    "remove": "Retirer l'image",
     "hint": "PNG, JPG, SVG ou WebP, jusqu'à 5 Mo",
     "note": "Simple aperçu. L'éditeur complet définit la taille et les zones d'impression.",
     "tooLarge": "Le fichier dépasse 5 Mo. Choisissez une image plus légère."
@@ -966,5 +976,42 @@
     "addComment": "Ajouter un commentaire",
     "sendComment": "Envoyer",
     "commentsOff": "Les commentaires sont désactivés pour ce lien."
+  },
+  "home": {
+    "hero": {
+      "heading": "Des vêtements, conçus par vous.",
+      "subheading": "Choisissez une pièce, ajoutez votre visuel ou votre texte dans l'éditeur : nous la fabriquons et la livrons. Même à l'unité."
+    },
+    "steps": {
+      "heading": "Trois étapes jusqu'à votre pièce",
+      "items": {
+        "0": {
+          "title": "Choisissez une pièce",
+          "desc": "T-shirt, sweat à capuche ou manches longues : choisissez le modèle, la couleur et la taille."
+        },
+        "1": {
+          "title": "Ajoutez votre design",
+          "desc": "Importez une image ou saisissez votre texte dans l'éditeur et voyez le résultat aussitôt."
+        },
+        "2": {
+          "title": "Recevez votre commande",
+          "desc": "Fabrication en 7 à 14 jours ouvrés, livraison partout en Ukraine."
+        }
+      }
+    },
+    "faq": {
+      "single": {
+        "question": "Puis-je commander une seule pièce ?",
+        "answer": "Oui. Commandez autant que nécessaire, même une seule pièce avec votre propre design."
+      },
+      "design": {
+        "question": "Comment ajouter mon design ?",
+        "answer": "Dans l'éditeur : importez une image ou ajoutez du texte, puis choisissez son emplacement. Le prix s'affiche aussitôt."
+      }
+    },
+    "biz": {
+      "heading": "Du merch pour votre équipe ou votre événement ?",
+      "text": "Vêtements d'entreprise, stands pop-up et personnalisation : sur une page dédiée aux entreprises."
+    }
   }
 }

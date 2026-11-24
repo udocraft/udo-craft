@@ -94,7 +94,7 @@ export function HeroMedia() {
         type="button"
         onClick={() => setCinema((v) => !v)}
         aria-label={cinema ? t("closeVideo") : t("watchVideo")}
-        className={`z-[9999] flex size-11 items-center justify-center rounded-full border border-border bg-background/70 text-foreground transition-colors duration-fast hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+        className={`${cinema ? "z-[9999]" : "z-10"} flex size-11 items-center justify-center rounded-full border border-border bg-background/70 text-foreground transition-colors duration-fast hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
           cinema ? "fixed bottom-6 right-4 md:right-6" : "absolute bottom-6 right-4 md:right-6"
         }`}
       >

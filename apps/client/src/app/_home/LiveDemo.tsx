@@ -1,7 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Section, SectionHeader } from "@udo-craft/ui";
 import { getAllImages, resolveProductImages } from "@udo-craft/shared/product-images";
-import { Link } from "@/i18n/navigation";
 import { localizedField } from "@/lib/localized-field";
 import { DemoIsland, type DemoVariant } from "./DemoIsland";
 import type { HomeCtx } from "./context";
@@ -35,10 +34,9 @@ function pickDemo(ctx: HomeCtx) {
 
 export async function LiveDemo({ ctx }: { ctx: HomeCtx }) {
   const { locale } = ctx;
-  const [t, tDemo, tDesigner, tCollections] = await Promise.all([
+  const [t, tDemo, tCollections] = await Promise.all([
     getTranslations({ locale, namespace: "customizer" }),
     getTranslations({ locale, namespace: "homeDemo" }),
-    getTranslations({ locale, namespace: "designer" }),
     getTranslations({ locale, namespace: "collections" }),
   ]);
   const { product, variants, fallback } = pickDemo(ctx);
@@ -63,18 +61,7 @@ export async function LiveDemo({ ctx }: { ctx: HomeCtx }) {
           tooLarge: tDemo("tooLarge"),
           editor: t("openEditor"),
         }}
-      >
-        <div className="mt-10 border-t border-border pt-6">
-          <h3 className="text-h4 font-semibold">{tDesigner("heading")}</h3>
-          <p className="mt-1 text-sm text-muted-foreground">{tDesigner("desc")}</p>
-          <Link
-            href="/?ref=designer#contact"
-            className="mt-2 inline-flex min-h-11 items-center rounded-control text-sm font-medium text-foreground underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            {tDesigner("cta")}
-          </Link>
-        </div>
-      </DemoIsland>
+      />
     </Section>
   );
 }
