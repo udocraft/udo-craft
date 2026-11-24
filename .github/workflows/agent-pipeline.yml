@@ -1,0 +1,448 @@
+name: Agent pipeline
+
+# Ticket lifecycle (labels = state = Kanban column):
+#   status:backlog -> triage (Haiku) -> planning (Opus) -> [needs-plan-approval: human /approve]
+#   -> building (Sonnet, branch agent/issue-N, draft PR) -> e2e-review (CI + E2E, then Opus review)
+#   -> fix loop (Sonnet, max 3) -> ready-to-merge (human merges)
+# Decisions between stages are made by this workflow from structured output, never by the model.
+# Kill switch: repo variable AGENT_ENABLED must be "true". Pause one ticket: label hitl:paused.
+# Full runbook: docs/AGENT_PIPELINE.md
+
+on:
+  schedule:
+    - cron: "*/20 * * * *" # feeder: pulls the next status:backlog ticket when below the WIP limit
+  issue_comment:
+    types: [created] # owner commands: /approve, /reject <why>, /replan, /fix <what>
+  repository_dispatch:
+    types: [agent-stage] # stage -> stage hand-off (sent by this workflow only)
+  workflow_run:
+    workflows: [CI, E2E]
+    types: [completed] # after checks on an agent/issue-N PR: review or fix
+  workflow_dispatch:
+    inputs:
+      stage: { description: "triage | plan | build | fix | review", required: true }
+      issue: { description: "Issue number", required: true }
+
+permissions:
+  contents: read
+
+env:
+  MODEL_TRIAGE: claude-haiku-5-5
+  MODEL_PLAN: claude-opus-5-5
+  MODEL_BUILD: claude-sonnet-5-5
+  MODEL_REVIEW: claude-opus-5-5
+  TOOLS_READ: "Read,Glob,Grep,Bash(git log:*),Bash(git show:*),Bash(git grep:*),Bash(git diff:*)"
+  TOOLS_WRITE: "Edit,Write,MultiEdit,Bash(npm run type-check:*),Bash(npm run lint:*),Bash(npm run test:*),Bash(npx tsc:*),Bash(npx vitest:*),Bash(git status:*)"
+  TOOLS_DENY: "Bash(git push:*),Bash(git commit:*),Bash(git reset:*),Bash(gh:*),Bash(curl:*),WebFetch,WebSearch"
+  FORBIDDEN_PATHS: '^(\.github/|\.claude/|scripts/agent/|apps/client/e2e/|.*-snapshots/|\.env|.*\.env)'
+
+jobs:
+  route:
+    if: vars.AGENT_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    permissions: { contents: read, issues: read, pull-requests: read, actions: read }
+    outputs:
+      stage: ${{ steps.r.outputs.stage }}
+      issue: ${{ steps.r.outputs.issue }}
+      sha: ${{ steps.r.outputs.sha }}
+      reason: ${{ steps.r.outputs.reason }}
+      ref: ${{ steps.r.outputs.ref }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { sparse-checkout: scripts/agent }
+      - id: r
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const h = require('./scripts/agent/gh.cjs');
+            const ev = context.eventName, p = context.payload;
+            const out = (o) => { for (const [k, v] of Object.entries(o)) core.setOutput(k, String(v ?? '')); core.info(JSON.stringify(o)); };
+            const isOwner = (u, assoc) => u && u.type === 'User' && u.login === context.repo.owner && assoc === 'OWNER';
+            const paused = async (n) => (await h.labels(github, context, n)).includes(h.PAUSED);
+
+            if (ev === 'schedule') {
+              const q = (label) => github.paginate(github.rest.issues.listForRepo, { ...context.repo, state: 'open', labels: label, per_page: 100 });
+              let active = 0;
+              for (const s of h.ACTIVE) active += (await q(s)).length;
+              const limit = Number(process.env.WIP || 2);
+              if (active >= limit) return out({ stage: '', reason: `WIP ${active}/${limit}` });
+              const backlog = (await q(h.STATUS.backlog)).filter((i) => !i.pull_request && !i.labels.some((l) => l.name === h.PAUSED));
+              backlog.sort((a, b) => a.number - b.number);
+              return out(backlog[0] ? { stage: 'triage', issue: backlog[0].number } : { stage: '', reason: 'backlog empty' });
+            }
+
+            if (ev === 'workflow_dispatch') return out({ stage: p.inputs.stage, issue: p.inputs.issue, reason: 'manual' });
+
+            if (ev === 'repository_dispatch') {
+              const c = p.client_payload || {};
+              if (await paused(c.issue)) return out({ stage: '', reason: 'paused' });
+              return out({ stage: c.stage, issue: c.issue, sha: c.sha, reason: c.reason, ref: c.ref });
+            }
+
+            if (ev === 'issue_comment') {
+              const c = p.comment;
+              if (!isOwner(c.user, c.author_association)) return out({ stage: '', reason: 'not owner' });
+              const cmd = (c.body.trim().match(/^\/(approve|reject|replan|fix)\b/) || [])[1];
+              if (!cmd) return out({ stage: '', reason: 'no command' });
+              const isPr = !!p.issue.pull_request;
+              let issue = p.issue.number;
+              if (isPr) {
+                const m = (await github.rest.pulls.get({ ...context.repo, pull_number: issue })).data.head.ref.match(/^agent\/issue-(\d+)$/);
+                if (!m) return out({ stage: '', reason: 'not an agent PR' });
+                issue = Number(m[1]);
+              }
+              const status = (await h.labels(github, context, issue)).find((n) => n.startsWith('status:'));
+              if (cmd === 'approve' && status === h.STATUS.planApproval) return out({ stage: 'build', issue, reason: 'approved' });
+              const replannable = [h.STATUS.planApproval, h.STATUS.needsHuman, h.STATUS.doneAlready, h.STATUS.readyToMerge];
+              if ((cmd === 'reject' || cmd === 'replan') && replannable.includes(status)) return out({ stage: 'plan', issue, reason: 'human', ref: c.id });
+              if (cmd === 'fix' && isPr) return out({ stage: 'fix', issue, reason: 'human', ref: c.id });
+              return out({ stage: '', reason: `/${cmd} not valid in ${status}` });
+            }
+
+            if (ev === 'workflow_run') {
+              const run = p.workflow_run;
+              const m = (run.head_branch || '').match(/^agent\/issue-(\d+)$/);
+              if (!m || run.head_repository.full_name !== `${context.repo.owner}/${context.repo.repo}`) return out({ stage: '', reason: 'not an agent branch' });
+              const issue = Number(m[1]);
+              const status = (await h.labels(github, context, issue)).find((n) => n.startsWith('status:'));
+              if (status !== h.STATUS.review || await paused(issue)) return out({ stage: '', reason: `status ${status}` });
+              const { data } = await github.rest.actions.listWorkflowRunsForRepo({ ...context.repo, head_sha: run.head_sha, per_page: 50 });
+              const latest = {};
+              for (const r of data.workflow_runs.filter((r) => ['CI', 'E2E'].includes(r.name))) {
+                if (!latest[r.name] || r.id > latest[r.name].id) latest[r.name] = r;
+              }
+              const runs = Object.values(latest);
+              if (runs.length < 2 || runs.some((r) => r.status !== 'completed')) return out({ stage: '', reason: 'checks still running' });
+              const failed = runs.filter((r) => !['success', 'skipped', 'neutral'].includes(r.conclusion));
+              if (failed.length) return out({ stage: 'fix', issue, sha: run.head_sha, reason: 'ci', ref: failed.map((r) => r.id).join(',') });
+              return out({ stage: 'review', issue, sha: run.head_sha, reason: 'checks green' });
+            }
+            out({ stage: '' });
+        env:
+          WIP: ${{ vars.AGENT_MAX_ACTIVE }}
+
+  # ---------------------------------------------------------------- triage (Haiku)
+  triage:
+    needs: route
+    if: needs.route.outputs.stage == 'triage'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env: { ISSUE: "${{ needs.route.outputs.issue }}" }
+    concurrency: { group: "agent-${{ needs.route.outputs.issue }}", cancel-in-progress: false }
+    steps:
+      - id: app
+        uses: actions/create-github-app-token@v1
+        with: { app-id: "${{ vars.AGENT_APP_ID }}", private-key: "${{ secrets.AGENT_APP_PRIVATE_KEY }}" }
+      - uses: actions/checkout@v4
+        with: { token: "${{ steps.app.outputs.token }}", fetch-depth: 200 }
+      - uses: actions/github-script@v7
+        with:
+          github-token: ${{ steps.app.outputs.token }}
+          script: |
+            const h = require('./scripts/agent/gh.cjs');
+            const n = Number(process.env.ISSUE);
+            await h.setStatus(github, context, n, h.STATUS.triage);
+            await h.writeTicket(github, context, n);
+      - id: schema
+        run: echo "json=$(jq -c . .github/agent/schemas/triage.json)" >> "$GITHUB_OUTPUT"
+      - id: claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ steps.app.outputs.token }}
+          prompt: "Read .github/agent/prompts/triage.md and follow it."
+          claude_args: >-
+            --model ${{ env.MODEL_TRIAGE }} --max-turns 20 --permission-mode default
+            --allowedTools "${{ env.TOOLS_READ }}" --disallowedTools "${{ env.TOOLS_DENY }},Edit,Write"
+            --json-schema '${{ steps.schema.outputs.json }}'
+      - uses: actions/github-script@v7
+        env: { OUT: "${{ steps.claude.outputs.structured_output }}", EXEC: "${{ steps.claude.outputs.execution_file }}" }
+        with:
+          github-token: ${{ steps.app.outputs.token }}
+          script: |
+            const h = require('./scripts/agent/gh.cjs');
+            const n = Number(process.env.ISSUE);
+            const t = JSON.parse(process.env.OUT || 'null');
+            const cost = h.runCost(process.env.EXEC);
+            if (!t) { await h.setStatus(github, context, n, h.STATUS.needsHuman); return h.comment(github, context, n, 'error', 'Triage produced no result. Check the workflow log.'); }
+            const body = `**Triage (${process.env.MODEL_TRIAGE})**: \`${t.verdict}\`, size **${t.size}**, ${t.gated ? 'needs plan approval' : 'auto-proceeds'}${cost != null ? `, $${cost.toFixed(3)}` : ''}\n\n${t.summary}\n\n${t.evidence.map((e) => `- ${e}`).join('\n')}${t.question ? `\n\n**Question:** ${t.question}` : ''}`;
+            await h.comment(github, context, n, 'triage', body, t);
+            await github.rest.issues.addLabels({ ...context.repo, issue_number: n, labels: [`size:${t.size}`] });
+            if (t.verdict === 'actionable') return h.dispatch(github, context, { stage: 'plan', issue: n });
+            await h.setStatus(github, context, n, t.verdict === 'done' ? h.STATUS.doneAlready : h.STATUS.needsHuman);
+
+  # ---------------------------------------------------------------- plan (Opus)
+  plan:
+    needs: route
+    if: needs.route.outputs.stage == 'plan'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env: { ISSUE: "${{ needs.route.outputs.issue }}" }
+    concurrency: { group: "agent-${{ needs.route.outputs.issue }}", cancel-in-progress: false }
+    steps:
+      - id: app
+        uses: actions/create-github-app-token@v1
+        with: { app-id: "${{ vars.AGENT_APP_ID }}", private-key: "${{ secrets.AGENT_APP_PRIVATE_KEY }}" }
+      - uses: actions/checkout@v4
+        with: { token: "${{ steps.app.outputs.token }}", fetch-depth: 200 }
+      - uses: actions/github-script@v7
+        env: { BOT: "${{ steps.app.outputs.app-slug }}[bot]", REF: "${{ needs.route.outputs.ref }}" }
+        with:
+          github-token: ${{ steps.app.outputs.token }}
+          script: |
+            const fs = require('fs'), h = require('./scripts/agent/gh.cjs');
+            const n = Number(process.env.ISSUE);
+            await h.setStatus(github, context, n, h.STATUS.planning);
+            await h.writeTicket(github, context, n);
+            fs.writeFileSync('.agent/triage.json', JSON.stringify(await h.latestData(github, context, n, 'triage', process.env.BOT) || {}, null, 2));
+            if (process.env.REF) {
+              const { data: c } = await github.rest.issues.getComment({ ...context.repo, comment_id: Number(process.env.REF) });
+              if (c.user.login === context.repo.owner) fs.writeFileSync('.agent/feedback.md', c.body);
+            }
+      - id: schema
+        run: echo "json=$(jq -c . .github/agent/schemas/plan.json)" >> "$GITHUB_OUTPUT"
+      - id: claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ steps.app.outputs.token }}
+          prompt: "Read .github/agent/prompts/plan.md and follow it."
+          claude_args: >-
+            --model ${{ env.MODEL_PLAN }} --max-turns 40 --permission-mode default
+            --allowedTools "${{ env.TOOLS_READ }}" --disallowedTools "${{ env.TOOLS_DENY }},Edit,Write"
+            --json-schema '${{ steps.schema.outputs.json }}'
+      - uses: actions/github-script@v7
+        env: { OUT: "${{ steps.claude.outputs.structured_output }}", EXEC: "${{ steps.claude.outputs.execution_file }}" }
+        with:
+          github-token: ${{ steps.app.outputs.token }}
+          script: |
+            const h = require('./scripts/agent/gh.cjs');
+            const n = Number(process.env.ISSUE);
+            const p = JSON.parse(process.env.OUT || 'null');
+            const cost = h.runCost(process.env.EXEC);
+            if (!p) { await h.setStatus(github, context, n, h.STATUS.needsHuman); return h.comment(github, context, n, 'error', 'Planning produced no result. Check the workflow log.'); }
+            const list = (a) => (a || []).map((x) => `- ${x}`).join('\n');
+            let body = `**Plan (${process.env.MODEL_PLAN})**${cost != null ? `, $${cost.toFixed(3)}` : ''}\n\n${p.goal}\n\n**Files**\n${list(p.target_files.map((f) => '`' + f + '`'))}\n\n**Changes**\n${p.changes.map((c) => `- \`${c.file}\`: ${c.before} → ${c.after}`).join('\n')}\n\n**Acceptance criteria**\n${list(p.acceptance_criteria)}\n\n**Edge cases**\n${list(p.edge_cases)}`;
+            if (p.test_gaps?.length) body += `\n\n**Test gaps (need a human to add E2E coverage)**\n${list(p.test_gaps)}`;
+            if (p.split_required) {
+              body += `\n\n**Too big for one PR. Proposed split:**\n${list(p.sub_tickets)}\n\nCreate the sub-issues and queue them, or reply \`/replan <guidance>\`.`;
+              await h.comment(github, context, n, 'plan', body, p);
+              return h.setStatus(github, context, n, h.STATUS.needsHuman);
+            }
+            if (p.gated) {
+              body += `\n\n**Needs your approval** (${p.gated_reason || 'user-facing change'}). Reply \`/approve\`, or \`/reject <what to change>\`.`;
+              await h.comment(github, context, n, 'plan', body, p);
+              return h.setStatus(github, context, n, h.STATUS.planApproval);
+            }
+            await h.comment(github, context, n, 'plan', body + '\n\nNot gated: building now.', p);
+            await h.dispatch(github, context, { stage: 'build', issue: n });
+
+  # ---------------------------------------------------------------- build / fix (Sonnet)
+  build:
+    needs: route
+    if: needs.route.outputs.stage == 'build' || needs.route.outputs.stage == 'fix'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions: { contents: read, actions: read }
+    concurrency: { group: "agent-${{ needs.route.outputs.issue }}", cancel-in-progress: false }
+    env:
+      STAGE: ${{ needs.route.outputs.stage }}
+      ISSUE: ${{ needs.route.outputs.issue }}
+      BRANCH: agent/issue-${{ needs.route.outputs.issue }}
+    steps:
+      - id: app
+        uses: actions/create-github-app-token@v1
+        with: { app-id: "${{ vars.AGENT_APP_ID }}", private-key: "${{ secrets.AGENT_APP_PRIVATE_KEY }}" }
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app.outputs.token }}
+          ref: ${{ needs.route.outputs.stage == 'fix' && format('agent/issue-{0}', needs.route.outputs.issue) || '' }}
+          fetch-depth: 0
+      - name: Prepare branch
+        run: |
+          echo ".agent/" >> .git/info/exclude
+          if [ "$STAGE" = "build" ]; then git switch -C "$BRANCH"; fi
+          if [ "$STAGE" = "fix" ] && [ -n "${{ needs.route.outputs.sha }}" ] && [ "$(git rev-parse HEAD)" != "${{ needs.route.outputs.sha }}" ]; then
+            echo "Branch moved past the failing commit; another fix already ran."; echo "SKIP=1" >> "$GITHUB_ENV"
+          fi
+      - id: prep
+        if: env.SKIP != '1'
+        uses: actions/github-script@v7
+        env: { BOT: "${{ steps.app.outputs.app-slug }}[bot]", REASON: "${{ needs.route.outputs.reason }}", REF: "${{ needs.route.outputs.ref }}" }
+        with:
+          github-token: ${{ steps.app.outputs.token }}
+          script: |
+            const fs = require('fs'), h = require('./scripts/agent/gh.cjs');
+            const n = Number(process.env.ISSUE);
+            await h.writeTicket(github, context, n);
+            const plan = await h.latestData(github, context, n, 'plan', process.env.BOT);
+            if (!plan) { core.setFailed('No plan found from the pipeline bot.'); return; }
+            fs.writeFileSync('.agent/plan.json', JSON.stringify(plan, null, 2));
+            if (process.env.STAGE === 'fix') {
+              const tries = await h.bumpRetries(github, context, n);
+              if (tries > h.MAX_RETRIES) {
+                await h.setStatus(github, context, n, h.STATUS.needsHuman);
+                await h.comment(github, context, n, 'blocked', `Stopped after ${h.MAX_RETRIES} fix attempts. Reply \`/fix <guidance>\` on the PR or \`/replan\` here.`);
+                core.setOutput('stop', '1'); return;
+              }
+              let failure = '';
+              if (process.env.REASON === 'review') {
+                const r = await h.latestData(github, context, n, 'review', process.env.BOT);
+                failure = `# Reviewer findings\n\n${(r?.findings || []).filter((f) => f.severity === 'blocking').map((f) => `- ${f.file}${f.line ? ':' + f.line : ''}: ${f.issue}${f.fix ? ` (suggested: ${f.fix})` : ''}`).join('\n')}\n\n${(r?.criteria || []).filter((c) => !c.met).map((c) => `- Unmet: ${c.criterion}: ${c.evidence}`).join('\n')}`;
+              } else if (process.env.REASON === 'human') {
+                const { data: c } = await github.rest.issues.getComment({ ...context.repo, comment_id: Number(process.env.REF) });
+                failure = `# Owner instruction\n\n${c.user.login === context.repo.owner ? c.body : ''}`;
+              } else {
+                failure = '# CI failures\n\nSee the log excerpts below.\n';
+                core.setOutput('runs', process.env.REF);
+              }
+              fs.writeFileSync('.agent/failure.md', failure);
+            }
+            await h.setStatus(github, context, n, h.STATUS.building);
+      - name: Collect CI logs
+        if: env.SKIP != '1' && steps.prep.outputs.runs != ''
+        env: { GH_TOKEN: "${{ github.token }}", RUNS: "${{ steps.prep.outputs.runs }}" }
+        run: |
+          for id in ${RUNS//,/ }; do
+            echo -e "\n## Run $id\n\`\`\`" >> .agent/failure.md
+            gh run view "$id" --log-failed | tail -n 300 >> .agent/failure.md || true
+            echo '```' >> .agent/failure.md
+          done
+      - uses: actions/setup-node@v4
+        if: env.SKIP != '1' && steps.prep.outputs.stop != '1'
+        with: { node-version: "20", cache: npm }
+      - name: Install
+        if: env.SKIP != '1' && steps.prep.outputs.stop != '1'
+        run: npm ci && npm run build:shared && npm run build:ui
+      - id: claude
+        if: env.SKIP != '1' && steps.prep.outputs.stop != '1'
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ steps.app.outputs.token }}
+          prompt: "Read .github/agent/prompts/${{ env.STAGE }}.md and follow it."
+          claude_args: >-
+            --model ${{ env.MODEL_BUILD }} --max-turns ${{ env.STAGE == 'build' && 80 || 40 }} --permission-mode default
+            --allowedTools "${{ env.TOOLS_READ }},${{ env.TOOLS_WRITE }}" --disallowedTools "${{ env.TOOLS_DENY }}"
+      - name: Guard, commit and push
+        id: push
+        if: env.SKIP != '1' && steps.prep.outputs.stop != '1'
+        env: { SLUG: "${{ steps.app.outputs.app-slug }}", GH_TOKEN: "${{ steps.app.outputs.token }}" }
+        run: |
+          git add -A
+          git diff --cached --name-only > .agent/changed.txt
+          if [ ! -s .agent/changed.txt ]; then echo "result=empty" >> "$GITHUB_OUTPUT"; exit 0; fi
+          if grep -E "$FORBIDDEN_PATHS" .agent/changed.txt > .agent/forbidden.txt; then
+            echo "result=forbidden" >> "$GITHUB_OUTPUT"; git reset -q --hard; exit 0
+          fi
+          BOT_ID=$(gh api "/users/${SLUG}%5Bbot%5D" --jq .id)
+          git -c user.name="${SLUG}[bot]" -c user.email="${BOT_ID}+${SLUG}[bot]@users.noreply.github.com" \
+            commit -q -m "agent(${STAGE}): #${ISSUE}" -m "Automated by the agent pipeline. Plan: see issue #${ISSUE}."
+          git push -q --force-with-lease origin "HEAD:${BRANCH}"
+          echo "result=pushed" >> "$GITHUB_OUTPUT"
+      - if: env.SKIP != '1' && steps.prep.outputs.stop != '1' && always()
+        uses: actions/github-script@v7
+        env:
+          RESULT: ${{ steps.push.outputs.result }}
+          EXEC: ${{ steps.claude.outputs.execution_file }}
+          CONCLUSION: ${{ steps.claude.outputs.conclusion }}
+        with:
+          github-token: ${{ steps.app.outputs.token }}
+          script: |
+            const fs = require('fs'), h = require('./scripts/agent/gh.cjs');
+            const n = Number(process.env.ISSUE), stage = process.env.STAGE, branch = process.env.BRANCH;
+            const cost = h.runCost(process.env.EXEC);
+            const costTxt = cost != null ? ` ($${cost.toFixed(3)})` : '';
+            if (process.env.RESULT !== 'pushed') {
+              const why = process.env.RESULT === 'forbidden'
+                ? `touched protected paths and was discarded:\n${fs.readFileSync('.agent/forbidden.txt', 'utf8')}`
+                : process.env.RESULT === 'empty' ? 'made no changes.' : `failed (${process.env.CONCLUSION || 'error'}).`;
+              await h.setStatus(github, context, n, h.STATUS.needsHuman);
+              return h.comment(github, context, n, 'blocked', `**${stage}**${costTxt} ${why}\nCheck the run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`);
+            }
+            const prs = await github.rest.pulls.list({ ...context.repo, head: `${context.repo.owner}:${branch}`, state: 'open' });
+            if (!prs.data.length) {
+              const { data: issue } = await github.rest.issues.get({ ...context.repo, issue_number: n });
+              const { data: pr } = await github.rest.pulls.create({
+                ...context.repo, head: branch, base: 'main', draft: true,
+                title: `agent: ${issue.title}`.slice(0, 200),
+                body: `Closes #${n}\n\nBuilt by the agent pipeline from the approved plan on #${n}. Opus review runs after CI and E2E pass.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)`,
+              });
+              await h.comment(github, context, n, 'build', `**Build${costTxt}**: draft PR #${pr.number}. Waiting for CI and E2E.`);
+            } else {
+              await h.comment(github, context, n, 'fix', `**Fix${costTxt}** pushed to #${prs.data[0].number}. Waiting for CI and E2E.`);
+            }
+            await h.setStatus(github, context, n, h.STATUS.review);
+
+  # ---------------------------------------------------------------- adversarial review (Opus)
+  review:
+    needs: route
+    if: needs.route.outputs.stage == 'review'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    concurrency: { group: "agent-${{ needs.route.outputs.issue }}", cancel-in-progress: false }
+    env:
+      ISSUE: ${{ needs.route.outputs.issue }}
+      SHA: ${{ needs.route.outputs.sha }}
+    steps:
+      - id: app
+        uses: actions/create-github-app-token@v1
+        with: { app-id: "${{ vars.AGENT_APP_ID }}", private-key: "${{ secrets.AGENT_APP_PRIVATE_KEY }}" }
+      - uses: actions/checkout@v4
+        with: { token: "${{ steps.app.outputs.token }}", ref: "agent/issue-${{ needs.route.outputs.issue }}", fetch-depth: 0 }
+      - id: prep
+        uses: actions/github-script@v7
+        env: { BOT: "${{ steps.app.outputs.app-slug }}[bot]" }
+        with:
+          github-token: ${{ steps.app.outputs.token }}
+          script: |
+            const fs = require('fs'), h = require('./scripts/agent/gh.cjs');
+            const n = Number(process.env.ISSUE);
+            const prev = await h.latestData(github, context, n, 'review', process.env.BOT);
+            if (prev && prev.sha === process.env.SHA) { core.setOutput('skip', '1'); return; }
+            await h.writeTicket(github, context, n);
+            fs.writeFileSync('.agent/plan.json', JSON.stringify(await h.latestData(github, context, n, 'plan', process.env.BOT), null, 2));
+            const { data: [pr] } = await github.rest.pulls.list({ ...context.repo, head: `${context.repo.owner}:agent/issue-${n}`, state: 'open' });
+            core.setOutput('pr', pr.number);
+            const { data: checks } = await github.rest.checks.listForRef({ ...context.repo, ref: process.env.SHA, per_page: 100 });
+            fs.writeFileSync('.agent/checks.md', checks.check_runs.map((c) => `- ${c.name}: ${c.conclusion}`).join('\n'));
+      - name: Diff
+        if: steps.prep.outputs.skip != '1'
+        run: git diff "origin/main...HEAD" > .agent/diff.patch && wc -l .agent/diff.patch
+      - id: schema
+        if: steps.prep.outputs.skip != '1'
+        run: echo "json=$(jq -c . .github/agent/schemas/review.json)" >> "$GITHUB_OUTPUT"
+      - id: claude
+        if: steps.prep.outputs.skip != '1'
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ steps.app.outputs.token }}
+          prompt: "Read .github/agent/prompts/review.md and follow it."
+          claude_args: >-
+            --model ${{ env.MODEL_REVIEW }} --max-turns 40 --permission-mode default
+            --allowedTools "${{ env.TOOLS_READ }}" --disallowedTools "${{ env.TOOLS_DENY }},Edit,Write"
+            --json-schema '${{ steps.schema.outputs.json }}'
+      - if: steps.prep.outputs.skip != '1'
+        uses: actions/github-script@v7
+        env: { OUT: "${{ steps.claude.outputs.structured_output }}", EXEC: "${{ steps.claude.outputs.execution_file }}", PR: "${{ steps.prep.outputs.pr }}" }
+        with:
+          github-token: ${{ steps.app.outputs.token }}
+          script: |
+            const h = require('./scripts/agent/gh.cjs');
+            const n = Number(process.env.ISSUE), pr = Number(process.env.PR);
+            const r = JSON.parse(process.env.OUT || 'null');
+            const cost = h.runCost(process.env.EXEC);
+            if (!r) { await h.setStatus(github, context, n, h.STATUS.needsHuman); return h.comment(github, context, n, 'error', 'Review produced no result. Check the workflow log.'); }
+            r.sha = process.env.SHA;
+            const crit = r.criteria.map((c) => `- ${c.met ? '✅' : '❌'} ${c.criterion}`).join('\n');
+            const finds = r.findings.map((f) => `- **${f.severity}** \`${f.file}${f.line ? ':' + f.line : ''}\`: ${f.issue}`).join('\n') || '- none';
+            const body = `**Review (${process.env.MODEL_REVIEW})**: \`${r.decision}\`${cost != null ? `, $${cost.toFixed(3)}` : ''}\n\n${r.summary}\n\n**Acceptance criteria**\n${crit}\n\n**Findings**\n${finds}`;
+            await github.rest.pulls.createReview({ ...context.repo, pull_number: pr, event: 'COMMENT', body });
+            await h.comment(github, context, n, 'review', body, r);
+            if (r.decision === 'approve') {
+              await github.graphql(`mutation($id:ID!){markPullRequestReadyForReview(input:{pullRequestId:$id}){clientMutationId}}`, { id: (await github.rest.pulls.get({ ...context.repo, pull_number: pr })).data.node_id }).catch(() => {});
+              await h.setStatus(github, context, n, h.STATUS.readyToMerge);
+              return h.comment(github, context, pr, 'ready', `Ready for human merge. CI and E2E are green, and Opus review approved commit ${process.env.SHA.slice(0, 7)}. Report: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`);
+            }
+            await h.dispatch(github, context, { stage: 'fix', issue: n, reason: 'review', sha: process.env.SHA });

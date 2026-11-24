@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["verdict", "summary", "evidence", "files", "size", "gated", "gated_reason"],
+  "properties": {
+    "verdict": { "type": "string", "enum": ["done", "actionable", "unclear", "out_of_scope"] },
+    "summary": { "type": "string", "maxLength": 600 },
+    "evidence": { "type": "array", "items": { "type": "string" }, "maxItems": 10 },
+    "files": { "type": "array", "items": { "type": "string" }, "maxItems": 15 },
+    "size": { "type": "string", "enum": ["S", "M", "L"] },
+    "gated": { "type": "boolean" },
+    "gated_reason": { "type": "string", "maxLength": 300 },
+    "question": { "type": "string", "maxLength": 500 }
+  }
+}

@@ -1,0 +1,79 @@
+name: E2E
+
+# Runs the existing Playwright + axe harness (apps/client/e2e/*.e2e.ts) against a
+# production build that talks to the STAGING Supabase project, never production.
+# Fork PRs get no secrets, so the job skips itself for them.
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    name: Playwright E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
+      NEXT_TELEMETRY_DISABLED: "1"
+      E2E_BASE_URL: http://localhost:3200
+    steps:
+      - name: Check staging secrets
+        id: guard
+        run: |
+          if [ -z "$NEXT_PUBLIC_SUPABASE_URL" ]; then
+            echo "No staging secrets (fork PR or not configured). Skipping E2E."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.guard.outputs.run == 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.guard.outputs.run == 'true'
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install
+        if: steps.guard.outputs.run == 'true'
+        run: npm ci
+
+      - name: Install Chromium
+        if: steps.guard.outputs.run == 'true'
+        run: npx --workspace=client playwright install --with-deps chromium
+
+      - name: Build
+        if: steps.guard.outputs.run == 'true'
+        run: npm run build:shared && npm run build:ui && npm run build:client
+
+      - name: Start server
+        if: steps.guard.outputs.run == 'true'
+        run: |
+          npm run start --workspace=client -- -p 3200 > server.log 2>&1 &
+          npx --yes wait-on@8 -t 120000 http-get://localhost:3200/api/health
+
+      - name: Run E2E
+        if: steps.guard.outputs.run == 'true'
+        run: npm run test:e2e --workspace=client
+
+      - name: Upload report
+        if: always() && steps.guard.outputs.run == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-results
+          path: |
+            apps/client/e2e-results
+            server.log
+          retention-days: 14
