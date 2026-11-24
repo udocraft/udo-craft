@@ -27,6 +27,7 @@ permissions:
   contents: read
 
 env:
+  AGENT_APPROVERS: ${{ vars.AGENT_APPROVERS }} # comma-separated logins allowed to /approve etc.
   MODEL_TRIAGE: claude-haiku-5-5
   MODEL_PLAN: claude-opus-5-5
   MODEL_BUILD: claude-sonnet-5-5
@@ -57,7 +58,6 @@ jobs:
             const h = require('./scripts/agent/gh.cjs');
             const ev = context.eventName, p = context.payload;
             const out = (o) => { for (const [k, v] of Object.entries(o)) core.setOutput(k, String(v ?? '')); core.info(JSON.stringify(o)); };
-            const isOwner = (u, assoc) => u && u.type === 'User' && u.login === context.repo.owner && assoc === 'OWNER';
             const paused = async (n) => (await h.labels(github, context, n)).includes(h.PAUSED);
 
             if (ev === 'schedule') {
@@ -81,7 +81,7 @@ jobs:
 
             if (ev === 'issue_comment') {
               const c = p.comment;
-              if (!isOwner(c.user, c.author_association)) return out({ stage: '', reason: 'not owner' });
+              if (!h.isApprover(context, c.user)) return out({ stage: '', reason: 'not an approver' });
               const cmd = (c.body.trim().match(/^\/(approve|reject|replan|fix)\b/) || [])[1];
               if (!cmd) return out({ stage: '', reason: 'no command' });
               const isPr = !!p.issue.pull_request;
@@ -197,7 +197,7 @@ jobs:
             fs.writeFileSync('.agent/triage.json', JSON.stringify(await h.latestData(github, context, n, 'triage', process.env.BOT) || {}, null, 2));
             if (process.env.REF) {
               const { data: c } = await github.rest.issues.getComment({ ...context.repo, comment_id: Number(process.env.REF) });
-              if (c.user.login === context.repo.owner) fs.writeFileSync('.agent/feedback.md', c.body);
+              if (h.isApprover(context, c.user)) fs.writeFileSync('.agent/feedback.md', c.body);
             }
       - id: schema
         run: echo "json=$(jq -c . .github/agent/schemas/plan.json)" >> "$GITHUB_OUTPUT"
@@ -291,7 +291,7 @@ jobs:
                 failure = `# Reviewer findings\n\n${(r?.findings || []).filter((f) => f.severity === 'blocking').map((f) => `- ${f.file}${f.line ? ':' + f.line : ''}: ${f.issue}${f.fix ? ` (suggested: ${f.fix})` : ''}`).join('\n')}\n\n${(r?.criteria || []).filter((c) => !c.met).map((c) => `- Unmet: ${c.criterion}: ${c.evidence}`).join('\n')}`;
               } else if (process.env.REASON === 'human') {
                 const { data: c } = await github.rest.issues.getComment({ ...context.repo, comment_id: Number(process.env.REF) });
-                failure = `# Owner instruction\n\n${c.user.login === context.repo.owner ? c.body : ''}`;
+                failure = `# Owner instruction\n\n${h.isApprover(context, c.user) ? c.body : ''}`;
               } else {
                 failure = '# CI failures\n\nSee the log excerpts below.\n';
                 core.setOutput('runs', process.env.REF);

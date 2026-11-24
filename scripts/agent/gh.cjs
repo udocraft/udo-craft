@@ -20,6 +20,17 @@ const MARK = (kind) => `<!-- agent:${kind} -->`;
 
 const repo = (context) => ({ owner: context.repo.owner, repo: context.repo.repo });
 
+/**
+ * People whose comments count as commands and ticket notes. Repo variable AGENT_APPROVERS
+ * (comma-separated GitHub logins); falls back to the repo owner for user-owned repos.
+ * For an organisation repo the owner is the org, so AGENT_APPROVERS must be set.
+ */
+function approvers(context) {
+  const list = (process.env.AGENT_APPROVERS || "").split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
+  return list.length ? list : [context.repo.owner.toLowerCase()];
+}
+const isApprover = (context, user) => !!user && user.type === "User" && approvers(context).includes(String(user.login).toLowerCase());
+
 async function labels(github, context, issue) {
   const { data } = await github.rest.issues.listLabelsOnIssue({ ...repo(context), issue_number: issue });
   return data.map((l) => l.name);
@@ -53,8 +64,7 @@ async function latestData(github, context, issue, kind, botLogin) {
 async function writeTicket(github, context, issue) {
   const { data: i } = await github.rest.issues.get({ ...repo(context), issue_number: issue });
   const all = await github.paginate(github.rest.issues.listComments, { ...repo(context), issue_number: issue, per_page: 100 });
-  const owner = context.repo.owner;
-  const notes = all.filter((c) => c.user.login === owner && c.user.type === "User").map((c) => `### Owner note\n${c.body}`);
+  const notes = all.filter((c) => isApprover(context, c.user)).map((c) => `### Owner note\n${c.body}`);
   fs.mkdirSync(".agent", { recursive: true });
   fs.writeFileSync(".agent/ticket.md", `# #${issue}: ${i.title}\n\n${i.body ?? ""}\n\n${notes.join("\n\n")}\n`);
   return i;
@@ -87,4 +97,4 @@ function runCost(executionFile) {
   }
 }
 
-module.exports = { STATUS, ACTIVE, PAUSED, MAX_RETRIES, MARK, labels, setStatus, comment, latestData, writeTicket, dispatch, retries, bumpRetries, runCost };
+module.exports = { approvers, isApprover, STATUS, ACTIVE, PAUSED, MAX_RETRIES, MARK, labels, setStatus, comment, latestData, writeTicket, dispatch, retries, bumpRetries, runCost };
