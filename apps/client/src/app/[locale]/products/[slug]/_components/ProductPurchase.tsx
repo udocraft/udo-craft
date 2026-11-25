@@ -1,5 +1,6 @@
 "use client";
 
+import { DEFAULT_DISCOUNT_GRID, discountPctForQty } from "@udo-craft/shared";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, BadgePercent, Check, ChevronDown, Clock3, Minus, Plus, ShieldCheck, Tags, Truck } from "lucide-react";
@@ -39,9 +40,6 @@ export interface PurchaseProps {
 
 const fmtPrice = (cents: number) => `₴${(cents / 100).toFixed(0)}`;
 
-function discountFor(grid: PurchaseProps["discountGrid"], qty: number) {
-  return [...grid].sort((a, b) => b.qty - a.qty).find((t) => qty >= t.qty)?.discount_pct ?? 0;
-}
 
 /**
  * Client island for the product page: full-height gallery on the left, sticky buy column on the
@@ -62,9 +60,10 @@ export function ProductPurchase(p: PurchaseProps) {
   const images = color && Object.keys(color.images).length > 0 ? color.images : p.defaultImages;
   const galleryImages = Object.entries(images).map(([key, url]) => ({ key, url }));
 
-  const discountPct = discountFor(p.discountGrid, quantity);
+  // Same discount rules as checkout and the server (packages/shared/src/orders.ts).
+  const discountPct = discountPctForQty(p.discountGrid, quantity);
   const unitCents = Math.round(p.basePriceCents * (1 - discountPct / 100));
-  const tiers = [...p.discountGrid].sort((a, b) => a.qty - b.qty);
+  const tiers = [...(p.discountGrid.length ? p.discountGrid : DEFAULT_DISCOUNT_GRID)].sort((a, b) => a.qty - b.qty);
   const nextTier = tiers.find((tier) => quantity < tier.qty);
   const topTier = tiers[tiers.length - 1];
   const topTierCents = topTier ? Math.round(p.basePriceCents * (1 - topTier.discount_pct / 100)) : 0;

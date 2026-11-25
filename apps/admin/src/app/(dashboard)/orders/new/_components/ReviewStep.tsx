@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { FileDown, Loader2 } from "lucide-react";
+import { FileDown, Loader2, Paperclip } from "lucide-react";
 import type { CartItem } from "./CartSummary";
 import { PREDEFINED_TAGS, DELIVERY_OPTIONS } from "../_lib/constants";
 
@@ -165,7 +165,7 @@ export function ReviewStep({ cart, totalCents, contact, orderTags, extraFiles, g
                       <div className="flex flex-wrap gap-2">
                         {extraFiles.map((f, i) => (
                           <Badge key={i} variant="secondary" className="bg-muted/40 text-[9px] font-bold h-7 px-3 truncate max-w-[150px] border-border/40">
-                            📎 {f.name}
+                            <Paperclip className="size-3 shrink-0" aria-hidden="true" /> {f.name}
                           </Badge>
                         ))}
                       </div>

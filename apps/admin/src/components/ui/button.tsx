@@ -1,5 +1,7 @@
 "use client"
 
+import * as React from "react"
+
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva, type VariantProps } from "class-variance-authority"
 
@@ -40,19 +42,36 @@ const buttonVariants = cva(
   }
 )
 
+/**
+ * `asChild` renders the single child (e.g. a Link) with the button styles instead
+ * of wrapping it, so links styled as buttons are not nested inside a <button>.
+ */
 function Button({
   className,
   variant = "default",
   size = "default",
   asChild,
+  children,
   ...props
 }: ButtonPrimitive.Props & VariantProps<typeof buttonVariants> & { asChild?: boolean }) {
+  if (asChild && React.isValidElement(children)) {
+    // Clone rather than render through ButtonPrimitive: Base UI would add
+    // role="button" to the link, and screen readers would announce a button.
+    const child = children as React.ReactElement<{ className?: string }>
+    return React.cloneElement(child, {
+      ...(props as Record<string, unknown>),
+      "data-slot": "button",
+      className: cn(buttonVariants({ variant, size, className }), child.props.className),
+    } as Record<string, unknown>)
+  }
   return (
     <ButtonPrimitive
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
-    />
+    >
+      {children}
+    </ButtonPrimitive>
   )
 }
 

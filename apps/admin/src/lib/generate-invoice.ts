@@ -6,7 +6,10 @@ export interface InvoiceItem {
   size: string;
   color: string;
   quantity: number;
+  /** Final price per unit, discount and print included. */
   unitPriceCents: number;
+  /** Price per unit before the volume discount, for the "було" line. */
+  listPriceCents?: number;
   printAreaLabel?: string;
   printUrl?: string;
 }
@@ -20,16 +23,6 @@ export interface InvoiceData {
     company?: string;
   };
   createdAt?: Date;
-}
-
-const DISCOUNT_TIERS = [
-  { min: 100, pct: 15 },
-  { min: 50, pct: 12 },
-  { min: 10, pct: 5 },
-];
-
-function getDiscount(qty: number): number {
-  return DISCOUNT_TIERS.find((t) => qty >= t.min)?.pct ?? 0;
 }
 
 function fmt(cents: number): string {
@@ -249,8 +242,11 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<void> {
 
   for (let i = 0; i < data.items.length; i++) {
     const it = data.items[i];
-    const discPct = getDiscount(it.quantity);
-    const unitAfter = Math.round(it.unitPriceCents * (1 - discPct / 100));
+    // unitPriceCents is the final per-unit price (volume discount and print already
+    // applied by the order builder); discounting it again here double-counted.
+    const unitAfter = Math.round(it.unitPriceCents);
+    const listPrice = it.listPriceCents && it.listPriceCents > unitAfter ? Math.round(it.listPriceCents) : null;
+    const discPct = listPrice ? Math.round((1 - unitAfter / listPrice) * 100) : 0;
     const lineSum = unitAfter * it.quantity;
     grand += lineSum;
 
@@ -309,7 +305,7 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<void> {
       doc.setFont("Cousine", "normal");
       doc.setFontSize(6.8);
       doc.setTextColor(...MGRAY);
-      doc.text(`було ${fmt(it.unitPriceCents)}`, colX.price, rowTop + 15, { align: "right" });
+      doc.text(`було ${fmt(listPrice ?? unitAfter)}`, colX.price, rowTop + 15, { align: "right" });
     }
 
     y += rowH + 4;

@@ -10,9 +10,14 @@ function AlertDialog({ ...props }: AlertDialogPrimitive.Root.Props) {
   return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />
 }
 
-function AlertDialogTrigger({ asChild, ...props }: AlertDialogPrimitive.Trigger.Props & { asChild?: boolean }) {
+/** `asChild` renders the child element as the trigger (Base UI `render`), so a
+ *  Button child does not end up as a button nested inside another button. */
+function AlertDialogTrigger({ asChild, children, ...props }: AlertDialogPrimitive.Trigger.Props & { asChild?: boolean }) {
+  if (asChild && React.isValidElement(children)) {
+    return <AlertDialogPrimitive.Trigger data-slot="alert-dialog-trigger" render={children as React.ReactElement<Record<string, unknown>>} {...props} />
+  }
   return (
-    <AlertDialogPrimitive.Trigger data-slot="alert-dialog-trigger" {...props} />
+    <AlertDialogPrimitive.Trigger data-slot="alert-dialog-trigger" {...props}>{children}</AlertDialogPrimitive.Trigger>
   )
 }
 

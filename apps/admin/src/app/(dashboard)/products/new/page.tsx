@@ -98,7 +98,7 @@ export default function ProductNewPage() {
         contentClassName="p-4 md:p-6"
         actions={
           <>
-            <Button variant="outline" onClick={() => router.push("/products")}>
+            <Button variant="outline" onClick={() => router.push("/catalog?tab=products")}>
               Назад
             </Button>
             <Button onClick={triggerSave} disabled={saving}>

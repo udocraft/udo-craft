@@ -17,6 +17,30 @@ async function requireAuth() {
   return user;
 }
 
+const MAX_BATCH_LEADS = 500;
+const ID_CHUNK = 100;
+const PREVIEW_COLUMNS = "id, lead_id, body, sender, created_at, read_at, attachments";
+
+/** Latest message per lead, queried in chunks so the id list never hits URL limits. */
+async function lastMessagesFor(ids: string[]) {
+  const service = serviceClient();
+  const chunks: string[][] = [];
+  for (let i = 0; i < ids.length; i += ID_CHUNK) chunks.push(ids.slice(i, i + ID_CHUNK));
+  const results = await Promise.all(
+    chunks.map((chunk) =>
+      service.from("messages").select(PREVIEW_COLUMNS).in("lead_id", chunk).order("created_at", { ascending: false }),
+    ),
+  );
+  const lastByLead: Record<string, Record<string, unknown>> = {};
+  for (const { data, error } of results) {
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    for (const msg of data ?? []) {
+      if (!lastByLead[msg.lead_id]) lastByLead[msg.lead_id] = msg;
+    }
+  }
+  return NextResponse.json(lastByLead);
+}
+
 export async function GET(request: NextRequest) {
   const user = await requireAuth();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -29,18 +53,10 @@ export async function GET(request: NextRequest) {
   if (leadIds) {
     const ids = leadIds.split(",").filter(Boolean);
     if (!ids.length) return NextResponse.json({});
-    const { data, error } = await serviceClient()
-      .from("messages")
-      .select("*")
-      .in("lead_id", ids)
-      .order("created_at", { ascending: false });
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    // Keep only the latest message per lead
-    const lastByLead: Record<string, typeof data[0]> = {};
-    for (const msg of (data || [])) {
-      if (!lastByLead[msg.lead_id]) lastByLead[msg.lead_id] = msg;
+    if (ids.length > MAX_BATCH_LEADS) {
+      return NextResponse.json({ error: `At most ${MAX_BATCH_LEADS} lead_ids per request` }, { status: 400 });
     }
-    return NextResponse.json(lastByLead);
+    return lastMessagesFor(ids);
   }
 
   if (!leadId) return NextResponse.json({ error: "lead_id required" }, { status: 400 });

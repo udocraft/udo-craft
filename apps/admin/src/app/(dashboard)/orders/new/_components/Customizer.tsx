@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import { Product, PrintZone, Material, ProductColorVariant, useCustomizer, type SidebarTabId, resolveProductImages, getCustomizableImages } from "@udo-craft/shared";
+import { Product, PrintZone, Material, ProductColorVariant, useCustomizer, discountPctForQty, DEFAULT_DISCOUNT_GRID, type SidebarTabId, resolveProductImages, getCustomizableImages } from "@udo-craft/shared";
 import { ArrowLeft, X, Loader2, Layers, Pencil, Type, Upload, LayoutList, MirrorRound, PackageOpen } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -128,13 +128,10 @@ export function Customizer({ product, printZones, sizeChart, materials, variants
     fetch("/api/print-type-pricing").then((r) => r.json()).then((d) => { if (Array.isArray(d)) setPrintPricing(d); }).catch(() => {});
   }, []);
 
-  const discountPct = (() => {
-    const grid = product.discount_grid;
-    if (!grid?.length) return 0;
-    return [...grid].sort((a, b) => b.qty - a.qty).find((t) => quantity >= t.qty)?.discount_pct ?? 0;
-  })();
+  // Same rules as the storefront and the public order API (packages/shared/src/orders.ts).
+  const discountPct = discountPctForQty(product.discount_grid, quantity);
   const unitPrice = product.base_price_cents / 100;
-  const discounted = unitPrice * (1 - discountPct / 100);
+  const discounted = Math.round(product.base_price_cents * (1 - discountPct / 100)) / 100;
   const resolveLayerPrice = (layer: PrintLayer) => resolveLayerPriceFromHook(layer, quantity, printPricing);
   const printCostPerUnit = layers.reduce((sum, layer) => sum + resolveLayerPrice(layer) / 100, 0);
   const requiresGarmentSize = Array.isArray(product.available_sizes) && product.available_sizes.length > 0;
@@ -437,7 +434,7 @@ export function Customizer({ product, printZones, sizeChart, materials, variants
     <>
       {productInfoCard}
       {colorSizeSection}
-      <QtyPricePanel quantity={quantity} setQuantity={setQuantity} discountGrid={product.discount_grid}
+      <QtyPricePanel quantity={quantity} setQuantity={setQuantity} discountGrid={product.discount_grid?.length ? product.discount_grid : [...DEFAULT_DISCOUNT_GRID]}
         discountPct={discountPct} unitPrice={unitPrice} discounted={discounted} layers={layers}
         printPricing={printPricing} printCostPerUnit={printCostPerUnit} resolveLayerPrice={resolveLayerPrice}
         itemNote={itemNote} setItemNote={setItemNote} addDisabledReason={addDisabledReason}

@@ -199,7 +199,7 @@ export function CheckoutForm({
                   className="h-9 text-xs font-bold border border-dashed border-border/60 rounded-xl px-4 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 bg-transparent placeholder:text-muted-foreground/50 w-28 transition-all focus:w-40"
                 />
                 {customTagInput.trim() && (
-                  <Button type="submit" size="icon" className="size-9 rounded-xl shadow-md">
+                  <Button aria-label="Додати" type="submit" size="icon" className="size-9 rounded-xl shadow-md">
                     <Plus className="size-4" />
                   </Button>
                 )}

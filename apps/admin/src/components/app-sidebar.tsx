@@ -407,7 +407,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
           </SidebarMenu>
         </SidebarHeader>
 
-        <SidebarContent className="px-2 py-2 gap-1 group-data-[collapsible=icon]:px-1.5">
+        <SidebarContent role="navigation" aria-label="Основна навігація" className="px-2 py-2 gap-1 group-data-[collapsible=icon]:px-1.5">
           {/* Quick search */}
           <SidebarGroup className="p-0 mb-1">
             <SidebarMenu>

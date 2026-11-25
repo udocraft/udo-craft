@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import { printLayerUnitCents } from "./orders";
 import type { PrintLayer } from "../index";
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -226,20 +227,8 @@ export function useCustomizer(config: UseCustomizerConfig): UseCustomizerReturn 
       quantity: number,
       printPricing: PrintTypePricingRow[],
     ): number => {
-      if (layer.isComboChild) return 0;
-      const rows = printPricing.filter((r) => r.print_type === layer.type);
-      if (!rows.length) return 0;
-      const sizeLabel = layer.sizeLabel;
-      if (!sizeLabel) return 0;
-      const row = rows.find((r) => r.size_label === sizeLabel) ?? null;
-      if (!row) return 0;
-      const sorted = [...row.qty_tiers].sort(
-        (a, b) => b.min_qty - a.min_qty,
-      );
-      const tier =
-        sorted.find((t) => quantity >= t.min_qty) ??
-        sorted[sorted.length - 1];
-      return tier?.price_cents ?? layer.priceCents ?? 0;
+      // Same rule the server uses to price the order (./orders.ts).
+      return printLayerUnitCents(layer, quantity, printPricing);
     },
     [],
   );

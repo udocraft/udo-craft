@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useCustomizer, type PrintLayer, type SidebarTabId } from "@udo-craft/shared";
+import { useCustomizer, discountPctForQty, type PrintLayer, type SidebarTabId } from "@udo-craft/shared";
 import type { Product, PrintZonesMap, Material, ProductColorVariant } from "@udo-craft/shared";
 import { type PrintTypePricingRow } from "@/components/LayersPanel";
 import { toast } from "sonner";
@@ -148,14 +148,10 @@ export function useCustomizerState({
   }, [selectedVariant, product.images, activeSide, printZones]);
 
   // Derived pricing values
-  const discountPct = (() => {
-    const grid = (product as any).discount_grid as { qty: number; discount_pct: number }[] | undefined;
-    if (!grid?.length) return 0;
-    const sorted = [...grid].sort((a, b) => b.qty - a.qty);
-    return sorted.find((t) => quantity >= t.qty)?.discount_pct ?? 0;
-  })();
+  // Same rules as the server (packages/shared/src/orders.ts), so the cart total is what gets stored.
+  const discountPct = discountPctForQty((product as { discount_grid?: unknown }).discount_grid, quantity);
   const unitPrice = product.base_price_cents / 100;
-  const discounted = unitPrice * (1 - discountPct / 100);
+  const discounted = Math.round(product.base_price_cents * (1 - discountPct / 100)) / 100;
   const resolveLayerPrice = (layer: PrintLayer): number =>
     resolveLayerPriceFromHook(layer, quantity, printPricing);
   const printCostPerUnit = layers.reduce((sum, layer) => sum + resolveLayerPrice(layer) / 100, 0);

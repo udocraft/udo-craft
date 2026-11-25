@@ -77,7 +77,7 @@ export function RepeaterField({ label, items = [], fields, onChange, itemLabelKe
                 <GripVertical className="size-4 text-muted-foreground cursor-grab active:cursor-grabbing" />
                 <span className="flex-1 text-sm font-medium truncate">{displayLabel}</span>
                 <div className="flex items-center gap-1">
-                  <Button
+                  <Button aria-label="Видалити"
                     type="button"
                     variant="ghost"
                     size="icon"

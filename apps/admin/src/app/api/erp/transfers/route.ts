@@ -55,35 +55,23 @@ export async function POST(req: NextRequest) {
     if (linesError) return apiError(linesError);
 
     if (parsed.post) {
-      for (const line of lines) {
-        const { data: material } = await service!
-          .from("erp_materials")
-          .select("unit_cost_cents")
-          .eq("id", line.erp_material_id)
-          .single();
-        await service!.from("erp_stock_movements").insert([
-          {
-            erp_material_id: line.erp_material_id,
-            transfer_id: transfer.id,
-            warehouse_id: parsed.from_warehouse_id,
-            movement_type: "transfer_out",
-            quantity: -line.quantity,
-            unit_cost_cents: Number(material?.unit_cost_cents || 0),
-            note: parsed.comment,
-            created_by: user!.id,
-          },
-          {
-            erp_material_id: line.erp_material_id,
-            transfer_id: transfer.id,
-            warehouse_id: parsed.to_warehouse_id,
-            movement_type: "transfer_in",
-            quantity: line.quantity,
-            unit_cost_cents: Number(material?.unit_cost_cents || 0),
-            note: parsed.comment,
-            created_by: user!.id,
-          },
-        ]);
-      }
+      const materialIds = [...new Set(lines.map((l) => l.erp_material_id))];
+      const { data: materials, error: materialsError } = await service!
+        .from("erp_materials")
+        .select("id, unit_cost_cents")
+        .in("id", materialIds);
+      if (materialsError) return apiError(materialsError);
+      const costById = new Map((materials ?? []).map((m) => [m.id as string, Number(m.unit_cost_cents || 0)]));
+      const movements = lines.flatMap((line) => {
+        const unit_cost_cents = costById.get(line.erp_material_id) ?? 0;
+        const base = { erp_material_id: line.erp_material_id, transfer_id: transfer.id, unit_cost_cents, note: parsed.comment, created_by: user!.id };
+        return [
+          { ...base, warehouse_id: parsed.from_warehouse_id, movement_type: "transfer_out", quantity: -line.quantity },
+          { ...base, warehouse_id: parsed.to_warehouse_id, movement_type: "transfer_in", quantity: line.quantity },
+        ];
+      });
+      const { error: movementsError } = await service!.from("erp_stock_movements").insert(movements);
+      if (movementsError) return apiError(movementsError);
     }
 
     return NextResponse.json(transfer, { status: 201 });

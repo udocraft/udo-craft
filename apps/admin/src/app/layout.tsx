@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { ClarityInit } from "@/components/clarity";
@@ -10,13 +10,21 @@ export const metadata: Metadata = {
   description: "B2B мерч-автоматизація. Панель управління.",
 };
 
+// Pinch-zoom stays enabled; the layout fits the notch area on phones.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#ffffff",
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="uk" className={cn()}>
-      <body className="min-h-screen bg-background">
+      <body className="min-h-dvh bg-background">
         <ClarityInit clarityId="w6t8md9b3l" />
         {children}
-        <Toaster theme="light" toastOptions={{ style: { background: "white", border: "1px solid #e5e7eb", color: "#111827" } }} />
+        <Toaster theme="light" toastOptions={{ style: { background: "var(--color-popover)", border: "1px solid var(--color-border)", color: "var(--color-popover-foreground)" } }} />
         <Analytics />
       </body>
     </html>

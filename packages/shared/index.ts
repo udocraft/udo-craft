@@ -9,6 +9,8 @@ export const PRINT_ZONE_SIDES = ["front", "back", "neck_inner", "sleeve_left", "
 export const PrintZoneSideEnum = z.string().min(1);
 export const LeadStatusEnum = z.enum(["draft", "new", "in_progress", "production", "completed", "archived"]);
 
+export * from "./src/orders";
+
 // ── Product image model ─────────────────────────────────────────────────────
 
 export const ProductImageSchema = z.object({
@@ -717,12 +719,6 @@ export const PREDEFINED_TAGS = [
   { id: "new_client", label: "Новий клієнт",  color: "#0284c7", bg: "#e0f2fe" },
 ] as const;
 
-export const DISCOUNT_TIERS = [
-  { min: 10, max: 49,   pct: 5  },
-  { min: 50, max: 99,   pct: 12 },
-  { min: 100, max: null, pct: 15 },
-] as const;
-
 // ── Lead validation ─────────────────────────────────────────────────────────
 
 export const CreateLeadSchema = z.object({
@@ -759,15 +755,54 @@ export const LeadOrderItemSchema = z.object({
   technical_metadata: z.record(z.unknown()).nullish(),
 });
 
-/** POST /api/leads. Extra customer_data keys (edrpou, delivery...) are kept. */
+/**
+ * Public POST /api/leads. Extra customer_data keys (edrpou, delivery...) are kept.
+ * `status` and any amounts in the body are ignored: the server always creates a
+ * `new` order and prices it from the catalogue.
+ */
 export const CreateLeadRequestSchema = CreateLeadSchema.extend({
+  status: LeadStatusEnum.optional(),
   customer_data: CreateLeadSchema.shape.customer_data
     .passthrough()
     .extend({ attachments: z.array(urlString).max(20).optional() }),
   order_items: z.array(LeadOrderItemSchema).max(100).optional(),
   initial_message: z.string().max(5000).nullish(),
+  /** Client-generated UUID, reused on retries of the same checkout (idempotency key). */
+  client_request_id: z.string().uuid().optional(),
 });
 export type CreateLeadRequest = z.infer<typeof CreateLeadRequestSchema>;
+
+/**
+ * Admin POST /api/leads. Staff may record an order with only a social contact,
+ * so email and phone are optional but at least one contact is required.
+ */
+export const AdminCreateLeadSchema = z.object({
+  status: z.enum(["draft", "new"]).default("new"),
+  customer_data: z
+    .object({
+      name: z.string().trim().min(1).max(200),
+      email: z.string().trim().email().max(254).optional(),
+      phone: z.string().trim().max(40).optional(),
+      social_channel: z.string().trim().max(200).optional(),
+    })
+    .passthrough()
+    .refine((c) => Boolean(c.email || c.phone || c.social_channel), {
+      message: "At least one contact (email, phone or social) is required",
+      path: ["email"],
+    }),
+  order_items: z
+    .array(
+      LeadOrderItemSchema.extend({
+        unit_price_cents: z.number().nonnegative().optional(),
+        print_cost_cents: z.number().nonnegative().optional(),
+      }),
+    )
+    .max(200)
+    .optional(),
+  tags: z.array(z.string().max(64)).max(50).optional(),
+  notes: z.string().max(10_000).optional(),
+});
+export type AdminCreateLead = z.infer<typeof AdminCreateLeadSchema>;
 
 /** `files` parts of POST /api/upload and /api/cabinet/upload (multipart, not JSON). */
 export const UploadFilesRequestSchema = z.array(z.instanceof(File)).max(10, "At most 10 files per request");

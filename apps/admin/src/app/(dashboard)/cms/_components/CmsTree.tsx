@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronRight, X } from "lucide-react";
+import { ChevronRight, X, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { SectionConfig } from "./LandingSectionEditor";
 
@@ -11,7 +11,7 @@ export type TreeNode =
   | {
       id: string;
       label: string;
-      icon?: string;
+      icon?: LucideIcon;
       type: "group";
       children: TreeNode[];
       section?: never;
@@ -22,7 +22,7 @@ export type TreeNode =
   | {
       id: string;
       label: string;
-      icon?: string;
+      icon?: LucideIcon;
       type: "section";
       section: SectionConfig;
       children?: never;
@@ -33,7 +33,7 @@ export type TreeNode =
   | {
       id: string;
       label: string;
-      icon?: string;
+      icon?: LucideIcon;
       type: "richpage";
       slug: string;
       pageTitle?: string;
@@ -80,7 +80,7 @@ function TreeGroup({
           className={cn("size-3 shrink-0 transition-transform duration-200", open && "rotate-90")}
           aria-hidden="true"
         />
-        {node.icon && <span className="text-base" aria-hidden="true">{node.icon}</span>}
+        {node.icon && <node.icon className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />}
         <span>{node.label}</span>
       </button>
 
@@ -128,7 +128,7 @@ function TreeLeaf({
           : "text-foreground/80 hover:text-foreground hover:bg-muted/60",
       )}
     >
-      {node.icon && <span className="text-base shrink-0" aria-hidden="true">{node.icon}</span>}
+      {node.icon && <node.icon className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />}
       <span className="truncate">{node.label}</span>
     </button>
   );

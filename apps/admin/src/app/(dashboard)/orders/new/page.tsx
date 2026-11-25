@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { generateInvoicePDF } from "@/lib/generate-invoice";
-import { Product, PrintZone, Material, ProductColorVariant, resolveProductImages, getCustomizableImages } from "@udo-craft/shared";
+import { Product, PrintZone, Material, ProductColorVariant, resolveProductImages, getCustomizableImages, discountPctForQty } from "@udo-craft/shared";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Customizer } from "./_components/Customizer";
@@ -14,7 +14,6 @@ import { ReviewStep } from "./_components/ReviewStep";
 import { ProductCardInline } from "./_components/ProductCardInline";
 import { CheckoutForm, type ContactData } from "./_components/CheckoutForm";
 import { StepHeader } from "./_components/StepHeader";
-import { getDiscount } from "./_lib/constants";
 import { ProductQuickSearch } from "./_components/ProductQuickSearch";
 
 // ── Types ─────────────────────────────────────────────────────────────────
@@ -128,11 +127,11 @@ export default function NewOrderPage() {
       const imgUrl = imgs.front ?? Object.values(imgs)[0] ?? "";
       const resolvedSize = size ?? (Array.isArray(product.available_sizes) && product.available_sizes.length > 0
         ? product.available_sizes[Math.floor(product.available_sizes.length / 2)] : "");
-      const discountPct = getDiscount(1);
+      const discountPct = discountPctForQty(product.discount_grid, 1);
       setCart((prev) => [...prev, {
         productId: product.id, productName: product.name, productImage: imgUrl,
         productPrice: product.base_price_cents / 100,
-        unitPriceCents: product.base_price_cents * (1 - discountPct / 100),
+        unitPriceCents: Math.round(product.base_price_cents * (1 - discountPct / 100)),
         printCostCents: 0, quantity: 1, size: resolvedSize as string,
         color: mat?.name ?? "", layers: [],
       }]);
@@ -214,6 +213,7 @@ export default function NewOrderPage() {
           productName: item.productName, productImage: item.productImage,
           size: item.size, color: item.color, quantity: item.quantity,
           unitPriceCents: item.unitPriceCents + item.printCostCents,
+          listPriceCents: Math.round(item.productPrice * 100) + item.printCostCents,
         })),
         contact: { name: contact.name, email: contact.email, phone: contact.phone, company: contact.company || undefined },
         createdAt: new Date(),

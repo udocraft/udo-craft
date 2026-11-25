@@ -18,16 +18,27 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
       .single();
     if (leadError) return apiError(leadError);
 
+    // A line is (garment after discount + print) x quantity, the same rule that
+    // produced total_amount_cents (packages/shared/src/orders.ts).
+    const goods = (lead.order_items ?? []).map((item: any) => {
+      const unit = Number(item.unit_price_cents ?? item.technical_metadata?.unit_price_cents ?? 0);
+      const print = Number(item.print_cost_cents ?? item.technical_metadata?.print_cost_cents ?? 0);
+      return {
+        name: [item.color, item.size].filter(Boolean).join(" / ") || "Товар",
+        quantity: item.quantity,
+        sum_cents: Math.round((unit + print) * item.quantity),
+      };
+    });
+    const goodsTotal = goods.reduce((sum: number, g: { sum_cents: number }) => sum + g.sum_cents, 0);
+
     const draft = {
       status: "draft_ready",
       provider: "checkbox",
       payment_status: lead.payment_status,
       total_cents: lead.total_amount_cents,
-      goods: (lead.order_items ?? []).map((item: any) => ({
-        name: [item.color, item.size].filter(Boolean).join(" / ") || "Товар",
-        quantity: item.quantity,
-        sum_cents: (item.unit_price_cents ?? item.technical_metadata?.unit_price_cents ?? 0) * item.quantity,
-      })),
+      goods,
+      // Orders saved before prices were unified can disagree; flag it rather than hide it.
+      totals_mismatch_cents: goodsTotal - (lead.total_amount_cents ?? 0),
       created_at: new Date().toISOString(),
       message: "Дані чека підготовлені. Для бойової фіскалізації потрібно додати касу/касира і точні мапінги Checkbox.",
     };

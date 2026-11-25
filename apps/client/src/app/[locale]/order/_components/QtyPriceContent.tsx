@@ -1,5 +1,6 @@
 "use client";
 
+import { DEFAULT_DISCOUNT_GRID } from "@udo-craft/shared";
 import { useTranslations } from "next-intl";
 
 import React from "react";
@@ -70,7 +71,7 @@ export function QtyPriceContent({
 }: QtyPriceContentProps) {
   const t = useTranslations("editor");
   const [noteOpen, setNoteOpen] = React.useState(false);
-  const sortedDiscounts = [...(product.discount_grid ?? [])].sort((a, b) => a.qty - b.qty);
+  const sortedDiscounts = [...(product.discount_grid?.length ? product.discount_grid : DEFAULT_DISCOUNT_GRID)].sort((a, b) => a.qty - b.qty);
 
   return (
     <div className={`space-y-5 pb-4 ${disabled ? "opacity-50 pointer-events-none" : ""}`}>

@@ -101,7 +101,7 @@ export function LandingSectionEditor({
           <p className="text-xs text-muted-foreground mt-0.5 hidden sm:block">Секція головної сторінки</p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <Button variant="outline" size="icon" onClick={load} disabled={loading} className="h-9 w-9">
+          <Button aria-label="Оновити" variant="outline" size="icon" onClick={load} disabled={loading} className="h-9 w-9">
             <RefreshCw className={`size-4 ${loading ? "animate-spin" : ""}`} />
           </Button>
           <Button onClick={handleSave} disabled={saving || loading} size="sm" className="h-9">

@@ -241,10 +241,10 @@ export function TypesDialog({
                 {type.name}
               </button>
               <span className="text-xs text-muted-foreground">{type.unit}</span>
-              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setForm({ ...type })}>
+              <Button aria-label="Редагувати" variant="ghost" size="icon" className="h-8 w-8" onClick={() => setForm({ ...type })}>
                 <Edit3 className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => remove(type)}>
+              <Button aria-label="Видалити" variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => remove(type)}>
                 <Trash2 className="h-4 w-4" />
               </Button>
             </div>

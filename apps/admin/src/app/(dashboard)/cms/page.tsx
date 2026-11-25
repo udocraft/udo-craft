@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import { ChevronUp, Menu } from "lucide-react";
+import { ChevronUp, Menu, BarChart3, ClipboardList, FileText, HelpCircle, Home, LayoutTemplate, Lock, PanelBottom, Phone, Search, ShieldCheck, Sparkles, Tent, Wrench } from "lucide-react";
 import { CmsTreeSidebar, CmsTreeDrawer, type TreeNode } from "./_components/CmsTree";
 import { LandingSectionEditor, type SectionConfig } from "./_components/LandingSectionEditor";
 import { PreviewPane } from "./_components/PreviewPane";
@@ -193,31 +193,31 @@ const TREE: TreeNode[] = [
   {
     id: "landing",
     label: "Головна сторінка",
-    icon: "🏠",
+    icon: Home,
     type: "group",
     children: [
-      { id: "home_layout",   label: "Структура",    icon: "🏗️", type: "section", section: LAYOUT_SECTION },
-      { id: "home_hero",     label: "Hero",         icon: "✦",  type: "section", section: HERO_SECTION },
-      { id: "home_stats",    label: "Статистика",   icon: "📊", type: "section", section: STATS_SECTION },
-      { id: "home_services", label: "Послуги",      icon: "🛠", type: "section", section: SERVICES_SECTION },
-      { id: "home_trust",    label: "Довіра",       icon: "🛡️", type: "section", section: TRUST_SECTION },
-      { id: "home_faq",      label: "FAQ",          icon: "❓", type: "section", section: FAQ_SECTION },
-      { id: "home_popup",    label: "Popup-стенд",  icon: "🎪", type: "section", section: POPUP_SECTION },
-      { id: "home_contact",  label: "Контакти",     icon: "📞", type: "section", section: CONTACT_SECTION },
-      { id: "footer",        label: "Футер",        icon: "⬇️", type: "section", section: FOOTER_SECTION },
-      { id: "seo_home",      label: "SEO",          icon: "🔍", type: "section", section: SEO_SECTION },
+      { id: "home_layout",   label: "Структура",    icon: LayoutTemplate, type: "section", section: LAYOUT_SECTION },
+      { id: "home_hero",     label: "Hero",         icon: Sparkles,  type: "section", section: HERO_SECTION },
+      { id: "home_stats",    label: "Статистика",   icon: BarChart3, type: "section", section: STATS_SECTION },
+      { id: "home_services", label: "Послуги",      icon: Wrench, type: "section", section: SERVICES_SECTION },
+      { id: "home_trust",    label: "Довіра",       icon: ShieldCheck, type: "section", section: TRUST_SECTION },
+      { id: "home_faq",      label: "FAQ",          icon: HelpCircle, type: "section", section: FAQ_SECTION },
+      { id: "home_popup",    label: "Popup-стенд",  icon: Tent, type: "section", section: POPUP_SECTION },
+      { id: "home_contact",  label: "Контакти",     icon: Phone, type: "section", section: CONTACT_SECTION },
+      { id: "footer",        label: "Футер",        icon: PanelBottom, type: "section", section: FOOTER_SECTION },
+      { id: "seo_home",      label: "SEO",          icon: Search, type: "section", section: SEO_SECTION },
     ],
   },
   {
     id: "pages",
     label: "Сторінки",
-    icon: "📄",
+    icon: FileText,
     type: "group",
     children: [
       {
         id: "page_privacy",
         label: "Конфіденційність",
-        icon: "🔒",
+        icon: Lock,
         type: "richpage",
         slug: "page_privacy",
         pageTitle: "Політика конфіденційності",
@@ -226,7 +226,7 @@ const TREE: TreeNode[] = [
       {
         id: "page_terms",
         label: "Умови та правила",
-        icon: "📋",
+        icon: ClipboardList,
         type: "richpage",
         slug: "page_terms",
         pageTitle: "Умови та правила",
@@ -302,7 +302,7 @@ export default function CmsPage() {
             <div className="flex-1 min-w-0 text-left">
               {selected && selected.type !== "group" ? (
                 <div className="flex items-center gap-1.5">
-                  {selected.icon && <span className="text-base" aria-hidden="true">{selected.icon}</span>}
+                  {selected.icon && <selected.icon className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />}
                   <span className="text-sm font-semibold truncate">{selected.label}</span>
                 </div>
               ) : (
@@ -319,7 +319,7 @@ export default function CmsPage() {
 function EmptyState({ onOpenMenu }: { onOpenMenu: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center h-full min-h-[400px] gap-4 text-center px-6 py-12">
-      <div className="text-5xl" aria-hidden="true">✦</div>
+      <Sparkles className="size-10 text-muted-foreground" aria-hidden="true" />
       <div>
         <p className="text-base font-semibold text-foreground">Оберіть розділ</p>
         <p className="text-sm text-muted-foreground mt-1 max-w-xs">
