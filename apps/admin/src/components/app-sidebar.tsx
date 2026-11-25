@@ -6,7 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   BarChart3, Users, MessageCircle, ShoppingBag, ImagePlus,
   Settings, ChevronRight, UserCog, ShelvingUnit,
-  FileEdit, Globe, Search, Tag, Plus, BadgeDollarSign,
+  FileEdit, Globe, Search, Tag, Plus, BadgeDollarSign, ChevronDown,
 } from "lucide-react";
 import { BrandLogo, BrandLogoFull } from "@/components/brand-logo";
 import { cn } from "@/lib/utils";
@@ -381,7 +381,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
     <>
       <Sidebar collapsible="icon" className="border-r border-border/60 bg-sidebar">
         {/* Brand header: U:DO mark + Admin label */}
-        <SidebarHeader className="h-14 shrink-0 justify-center border-b border-sidebar-border px-3 py-0 group-data-[collapsible=icon]:px-2">
+        <SidebarHeader className="h-16 shrink-0 justify-center border-b border-sidebar-border px-3 py-0 group-data-[collapsible=icon]:px-2">
           <Link
             href="/"
             aria-label="U:DO Admin — на головну"
@@ -395,7 +395,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
           </Link>
         </SidebarHeader>
 
-        <SidebarContent role="navigation" aria-label="Основна навігація" className="gap-4 px-3 py-3 group-data-[collapsible=icon]:px-2.5">
+        <SidebarContent id="admin-sidebar-nav" role="navigation" aria-label="Основна навігація" className="gap-4 px-3 py-3 group-data-[collapsible=icon]:px-2.5">
           {/* Primary action + search */}
           <SidebarGroup className="gap-2 p-0">
             {!isSeamstress && (
@@ -446,7 +446,8 @@ export function AppSidebar({ user }: AppSidebarProps) {
           {!isSeamstress && renderSection("Система", SYSTEM_NAV)}
         </SidebarContent>
 
-        <SidebarFooter className="border-t border-sidebar-border p-3 group-data-[collapsible=icon]:p-2">
+        <SidebarFooter className="relative border-t border-sidebar-border p-3 group-data-[collapsible=icon]:p-2">
+          <SidebarScrollHint targetId="admin-sidebar-nav" />
           <SidebarMenu>
             <SidebarMenuItem>
               <NavUser user={user} />
@@ -477,5 +478,56 @@ export function AppSidebar({ user }: AppSidebarProps) {
         </AlertDialogContent>
       </AlertDialog>
     </>
+  );
+}
+
+/**
+ * Small chevron above the sidebar footer while nav items are hidden below.
+ * Fades out at the bottom; updates on scroll, resize and content changes.
+ */
+function SidebarScrollHint({ targetId }: { targetId: string }) {
+  const [more, setMore] = React.useState(false);
+
+  React.useEffect(() => {
+    const el = document.getElementById(targetId);
+    if (!el) return;
+    const update = () => setMore(el.scrollHeight - el.scrollTop - el.clientHeight > 8);
+    update();
+    el.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    Array.from(el.children).forEach((c) => ro.observe(c));
+    return () => {
+      el.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+      ro.disconnect();
+    };
+  }, [targetId]);
+
+  return (
+    <div
+      aria-hidden={!more}
+      className={cn(
+        "pointer-events-none absolute inset-x-0 -top-12 flex h-12 items-end justify-center bg-gradient-to-t from-sidebar to-transparent pb-1.5 transition-opacity duration-200",
+        more ? "opacity-100" : "opacity-0",
+      )}
+    >
+      <button
+        type="button"
+        tabIndex={more ? 0 : -1}
+        onClick={() => {
+          const el = document.getElementById(targetId);
+          el?.scrollBy({ top: el.clientHeight * 0.7, behavior: "smooth" });
+        }}
+        aria-label="Прокрутити меню вниз"
+        className={cn(
+          "flex size-7 items-center justify-center rounded-full border border-sidebar-border bg-background text-muted-foreground shadow-sm transition-colors hover:text-foreground",
+          more ? "pointer-events-auto" : "pointer-events-none",
+        )}
+      >
+        <ChevronDown className="size-4" />
+      </button>
+    </div>
   );
 }

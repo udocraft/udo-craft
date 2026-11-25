@@ -28,7 +28,7 @@ export function StepHeader({ step, cartLength, contactComplete, onNavigate }: St
   const stepIdx = STEPS.indexOf(step);
 
   return (
-    <div className="sticky top-0 z-40 flex min-h-16 shrink-0 items-center gap-3 border-b border-border bg-background px-4 md:px-6">
+    <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-3 border-b border-border bg-background px-4 md:px-6">
       <SidebarTrigger className="-ml-1.5 z-10 size-9 shrink-0 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground" />
       <Separator orientation="vertical" className="z-10 h-5" />
       <button

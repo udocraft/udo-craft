@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { createClient } from "@/lib/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { LeadStatus } from "@/components/status-badge";
@@ -107,10 +106,28 @@ export function useClients() {
 
   const reload = useCallback(async () => {
     setLoading(true);
-    const { data, error } = await createClient().from("leads").select("*").order("created_at", { ascending: false });
-    if (error) toast.error("Помилка завантаження клієнтів");
-    else setClients(groupClients((data || []) as Lead[]));
-    setLoading(false);
+    // Through the server API (same as the Orders page). Reading `leads` from the
+    // browser went through row-level security and could return no rows without an
+    // error, which showed "no clients" while orders existed.
+    try {
+      const all: Lead[] = [];
+      let before: string | null = null;
+      for (let page = 0; page < 50; page++) {
+        const qs = new URLSearchParams({ view: "summary", limit: "2000" });
+        if (before) qs.set("before", before);
+        const res = await fetch(`/api/leads?${qs}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const rows = (await res.json()) as Lead[];
+        all.push(...rows);
+        if (res.headers.get("X-Has-More") !== "1" || rows.length === 0) break;
+        before = rows[rows.length - 1].created_at;
+      }
+      setClients(groupClients(all));
+    } catch {
+      toast.error("Помилка завантаження клієнтів");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {

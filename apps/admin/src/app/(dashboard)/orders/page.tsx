@@ -10,6 +10,8 @@ import { createClient } from "@/lib/supabase/client";
 import { playNotificationTone } from "@/lib/notifications";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { BulkActionBar, TypedDeleteDialog, useRowSelection } from "@/components/bulk-actions";
+import { exportCsv, exportPdf, type ExportColumn } from "@/lib/export";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -34,7 +36,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { DashboardPage } from "@/components/dashboard-page";
-import { AdminToolbar, AdminSearch, AdminFilter, AdminEmptyState } from "@/components/admin-layout";
+import { AdminToolbar, AdminSearch, AdminFilter, AdminFilterReset, AdminEmptyState } from "@/components/admin-layout";
 import { KanbanColumn } from "./_components/KanbanColumn";
 import { OrderQuickSheet } from "./_components/OrderQuickSheet";
 import { useKanbanDrag, type Lead } from "./_components/useKanbanDrag";
@@ -375,17 +377,63 @@ function OrdersBoard() {
     setSortFilter("newest");
   }, []);
 
+  // ── Bulk actions (list view) ─────────────────────────────────────────
+  const selection = useRowSelection(viewMode === "list" ? filteredLeads.map((l) => l.id) : []);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
+  const selectedLeads = filteredLeads.filter((l) => selection.isSelected(l.id));
+  const ordersNoun = (n: number) => `${n} ${n % 10 === 1 && n % 100 !== 11 ? "замовлення" : "замовлень"}`;
+  const exportColumns: ExportColumn<Lead>[] = [
+    { header: "№", value: (l) => getOrderNumber(l) },
+    { header: "Створено", value: (l) => new Date(l.created_at).toLocaleString("uk-UA") },
+    { header: "Статус", value: (l) => LEAD_STATUS_LABELS[l.status as keyof typeof LEAD_STATUS_LABELS] ?? l.status },
+    { header: "Клієнт", value: (l) => l.customer_data?.name ?? "" },
+    { header: "Телефон", value: (l) => l.customer_data?.phone ?? "" },
+    { header: "Email", value: (l) => l.customer_data?.email ?? "" },
+    { header: "Компанія", value: (l) => l.customer_data?.company ?? "" },
+    { header: "Сума, ₴", value: (l) => (l.total_amount_cents / 100).toFixed(2) },
+  ];
+  const bulkDelete = async () => {
+    const ids = [...selection.selected];
+    try {
+      const res = await fetch("/api/leads/bulk-delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
+      toast.success(`Видалено ${ordersNoun(data?.deleted ?? ids.length)}`);
+      selection.clear();
+      await fetchLeads(false);
+    } catch (e) {
+      toast.error(`Не вдалося видалити: ${e instanceof Error ? e.message : "помилка"}`);
+      throw e;
+    }
+  };
+
   return (
-    <DashboardPage 
-      title="Замовлення" 
-      padding="px-0 py-0"
-      contentClassName="[&>header]:hidden"
+    <DashboardPage
+      title="Замовлення"
+      actions={
+        <>
+          {keycrmEnabled && (
+            <Button variant="outline" size="sm" className="gap-2" onClick={handleKeycrmSync} disabled={syncingKeycrm}>
+              {syncingKeycrm ? <Loader2 className="size-4 animate-spin" /> : <RefreshCw className="size-4" />}
+              <span className="hidden sm:inline">Sync KeyCRM</span>
+            </Button>
+          )}
+          <Button size="sm" className="gap-2" onClick={() => router.push("/orders/new")}>
+            <Plus className="size-4" />
+            <span className="hidden sm:inline">Нове замовлення</span>
+          </Button>
+        </>
+      }
     >
       {/* ── Toolbar ─────────────────────────────────────────────────────── */}
       <AdminToolbar>
         {/* Title + view-mode toggle */}
-        <div className="flex h-full items-center gap-4">
-          <div className="flex items-center gap-0.5">
+        <div className="flex h-full items-center">
+          <div role="group" aria-label="Вигляд" className="inline-flex h-9 items-center rounded-lg border border-border bg-muted/60 p-0.5">
             <ViewModeButton
               active={viewMode === "kanban"}
               icon={Columns3}
@@ -402,7 +450,7 @@ function OrdersBoard() {
         </div>
 
         {/* Search */}
-        <AdminSearch value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Швидкий пошук..." />
+        <AdminSearch value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Номер, клієнт, email…" />
 
         {/* Filters */}
         <div className="flex items-center gap-1.5">
@@ -453,36 +501,17 @@ function OrdersBoard() {
           />
         </div>
 
-        {/* Right-side actions */}
+        <AdminFilterReset active={Boolean(hasFilters)} onReset={resetFilters} />
+
         <div className="ml-auto flex items-center gap-2">
-          <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60 tabular-nums" aria-live="polite">
-            {loading ? "—" : `${filteredLeads.length} замовлень`}
+          <span className="text-sm text-muted-foreground tabular-nums" aria-live="polite">
+            {loading ? "" : `${filteredLeads.length} замовлень`}
           </span>
           {hasMore && !loading && (
             <Button variant="ghost" size="sm" onClick={loadOlder} disabled={loadingMore}>
-              {loadingMore ? "Завантаження…" : "Старіші"}
+              {loadingMore ? "Завантаження…" : "Завантажити старіші"}
             </Button>
           )}
-          {keycrmEnabled && (
-            <Button
-              variant="outline"
-              size="sm"
-              className="gap-2"
-              onClick={handleKeycrmSync}
-              disabled={syncingKeycrm}
-            >
-              {syncingKeycrm ? <Loader2 className="size-3.5 animate-spin" /> : <RefreshCw className="size-3.5" />}
-              <span className="hidden sm:inline">Sync KeyCRM</span>
-            </Button>
-          )}
-          <Button
-            size="sm"
-            className="gap-2 px-4"
-            onClick={() => router.push("/orders/new")}
-          >
-            <Plus className="size-4" />
-            <span>Нове замовлення</span>
-          </Button>
         </div>
       </AdminToolbar>
 
@@ -534,6 +563,7 @@ function OrdersBoard() {
             orders={filteredLeads}
             selectedOrderId={selectedLead?.id ?? null}
             onOrderClick={drag.onCardClick}
+            selection={selection}
           />
         ) : (
           <div className="flex h-full gap-4 px-6 py-6 animate-in" style={{ width: "max-content", minWidth: "100%" }}>
@@ -574,6 +604,21 @@ function OrdersBoard() {
           if (lead) handleStatusChange(lead, status);
         }}
       />
+      <BulkActionBar
+        count={selection.count}
+        noun={ordersNoun}
+        onClear={selection.clear}
+        onExportCsv={() => exportCsv("orders", exportColumns, selectedLeads)}
+        onExportPdf={() => exportPdf("orders", "Замовлення", exportColumns, selectedLeads)}
+        onDelete={() => setBulkDeleteOpen(true)}
+      />
+      <TypedDeleteDialog
+        open={bulkDeleteOpen}
+        onOpenChange={setBulkDeleteOpen}
+        title={`Видалити ${ordersNoun(selection.count)}?`}
+        description="Замовлення, їхні позиції та листування буде видалено назавжди. Скасувати це не можна."
+        onConfirm={bulkDelete}
+      />
     </DashboardPage>
   );
 }
@@ -595,14 +640,14 @@ function ViewModeButton({
       aria-pressed={active}
       onClick={onClick}
       className={cn(
-        "relative inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md px-3 text-xs font-medium transition-all",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "relative inline-flex h-8 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium transition-colors",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         active
-          ? "bg-primary/10 text-primary"
-          : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+          ? "bg-background text-foreground shadow-sm"
+          : "text-muted-foreground hover:text-foreground"
       )}
     >
-      <Icon className="size-3.5 mr-1.5" />
+      <Icon className="mr-1.5 size-4" />
       {label}
     </button>
   );
@@ -735,10 +780,12 @@ function OrdersListView({
   orders,
   selectedOrderId,
   onOrderClick,
+  selection,
 }: {
   orders: Lead[];
   selectedOrderId: string | null;
   onOrderClick: (lead: Lead) => void;
+  selection: ReturnType<typeof useRowSelection>;
 }) {
   return (
     <div className="animate-in">
@@ -747,15 +794,17 @@ function OrdersListView({
           <TableHeader>
             <TableRow className="h-11 hover:bg-transparent">
               <TableHead className="w-[46px] px-3">
-                <Checkbox aria-label="Вибрати всі замовлення" />
+                <Checkbox
+                  aria-label="Вибрати всі замовлення"
+                  checked={selection.allSelected}
+                  indeterminate={selection.someSelected}
+                  onCheckedChange={() => selection.toggleAll()}
+                />
               </TableHead>
               <TableHead className="w-[124px]">
                 <span className="inline-flex items-center gap-1.5 leading-tight">
                   <Hash className="size-3.5 text-muted-foreground" />
-                  <span className="flex flex-col">
-                    <span>№</span>
-                    <span>замовлення</span>
-                  </span>
+                  <span>№</span>
                 </span>
               </TableHead>
               <TableHead className="w-[116px]">Джерело</TableHead>
@@ -810,13 +859,17 @@ function OrdersListView({
                   tabIndex={0}
                   role="button"
                   aria-label={`Відкрити замовлення ${lead.customer_data?.name ?? lead.id}`}
-                  data-state={selectedOrderId === lead.id ? "selected" : undefined}
+                  data-state={selectedOrderId === lead.id || selection.isSelected(lead.id) ? "selected" : undefined}
                   onClick={() => onOrderClick(lead)}
                   onKeyDown={(event) => event.key === "Enter" && onOrderClick(lead)}
                   className="h-[74px] cursor-pointer align-top outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <TableCell className="px-3" onClick={(event) => event.stopPropagation()}>
-                    <Checkbox aria-label={`Вибрати замовлення ${getOrderNumber(lead)}`} />
+                    <Checkbox
+                      aria-label={`Вибрати замовлення ${getOrderNumber(lead)}`}
+                      checked={selection.isSelected(lead.id)}
+                      onCheckedChange={() => selection.toggle(lead.id)}
+                    />
                   </TableCell>
                   <TableCell>
                     <span className="text-sm font-semibold text-foreground">{getOrderNumber(lead)}</span>

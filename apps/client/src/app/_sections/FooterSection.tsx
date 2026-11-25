@@ -68,7 +68,7 @@ function NewsletterForm({ pct }: { pct: number }) {
           aria-describedby={msgId}
           aria-invalid={state === "invalid"}
           disabled={state === "done"}
-          className="h-14 min-w-0 flex-1 rounded-full bg-foreground/10 px-6 text-base text-foreground placeholder:text-muted-foreground outline-none transition-colors focus:bg-foreground/15 focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
+          className="h-14 min-w-0 flex-1 rounded-lg bg-foreground/10 px-6 text-base text-foreground placeholder:text-muted-foreground outline-none transition-colors focus:bg-foreground/15 focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
         />
         <button
           type="submit"

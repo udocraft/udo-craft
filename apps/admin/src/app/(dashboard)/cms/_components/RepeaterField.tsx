@@ -105,7 +105,7 @@ export function RepeaterField({ label, items = [], fields, onChange, itemLabelKe
                         />
                       ) : (
                         <Input
-                          className="h-9 rounded-full"
+                          className="h-9 rounded-lg"
                           value={item[f.key] || ""}
                           placeholder={f.placeholder}
                           onChange={(e) => updateItem(index, f.key, e.target.value)}

@@ -239,7 +239,7 @@ export function ProductPurchase(p: PurchaseProps) {
               min={1}
               value={quantity}
               onChange={(e) => setQuantity(Math.max(1, Math.round(Number(e.target.value) || 1)))}
-              className="h-11 w-20 rounded-full border border-input bg-background text-center text-base font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="h-11 w-20 rounded-lg border border-input bg-background text-center text-base font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             />
             <button type="button" className={round} aria-label="Збільшити кількість" onClick={() => setQuantity((q) => q + 1)}>
               <Plus className="size-4" aria-hidden="true" />
