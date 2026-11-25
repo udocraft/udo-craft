@@ -62,6 +62,8 @@ export function FooterWordmark() {
   const logoMaskId = `logo-mask-${uid}`;
   const maskId = `sig-mask-${uid}`;
   const paintId = `sig-paint-${uid}`;
+  const logoFeatherId = `logo-feather-${uid}`;
+  const sigFeatherId = `sig-feather-${uid}`;
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -76,9 +78,13 @@ export function FooterWordmark() {
     <div ref={ref} aria-hidden="true" data-phase={phase} className={`${styles.root} relative`}>
       <svg viewBox={LOGO_VIEWBOX} className="block h-auto w-full" fill="none">
         <defs>
+          {/* Blurring the mask feathers each stroke's moving tip, so the fill fades into the background. */}
+          <filter id={logoFeatherId} filterUnits="userSpaceOnUse" x="-40" y="-40" width="860" height="320">
+            <feGaussianBlur stdDeviation={8} />
+          </filter>
           <mask id={logoMaskId} maskUnits="userSpaceOnUse" x="0" y="0" width="780" height="240">
             <rect width="780" height="240" fill="#000" />
-            <g fill="none" stroke="#fff" strokeLinejoin="round">
+            <g fill="none" stroke="#fff" strokeLinejoin="round" filter={`url(#${logoFeatherId})`}>
               {LOGO_STROKES.map((s, i) => (
                 <path key={i} d={s.d} strokeWidth={s.width} strokeLinecap={s.cap} pathLength={1} className={`${styles.stroke} ${styles.logoStroke}`} style={timingStyle(LOGO_TIMING[i])} />
               ))}
@@ -99,9 +105,12 @@ export function FooterWordmark() {
         fill="none"
       >
         <defs>
+          <filter id={sigFeatherId} filterUnits="userSpaceOnUse" x="-30" y="-30" width="810" height="311">
+            <feGaussianBlur stdDeviation={5} />
+          </filter>
           <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width="750" height="251">
             <rect width="750" height="251" fill="#000" />
-            <g fill="none" stroke="#fff" strokeWidth={30} strokeLinecap="round" strokeLinejoin="round">
+            <g fill="none" stroke="#fff" strokeWidth={40} strokeLinecap="round" strokeLinejoin="round" filter={`url(#${sigFeatherId})`}>
               {SIGNATURE_STROKES.map((d, i) => (
                 <path
                   key={i}

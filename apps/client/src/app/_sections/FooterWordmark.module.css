@@ -34,7 +34,7 @@
 }
 .root[data-phase="play"] .settle {
   opacity: 0;
-  animation: settle 0.25s ease-out var(--at) forwards;
+  animation: settle 0.45s ease-out var(--at) forwards;
 }
 
 @keyframes write {

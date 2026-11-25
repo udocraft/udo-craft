@@ -52,8 +52,8 @@ export const SIGNATURE_STROKES: string[] = [
 
 /**
  * U:DO logo (same shapes as `BrandLogoFull` in `packages/ui/components/brand-logo.tsx`, viewBox
- * 0 0 780 240) and its pen paths. Each stroke is wide enough to cover its shape; ends are butt
- * so they don't spill onto the neighbouring shape. `slot` is the letter's place in the stagger;
+ * 0 0 780 240) and its pen paths. Each stroke covers its shape with a margin, because the mask is
+ * blurred to feather the moving tip; strokes start a little outside their shape for the same reason. `slot` is the letter's place in the stagger;
  * `after` (0-1) starts a stroke part-way through its letter.
  */
 export const LOGO_VIEWBOX = "0 0 780 240";
@@ -68,14 +68,14 @@ export const LOGO_SHAPES: string[] = [
 
 export const LOGO_STROKES: { d: string; width: number; cap: "butt" | "round"; slot: number; after?: number }[] = [
   // U: down the left pillar, round the bottom, up the right pillar
-  { d: "M43 0 L43 142 A55 55 0 0 0 153 142 L153 0", width: 112, cap: "butt", slot: 0 },
+  { d: "M43 -30 L43 142 A55 55 0 0 0 153 142 L153 -30", width: 136, cap: "butt", slot: 0 },
   // colon: two dabbed dots
-  { d: "M235 71 a10 10 0 1 0 20 0 a10 10 0 1 0 -20 0", width: 72, cap: "round", slot: 1 },
-  { d: "M235 169 a10 10 0 1 0 20 0 a10 10 0 1 0 -20 0", width: 72, cap: "round", slot: 2 },
+  { d: "M235 71 a10 10 0 1 0 20 0 a10 10 0 1 0 -20 0", width: 90, cap: "round", slot: 1 },
+  { d: "M235 169 a10 10 0 1 0 20 0 a10 10 0 1 0 -20 0", width: 90, cap: "round", slot: 2 },
   // D: along the top bar, round the bowl, back along the bottom bar
-  { d: "M294 55 L402 55 A65 65 0 0 1 402 185 L294 185", width: 132, cap: "butt", slot: 3 },
+  { d: "M270 55 L402 55 A65 65 0 0 1 402 185 L270 185", width: 156, cap: "butt", slot: 3 },
   // O: one full loop from beside the bottom slot (the overlap lands in the empty slot), then a dab
   // fills the centre. (A single stroke wider than twice its radius renders a stray sliver.)
-  { d: "M652.26 194.91 A75 75 0 1 1 665.34 194.91 A75 75 0 0 1 652.26 194.91", width: 96, cap: "butt", slot: 4 },
-  { d: "M658.8 118 L658.8 122.4", width: 62, cap: "round", slot: 4, after: 0.45 },
+  { d: "M652.26 194.91 A75 75 0 1 1 665.34 194.91 A75 75 0 0 1 652.26 194.91", width: 120, cap: "butt", slot: 4 },
+  { d: "M658.8 118 L658.8 122.4", width: 80, cap: "round", slot: 4, after: 0.45 },
 ];
