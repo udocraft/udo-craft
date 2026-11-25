@@ -1248,7 +1248,8 @@
       "linkFailed": "Impossible d'ouvrir le lien",
       "linkProductGone": "Le produit de ce lien n'est plus disponible",
       "catalogFailed": "Impossible de charger le catalogue",
-      "catalogFailedReload": "Impossible de charger le catalogue. Actualisez la page."
+      "catalogFailedReload": "Impossible de charger le catalogue. Actualisez la page.",
+      "printSelected": "Imprimé « {name} » choisi — choisissez un article"
     },
     "grid": {
       "title": "Choisissez une pièce",
@@ -1553,5 +1554,13 @@
         "soon": "Bientôt"
       }
     }
+  },
+  "homePrints": {
+    "heading": "Imprimés",
+    "lede": "Des imprimés prêts à l’emploi. Choisissez un imprimé, puis l’article sur lequel le placer.",
+    "sizes": "Tailles",
+    "types": "Impression",
+    "from": "dès {price} ₴",
+    "add": "Ajouter à un article"
   }
 }

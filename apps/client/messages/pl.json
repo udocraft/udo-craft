@@ -1248,7 +1248,8 @@
       "linkFailed": "Nie udało się otworzyć linku",
       "linkProductGone": "Produkt z tego linku nie jest już dostępny",
       "catalogFailed": "Nie udało się wczytać katalogu",
-      "catalogFailedReload": "Nie udało się wczytać katalogu. Odśwież stronę."
+      "catalogFailedReload": "Nie udało się wczytać katalogu. Odśwież stronę.",
+      "printSelected": "Wybrano nadruk „{name}” — wybierz produkt"
     },
     "grid": {
       "title": "Wybierz rzecz",
@@ -1553,5 +1554,13 @@
         "soon": "Wkrótce"
       }
     }
+  },
+  "homePrints": {
+    "heading": "Nadruki",
+    "lede": "Gotowe nadruki od naszego zespołu. Wybierz nadruk, a potem produkt, na którym go umieścimy.",
+    "sizes": "Rozmiary",
+    "types": "Druk",
+    "from": "od {price} ₴",
+    "add": "Dodaj na produkt"
   }
 }

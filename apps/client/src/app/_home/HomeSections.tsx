@@ -21,6 +21,7 @@ import { BizBand } from "./BizBand";
 import { Statement } from "./Statement";
 import { FeaturedPair } from "./FeaturedPair";
 import { Testimonials } from "./Testimonials";
+import { PrintsCatalog } from "./PrintsCatalog";
 
 /** Sections on the shopper home. The CMS `home_layout` still orders and hides them. */
 const B2C_SECTIONS: readonly HomeSectionId[] = ["hero", "collections", "demo", "process", "faq"];
@@ -33,7 +34,7 @@ function renderB2c(id: HomeSectionId, ctx: HomeCtx, faqItems: FaqItems): ReactNo
   switch (id) {
     // Editorial sections ride with the hero and catalog so the CMS layout keeps working.
     case "hero": return <><Hero ctx={ctx} /><Statement ctx={ctx} /></>;
-    case "collections": return <><FeaturedPair ctx={ctx} /><Collections ctx={ctx} /></>;
+    case "collections": return <><FeaturedPair ctx={ctx} /><Collections ctx={ctx} /><PrintsCatalog locale={ctx.locale} /></>;
     case "demo": return <LiveDemo ctx={ctx} />;
     case "process": return <Steps locale={ctx.locale} />;
     // Customer stories sit right before the FAQ; they render nothing until real entries exist.

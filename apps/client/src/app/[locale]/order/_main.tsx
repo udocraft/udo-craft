@@ -95,6 +95,7 @@ export function OrderPageInner({
   const [extraFiles, setExtraFiles] = useState<File[]>([]);
   const [successEmail, setSuccessEmail] = useState<string | null>(null);
   const processedAddQueryRef = useRef(false);
+  const processedPrintRef = useRef(false);
   const didRestoreRef = useRef(false);
 
   const buildPlainCartItem = useCallback((product: ProductWithConfig, variant: ProductColorVariant | null, size: string | null, color: string | null): CartItem => {
@@ -188,6 +189,25 @@ export function OrderPageInner({
         .catch((err) => toast.error(err instanceof Error ? err.message : tE("main.linkFailed")));
       return;
     }
+    // Print chosen on the home page prints catalogue: load its file once, keep it until
+    // the visitor picks an item; the builder then adds it as a layer.
+    const printId = searchParams.get("print");
+    if (printId && !processedPrintRef.current) {
+      processedPrintRef.current = true;
+      void (async () => {
+        try {
+          const { data } = await createClient().from("print_presets").select("name,file_url").eq("id", printId).eq("is_active", true).maybeSingle();
+          if (!data?.file_url) return;
+          const res = await fetch(data.file_url as string);
+          if (!res.ok) return;
+          const blob = await res.blob();
+          const ext = (blob.type.split("/")[1] || "png").replace("svg+xml", "svg");
+          setCustomizerInitialFile(new File([blob], `${data.name}.${ext}`, { type: blob.type }));
+          toast.info(tE("main.printSelected", { name: data.name as string }));
+        } catch { /* the visitor can still add the print in the builder */ }
+      })();
+    }
+
     const pid = searchParams.get("product");
     const editIdx = searchParams.get("edit");
 
@@ -249,6 +269,7 @@ export function OrderPageInner({
     setEditingCartIndex(null);
     setCustomizerInitialSize(null);
     setCustomizerInitialColor(null);
+    setCustomizerInitialFile(null);
     setCustomizing(null);
     track("customize_complete", { product_id: item.productId, quantity: item.quantity });
   }, [editingCartIndex]);
