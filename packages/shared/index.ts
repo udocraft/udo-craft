@@ -183,6 +183,8 @@ export const ProductSchema = z.object({
   collar_y_px: z.number().int(),
   is_active: z.boolean().default(true),
   is_customizable: z.boolean().default(false),
+  /** Shown in the home page try-on section («Спробуй наші бестселери»). */
+  is_bestseller: z.boolean().default(false).optional(),
   available_sizes: z.array(z.string()).default(["S", "M", "L", "XL"]),
 });
 

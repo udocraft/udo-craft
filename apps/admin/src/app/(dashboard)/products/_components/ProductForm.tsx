@@ -39,6 +39,7 @@ export interface ProductFormData {
   base_price_cents: number;
   is_active: boolean;
   is_customizable: boolean;
+  is_bestseller: boolean;
   category_id: string | null;
   size_chart_id: string | null;
   print_area_ids: string[];
@@ -61,6 +62,7 @@ interface ProductFormProps {
     base_price_cents: number;
     is_active: boolean;
     is_customizable: boolean;
+    is_bestseller?: boolean;
     category_id?: string | null;
     size_chart_id?: string | null;
     print_area_ids?: string[];
@@ -112,6 +114,7 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
   const [priceStr, setPriceStr] = useState(product ? String(product.base_price_cents / 100) : "");
   const [isActive, setIsActive] = useState(product?.is_active ?? true);
   const [isCustomizable, setIsCustomizable] = useState(product?.is_customizable ?? false);
+  const [isBestseller, setIsBestseller] = useState(product?.is_bestseller ?? false);
   const [categoryId, setCategoryId] = useState<string>(product?.category_id ?? "");
   const [sizeChartId, setSizeChartId] = useState<string>(product?.size_chart_id ?? "");
   const [printAreaIds, setPrintAreaIds] = useState<string[]>(product?.print_area_ids ?? []);
@@ -171,6 +174,7 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
       base_price_cents: Math.round(parseFloat(priceStr || "0") * 100),
       is_active: isActive,
       is_customizable: isCustomizable,
+      is_bestseller: isBestseller,
       category_id: categoryId || null,
       size_chart_id: sizeChartId || null,
       print_area_ids: printAreaIds,
@@ -329,6 +333,13 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
                 <p className="text-xs text-muted-foreground">Дозволяє нанесення принтів</p>
               </div>
               <Switch checked={isCustomizable} onCheckedChange={v => { setIsCustomizable(v); markDirty(); }} />
+            </div>
+            <div className="flex items-center justify-between rounded-lg border border-border px-4 py-3">
+              <div>
+                <p className="text-sm font-medium">Бестселер</p>
+                <p className="text-xs text-muted-foreground">У блоці «Спробуй наші бестселери» на головній</p>
+              </div>
+              <Switch checked={isBestseller} onCheckedChange={v => { setIsBestseller(v); markDirty(); }} aria-label="Бестселер" />
             </div>
           </div>
         </CardContent>

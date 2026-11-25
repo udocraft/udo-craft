@@ -79,6 +79,8 @@ export interface CustomizerProps {
   initialSize?: string;
   initialColor?: string;
   initialLayers?: PrintLayer[];
+  /** Image chosen before opening (home page try-on): added as a layer on open. */
+  initialFile?: File;
   autoOpenCanvas?: boolean;
   existingMockupUploadedUrl?: string;
   initialShare?: LoadedCustomizerShare;
@@ -99,6 +101,7 @@ export function Customizer({
   initialSize,
   initialColor,
   initialLayers,
+  initialFile,
   existingMockupUploadedUrl,
   initialShare,
   cartItemId,
@@ -257,6 +260,23 @@ export function Customizer({
     }
     setMode(next);
   };
+
+  // Image handed over from the home page try-on: add it once, as soon as print
+  // prices are loaded (so the layer gets a size and price), or after 2.5 s anyway.
+  const initialFileAdded = React.useRef<File | null>(null);
+  useEffect(() => {
+    if (!s.mounted || !initialFile || isReadOnly || initialFileAdded.current === initialFile) return;
+    const add = () => {
+      if (initialFileAdded.current === initialFile) return;
+      initialFileAdded.current = initialFile;
+      s.addLayer(initialFile);
+      s.setActiveTab("layers");
+    };
+    if (s.printPricing.length > 0) { add(); return; }
+    const timer = setTimeout(add, 2500);
+    return () => clearTimeout(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [s.mounted, initialFile, isReadOnly, s.printPricing.length]);
 
   if (!s.mounted) return null;
 

@@ -1004,8 +1004,11 @@
     "upload": "Ladda upp bild",
     "remove": "Ta bort bild",
     "hint": "PNG, JPG, SVG eller WebP, upp till 5 MB",
-    "note": "Bara en förhandsvisning. Storlek och tryckzoner ställer du in i den fullständiga editorn.",
-    "tooLarge": "Filen är större än 5 MB. Välj en mindre bild."
+    "note": "Din bild följer med till editorn, där du väljer tryckets storlek och placering.",
+    "tooLarge": "Filen är större än 5 MB. Välj en mindre bild.",
+    "heading": "Testa våra bästsäljare",
+    "prev": "Föregående produkt",
+    "next": "Nästa produkt"
   },
   "checkoutErrors": {
     "required": "Obligatoriskt fält",

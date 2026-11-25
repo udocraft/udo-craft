@@ -1004,8 +1004,11 @@
     "upload": "Importer une image",
     "remove": "Retirer l'image",
     "hint": "PNG, JPG, SVG ou WebP, jusqu'à 5 Mo",
-    "note": "Simple aperçu. L'éditeur complet définit la taille et les zones d'impression.",
-    "tooLarge": "Le fichier dépasse 5 Mo. Choisissez une image plus légère."
+    "note": "Votre image est reprise dans l’éditeur, où vous choisissez la taille et l’emplacement de l’impression.",
+    "tooLarge": "Le fichier dépasse 5 Mo. Choisissez une image plus légère.",
+    "heading": "Essayez nos best-sellers",
+    "prev": "Article précédent",
+    "next": "Article suivant"
   },
   "checkoutErrors": {
     "required": "Champ obligatoire",

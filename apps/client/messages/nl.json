@@ -1004,8 +1004,11 @@
     "upload": "Afbeelding uploaden",
     "remove": "Afbeelding verwijderen",
     "hint": "PNG, JPG, SVG of WebP, tot 5 MB",
-    "note": "Alleen een voorbeeld. In de volledige editor stel je formaat en drukzones in.",
-    "tooLarge": "Het bestand is groter dan 5 MB. Kies een kleinere afbeelding."
+    "note": "Je afbeelding gaat mee naar de editor, waar je de printgrootte en plaats kiest.",
+    "tooLarge": "Het bestand is groter dan 5 MB. Kies een kleinere afbeelding.",
+    "heading": "Probeer onze bestsellers",
+    "prev": "Vorig artikel",
+    "next": "Volgend artikel"
   },
   "checkoutErrors": {
     "required": "Verplicht veld",
