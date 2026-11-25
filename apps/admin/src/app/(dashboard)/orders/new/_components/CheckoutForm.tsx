@@ -15,6 +15,14 @@ export interface ContactData {
   novaPoshtaDetails: string; deadline: string; comment: string;
 }
 
+/** Required contact fields for an order: name, phone, and Nova Poshta details when that delivery is chosen. */
+export function isContactComplete(contact: ContactData): boolean {
+  return Boolean(
+    contact.name.trim() && contact.phone.trim() &&
+    (contact.delivery !== "nova_poshta" || contact.novaPoshtaDetails.trim()),
+  );
+}
+
 interface CheckoutFormProps {
   contact: ContactData;
   setContact: React.Dispatch<React.SetStateAction<ContactData>>;
@@ -48,8 +56,7 @@ export function CheckoutForm({
   const toggleTag = (id: string) =>
     setOrderTags((prev) => prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]);
 
-  const canProceed = contact.name.trim() && contact.phone.trim() &&
-    (contact.delivery !== "nova_poshta" || contact.novaPoshtaDetails.trim());
+  const canProceed = isContactComplete(contact);
 
   const handleNext = () => {
     if (!canProceed) { setHighlightRequired(true); setTimeout(() => setHighlightRequired(false), 1000); return; }
