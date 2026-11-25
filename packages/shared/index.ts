@@ -489,18 +489,25 @@ export const TEXT_FONTS = [
   { id: "Unbounded",         label: "Unbounded",         style: "sans-serif", category: "Дисплейний"    },
   { id: "Dela Gothic One",   label: "Dela Gothic One",   style: "display",    category: "Дисплейний"    },
   { id: "Oi",                label: "Oi",                style: "display",    category: "Дисплейний"    },
+  { id: "Climate Crisis",    label: "Climate Crisis",    style: "display",    category: "Дисплейний"    },
   // ── Декоративний ──────────────────────────────────────────────────────
   { id: "Comfortaa",         label: "Comfortaa",         style: "cursive",    category: "Декоративний"  },
   { id: "Amatic SC",         label: "Amatic SC",         style: "display",    category: "Декоративний"  },
+  { id: "Rubik Glitch",      label: "Rubik Glitch",      style: "display",    category: "Декоративний"  },
+  { id: "Rubik Spray Paint", label: "Rubik Spray Paint", style: "display",    category: "Декоративний"  },
+  { id: "Pangolin",          label: "Pangolin",          style: "display",    category: "Декоративний"  },
   // ── Рукописний ────────────────────────────────────────────────────────
   { id: "Caveat",            label: "Caveat",            style: "cursive",    category: "Рукописний"    },
   { id: "Balsamiq Sans",     label: "Balsamiq Sans",     style: "cursive",    category: "Рукописний"    },
   { id: "Shantell Sans",     label: "Shantell Sans",     style: "cursive",    category: "Рукописний"    },
   { id: "Comforter",         label: "Comforter",         style: "cursive",    category: "Рукописний"    },
   { id: "Great Vibes",       label: "Great Vibes",       style: "cursive",    category: "Рукописний"    },
+  { id: "Bad Script",        label: "Bad Script",        style: "cursive",    category: "Рукописний"    },
   // ── Технічний ─────────────────────────────────────────────────────────
   { id: "Jura",              label: "Jura",              style: "sans-serif", category: "Технічний"     },
   { id: "Press Start 2P",    label: "Press Start 2P",    style: "monospace",  category: "Технічний"     },
+  { id: "Science Gothic",    label: "Science Gothic",    style: "sans-serif", category: "Технічний"     },
+  { id: "Tiny5 Duo",         label: "Tiny5 Duo",         style: "display",    category: "Технічний"     },
 ] as const;
 
 export type TextFontId = typeof TEXT_FONTS[number]["id"];
