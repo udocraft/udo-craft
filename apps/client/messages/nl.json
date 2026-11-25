@@ -1248,7 +1248,8 @@
       "linkFailed": "De link kon niet worden geopend",
       "linkProductGone": "Het product uit deze link is niet meer beschikbaar",
       "catalogFailed": "Catalogus kon niet worden geladen",
-      "catalogFailedReload": "Catalogus kon niet worden geladen. Vernieuw de pagina."
+      "catalogFailedReload": "Catalogus kon niet worden geladen. Vernieuw de pagina.",
+      "printSelected": "Print ‘{name}’ gekozen — kies nu een artikel"
     },
     "grid": {
       "title": "Kies een item",
@@ -1553,5 +1554,13 @@
         "soon": "Binnenkort"
       }
     }
+  },
+  "homePrints": {
+    "heading": "Prints",
+    "lede": "Kant-en-klare prints van ons team. Kies een print en daarna het artikel.",
+    "sizes": "Maten",
+    "types": "Druk",
+    "from": "vanaf {price} ₴",
+    "add": "Op artikel zetten"
   }
 }

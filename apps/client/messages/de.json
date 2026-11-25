@@ -1248,7 +1248,8 @@
       "linkFailed": "Link konnte nicht geöffnet werden",
       "linkProductGone": "Das Produkt aus dem Link ist nicht mehr verfügbar",
       "catalogFailed": "Katalog konnte nicht geladen werden",
-      "catalogFailedReload": "Katalog konnte nicht geladen werden. Lade die Seite neu."
+      "catalogFailedReload": "Katalog konnte nicht geladen werden. Lade die Seite neu.",
+      "printSelected": "Print „{name}“ gewählt – wähle jetzt einen Artikel"
     },
     "grid": {
       "title": "Wähle ein Teil",
@@ -1553,5 +1554,13 @@
         "soon": "Demnächst"
       }
     }
+  },
+  "homePrints": {
+    "heading": "Prints",
+    "lede": "Fertige Prints von unserem Team. Wähle einen Print und dann den Artikel dafür.",
+    "sizes": "Größen",
+    "types": "Druck",
+    "from": "ab {price} ₴",
+    "add": "Auf Artikel setzen"
   }
 }

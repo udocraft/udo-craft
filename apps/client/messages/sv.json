@@ -1248,7 +1248,8 @@
       "linkFailed": "Det gick inte att öppna länken",
       "linkProductGone": "Produkten i länken finns inte längre",
       "catalogFailed": "Det gick inte att läsa in katalogen",
-      "catalogFailedReload": "Det gick inte att läsa in katalogen. Ladda om sidan."
+      "catalogFailedReload": "Det gick inte att läsa in katalogen. Ladda om sidan.",
+      "printSelected": "Trycket ”{name}” valt – välj ett plagg"
     },
     "grid": {
       "title": "Välj ett plagg",
@@ -1553,5 +1554,13 @@
         "soon": "Kommer snart"
       }
     }
+  },
+  "homePrints": {
+    "heading": "Tryck",
+    "lede": "Färdiga tryck från vårt team. Välj ett tryck och sedan plagget det ska på.",
+    "sizes": "Storlekar",
+    "types": "Tryck",
+    "from": "från {price} ₴",
+    "add": "Lägg på plagg"
   }
 }

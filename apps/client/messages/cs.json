@@ -1248,7 +1248,8 @@
       "linkFailed": "Odkaz se nepodařilo otevřít",
       "linkProductGone": "Produkt z odkazu už není dostupný",
       "catalogFailed": "Katalog se nepodařilo načíst",
-      "catalogFailedReload": "Katalog se nepodařilo načíst. Obnovte stránku."
+      "catalogFailedReload": "Katalog se nepodařilo načíst. Obnovte stránku.",
+      "printSelected": "Potisk „{name}“ vybrán — vyberte produkt"
     },
     "grid": {
       "title": "Vyberte kousek",
@@ -1553,5 +1554,13 @@
         "soon": "Již brzy"
       }
     }
+  },
+  "homePrints": {
+    "heading": "Potisky",
+    "lede": "Hotové potisky od našeho týmu. Vyberte potisk a pak produkt, na který ho dáme.",
+    "sizes": "Velikosti",
+    "types": "Tisk",
+    "from": "od {price} ₴",
+    "add": "Přidat na produkt"
   }
 }

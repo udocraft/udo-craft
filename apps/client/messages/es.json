@@ -1248,7 +1248,8 @@
       "linkFailed": "No se pudo abrir el enlace",
       "linkProductGone": "El producto de este enlace ya no está disponible",
       "catalogFailed": "No se pudo cargar el catálogo",
-      "catalogFailedReload": "No se pudo cargar el catálogo. Prueba a recargar la página."
+      "catalogFailedReload": "No se pudo cargar el catálogo. Prueba a recargar la página.",
+      "printSelected": "Estampado «{name}» elegido: ahora elige una prenda"
     },
     "grid": {
       "title": "Elige una prenda",
@@ -1553,5 +1554,13 @@
         "soon": "Próximamente"
       }
     }
+  },
+  "homePrints": {
+    "heading": "Estampados",
+    "lede": "Estampados listos de nuestro equipo. Elige uno y después la prenda donde ponerlo.",
+    "sizes": "Tamaños",
+    "types": "Impresión",
+    "from": "desde {price} ₴",
+    "add": "Añadir a prenda"
   }
 }

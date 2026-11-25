@@ -1248,7 +1248,8 @@
       "linkFailed": "Não foi possível abrir a ligação",
       "linkProductGone": "O produto desta ligação já não está disponível",
       "catalogFailed": "Não foi possível carregar o catálogo",
-      "catalogFailedReload": "Não foi possível carregar o catálogo. Atualize a página."
+      "catalogFailedReload": "Não foi possível carregar o catálogo. Atualize a página.",
+      "printSelected": "Estampa «{name}» escolhida — escolha uma peça"
     },
     "grid": {
       "title": "Escolha uma peça",
@@ -1553,5 +1554,13 @@
         "soon": "Em breve"
       }
     }
+  },
+  "homePrints": {
+    "heading": "Estampas",
+    "lede": "Estampas prontas da nossa equipa. Escolha uma estampa e depois a peça onde a colocar.",
+    "sizes": "Tamanhos",
+    "types": "Impressão",
+    "from": "desde {price} ₴",
+    "add": "Adicionar à peça"
   }
 }

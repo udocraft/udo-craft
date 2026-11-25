@@ -1248,7 +1248,8 @@
       "linkFailed": "Couldn't open the link",
       "linkProductGone": "The product from this link is no longer available",
       "catalogFailed": "Couldn't load the catalog",
-      "catalogFailedReload": "Couldn't load the catalog. Try refreshing the page."
+      "catalogFailedReload": "Couldn't load the catalog. Try refreshing the page.",
+      "printSelected": "Print “{name}” selected — now pick an item"
     },
     "grid": {
       "title": "Choose a piece",
@@ -1553,5 +1554,13 @@
         "soon": "Coming soon"
       }
     }
+  },
+  "homePrints": {
+    "heading": "Prints",
+    "lede": "Ready-made prints from our team. Pick a print, then choose the item to put it on.",
+    "sizes": "Sizes",
+    "types": "Print",
+    "from": "from {price} ₴",
+    "add": "Add to item"
   }
 }

@@ -1248,7 +1248,8 @@
       "linkFailed": "Impossibile aprire il link",
       "linkProductGone": "Il prodotto di questo link non è più disponibile",
       "catalogFailed": "Impossibile caricare il catalogo",
-      "catalogFailedReload": "Impossibile caricare il catalogo. Prova ad aggiornare la pagina."
+      "catalogFailedReload": "Impossibile caricare il catalogo. Prova ad aggiornare la pagina.",
+      "printSelected": "Stampa «{name}» scelta: ora scegli un capo"
     },
     "grid": {
       "title": "Scegli un capo",
@@ -1553,5 +1554,13 @@
         "soon": "In arrivo"
       }
     }
+  },
+  "homePrints": {
+    "heading": "Stampe",
+    "lede": "Stampe pronte del nostro team. Scegli una stampa, poi il capo su cui applicarla.",
+    "sizes": "Misure",
+    "types": "Stampa",
+    "from": "da {price} ₴",
+    "add": "Aggiungi al capo"
   }
 }
