@@ -1095,7 +1095,9 @@
     "testimonials": {
       "eyebrow": "Reviews",
       "heading": "People already wearing their own",
-      "listLabel": "Customer reviews"
+      "listLabel": "Customer reviews",
+      "prev": "Previous review",
+      "next": "Next review"
     }
   },
   "auth": {
@@ -1528,7 +1530,6 @@
   },
   "editorial": {
     "statement": {
-      "eyebrow": "U:DO CRAFT",
       "part1": "We blend craft with technology so clothing with your design",
       "part2": "gets worn, not stored in a drawer —",
       "part3": "pieces you are proud of every day.",

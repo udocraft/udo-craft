@@ -1095,7 +1095,9 @@
     "testimonials": {
       "eyebrow": "Reviews",
       "heading": "Mensen die hun eigen ontwerp al dragen",
-      "listLabel": "Klantreviews"
+      "listLabel": "Klantreviews",
+      "prev": "Vorige review",
+      "next": "Volgende review"
     }
   },
   "auth": {
@@ -1528,7 +1530,6 @@
   },
   "editorial": {
     "statement": {
-      "eyebrow": "U:DO CRAFT",
       "part1": "We combineren vakmanschap met technologie, zodat kleding met jouw ontwerp",
       "part2": "gedragen wordt en niet in de kast blijft —",
       "part3": "items waar je elke dag trots op bent.",

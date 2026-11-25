@@ -1095,7 +1095,9 @@
     "testimonials": {
       "eyebrow": "Opiniones",
       "heading": "Quienes ya llevan lo suyo",
-      "listLabel": "Opiniones de clientes"
+      "listLabel": "Opiniones de clientes",
+      "prev": "Opinión anterior",
+      "next": "Siguiente opinión"
     }
   },
   "auth": {
@@ -1528,7 +1530,6 @@
   },
   "editorial": {
     "statement": {
-      "eyebrow": "U:DO CRAFT",
       "part1": "Unimos oficio y tecnología para que la ropa con tu diseño",
       "part2": "se use, no se quede en el armario —",
       "part3": "prendas de las que te sientes orgulloso cada día.",

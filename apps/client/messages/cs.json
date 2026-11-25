@@ -1095,7 +1095,9 @@
     "testimonials": {
       "eyebrow": "Recenze",
       "heading": "Lidé, kteří už nosí to své",
-      "listLabel": "Recenze zákazníků"
+      "listLabel": "Recenze zákazníků",
+      "prev": "Předchozí recenze",
+      "next": "Další recenze"
     }
   },
   "auth": {
@@ -1528,7 +1530,6 @@
   },
   "editorial": {
     "statement": {
-      "eyebrow": "U:DO CRAFT",
       "part1": "Spojujeme řemeslo s technologií, aby oblečení s vaším návrhem",
       "part2": "se nosilo, a ne leželo ve skříni —",
       "part3": "kousky, na které jste hrdí každý den.",

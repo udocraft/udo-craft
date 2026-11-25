@@ -32,7 +32,7 @@ export function StatementFill({ chunks, images, headingId }: { chunks: string[];
   let index = 0;
 
   return (
-    <h2 ref={ref} id={headingId} className="text-h1 font-semibold text-balance">
+    <h2 ref={ref} id={headingId} className="text-display font-semibold text-balance">
       <span className="sr-only">{chunks.join(" ")}</span>
       <span aria-hidden="true">
         {words.map((group, gi) => (

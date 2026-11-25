@@ -1095,7 +1095,9 @@
     "testimonials": {
       "eyebrow": "Omdömen",
       "heading": "De som redan bär sitt eget",
-      "listLabel": "Kundomdömen"
+      "listLabel": "Kundomdömen",
+      "prev": "Föregående omdöme",
+      "next": "Nästa omdöme"
     }
   },
   "auth": {
@@ -1528,7 +1530,6 @@
   },
   "editorial": {
     "statement": {
-      "eyebrow": "U:DO CRAFT",
       "part1": "Vi förenar hantverk och teknik så att kläder med din design",
       "part2": "blir burna, inte bortglömda i garderoben —",
       "part3": "plagg du är stolt över varje dag.",

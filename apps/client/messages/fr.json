@@ -1095,7 +1095,9 @@
     "testimonials": {
       "eyebrow": "Avis",
       "heading": "Ceux qui portent déjà le leur",
-      "listLabel": "Avis clients"
+      "listLabel": "Avis clients",
+      "prev": "Avis précédent",
+      "next": "Avis suivant"
     }
   },
   "auth": {
@@ -1528,7 +1530,6 @@
   },
   "editorial": {
     "statement": {
-      "eyebrow": "U:DO CRAFT",
       "part1": "Nous allions artisanat et technologie pour que les vêtements à votre design",
       "part2": "soient portés, pas rangés au placard —",
       "part3": "des pièces dont vous êtes fier chaque jour.",

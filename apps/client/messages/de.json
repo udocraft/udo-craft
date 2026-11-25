@@ -1095,7 +1095,9 @@
     "testimonials": {
       "eyebrow": "Bewertungen",
       "heading": "Menschen, die schon ihr eigenes tragen",
-      "listLabel": "Kundenbewertungen"
+      "listLabel": "Kundenbewertungen",
+      "prev": "Vorherige Bewertung",
+      "next": "Nächste Bewertung"
     }
   },
   "auth": {
@@ -1528,7 +1530,6 @@
   },
   "editorial": {
     "statement": {
-      "eyebrow": "U:DO CRAFT",
       "part1": "Wir verbinden Handwerk und Technologie, damit Kleidung mit deinem Design",
       "part2": "getragen wird und nicht im Schrank liegt —",
       "part3": "Teile, auf die du jeden Tag stolz bist.",
