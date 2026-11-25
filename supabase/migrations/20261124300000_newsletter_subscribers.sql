@@ -13,10 +13,15 @@ CREATE UNIQUE INDEX IF NOT EXISTS newsletter_subscribers_email_key
 
 ALTER TABLE newsletter_subscribers ENABLE ROW LEVEL SECURITY;
 
+-- Staff only. auth.role() = 'authenticated' would include every storefront
+-- customer, who could then read all subscriber emails.
 DO $$
 BEGIN
   DROP POLICY IF EXISTS "Newsletter admin read" ON newsletter_subscribers;
-  CREATE POLICY "Newsletter admin read" ON newsletter_subscribers
-    FOR SELECT USING (auth.role() = 'authenticated');
+  DROP POLICY IF EXISTS "Newsletter staff read" ON newsletter_subscribers;
+  IF to_regprocedure('public.is_staff_member()') IS NOT NULL THEN
+    CREATE POLICY "Newsletter staff read" ON newsletter_subscribers
+      FOR SELECT TO authenticated USING (public.is_staff_member());
+  END IF;
 END $$;
 -- Inserts go through the service role in /api/newsletter only.
