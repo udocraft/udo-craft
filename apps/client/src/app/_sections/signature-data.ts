@@ -53,7 +53,8 @@ export const SIGNATURE_STROKES: string[] = [
 /**
  * U:DO logo (same shapes as `BrandLogoFull` in `packages/ui/components/brand-logo.tsx`, viewBox
  * 0 0 780 240) and its pen paths. Each stroke is wide enough to cover its shape; ends are butt
- * so they don't spill onto the neighbouring shape. `len` is the path length in viewBox units.
+ * so they don't spill onto the neighbouring shape. `slot` is the letter's place in the stagger;
+ * `after` (0-1) starts a stroke part-way through its letter.
  */
 export const LOGO_VIEWBOX = "0 0 780 240";
 
@@ -65,16 +66,16 @@ export const LOGO_SHAPES: string[] = [
   "M778.786 120.244C778.786 182.841 730.861 234.244 669.695 239.756V131.154H647.878V239.756C586.717 234.244 538.788 182.841 538.788 120.244C538.788 53.9703 592.513 0.244446 658.788 0.244446C725.059 0.244446 778.786 53.9703 778.786 120.244Z",
 ];
 
-export const LOGO_STROKES: { d: string; width: number; len: number; cap: "butt" | "round" }[] = [
+export const LOGO_STROKES: { d: string; width: number; cap: "butt" | "round"; slot: number; after?: number }[] = [
   // U: down the left pillar, round the bottom, up the right pillar
-  { d: "M43 0 L43 142 A55 55 0 0 0 153 142 L153 0", width: 112, len: 457, cap: "butt" },
+  { d: "M43 0 L43 142 A55 55 0 0 0 153 142 L153 0", width: 112, cap: "butt", slot: 0 },
   // colon: two dabbed dots
-  { d: "M235 71 a10 10 0 1 0 20 0 a10 10 0 1 0 -20 0", width: 72, len: 63, cap: "round" },
-  { d: "M235 169 a10 10 0 1 0 20 0 a10 10 0 1 0 -20 0", width: 72, len: 63, cap: "round" },
+  { d: "M235 71 a10 10 0 1 0 20 0 a10 10 0 1 0 -20 0", width: 72, cap: "round", slot: 1 },
+  { d: "M235 169 a10 10 0 1 0 20 0 a10 10 0 1 0 -20 0", width: 72, cap: "round", slot: 2 },
   // D: along the top bar, round the bowl, back along the bottom bar
-  { d: "M294 55 L402 55 A65 65 0 0 1 402 185 L294 185", width: 132, len: 420, cap: "butt" },
+  { d: "M294 55 L402 55 A65 65 0 0 1 402 185 L294 185", width: 132, cap: "butt", slot: 3 },
   // O: one full loop from beside the bottom slot (the overlap lands in the empty slot), then a dab
   // fills the centre. (A single stroke wider than twice its radius renders a stray sliver.)
-  { d: "M652.26 194.91 A75 75 0 1 1 665.34 194.91 A75 75 0 0 1 652.26 194.91", width: 96, len: 471, cap: "butt" },
-  { d: "M658.8 118 L658.8 122.4", width: 62, len: 40, cap: "round" },
+  { d: "M652.26 194.91 A75 75 0 1 1 665.34 194.91 A75 75 0 0 1 652.26 194.91", width: 96, cap: "butt", slot: 4 },
+  { d: "M658.8 118 L658.8 122.4", width: 62, cap: "round", slot: 4, after: 0.45 },
 ];

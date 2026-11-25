@@ -206,8 +206,8 @@ export function FooterSection({ tagline, copyright, instagram, telegram, showCta
           </div>
         </div>
 
-        {/* Closing wordmark: faint full logo revealed top to bottom, then "what you love ♥" written over it. */}
-        <Link href="/" aria-label={t("homeLink")} className="block pb-8 focus-visible:outline-none focus-visible:opacity-80 sm:pb-12">
+        {/* Closing wordmark: faint full logo revealed top to bottom, then "what you love ♥" written across it. The lettering is taller than the logo, so the margins leave room for it. */}
+        <Link href="/" aria-label={t("homeLink")} className="mt-8 block pb-8 focus-visible:outline-none focus-visible:opacity-80 sm:mt-14 sm:pb-14">
           <FooterWordmark />
         </Link>
       </div>

@@ -5,12 +5,14 @@ import { useInView } from "framer-motion";
 import { LOGO_SHAPES, LOGO_STROKES, LOGO_VIEWBOX, SIGNATURE_SHAPES, SIGNATURE_STROKES, SIGNATURE_VIEWBOX } from "./signature-data";
 import styles from "./FooterWordmark.module.css";
 
-/** Pen time for the logo, then for the lettering. Each is split by stroke length, so the pen keeps one speed. */
-const LOGO_WRITE_S = 1.5;
+/** Logo: every letter fills over the same time, each starting a beat after the previous one (ease-out). */
+const LOGO_FILL_S = 1.2;
+const LOGO_STAGGER_S = 0.09;
+/** Lettering: starts while the logo settles; total pen time is split by stroke length (one pen speed). */
+const SIG_START_S = 0.9;
 const SIG_WRITE_S = 2.8;
-/** Pen lift between strokes, and the pause between the logo and the lettering. */
+/** Pen lift between lettering strokes. */
 const LIFT_S = 0.06;
-const PAUSE_S = 0.2;
 
 function polylineLength(d: string) {
   const n = d.match(/-?\d+(\.\d+)?/g)?.map(Number) ?? [];
@@ -33,9 +35,12 @@ function timeline(lengths: number[], total: number, start: number): Timing[] {
 }
 
 const end = (t: Timing[]) => t[t.length - 1].delay + t[t.length - 1].dur;
-const LOGO_TIMING = timeline(LOGO_STROKES.map((s) => s.len), LOGO_WRITE_S, 0);
-const LOGO_END_S = end(LOGO_TIMING);
-const SIG_TIMING = timeline(SIGNATURE_STROKES.map(polylineLength), SIG_WRITE_S, LOGO_END_S + PAUSE_S);
+const LOGO_TIMING: Timing[] = LOGO_STROKES.map((s) => {
+  const after = s.after ?? 0;
+  return { delay: s.slot * LOGO_STAGGER_S + after * LOGO_FILL_S, dur: LOGO_FILL_S * (1 - after) };
+});
+const LOGO_END_S = Math.max(...LOGO_TIMING.map((t) => t.delay + t.dur));
+const SIG_TIMING = timeline(SIGNATURE_STROKES.map(polylineLength), SIG_WRITE_S, SIG_START_S);
 const SIG_END_S = end(SIG_TIMING);
 
 const timingStyle = (t: Timing) => ({ ["--delay" as string]: `${t.delay}s`, ["--dur" as string]: `${t.dur}s` });
@@ -43,8 +48,8 @@ const timingStyle = (t: Timing) => ({ ["--delay" as string]: `${t.delay}s`, ["--
 type Phase = "idle" | "armed" | "play";
 
 /**
- * Closing footer wordmark: the faint, full U:DO logo is written in with broad pen strokes,
- * then "what you love ♥" is written over it stroke by stroke in spray paint.
+ * Closing footer wordmark: the faint, full U:DO logo fills in (all letters together, slightly
+ * staggered, easing out), then "what you love ♥" is written across it stroke by stroke in spray paint.
  *
  * The server renders the finished state ("idle"), so without JS or with reduced motion nothing
  * is hidden. On mount the client arms the animation, and it plays once when half of it is in view.
@@ -75,7 +80,7 @@ export function FooterWordmark() {
             <rect width="780" height="240" fill="#000" />
             <g fill="none" stroke="#fff" strokeLinejoin="round">
               {LOGO_STROKES.map((s, i) => (
-                <path key={i} d={s.d} strokeWidth={s.width} strokeLinecap={s.cap} pathLength={1} className={styles.stroke} style={timingStyle(LOGO_TIMING[i])} />
+                <path key={i} d={s.d} strokeWidth={s.width} strokeLinecap={s.cap} pathLength={1} className={`${styles.stroke} ${styles.logoStroke}`} style={timingStyle(LOGO_TIMING[i])} />
               ))}
             </g>
             <rect width="780" height="240" fill="#fff" className={styles.settle} style={{ ["--at" as string]: `${LOGO_END_S}s` }} />
@@ -90,7 +95,7 @@ export function FooterWordmark() {
 
       <svg
         viewBox={SIGNATURE_VIEWBOX}
-        className="absolute left-1/2 top-[46%] w-[58%] -translate-x-1/2 -translate-y-1/2 -rotate-3"
+        className="absolute left-1/2 top-1/2 w-full -translate-x-1/2 -translate-y-1/2 -rotate-2"
         fill="none"
       >
         <defs>
