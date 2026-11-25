@@ -3,11 +3,10 @@
 import { useId, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { Instagram, Send, ArrowRight, Check, Loader2 } from "lucide-react";
-import { BrandLogoFull } from "@/components/brand-logo";
 import { useLocale, useTranslations } from "next-intl";
 import { resetConsent } from "@/lib/consent";
 import { Button } from "@udo-craft/ui";
-import { motion } from "framer-motion";
+import { FooterWordmark } from "./FooterWordmark";
 
 interface FooterSectionProps {
   tagline: string; copyright: string; instagram: string; telegram: string;
@@ -207,26 +206,10 @@ export function FooterSection({ tagline, copyright, instagram, telegram, showCta
           </div>
         </div>
 
-        {/* Closing wordmark: the logo shows its top 95% as a faint watermark that
-            spans the content width and grows up from its bottom edge once it scrolls into view. */}
-        {/* The observer watches the unscaled link: a box at scale(0) has no area and never "enters" the viewport.
-            Reduced motion is handled in CSS (transform-none!), so server and client render the same markup. */}
-        <motion.div
-          initial="hidden"
-          whileInView="shown"
-          viewport={{ once: true, amount: 0.5 }}
-        >
-          <Link href="/" aria-label={t("homeLink")} className="block focus-visible:outline-none focus-visible:opacity-80">
-            <motion.div
-              aria-hidden="true"
-              className="aspect-[780/228] origin-bottom overflow-hidden opacity-15 motion-reduce:transform-none!"
-              variants={{ hidden: { scale: 0 }, shown: { scale: 1 } }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <BrandLogoFull className="block h-auto w-full" color="currentColor" />
-            </motion.div>
-          </Link>
-        </motion.div>
+        {/* Closing wordmark: faint logo revealed right to left, then "what you love ♥" written over it. */}
+        <Link href="/" aria-label={t("homeLink")} className="block focus-visible:outline-none focus-visible:opacity-80">
+          <FooterWordmark />
+        </Link>
       </div>
     </footer>
   );

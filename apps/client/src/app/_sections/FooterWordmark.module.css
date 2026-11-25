@@ -1,0 +1,103 @@
+/*
+ * Phases (set on .root by FooterWordmark):
+ *   idle  - finished state; what the server renders and what reduced motion keeps
+ *   armed - everything hidden, waiting to scroll into view
+ *   play  - reveal + shimmer, then the lettering is written stroke by stroke
+ */
+
+/*
+ * Logo: the mask is 2.2x the box width. Moving it from 0% to 100% carries its soft edge from
+ * just outside the right side to just outside the left side, so the edge crosses the box once
+ * over the whole duration, and the mask image always covers the box (nothing clipped at rest).
+ */
+.reveal,
+.shine {
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 220% 100%;
+  mask-size: 220% 100%;
+  -webkit-mask-position: 100% 0;
+  mask-position: 100% 0;
+}
+
+.reveal {
+  -webkit-mask-image: linear-gradient(to right, transparent 47%, #000 53%);
+  mask-image: linear-gradient(to right, transparent 47%, #000 53%);
+}
+
+/* A brighter copy of the logo, visible only in a narrow band that rides the reveal edge. */
+.shine {
+  visibility: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 46.5%, #000 50%, transparent 53.5%);
+  mask-image: linear-gradient(to right, transparent 46.5%, #000 50%, transparent 53.5%);
+}
+
+.stroke {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 0;
+}
+
+.settle {
+  opacity: 1;
+}
+
+/* armed: hidden until it plays */
+.root[data-phase="armed"] .reveal {
+  -webkit-mask-position: 0% 0;
+  mask-position: 0% 0;
+}
+.root[data-phase="armed"] .stroke {
+  stroke-dashoffset: 1;
+}
+.root[data-phase="armed"] .settle {
+  opacity: 0;
+}
+
+/* play */
+.root[data-phase="play"] .reveal {
+  animation: sweep var(--reveal) cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+.root[data-phase="play"] .shine {
+  visibility: visible;
+  animation: sweep var(--reveal) cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+.root[data-phase="play"] .stroke {
+  stroke-dashoffset: 1;
+  /* A pen speeds up mid-stroke and slows at the ends. */
+  animation: write var(--dur) cubic-bezier(0.45, 0.05, 0.55, 0.95) var(--delay) forwards;
+}
+.root[data-phase="play"] .settle {
+  opacity: 0;
+  animation: settle 0.25s ease-out var(--write-end) forwards;
+}
+
+@keyframes sweep {
+  from {
+    -webkit-mask-position: 0% 0;
+    mask-position: 0% 0;
+  }
+  to {
+    -webkit-mask-position: 100% 0;
+    mask-position: 100% 0;
+  }
+}
+
+@keyframes write {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes settle {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root .reveal,
+  .root .stroke,
+  .root .settle {
+    animation: none !important;
+  }
+}
