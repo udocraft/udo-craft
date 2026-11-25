@@ -8,7 +8,7 @@ import {
   Settings, ChevronRight, UserCog, ShelvingUnit,
   FileEdit, Globe, Search, Tag, Plus, BadgeDollarSign, ChevronDown,
 } from "lucide-react";
-import { BrandLogo, BrandLogoFull } from "@/components/brand-logo";
+import { BrandLogoFull } from "@/components/brand-logo";
 import { cn } from "@/lib/utils";
 import { NavUser } from "@/components/nav-user";
 import { createClient } from "@/lib/supabase/client";
@@ -30,6 +30,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
+  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
 import {
@@ -381,18 +382,20 @@ export function AppSidebar({ user }: AppSidebarProps) {
     <>
       <Sidebar collapsible="icon" className="border-r border-border/60 bg-sidebar">
         {/* Brand header: U:DO mark + Admin label */}
-        <SidebarHeader className="h-16 shrink-0 justify-center border-b border-sidebar-border px-3 py-0 group-data-[collapsible=icon]:px-2">
+        {/* Brand header: logo + Admin label and the collapse button. Collapsed, the logo
+            gives way to the open button. */}
+        <SidebarHeader className="h-16 shrink-0 flex-row items-center justify-between gap-2 border-b border-sidebar-border px-3 py-0 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2">
           <Link
             href="/"
             aria-label="U:DO Admin — на головну"
-            className="flex h-10 items-center gap-2.5 rounded-lg px-2 outline-hidden ring-sidebar-ring focus-visible:ring-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
+            className="flex h-10 min-w-0 items-center gap-2.5 rounded-lg px-2 outline-hidden ring-sidebar-ring focus-visible:ring-2 group-data-[collapsible=icon]:hidden"
           >
-            <BrandLogoFull className="h-5 w-auto text-primary group-data-[collapsible=icon]:hidden" color="var(--color-primary)" />
-            <BrandLogo compact className="hidden text-primary group-data-[collapsible=icon]:flex" color="var(--color-primary)" />
-            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-primary group-data-[collapsible=icon]:hidden">
+            <BrandLogoFull className="h-5 w-auto shrink-0 text-primary" color="var(--color-primary)" />
+            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-primary">
               Admin
             </span>
           </Link>
+          <SidebarTrigger className="size-9 min-h-0 min-w-0 shrink-0 rounded-lg text-muted-foreground hover:bg-sidebar-accent hover:text-foreground" />
         </SidebarHeader>
 
         <SidebarContent id="admin-sidebar-nav" role="navigation" aria-label="Основна навігація" className="gap-4 px-3 py-3 group-data-[collapsible=icon]:px-2.5">
@@ -411,7 +414,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                     )}
                   >
                     <Plus />
-                    <span>Нове замовлення</span>
+                    <span className="group-data-[collapsible=icon]:hidden">Нове замовлення</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>
@@ -427,7 +430,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                       className={cn(itemH, "gap-3 rounded-lg px-3 text-muted-foreground hover:text-foreground")}
                     >
                       <Search />
-                      <span className="flex-1 text-sm">Пошук…</span>
+                      <span className="flex-1 text-sm group-data-[collapsible=icon]:hidden">Пошук…</span>
                       {!isCollapsed && (
                         <kbd className="pointer-events-none ml-auto hidden h-5 select-none items-center gap-0.5 rounded border border-border bg-muted px-1.5 font-mono text-[11px] font-medium text-muted-foreground md:inline-flex">
                           ⌘K

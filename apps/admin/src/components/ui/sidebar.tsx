@@ -23,7 +23,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "./tooltip"
-import { Menu } from "lucide-react"
+import { PanelLeftClose, PanelLeftOpen } from "lucide-react"
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -261,7 +261,10 @@ function SidebarTrigger({
   onClick,
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar, state, isMobile, openMobile } = useSidebar()
+  // Icon shows what the click does: close (collapse) an open sidebar, open a closed one.
+  const isOpen = isMobile ? openMobile : state === "expanded"
+  const label = isOpen ? "Згорнути меню" : "Розгорнути меню"
 
   return (
     <Button
@@ -269,6 +272,9 @@ function SidebarTrigger({
       data-slot="sidebar-trigger"
       variant="ghost"
       size="icon-sm"
+      aria-label={label}
+      aria-expanded={isOpen}
+      title={`${label} (⌘B)`}
       className={cn(className)}
       onClick={(event) => {
         onClick?.(event)
@@ -276,8 +282,7 @@ function SidebarTrigger({
       }}
       {...props}
     >
-      <Menu />
-      <span className="sr-only">Toggle Sidebar</span>
+      {isOpen ? <PanelLeftClose /> : <PanelLeftOpen />}
     </Button>
   )
 }

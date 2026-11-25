@@ -66,7 +66,8 @@ export function DashboardPage({
       <header className={cn("shrink-0 bg-background", !toolbar && "border-b border-border")}>
         {/* Fixed 64px row so its bottom rule lines up with the sidebar header (h-16). */}
         <div className="flex h-16 items-center gap-2 px-4 md:px-6">
-          <SidebarTrigger className="-ml-2 size-9 shrink-0 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground" />
+          {/* Desktop toggles from the sidebar header; on phones the sidebar is a sheet, so it opens from here. */}
+          <SidebarTrigger className="-ml-2 size-9 min-h-0 min-w-0 shrink-0 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground md:hidden" />
 
           <div className="min-w-0 flex-1">
             {trail.length > 0 && (
