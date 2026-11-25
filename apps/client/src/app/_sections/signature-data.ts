@@ -49,3 +49,32 @@ export const SIGNATURE_STROKES: string[] = [
   // heart
   "M712 108 L690 82 L670 50 L672 32 L688 32 L708 62 L722 38 L740 20 L746 27 L735 60 L712 105",
 ];
+
+/**
+ * U:DO logo (same shapes as `BrandLogoFull` in `packages/ui/components/brand-logo.tsx`, viewBox
+ * 0 0 780 240) and its pen paths. Each stroke is wide enough to cover its shape; ends are butt
+ * so they don't spill onto the neighbouring shape. `len` is the path length in viewBox units.
+ */
+export const LOGO_VIEWBOX = "0 0 780 240";
+
+export const LOGO_SHAPES: string[] = [
+  "M0 0H87.2727V109.091H109.091V0H196.364V141.818C196.364 204.545 152.406 240 98.1818 240C43.9575 240 0 201.818 0 141.818V0Z",
+  "M278.182 70.9091C278.182 88.9841 263.529 103.636 245.454 103.636C227.379 103.636 212.727 88.9841 212.727 70.9091C212.727 52.8343 227.379 38.1818 245.454 38.1818C263.529 38.1818 278.182 52.8343 278.182 70.9091Z",
+  "M278.182 169.091C278.182 187.166 263.529 201.818 245.454 201.818C227.379 201.818 212.727 187.166 212.727 169.091C212.727 151.016 227.379 136.364 245.454 136.364C263.529 136.364 278.182 151.016 278.182 169.091Z",
+  "M403.636 109.091H294.545V0H402.424C479.091 0 522.424 53.7258 522.424 120C522.424 186.274 475.758 240 402.424 240H294.545V130.909H403.636V109.091Z",
+  "M778.786 120.244C778.786 182.841 730.861 234.244 669.695 239.756V131.154H647.878V239.756C586.717 234.244 538.788 182.841 538.788 120.244C538.788 53.9703 592.513 0.244446 658.788 0.244446C725.059 0.244446 778.786 53.9703 778.786 120.244Z",
+];
+
+export const LOGO_STROKES: { d: string; width: number; len: number; cap: "butt" | "round" }[] = [
+  // U: down the left pillar, round the bottom, up the right pillar
+  { d: "M43 0 L43 142 A55 55 0 0 0 153 142 L153 0", width: 112, len: 457, cap: "butt" },
+  // colon: two dabbed dots
+  { d: "M235 71 a10 10 0 1 0 20 0 a10 10 0 1 0 -20 0", width: 72, len: 63, cap: "round" },
+  { d: "M235 169 a10 10 0 1 0 20 0 a10 10 0 1 0 -20 0", width: 72, len: 63, cap: "round" },
+  // D: along the top bar, round the bowl, back along the bottom bar
+  { d: "M294 55 L402 55 A65 65 0 0 1 402 185 L294 185", width: 132, len: 420, cap: "butt" },
+  // O: one full loop from beside the bottom slot (the overlap lands in the empty slot), then a dab
+  // fills the centre. (A single stroke wider than twice its radius renders a stray sliver.)
+  { d: "M652.26 194.91 A75 75 0 1 1 665.34 194.91 A75 75 0 0 1 652.26 194.91", width: 96, len: 471, cap: "butt" },
+  { d: "M658.8 118 L658.8 122.4", width: 62, len: 40, cap: "round" },
+];

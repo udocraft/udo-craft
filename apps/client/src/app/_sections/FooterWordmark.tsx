@@ -2,18 +2,15 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { useInView } from "framer-motion";
-import { BrandLogoFull } from "@/components/brand-logo";
-import { SIGNATURE_SHAPES, SIGNATURE_STROKES, SIGNATURE_VIEWBOX } from "./signature-data";
+import { LOGO_SHAPES, LOGO_STROKES, LOGO_VIEWBOX, SIGNATURE_SHAPES, SIGNATURE_STROKES, SIGNATURE_VIEWBOX } from "./signature-data";
 import styles from "./FooterWordmark.module.css";
 
-/** Logo reveal (top to bottom, with a shimmer band riding the edge). */
-const REVEAL_S = 1.1;
-/** The lettering starts just before the reveal ends. */
-const WRITE_START_S = 1.0;
-/** Total pen time for all strokes, split by stroke length so the pen moves at one speed. */
-const WRITE_S = 2.8;
-/** Pen lift between strokes. */
+/** Pen time for the logo, then for the lettering. Each is split by stroke length, so the pen keeps one speed. */
+const LOGO_WRITE_S = 1.5;
+const SIG_WRITE_S = 2.8;
+/** Pen lift between strokes, and the pause between the logo and the lettering. */
 const LIFT_S = 0.06;
+const PAUSE_S = 0.2;
 
 function polylineLength(d: string) {
   const n = d.match(/-?\d+(\.\d+)?/g)?.map(Number) ?? [];
@@ -22,21 +19,32 @@ function polylineLength(d: string) {
   return len;
 }
 
-const LENGTHS = SIGNATURE_STROKES.map(polylineLength);
-const TOTAL_LEN = LENGTHS.reduce((a, b) => a + b, 0);
-const TIMING = LENGTHS.reduce<{ delay: number; dur: number }[]>((acc, len, i) => {
-  const dur = (len / TOTAL_LEN) * WRITE_S;
-  const delay = i === 0 ? WRITE_START_S : acc[i - 1].delay + acc[i - 1].dur + LIFT_S;
-  acc.push({ delay, dur });
-  return acc;
-}, []);
-const WRITE_END_S = TIMING[TIMING.length - 1].delay + TIMING[TIMING.length - 1].dur;
+type Timing = { delay: number; dur: number };
+
+/** Lays strokes end to end from `start`, with durations proportional to length. */
+function timeline(lengths: number[], total: number, start: number): Timing[] {
+  const sum = lengths.reduce((a, b) => a + b, 0);
+  return lengths.reduce<Timing[]>((acc, len, i) => {
+    const dur = (len / sum) * total;
+    const delay = i === 0 ? start : acc[i - 1].delay + acc[i - 1].dur + LIFT_S;
+    acc.push({ delay, dur });
+    return acc;
+  }, []);
+}
+
+const end = (t: Timing[]) => t[t.length - 1].delay + t[t.length - 1].dur;
+const LOGO_TIMING = timeline(LOGO_STROKES.map((s) => s.len), LOGO_WRITE_S, 0);
+const LOGO_END_S = end(LOGO_TIMING);
+const SIG_TIMING = timeline(SIGNATURE_STROKES.map(polylineLength), SIG_WRITE_S, LOGO_END_S + PAUSE_S);
+const SIG_END_S = end(SIG_TIMING);
+
+const timingStyle = (t: Timing) => ({ ["--delay" as string]: `${t.delay}s`, ["--dur" as string]: `${t.dur}s` });
 
 type Phase = "idle" | "armed" | "play";
 
 /**
- * Closing footer wordmark: the faint, full U:DO logo is revealed top to bottom with a
- * shimmer, then "what you love ♥" is written over it stroke by stroke.
+ * Closing footer wordmark: the faint, full U:DO logo is written in with broad pen strokes,
+ * then "what you love ♥" is written over it stroke by stroke in spray paint.
  *
  * The server renders the finished state ("idle"), so without JS or with reduced motion nothing
  * is hidden. On mount the client arms the animation, and it plays once when half of it is in view.
@@ -46,6 +54,7 @@ export function FooterWordmark() {
   const inView = useInView(ref, { once: true, amount: 0.5 });
   const [phase, setPhase] = useState<Phase>("idle");
   const uid = useId().replace(/:/g, "");
+  const logoMaskId = `logo-mask-${uid}`;
   const maskId = `sig-mask-${uid}`;
   const paintId = `sig-paint-${uid}`;
 
@@ -59,19 +68,25 @@ export function FooterWordmark() {
   }, [inView, phase]);
 
   return (
-    <div
-      ref={ref}
-      aria-hidden="true"
-      data-phase={phase}
-      className={`${styles.root} relative`}
-      style={{ ["--reveal" as string]: `${REVEAL_S}s`, ["--write-end" as string]: `${WRITE_END_S}s` }}
-    >
-      <div className={`${styles.reveal} opacity-15`}>
-        <BrandLogoFull className="block h-auto w-full" color="currentColor" />
-      </div>
-      <div className={`${styles.shine} absolute inset-0 opacity-50`}>
-        <BrandLogoFull className="block h-auto w-full" color="currentColor" />
-      </div>
+    <div ref={ref} aria-hidden="true" data-phase={phase} className={`${styles.root} relative`}>
+      <svg viewBox={LOGO_VIEWBOX} className="block h-auto w-full" fill="none">
+        <defs>
+          <mask id={logoMaskId} maskUnits="userSpaceOnUse" x="0" y="0" width="780" height="240">
+            <rect width="780" height="240" fill="#000" />
+            <g fill="none" stroke="#fff" strokeLinejoin="round">
+              {LOGO_STROKES.map((s, i) => (
+                <path key={i} d={s.d} strokeWidth={s.width} strokeLinecap={s.cap} pathLength={1} className={styles.stroke} style={timingStyle(LOGO_TIMING[i])} />
+              ))}
+            </g>
+            <rect width="780" height="240" fill="#fff" className={styles.settle} style={{ ["--at" as string]: `${LOGO_END_S}s` }} />
+          </mask>
+        </defs>
+        <g fill="currentColor" opacity={0.15} mask={`url(#${logoMaskId})`}>
+          {LOGO_SHAPES.map((d, i) => (
+            <path key={i} d={d} />
+          ))}
+        </g>
+      </svg>
 
       <svg
         viewBox={SIGNATURE_VIEWBOX}
@@ -88,12 +103,12 @@ export function FooterWordmark() {
                   d={d}
                   pathLength={1}
                   className={styles.stroke}
-                  style={{ ["--delay" as string]: `${TIMING[i].delay}s`, ["--dur" as string]: `${TIMING[i].dur}s` }}
+                  style={timingStyle(SIG_TIMING[i])}
                 />
               ))}
             </g>
             {/* Fades in at the very end so anti-aliased letter edges are fully shown. */}
-            <rect width="750" height="251" fill="#fff" className={styles.settle} />
+            <rect width="750" height="251" fill="#fff" className={styles.settle} style={{ ["--at" as string]: `${SIG_END_S}s` }} />
           </mask>
           {/*
             Spray paint look, applied after the mask so it builds up as the strokes are written:
