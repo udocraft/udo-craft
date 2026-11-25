@@ -12,7 +12,7 @@ import { DesktopCartPanel, type CartItem } from "./_components/CartSummary";
 import { MobileAdminCart } from "./_components/MobileAdminCart";
 import { ReviewStep } from "./_components/ReviewStep";
 import { ProductCardInline } from "./_components/ProductCardInline";
-import { CheckoutForm, type ContactData } from "./_components/CheckoutForm";
+import { CheckoutForm, isContactComplete, type ContactData } from "./_components/CheckoutForm";
 import { StepHeader } from "./_components/StepHeader";
 import { ProductQuickSearch } from "./_components/ProductQuickSearch";
 
@@ -156,6 +156,8 @@ export default function NewOrderPage() {
     if (!contact.phone.trim() && !contact.email.trim() && !contact.socialHandle.trim()) {
       toast.error("Введіть хоча б один контакт"); return;
     }
+    // Same rule as the Contacts step, in case Review was reached some other way.
+    if (!isContactComplete(contact)) { toast.error("Заповніть телефон і дані доставки"); setStep("checkout"); return; }
     setSubmitting(true);
     try {
       const supabase = createClient();
@@ -225,7 +227,7 @@ export default function NewOrderPage() {
   if (loading) {
     return (
       <div className="flex flex-col flex-1 min-h-0">
-        <StepHeader step={step} cartLength={cart.length} onNavigate={setStep} />
+        <StepHeader step={step} cartLength={cart.length} contactComplete={isContactComplete(contact)} onNavigate={setStep} />
         <div className="flex-1 flex items-center justify-center">
           <Loader2 className="size-6 animate-spin text-muted-foreground" />
         </div>
@@ -251,7 +253,7 @@ export default function NewOrderPage() {
       )}
 
       {/* Sticky step header */}
-      <StepHeader step={step} cartLength={cart.length} onNavigate={setStep} />
+      <StepHeader step={step} cartLength={cart.length} contactComplete={isContactComplete(contact)} onNavigate={setStep} />
 
       {/* Body */}
       <div className="flex-1 min-h-0 flex overflow-hidden">

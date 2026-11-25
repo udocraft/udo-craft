@@ -11,6 +11,8 @@ type Step = "catalog" | "checkout" | "review";
 interface StepHeaderProps {
   step: Step;
   cartLength: number;
+  /** Required contact fields are filled; the Review step stays locked until then. */
+  contactComplete: boolean;
   onNavigate: (s: Step) => void;
 }
 
@@ -21,7 +23,7 @@ const STEP_LABELS: Record<Step, string> = {
   review: "Перевірка",
 };
 
-export function StepHeader({ step, cartLength, onNavigate }: StepHeaderProps) {
+export function StepHeader({ step, cartLength, contactComplete, onNavigate }: StepHeaderProps) {
   const router = useRouter();
   const stepIdx = STEPS.indexOf(step);
 
@@ -48,13 +50,19 @@ export function StepHeader({ step, cartLength, onNavigate }: StepHeaderProps) {
           {STEPS.map((s, i) => {
             const isCurrent = i === stepIdx;
             const isVisited = i < stepIdx;
-            const canNavigate = i < stepIdx || (i > stepIdx && cartLength > 0);
+            const forwardOk = cartLength > 0 && (s !== "review" || contactComplete);
+            const canNavigate = i < stepIdx || (i > stepIdx && forwardOk);
+            const lockedHint = i > stepIdx && !forwardOk
+              ? (cartLength === 0 ? "Спершу додайте товар" : "Спершу заповніть ім'я і телефон")
+              : undefined;
             
             return (
               <React.Fragment key={s}>
                 <button
                   onClick={() => canNavigate ? onNavigate(s) : undefined}
                   disabled={!canNavigate}
+                  title={lockedHint}
+                  aria-current={isCurrent ? "step" : undefined}
                   className={`flex items-center gap-2.5 px-3 py-1.5 rounded-xl transition-all ${
                     isCurrent 
                       ? "bg-background text-primary shadow-sm border border-border/50 scale-105" 

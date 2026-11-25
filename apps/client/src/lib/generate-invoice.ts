@@ -1,3 +1,4 @@
+import { PRINT_TYPES } from "@udo-craft/shared";
 export interface InvoiceItem {
   productName: string;
   productImage?: string;
@@ -98,8 +99,26 @@ function logoToPng(fillColor: string, width: number, height: number): Promise<st
 }
 
 // ── Main export ────────────────────────────────────────────────────────────
+/**
+ * Print type names for the invoice: built-in names, overridden by the admin's list
+ * (including hidden types, so older orders still show a name). Falls back to the
+ * built-in names if the request fails.
+ */
+async function loadPrintTypeLabels(): Promise<Record<string, string>> {
+  const labels: Record<string, string> = Object.fromEntries(PRINT_TYPES.map((t) => [t.id, t.label]));
+  try {
+    const res = await fetch("/api/print-types?all=1");
+    if (res.ok) {
+      const rows: { id: string; label: string }[] = await res.json();
+      for (const r of rows) if (r?.id && r?.label) labels[r.id] = r.label;
+    }
+  } catch { /* keep built-in names */ }
+  return labels;
+}
+
 export async function generateInvoicePDF(data: InvoiceData): Promise<void> {
   const { jsPDF } = await import("jspdf");
+  const printTypeLabels = await loadPrintTypeLabels();
 
   // Load Cousine fonts (served from /public/fonts/)
   const [fontRegular, fontBold] = await Promise.all([
@@ -311,8 +330,7 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<void> {
     grandTotal += rowTotal;
 
     const layerLines = (item.layers ?? []).map((l) => {
-      const typeLabels: Record<string, string> = { dtf: "DTF", embroidery: "Вишивка", screen: "Шовкодрук", sublimation: "Сублімація", patch: "Нашивка" };
-      const typeName = typeLabels[l.type] ?? l.type;
+      const typeName = printTypeLabels[l.type] ?? l.type;
       if (l.kind === "text") return `Текст · ${typeName}${l.sizeLabel ? ` · ${l.sizeLabel}` : ""}`;
       return `${typeName}${l.sizeLabel ? ` · ${l.sizeLabel}` : ""}${l.sizeMinCm && l.sizeMaxCm ? ` (${l.sizeMinCm}–${l.sizeMaxCm}см)` : ""}${l.priceCents ? ` · ${(l.priceCents / 100).toFixed(0)}₴/шт` : ""}`;
     });

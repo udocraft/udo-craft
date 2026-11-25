@@ -8,8 +8,6 @@ import { createClient } from "@/lib/supabase/client";
 
 type View = "login" | "forgot" | "otp" | "new-password" | "done";
 
-const ALLOWED_ROLES = ["admin", "manager", "seamstress", "sewer"];
-
 export default function LoginPage() {
   const [view, setView] = useState<View>("login");
   const [email, setEmail] = useState("");
