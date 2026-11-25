@@ -8,7 +8,7 @@ import {
   Settings, ChevronRight, UserCog, ShelvingUnit,
   FileEdit, Globe, Search, Tag, Plus, BadgeDollarSign, ChevronDown,
 } from "lucide-react";
-import { BrandLogo, BrandLogoFull } from "@/components/brand-logo";
+import { BrandLogoFull } from "@/components/brand-logo";
 import { cn } from "@/lib/utils";
 import { NavUser } from "@/components/nav-user";
 import { createClient } from "@/lib/supabase/client";
@@ -30,6 +30,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
+  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
 import {
@@ -379,20 +380,23 @@ export function AppSidebar({ user }: AppSidebarProps) {
 
   return (
     <>
-      <Sidebar collapsible="icon" className="border-r border-border/60 bg-sidebar">
+      <Sidebar collapsible="icon" className="bg-sidebar">
         {/* Brand header: U:DO mark + Admin label */}
-        <SidebarHeader className="h-16 shrink-0 justify-center border-b border-sidebar-border px-3 py-0 group-data-[collapsible=icon]:px-2">
+        {/* Brand header: logo + Admin label and the collapse button. Collapsed, the logo
+            gives way to the open button. */}
+        <SidebarHeader className="relative h-16 shrink-0 flex-row items-center justify-between gap-2 border-b border-border px-3 py-0 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2">
           <Link
             href="/"
             aria-label="U:DO Admin — на головну"
-            className="flex h-10 items-center gap-2.5 rounded-lg px-2 outline-hidden ring-sidebar-ring focus-visible:ring-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
+            className="flex h-10 min-w-0 shrink-0 items-center gap-2.5 whitespace-nowrap rounded-full px-2 outline-hidden ring-sidebar-ring transition-opacity duration-200 focus-visible:ring-2 motion-reduce:transition-none group-data-[collapsible=icon]:pointer-events-none group-data-[collapsible=icon]:absolute group-data-[collapsible=icon]:opacity-0"
+            tabIndex={state === "collapsed" && !isMobile ? -1 : undefined}
           >
-            <BrandLogoFull className="h-5 w-auto text-primary group-data-[collapsible=icon]:hidden" color="var(--color-primary)" />
-            <BrandLogo compact className="hidden text-primary group-data-[collapsible=icon]:flex" color="var(--color-primary)" />
-            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-primary group-data-[collapsible=icon]:hidden">
+            <BrandLogoFull className="h-5 w-auto shrink-0 text-primary" color="var(--color-primary)" />
+            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-primary">
               Admin
             </span>
           </Link>
+          <SidebarTrigger className="size-9 min-h-0 min-w-0 shrink-0 rounded-full bg-transparent text-muted-foreground hover:bg-muted hover:text-foreground aria-expanded:bg-transparent aria-expanded:hover:bg-muted" />
         </SidebarHeader>
 
         <SidebarContent id="admin-sidebar-nav" role="navigation" aria-label="Основна навігація" className="gap-4 px-3 py-3 group-data-[collapsible=icon]:px-2.5">
@@ -407,11 +411,11 @@ export function AppSidebar({ user }: AppSidebarProps) {
                     onClick={(e) => { if (!handleNavClick("/orders/new", pathname === "/orders/new")) e.preventDefault(); }}
                     className={cn(
                       itemH,
-                      "justify-center gap-2 rounded-lg bg-primary px-3 font-medium text-primary-foreground shadow-sm hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground data-active:bg-primary data-active:text-primary-foreground group-data-[collapsible=icon]:justify-center",
+                      "justify-center gap-2 rounded-full bg-primary px-3 font-medium text-primary-foreground shadow-sm hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground data-active:bg-primary data-active:text-primary-foreground group-data-[collapsible=icon]:justify-center",
                     )}
                   >
                     <Plus />
-                    <span>Нове замовлення</span>
+                    <span className="group-data-[collapsible=icon]:hidden">Нове замовлення</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>
@@ -427,7 +431,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                       className={cn(itemH, "gap-3 rounded-lg px-3 text-muted-foreground hover:text-foreground")}
                     >
                       <Search />
-                      <span className="flex-1 text-sm">Пошук…</span>
+                      <span className="flex-1 text-sm group-data-[collapsible=icon]:hidden">Пошук…</span>
                       {!isCollapsed && (
                         <kbd className="pointer-events-none ml-auto hidden h-5 select-none items-center gap-0.5 rounded border border-border bg-muted px-1.5 font-mono text-[11px] font-medium text-muted-foreground md:inline-flex">
                           ⌘K
@@ -446,7 +450,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
           {!isSeamstress && renderSection("Система", SYSTEM_NAV)}
         </SidebarContent>
 
-        <SidebarFooter className="relative border-t border-sidebar-border p-3 group-data-[collapsible=icon]:p-2">
+        <SidebarFooter className="relative border-t border-border p-3 group-data-[collapsible=icon]:p-2">
           <SidebarScrollHint targetId="admin-sidebar-nav" />
           <SidebarMenu>
             <SidebarMenuItem>
@@ -509,7 +513,7 @@ function SidebarScrollHint({ targetId }: { targetId: string }) {
     <div
       aria-hidden={!more}
       className={cn(
-        "pointer-events-none absolute inset-x-0 -top-12 flex h-12 items-end justify-center bg-gradient-to-t from-sidebar to-transparent pb-1.5 transition-opacity duration-200",
+        "pointer-events-none absolute left-0 right-px -top-12 flex h-12 items-end justify-center bg-gradient-to-t from-sidebar to-transparent pb-1.5 transition-opacity duration-200",
         more ? "opacity-100" : "opacity-0",
       )}
     >

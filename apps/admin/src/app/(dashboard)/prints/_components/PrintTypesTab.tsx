@@ -176,7 +176,7 @@ export default function PrintTypesTab({ onCreateActionReady }: { onCreateActionR
                       <DropdownMenu>
                         <DropdownMenuTrigger
                           aria-label={`Дії для «${type.label}»`}
-                          className="inline-flex size-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+                          className="inline-flex size-9 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
                         >
                           <MoreHorizontal className="size-4" />
                         </DropdownMenuTrigger>

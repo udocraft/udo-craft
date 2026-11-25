@@ -427,7 +427,7 @@ function OrdersBoard() {
       <AdminToolbar>
         {/* Title + view-mode toggle */}
         <div className="flex h-full items-center">
-          <div role="group" aria-label="Вигляд" className="inline-flex h-9 items-center rounded-lg border border-border bg-muted/60 p-0.5">
+          <div role="group" aria-label="Вигляд" className="inline-flex h-9 items-center rounded-full border border-border bg-muted/60 p-0.5">
             <ViewModeButton
               active={viewMode === "kanban"}
               icon={Columns3}
@@ -630,7 +630,7 @@ function ViewModeButton({
       aria-pressed={active}
       onClick={onClick}
       className={cn(
-        "relative inline-flex h-8 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium transition-colors",
+        "relative inline-flex h-8 items-center justify-center whitespace-nowrap rounded-full px-3.5 text-sm font-medium transition-colors",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         active
           ? "bg-background text-foreground shadow-sm"
