@@ -38,10 +38,13 @@ export async function POST(request: NextRequest) {
 
   const { data, error: dbErr } = await svc()
     .from("print_type_pricing")
-    .upsert({ print_type, size_label, size_min_cm, size_max_cm, qty_tiers: qty_tiers ?? [], sort_order: sort_order ?? 0 }, { onConflict: "print_type,size_label" })
+    .insert({ print_type, size_label, size_min_cm, size_max_cm, qty_tiers: qty_tiers ?? [], sort_order: sort_order ?? 0 })
     .select()
     .single();
 
+  // Insert, not upsert: a duplicate size label must not silently overwrite existing prices.
+  if (dbErr?.code === "23505") return NextResponse.json({ error: `Розмір «${size_label}» уже є для цього типу` }, { status: 409 });
+  if (dbErr?.code === "23503") return NextResponse.json({ error: "Невідомий тип друку" }, { status: 400 });
   if (dbErr) return NextResponse.json({ error: dbErr.message }, { status: 500 });
   return NextResponse.json(data, { status: 201 });
 }

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
-import type { ErpMaterial, ErpSupplier, ErpWarehouse, ProductVariantSku } from "@udo-craft/shared";
+import { leadStatusLabel, type ErpMaterial, type ErpSupplier, type ErpWarehouse, type ProductVariantSku } from "@udo-craft/shared";
 
 export type Product = { id: string; name: string; slug: string };
 export type LeadOption = {
@@ -71,23 +71,45 @@ async function getJson<T>(url: string, fallback: T): Promise<T> {
   }
 }
 
-/** Loads one document list (receipts, acts, ...). `refetch` reloads it. */
+/**
+ * Loads one document list (receipts, acts, ...). `refetch` reloads it.
+ * A failed request sets `error` instead of looking like an empty list.
+ */
 export function useDocs<T>(endpoint: string) {
   const [items, setItems] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const refetch = useCallback(async () => {
     setLoading(true);
-    setItems(await getJson<T[]>(endpoint, []));
-    setLoading(false);
+    setError(null);
+    try {
+      const res = await fetch(endpoint);
+      const body = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(body?.error || `HTTP ${res.status}`);
+      setItems(Array.isArray(body) ? body : []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Помилка мережі");
+    } finally {
+      setLoading(false);
+    }
   }, [endpoint]);
 
   useEffect(() => {
     refetch();
   }, [refetch]);
 
-  return { items, loading, refetch };
+  return { items, loading, error, refetch };
 }
+
+export const PRODUCTION_STATUS_LABELS: Record<string, string> = {
+  draft: "Чернетка",
+  planned: "Заплановано",
+  reserved: "Зарезервовано",
+  in_progress: "У роботі",
+  done: "Виконано",
+  cancelled: "Скасовано",
+};
 
 /** Reference data the document forms pick from. */
 export function useLookups() {
@@ -177,4 +199,4 @@ export function PickSelect({
 
 export const warehouseOptions = (list: ErpWarehouse[]) => list.map((w) => ({ value: w.id, label: w.name }));
 export const leadOptions = (list: LeadOption[]) =>
-  list.map((l) => ({ value: l.id, label: `${l.customer_data?.name ?? "Клієнт"} · ${l.status}` }));
+  list.map((l) => ({ value: l.id, label: `${l.customer_data?.name ?? "Клієнт"} · ${leadStatusLabel(l.status)}` }));

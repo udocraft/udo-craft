@@ -45,7 +45,7 @@ export function ProductQuickSearch({ products, onSelect }: ProductQuickSearchPro
             setIsOpen(true);
           }}
           onFocus={() => setIsOpen(true)}
-          className="pl-11 h-12 rounded-2xl border-border/40 bg-muted/20 focus:bg-background/80 focus:backdrop-blur-md transition-all shadow-sm focus:shadow-md focus:ring-primary/20"
+          className="pl-11 h-12 rounded-lg border-border/40 bg-muted/20 focus:bg-background/80 focus:backdrop-blur-md transition-all shadow-sm focus:shadow-md focus:ring-primary/20"
         />
         {query && (
           <button 

@@ -6,9 +6,10 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   BarChart3, Users, MessageCircle, ShoppingBag, ImagePlus,
   Settings, ChevronRight, UserCog, ShelvingUnit,
-  FileEdit, Globe, Search, Tag, Plus,
+  FileEdit, Globe, Search, Tag, Plus, BadgeDollarSign, ChevronDown,
 } from "lucide-react";
-import { BrandLogo } from "@/components/brand-logo";
+import { BrandLogoFull } from "@/components/brand-logo";
+import { cn } from "@/lib/utils";
 import { NavUser } from "@/components/nav-user";
 import { createClient } from "@/lib/supabase/client";
 import { playNotificationTone } from "@/lib/notifications";
@@ -29,6 +30,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
+  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
 import {
@@ -45,7 +47,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 
 // ── Nav structure ─────────────────────────────────────────────────────────────
 
@@ -67,16 +68,7 @@ interface NavItem {
 type AdminRole = "admin" | "manager" | "viewer" | "seamstress" | "sewer";
 
 const CRM_NAV: NavItem[] = [
-  {
-    title: "Замовлення",
-    url: "/orders",
-    icon: ShoppingBag,
-    badgeKey: "orders",
-    children: [
-      { title: "Всі замовлення", url: "/orders" },
-      { title: "Нове замовлення", url: "/orders/new" },
-    ],
-  },
+  { title: "Замовлення", url: "/orders", icon: ShoppingBag, badgeKey: "orders" },
   { title: "Клієнти", url: "/clients", icon: Users },
   { title: "Повідомлення", url: "/messages", icon: MessageCircle, badgeKey: "messages" },
 ];
@@ -103,11 +95,11 @@ const CATALOG_NAV: NavItem[] = [
     url: "/prints",
     icon: ImagePlus,
     children: [
-      { title: "Бібліотека принтів", url: "/prints?tab=prints" },
-      { title: "Технології друку", url: "/prints?tab=types" },
-      { title: "Формати друку", url: "/prints?tab=sizes" },
+      { title: "Бібліотека", url: "/prints?tab=prints" },
+      { title: "Типи друку", url: "/prints?tab=types" },
     ],
   },
+  { title: "Ціни", url: "/prices", icon: BadgeDollarSign },
   {
     title: "Склад",
     url: "/erp",
@@ -178,7 +170,6 @@ export function AppSidebar({ user }: AppSidebarProps) {
   const isSeamstress = role === "seamstress" || role === "sewer";
 
   const [openGroups, setOpenGroups] = React.useState<Record<string, boolean>>({
-    "/orders": pathname.startsWith("/orders"),
     "/catalog": pathname.startsWith("/catalog"),
     "/prints": pathname.startsWith("/prints"),
     "/erp": pathname.startsWith("/erp") || pathname.startsWith("/warehouse"),
@@ -233,6 +224,17 @@ export function AppSidebar({ user }: AppSidebarProps) {
     return () => { mounted = false; supabase.removeChannel(channel); };
   }, [supabase, router]);
 
+  const itemH = isMobile ? "h-11" : "h-9";
+
+  const renderSection = (label: string, items: NavItem[]) => (
+    <SidebarGroup className="p-0">
+      <SidebarGroupLabel className="h-8 px-3 text-xs font-medium text-muted-foreground">{label}</SidebarGroupLabel>
+      <SidebarMenu className="gap-0.5">
+        {items.map((item) => (item.children ? renderCollapsibleItem(item) : renderSimpleItem(item)))}
+      </SidebarMenu>
+    </SidebarGroup>
+  );
+
   const handleNavClick = (url: string, isActive: boolean) => {
     if (isMobile) setOpenMobile(false);
     const hasDraft = typeof sessionStorage !== "undefined" && !!sessionStorage.getItem("new-order-draft");
@@ -270,19 +272,16 @@ export function AppSidebar({ user }: AppSidebarProps) {
             const ok = handleNavClick(item.url, isActive);
             if (!ok) e.preventDefault();
           }}
-          className="h-8 gap-2.5 px-2.5 text-[13px] transition-colors group-data-[collapsible=icon]:mx-auto rounded-lg"
+          className={cn(itemH, "gap-3 rounded-lg px-3 text-sm text-sidebar-foreground/80 hover:text-sidebar-foreground data-active:text-sidebar-foreground")}
         >
-          <item.icon
-            className={`size-4 shrink-0 transition-colors ${isActive ? "text-primary" : "text-muted-foreground/70"}`}
-          />
-          <span
-            className={`truncate ${isActive ? "font-medium text-foreground" : "text-muted-foreground"} group-data-[collapsible=icon]:hidden`}
-          >
-            {item.title}
-          </span>
+          <item.icon className={cn("transition-colors", isActive ? "text-primary" : "text-muted-foreground")} />
+          <span>{item.title}</span>
         </SidebarMenuButton>
         {showBadge && (
-          <SidebarMenuBadge className="bg-primary text-primary-foreground rounded-full text-[9px] font-bold min-w-[1.125rem] h-[1.125rem] flex items-center justify-center border border-sidebar">
+          <SidebarMenuBadge
+            aria-label={`${count} нових`}
+            className="top-1/2! right-2 h-5 min-w-5 -translate-y-1/2 rounded-full bg-primary px-1.5 text-[11px] font-semibold text-primary-foreground peer-hover/menu-button:text-primary-foreground peer-data-active/menu-button:text-primary-foreground"
+          >
             {count > 99 ? "99+" : count}
           </SidebarMenuBadge>
         )}
@@ -293,7 +292,22 @@ export function AppSidebar({ user }: AppSidebarProps) {
   const renderCollapsibleItem = (item: NavItem) => {
     const isGroupActive = (item.match ?? [item.url]).some((prefix) => pathname.startsWith(prefix));
     const isOpen = openGroups[item.url] ?? isGroupActive;
-    const firstChildUrl = item.children?.[0]?.url ?? item.url;
+
+    if (isCollapsed) {
+      return (
+        <SidebarMenuItem key={item.title}>
+          <SidebarMenuButton
+            render={<Link href={item.url} />}
+            isActive={isGroupActive}
+            tooltip={item.title}
+            onClick={(e) => { if (!handleNavClick(item.url, isGroupActive)) e.preventDefault(); }}
+          >
+            <item.icon className={isGroupActive ? "text-primary" : "text-muted-foreground"} />
+            <span>{item.title}</span>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      );
+    }
 
     return (
       <Collapsible
@@ -305,38 +319,22 @@ export function AppSidebar({ user }: AppSidebarProps) {
         <SidebarMenuItem>
           <SidebarMenuButton
             tooltip={item.title}
-            isActive={isGroupActive}
-            aria-current={isGroupActive ? "page" : undefined}
+            isActive={isGroupActive && !isOpen}
             aria-expanded={isOpen}
-            onClick={(e) => {
-              if (isGroupActive) {
-                setOpenGroups((prev) => ({ ...prev, [item.url]: !prev[item.url] }));
-                return;
-              }
-              const ok = handleNavClick(firstChildUrl, isGroupActive);
-              if (!ok) {
-                e.preventDefault();
-                return;
-              }
-              setOpenGroups((prev) => ({ ...prev, [item.url]: true }));
-              router.push(firstChildUrl);
-            }}
-            className="h-8 gap-2.5 px-2.5 text-[13px] transition-colors group-data-[collapsible=icon]:mx-auto rounded-lg"
+            onClick={() =>
+              setOpenGroups((prev) => ({ ...prev, [item.url]: !(prev[item.url] ?? isGroupActive) }))
+            }
+            className={cn(itemH, "gap-3 rounded-lg px-3 text-sm text-sidebar-foreground/80 hover:text-sidebar-foreground data-active:text-sidebar-foreground", isGroupActive && "font-medium text-sidebar-foreground")}
           >
-            <item.icon
-              className={`size-4 shrink-0 transition-colors ${isGroupActive ? "text-primary" : "text-muted-foreground/70"}`}
-            />
-            <span
-              className={`truncate ${isGroupActive ? "font-medium text-foreground" : "text-muted-foreground"} group-data-[collapsible=icon]:hidden`}
-            >
-              {item.title}
-            </span>
+            <item.icon className={cn("transition-colors", isGroupActive ? "text-primary" : "text-muted-foreground")} />
+            <span className="flex-1 truncate">{item.title}</span>
             <ChevronRight
-              className="ml-auto size-3 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 text-muted-foreground/40 group-data-[collapsible=icon]:hidden"
+              aria-hidden="true"
+              className={cn("ml-auto size-4! text-muted-foreground transition-transform duration-200", isOpen && "rotate-90")}
             />
           </SidebarMenuButton>
           <CollapsibleContent className="data-[state=closed]:animate-none">
-            <SidebarMenuSub className="ml-5 mt-0.5 border-l border-border/50 pl-2 gap-0">
+            <SidebarMenuSub className="mx-0 ml-5 mt-0.5 gap-0.5 border-l border-sidebar-border py-0.5 pl-2 pr-0">
               {item.children?.map((child) => {
                 let childActive = false;
                 if (child.url.includes("?")) {
@@ -355,15 +353,18 @@ export function AppSidebar({ user }: AppSidebarProps) {
                     <SidebarMenuSubButton
                       render={<Link href={child.url} />}
                       isActive={childActive}
+                      aria-current={childActive ? "page" : undefined}
                       onClick={(e) => {
                         const ok = handleNavClick(child.url, childActive);
                         if (!ok) e.preventDefault();
                       }}
-                      className={`h-7 py-1 text-[12px] rounded-md transition-colors ${
+                      className={cn(
+                        isMobile ? "h-10" : "h-8",
+                        "rounded-lg px-3 text-sm transition-colors",
                         childActive
-                          ? "font-medium text-primary bg-primary/5"
-                          : "text-muted-foreground hover:text-foreground"
-                      }`}
+                          ? "bg-primary/10 font-medium text-primary hover:bg-primary/10 hover:text-primary data-active:bg-primary/10 data-active:text-primary"
+                          : "text-muted-foreground hover:text-foreground",
+                      )}
                     >
                       {child.title}
                     </SidebarMenuSubButton>
@@ -379,45 +380,60 @@ export function AppSidebar({ user }: AppSidebarProps) {
 
   return (
     <>
-      <Sidebar collapsible="icon" className="border-r border-border/60 bg-sidebar">
-        {/* Brand header */}
-        <SidebarHeader className="h-14 shrink-0 justify-center border-b border-border px-3 py-0">
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                size="lg"
-                render={<Link href="/" />}
-                className="h-9 gap-2.5 px-2 rounded-lg hover:bg-sidebar-accent"
-              >
-                <div className="flex aspect-square size-7 items-center justify-center rounded-md bg-primary text-primary-foreground shrink-0">
-                  <BrandLogo className="size-3.5" />
-                </div>
-                <div className="grid flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
-                  <span className="truncate text-sm font-semibold tracking-tight">U:DO Craft</span>
-                  <span className="truncate text-[10px] text-muted-foreground">Admin</span>
-                </div>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
+      <Sidebar collapsible="icon" className="bg-sidebar">
+        {/* Brand header: U:DO mark + Admin label */}
+        {/* Brand header: logo + Admin label and the collapse button. Collapsed, the logo
+            gives way to the open button. */}
+        <SidebarHeader className="relative h-16 shrink-0 flex-row items-center justify-between gap-2 border-b border-border px-3 py-0 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2">
+          <Link
+            href="/"
+            aria-label="U:DO Admin — на головну"
+            className="flex h-10 min-w-0 shrink-0 items-center gap-2.5 whitespace-nowrap rounded-full px-2 outline-hidden ring-sidebar-ring transition-opacity duration-200 focus-visible:ring-2 motion-reduce:transition-none group-data-[collapsible=icon]:pointer-events-none group-data-[collapsible=icon]:absolute group-data-[collapsible=icon]:opacity-0"
+            tabIndex={state === "collapsed" && !isMobile ? -1 : undefined}
+          >
+            <BrandLogoFull className="h-5 w-auto shrink-0 text-primary" color="var(--color-primary)" />
+            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-primary">
+              Admin
+            </span>
+          </Link>
+          <SidebarTrigger className="size-9 min-h-0 min-w-0 shrink-0 rounded-full bg-transparent text-muted-foreground hover:bg-muted hover:text-foreground aria-expanded:bg-transparent aria-expanded:hover:bg-muted" />
         </SidebarHeader>
 
-        <SidebarContent className="px-2 py-2 gap-1 group-data-[collapsible=icon]:px-1.5">
-          {/* Quick search */}
-          <SidebarGroup className="p-0 mb-1">
+        <SidebarContent id="admin-sidebar-nav" role="navigation" aria-label="Основна навігація" className="gap-4 px-3 py-3 group-data-[collapsible=icon]:px-2.5">
+          {/* Primary action + search */}
+          <SidebarGroup className="gap-2 p-0">
+            {!isSeamstress && (
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    render={<Link href="/orders/new" />}
+                    tooltip="Нове замовлення"
+                    onClick={(e) => { if (!handleNavClick("/orders/new", pathname === "/orders/new")) e.preventDefault(); }}
+                    className={cn(
+                      itemH,
+                      "justify-center gap-2 rounded-full bg-primary px-3 font-medium text-primary-foreground shadow-sm hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground data-active:bg-primary data-active:text-primary-foreground group-data-[collapsible=icon]:justify-center",
+                    )}
+                  >
+                    <Plus />
+                    <span className="group-data-[collapsible=icon]:hidden">Нове замовлення</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            )}
             <SidebarMenu>
               <SidebarMenuItem>
                 <CommandMenu
                   trigger={
                     <SidebarMenuButton
-                      tooltip="Швидкий пошук (⌘K)"
-                      className="h-8 gap-2 border border-border/60 bg-background/60 px-2.5 hover:bg-muted/80 rounded-lg group-data-[collapsible=icon]:mx-auto"
+                      tooltip="Пошук (⌘K)"
+                      variant="outline"
+                      aria-keyshortcuts="Meta+K Control+K"
+                      className={cn(itemH, "gap-3 rounded-lg px-3 text-muted-foreground hover:text-foreground")}
                     >
-                      <Search className="size-3.5 text-muted-foreground shrink-0" />
-                      <span className="text-xs text-muted-foreground group-data-[collapsible=icon]:hidden">
-                        Пошук...
-                      </span>
+                      <Search />
+                      <span className="flex-1 text-sm group-data-[collapsible=icon]:hidden">Пошук…</span>
                       {!isCollapsed && (
-                        <kbd className="ml-auto pointer-events-none hidden h-4 select-none items-center rounded border bg-background/80 px-1 font-mono text-[9px] font-semibold opacity-60 md:flex">
+                        <kbd className="pointer-events-none ml-auto hidden h-5 select-none items-center gap-0.5 rounded border border-border bg-muted px-1.5 font-mono text-[11px] font-medium text-muted-foreground md:inline-flex">
                           ⌘K
                         </kbd>
                       )}
@@ -428,75 +444,14 @@ export function AppSidebar({ user }: AppSidebarProps) {
             </SidebarMenu>
           </SidebarGroup>
 
-          {/* CRM & Sales */}
-          <SidebarGroup className="p-0">
-            <SidebarGroupLabel className="h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/50 mb-0.5">
-              CRM
-            </SidebarGroupLabel>
-            <SidebarMenu className="gap-px">
-              {(isSeamstress ? CRM_NAV.filter((item) => item.url !== "/clients") : CRM_NAV).map((item) =>
-                item.children ? renderCollapsibleItem(item) : renderSimpleItem(item)
-              )}
-            </SidebarMenu>
-          </SidebarGroup>
-
-          {/* Analytics */}
-          {!isSeamstress && (
-            <SidebarGroup className="p-0">
-              <SidebarGroupLabel className="h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/50 mb-0.5">
-                Аналітика
-              </SidebarGroupLabel>
-              <SidebarMenu className="gap-px">
-                {ANALYTICS_NAV.map(renderSimpleItem)}
-              </SidebarMenu>
-            </SidebarGroup>
-          )}
-
-          {/* Catalog & Production */}
-          <SidebarGroup className="p-0">
-            <SidebarGroupLabel className="h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/50 mb-0.5">
-              Виробництво
-            </SidebarGroupLabel>
-            <SidebarMenu className="gap-px">
-              {(isSeamstress ? CATALOG_NAV.filter((item) => item.url === "/erp") : CATALOG_NAV).map((item) =>
-                item.children ? renderCollapsibleItem(item) : renderSimpleItem(item)
-              )}
-            </SidebarMenu>
-          </SidebarGroup>
-
-          {/* System */}
-          {!isSeamstress && (
-            <SidebarGroup className="p-0">
-              <SidebarGroupLabel className="h-5 px-2.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/50 mb-0.5">
-                Система
-              </SidebarGroupLabel>
-              <SidebarMenu className="gap-px">
-                {SYSTEM_NAV.map((item) =>
-                  item.children ? renderCollapsibleItem(item) : renderSimpleItem(item)
-                )}
-              </SidebarMenu>
-            </SidebarGroup>
-          )}
-
-          {/* Quick new order shortcut */}
-          {!isCollapsed && !isSeamstress && (
-            <div className="mt-auto pt-2 px-1">
-              <Button
-                asChild
-                variant="outline"
-                size="sm"
-                className="w-full h-8 gap-2 text-xs border-dashed text-muted-foreground hover:text-primary hover:border-primary/40 rounded-lg"
-              >
-                <Link href="/orders/new">
-                  <Plus className="size-3.5" />
-                  Нове замовлення
-                </Link>
-              </Button>
-            </div>
-          )}
+          {renderSection("CRM", isSeamstress ? CRM_NAV.filter((item) => item.url !== "/clients") : CRM_NAV)}
+          {!isSeamstress && renderSection("Аналітика", ANALYTICS_NAV)}
+          {renderSection("Виробництво", isSeamstress ? CATALOG_NAV.filter((item) => item.url === "/erp") : CATALOG_NAV)}
+          {!isSeamstress && renderSection("Система", SYSTEM_NAV)}
         </SidebarContent>
 
-        <SidebarFooter className="border-t border-border/40 px-2 py-2">
+        <SidebarFooter className="relative border-t border-border p-3 group-data-[collapsible=icon]:p-2">
+          <SidebarScrollHint targetId="admin-sidebar-nav" />
           <SidebarMenu>
             <SidebarMenuItem>
               <NavUser user={user} />
@@ -527,5 +482,56 @@ export function AppSidebar({ user }: AppSidebarProps) {
         </AlertDialogContent>
       </AlertDialog>
     </>
+  );
+}
+
+/**
+ * Small chevron above the sidebar footer while nav items are hidden below.
+ * Fades out at the bottom; updates on scroll, resize and content changes.
+ */
+function SidebarScrollHint({ targetId }: { targetId: string }) {
+  const [more, setMore] = React.useState(false);
+
+  React.useEffect(() => {
+    const el = document.getElementById(targetId);
+    if (!el) return;
+    const update = () => setMore(el.scrollHeight - el.scrollTop - el.clientHeight > 8);
+    update();
+    el.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    Array.from(el.children).forEach((c) => ro.observe(c));
+    return () => {
+      el.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+      ro.disconnect();
+    };
+  }, [targetId]);
+
+  return (
+    <div
+      aria-hidden={!more}
+      className={cn(
+        "pointer-events-none absolute left-0 right-px -top-12 flex h-12 items-end justify-center bg-gradient-to-t from-sidebar to-transparent pb-1.5 transition-opacity duration-200",
+        more ? "opacity-100" : "opacity-0",
+      )}
+    >
+      <button
+        type="button"
+        tabIndex={more ? 0 : -1}
+        onClick={() => {
+          const el = document.getElementById(targetId);
+          el?.scrollBy({ top: el.clientHeight * 0.7, behavior: "smooth" });
+        }}
+        aria-label="Прокрутити меню вниз"
+        className={cn(
+          "flex size-7 items-center justify-center rounded-full border border-sidebar-border bg-background text-muted-foreground shadow-sm transition-colors hover:text-foreground",
+          more ? "pointer-events-auto" : "pointer-events-none",
+        )}
+      >
+        <ChevronDown className="size-4" />
+      </button>
+    </div>
   );
 }

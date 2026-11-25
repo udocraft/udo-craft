@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import React, { useCallback, useState } from "react";
 import { RefreshCw, Search, X } from "lucide-react";
 import { ELEMENT_PRESETS, SHAPE_CATEGORIES } from "@udo-craft/shared";
@@ -9,6 +11,7 @@ export interface ShapesPanelProps {
 }
 
 export default function ShapesPanel({ onAddLayer }: ShapesPanelProps) {
+  const t = useTranslations("editor");
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [addingId, setAddingId] = useState<string | null>(null);
@@ -36,17 +39,17 @@ export default function ShapesPanel({ onAddLayer }: ShapesPanelProps) {
     <div className="flex flex-col h-full overflow-y-auto">
       <section className="px-3 pt-3 pb-4">
         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
-          Фігури
+          {t("shapes.title")}
         </h3>
 
         <div className="relative mb-2">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground pointer-events-none" />
-          <input type="text" placeholder="Пошук фігур…" value={search}
+          <input type="text" placeholder={t("shapes.search")} value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-8 pr-8 py-1.5 text-xs rounded-md border border-input bg-background focus:outline-none focus:ring-1 focus:ring-primary" />
           {search && (
             <button type="button" onClick={() => setSearch("")}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label="Скинути пошук">
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label={t("common.resetSearch")}>
               <X className="size-3.5" />
             </button>
           )}
@@ -56,7 +59,7 @@ export default function ShapesPanel({ onAddLayer }: ShapesPanelProps) {
           <button type="button" onClick={() => setActiveCategory(null)}
             className={["px-2 py-0.5 rounded-full text-xs font-medium border transition-all",
               activeCategory === null ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground hover:border-foreground/40"].join(" ")}>
-            Всі
+            {t("common.all")}
           </button>
           {SHAPE_CATEGORIES.map((cat) => (
             <button key={cat} type="button" onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
@@ -69,11 +72,11 @@ export default function ShapesPanel({ onAddLayer }: ShapesPanelProps) {
 
         {filtered.length === 0 ? (
           <div className="py-8 text-center">
-            <p className="text-xs text-muted-foreground">Фігур не знайдено.</p>
+            <p className="text-xs text-muted-foreground">{t("shapes.empty")}</p>
             {(search || activeCategory) && (
               <button type="button" onClick={() => { setSearch(""); setActiveCategory(null); }}
                 className="mt-1 text-xs text-primary hover:underline">
-                Скинути фільтри
+                {t("shapes.resetFilters")}
               </button>
             )}
           </div>

@@ -20,13 +20,18 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   if (error || !user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await request.json();
+  // Only editable columns; id, print_type and timestamps are never taken from the client.
+  const ALLOWED = ["size_label", "size_min_cm", "size_max_cm", "qty_tiers", "sort_order", "is_active"] as const;
+  const patch: Record<string, unknown> = {};
+  for (const key of ALLOWED) if (body?.[key] !== undefined) patch[key] = body[key];
   const { data, error: dbErr } = await svc()
     .from("print_type_pricing")
-    .update({ ...body, updated_at: new Date().toISOString() })
+    .update({ ...patch, updated_at: new Date().toISOString() })
     .eq("id", params.id)
     .select()
     .single();
 
+  if (dbErr?.code === "23505") return NextResponse.json({ error: "Такий розмір уже є для цього типу" }, { status: 409 });
   if (dbErr) return NextResponse.json({ error: dbErr.message }, { status: 500 });
   return NextResponse.json(data);
 }

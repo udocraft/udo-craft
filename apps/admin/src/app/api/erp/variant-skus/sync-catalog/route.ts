@@ -51,16 +51,20 @@ export async function POST(req: NextRequest) {
         colorVariantMaterialName.has(sku.color_variant_id)
     );
 
-    let synced = 0;
+    // One update per distinct colour name instead of one per SKU.
+    const idsByColor = new Map<string, string[]>();
     for (const sku of toUpdate) {
-      const newColorName = colorVariantMaterialName.get(sku.color_variant_id!)!;
+      const name = colorVariantMaterialName.get(sku.color_variant_id!)!;
+      idsByColor.set(name, [...(idsByColor.get(name) ?? []), sku.id]);
+    }
+    for (const [colorName, ids] of idsByColor) {
       const { error: updateError } = await service!
         .from("product_variant_skus")
-        .update({ color_name: newColorName })
-        .eq("id", sku.id);
+        .update({ color_name: colorName })
+        .in("id", ids);
       if (updateError) return apiError(updateError);
-      synced++;
     }
+    const synced = toUpdate.length;
 
     // 4. Fetch updated SKUs to return fresh data
     const { data: updatedSkus, error: refetchError } = await service!

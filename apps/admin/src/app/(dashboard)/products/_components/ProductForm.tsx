@@ -9,6 +9,7 @@ import {
   serializeProductFeatureGroups,
   serializeProductTrustBadges,
   type ProductMarketingMeta,
+  type ProductImage,
 } from "@udo-craft/shared";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,6 +20,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProductColorVariantsList } from "@/components/product-color-variants";
 import { SizeChartModal } from "@/components/size-chart-modal";
+import { PrintZonesEditor } from "@/components/print-zones-editor";
 import { ProductErpRecipe } from "./ProductErpRecipe";
 import { ProductVariantSkus } from "./ProductVariantSkus";
 
@@ -26,7 +28,7 @@ import { ProductVariantSkus } from "./ProductVariantSkus";
 
 interface Category { id: string; name: string; slug: string; is_active: boolean; sort_order: number; }
 interface SizeChart { id: string; name: string; rows: Record<string, string>[]; image_url?: string | null; }
-interface PrintArea { id: string; name: string; label: string; }
+interface PrintArea { id: string; name: string; label: string; width_mm?: number; height_mm?: number; }
 
 export interface ProductFormData {
   name: string;
@@ -65,6 +67,8 @@ interface ProductFormProps {
     available_sizes?: string[];
     discount_grid?: { qty: number; discount_pct: number }[];
     marketing_meta?: ProductMarketingMeta;
+    product_images?: ProductImage[];
+    px_to_mm_ratio?: number;
   };
   categories: Category[];
   sizeCharts: SizeChart[];
@@ -204,6 +208,7 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
             <TabsTrigger value="sizes">Розміри</TabsTrigger>
             <TabsTrigger value="production">Виробництво</TabsTrigger>
             <TabsTrigger value="colors">Кольори</TabsTrigger>
+            {product?.id && <TabsTrigger value="zones">Зони друку</TabsTrigger>}
           </TabsList>
         </div>
 
@@ -562,6 +567,24 @@ export function ProductForm({ product, categories, sizeCharts, printAreas, onSav
         </CardContent>
       </Card>
       </TabsContent>
+
+      {product?.id && (
+        <TabsContent value="zones" className="space-y-5">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-semibold">Зони друку</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <PrintZonesEditor
+                productId={product.id}
+                images={product.product_images ?? []}
+                printAreas={printAreas}
+                pxToMmRatio={product.px_to_mm_ratio}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+      )}
       </Tabs>
 
       {/* Hidden submit trigger */}

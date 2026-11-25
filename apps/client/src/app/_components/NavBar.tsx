@@ -1,14 +1,16 @@
 "use client";
 
 import { Link } from "@/i18n/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { User, ShoppingBag, ArrowRight, X, Menu } from "lucide-react";
-import { BrandLogoFull } from "@/components/brand-logo";
-import { sound } from "@/lib/sound";
+import { User, ShoppingBag, Menu, Phone, Mail, Shirt, ListChecks, Briefcase } from "lucide-react";
+import { socialLinks } from "@/components/social-links";
 import { useTranslations } from "next-intl";
+import { buttonVariants } from "@udo-craft/ui/components/ui/button-variants";
+import { BrandLogoFull } from "@/components/brand-logo";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { Button } from "@udo-craft/ui";
+import { sound } from "@/lib/sound";
+import { telHref, type SiteContacts } from "@/lib/contacts";
 
 // The sheet pulls in the base-ui dialog; load it on the first tap of the burger.
 const MobileMenuSheet = dynamic(() => import("./MobileMenuSheet").then((m) => m.MobileMenuSheet), { ssr: false });
@@ -16,139 +18,159 @@ const MobileMenuSheet = dynamic(() => import("./MobileMenuSheet").then((m) => m.
 interface NavBarProps {
   isLoggedIn: boolean;
   cartCount: number;
+  contacts: SiteContacts;
   onCartOpen: () => void;
   onAuthOpen?: () => void;
 }
 
-export function NavBar({ isLoggedIn, cartCount, onCartOpen, onAuthOpen }: NavBarProps) {
+// Long ease-out: fast start, very soft landing.
+const morph = "duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none";
+
+/** Content inset shared by both rows; the pill's edges sit on the max-w-6xl box. */
+const rowInner = "mx-auto flex max-w-6xl items-center px-gutter md:px-8 lg:px-10";
+
+const iconButton =
+  "relative flex size-11 items-center justify-center rounded-full text-muted-foreground transition-colors duration-fast hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+const topLink =
+  "inline-flex min-h-8 items-center gap-1.5 rounded-control text-muted-foreground transition-colors duration-fast hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+
+/**
+ * Two-level header. Top row (md+): phone, email and socials; main row: logo,
+ * navigation, account, cart and the primary action. On scroll both rows float as one
+ * rounded pill. `--header-height` in globals.css matches the full height. `--header-height` in globals.css matches both heights.
+ */
+export function NavBar({ isLoggedIn, cartCount, contacts, onCartOpen, onAuthOpen }: NavBarProps) {
   const t = useTranslations("nav");
   const navLinks = [
-    { href: "/#catalog", label: t("catalog") },
-    { href: "/#about", label: t("about") },
-    { href: "/#how", label: t("how") },
-    { href: "/#contact", label: t("contacts") },
+    { href: "/#catalog", label: t("catalog"), Icon: Shirt },
+    { href: "/#how", label: t("how"), Icon: ListChecks },
+    { href: "/biz", label: t("business"), Icon: Briefcase },
   ];
+  const socials = socialLinks(contacts);
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuMounted, setMenuMounted] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  const isLight = true; // always use light nav style
+  useEffect(() => {
+    // Hysteresis: morph past 24px, unmorph under 4px, so it never flickers at the edge.
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled((prev) => (prev ? y > 4 : y > 24));
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <nav
-      className="animate-enter-down fixed inset-x-0 top-3 z-50 flex justify-center pointer-events-none px-3 sm:top-4 sm:px-4"
-      aria-label={t("mainNav")}
-    >
-      <div
-        className={`pointer-events-auto inline-flex max-w-full h-14 items-center gap-1.5 rounded-full border px-3 shadow-[0_12px_40px_rgba(12,16,34,0.12)] backdrop-blur-2xl md:gap-2 ${
-          isLight
-            ? "bg-background/90 border-border/80"
-            : "bg-white/8 backdrop-blur-xl border-white/12 shadow-lg shadow-black/20"
-        }`}
-      >
-        {/* Logo — always using BrandLogoFull (SVG) */}
-        <Link href="/" aria-label={t("logoLink")} className="inline-flex min-h-11 shrink-0 items-center pl-1 pr-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg">
-          <BrandLogoFull className="h-8 w-auto" color="var(--color-primary)" />
-        </Link>
+    <header className="fixed inset-x-0 top-0 z-50">
+      <div className={`relative transition-transform ${morph} ${scrolled ? "md:translate-y-3" : "translate-y-0"}`}>
+        {/* One surface carries the look: full-width bar at the top, floating pill on scroll
+            (md+ only). Phones keep a solid bar flush with the top edge, so in-app browsers
+            and Safari tint their glass toolbars white instead of showing the page through.
+            Only its edges, radius and shadow animate; the content does not reflow. The
+            gray band at the top is the contact row (md+). */}
+        <div
+          aria-hidden="true"
+          className={`absolute inset-y-0 border bg-[linear-gradient(to_bottom,var(--color-muted)_var(--strip),var(--color-card)_var(--strip))] [--strip:0px] md:[--strip:2.25rem] transition-[left,right,border-radius,border-color,box-shadow] ${morph} ${
+            scrolled
+              ? "left-0 right-0 rounded-none border-transparent border-b-border/70 shadow-[0_4px_16px_rgba(12,16,34,0.06)] md:left-[max(0.375rem,calc(50%_-_36rem))] md:right-[max(0.375rem,calc(50%_-_36rem))] md:rounded-[28px] md:border-border/80 md:shadow-[0_12px_40px_rgba(12,16,34,0.12)]"
+              : "left-0 right-0 rounded-none border-transparent border-b-border/70 shadow-none"
+          }`}
+        />
 
-        {/* Nav links — always visible on desktop */}
-        <div className="hidden xl:flex items-center">
-          <div className={`w-px h-5 shrink-0 mx-1 ${isLight ? "bg-border" : "bg-white/12"}`} aria-hidden="true" />
-          {navLinks.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className={`inline-flex min-h-11 items-center px-4 text-sm font-medium rounded-full transition-all duration-200 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                isLight
-                  ? "text-muted-foreground hover:text-foreground hover:bg-muted"
-                  : "text-white/60 hover:text-white hover:bg-white/10"
-              }`}
-            >
-              {l.label}
-            </Link>
-          ))}
-          <div className={`w-px h-5 shrink-0 mx-1 ${isLight ? "bg-border" : "bg-white/12"}`} aria-hidden="true" />
+        {/* Top row: contacts and socials, desktop only */}
+        <div className="relative hidden h-9 md:block">
+        <div className={`${rowInner} h-full justify-between gap-6 text-xs`}>
+          <div className="flex items-center gap-5">
+            <a href={telHref(contacts.phone)} className={topLink}>
+              <Phone className="size-3.5" aria-hidden="true" />
+              {contacts.phone}
+            </a>
+            <a href={`mailto:${contacts.email}`} className={topLink}>
+              <Mail className="size-3.5" aria-hidden="true" />
+              {contacts.email}
+            </a>
+          </div>
+          <div className="flex items-center gap-5">
+            {socials.map(({ href, label, Icon }) => (
+              <a key={label} href={href} target="_blank" rel="noopener noreferrer" className={topLink}>
+                <Icon className="size-3.5" aria-hidden="true" />
+                {label}
+              </a>
+            ))}
+            <span className="h-4 w-px bg-border" aria-hidden="true" />
+            <LanguageSwitcher />
+          </div>
+        </div>
         </div>
 
-        {/* Actions — always visible */}
-        <div className="flex items-center gap-1">
-          {/* User icon — opens auth modal if not logged in, navigates to cabinet if logged in */}
-          {isLoggedIn ? (
-            <Link
-              href="/cabinet"
-              aria-label={t("goToAccount")}
-              className={`flex items-center justify-center w-11 h-11 rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                isLight
-                  ? "text-muted-foreground hover:text-foreground hover:bg-muted"
-                  : "text-white/60 hover:text-white hover:bg-white/10"
-              }`}
-            >
-              <User className="w-5 h-5" strokeWidth={2} />
-            </Link>
-          ) : (
-            <button
-              onClick={() => { sound.tap(); onAuthOpen?.(); }}
-              aria-label={t("signIn")}
-              className={`flex items-center justify-center w-11 h-11 rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                isLight
-                  ? "text-muted-foreground hover:text-foreground hover:bg-muted"
-                  : "text-white/60 hover:text-white hover:bg-white/10"
-              }`}
-            >
-              <User className="w-5 h-5" strokeWidth={2} />
-            </button>
-          )}
-
-          <button
-            onClick={() => { sound.open(); onCartOpen(); }}
-            aria-label={t("cartItems", { count: cartCount })}
-            className={`relative flex items-center justify-center w-11 h-11 rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-              isLight
-                ? "text-muted-foreground hover:text-foreground hover:bg-muted"
-                : "text-white/60 hover:text-white hover:bg-white/10"
-            }`}
+        {/* Main row */}
+        <nav aria-label={t("mainNav")} className="relative">
+        <div className={`${rowInner} relative h-14 gap-2`}>
+          <Link
+            href="/"
+            aria-label={t("logoLink")}
+            className="mr-auto inline-flex min-h-11 shrink-0 items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            <ShoppingBag className="w-5 h-5" strokeWidth={2} />
-            {cartCount > 0 && (
-              <span
-                className="animate-pop absolute top-1.5 right-1.5 bg-primary text-white text-xs font-black rounded-full w-4.5 h-4.5 flex items-center justify-center leading-none ring-2 ring-background"
-              >
-                {cartCount}
-              </span>
+            <BrandLogoFull className="h-7 w-auto" color="var(--color-primary)" />
+          </Link>
+
+          <ul className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 lg:flex">
+            {navLinks.map((l) => (
+              <li key={l.href}>
+                <Link
+                  href={l.href}
+                  className="inline-flex min-h-11 items-center rounded-control px-4 text-sm text-muted-foreground transition-colors duration-fast hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex items-center gap-0.5">
+            {isLoggedIn ? (
+              <Link href="/cabinet" aria-label={t("goToAccount")} className={iconButton}>
+                <User className="size-5" strokeWidth={1.8} />
+              </Link>
+            ) : (
+              <button type="button" onClick={() => { sound.tap(); onAuthOpen?.(); }} aria-label={t("signIn")} className={iconButton}>
+                <User className="size-5" strokeWidth={1.8} />
+              </button>
             )}
-          </button>
 
-          {/* One primary CTA, one secondary (Plan.md 3.1). */}
-          <Button asChild variant="outline" className="ml-1 hidden xl:inline-flex">
-            <Link href="/#contact">{t("getQuote")}</Link>
-            </Button>
-            <Button asChild variant="primary" className="ml-1 hidden md:inline-flex">
-              <Link href="/order" prefetch={false}>
-                {t("designMerch")} <ArrowRight className="size-4" aria-hidden="true" />
-            </Link>
-          </Button>
+            <button type="button" onClick={() => { sound.open(); onCartOpen(); }} aria-label={t("cartItems", { count: cartCount })} className={iconButton}>
+              <ShoppingBag className="size-5" strokeWidth={1.8} />
+              {cartCount > 0 && (
+                <span className="animate-pop absolute right-1.5 top-1.5 flex size-4.5 items-center justify-center rounded-full bg-primary text-xs font-semibold leading-none text-primary-foreground ring-2 ring-background">
+                  {cartCount}
+                </span>
+              )}
+            </button>
 
-          <LanguageSwitcher />
+            {/* Wrapper carries the visibility: buttonVariants' own inline-flex would override `hidden`. */}
+            <div className="ml-2 hidden md:block">
+              <Link href="/order" prefetch={false} className={buttonVariants({ variant: "primary", size: "sm" })}>
+                {t("createDesign")}
+              </Link>
+            </div>
 
-          <button
-            onClick={() => { sound.toggle(!menuOpen); setMenuMounted(true); setMenuOpen(!menuOpen); }}
-            aria-label={menuOpen ? t("closeMenu") : t("openMenu")}
-            aria-expanded={menuOpen}
-            className={`xl:hidden flex items-center justify-center w-11 h-11 rounded-full transition-colors duration-200 ml-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-              isLight ? "hover:bg-muted text-foreground" : "hover:bg-white/10 text-white/70"
-            }`}
-          >
-            {menuOpen ? <X className="w-6 h-6" strokeWidth={2} /> : <Menu className="w-6 h-6" strokeWidth={2} />}
-          </button>
+            <button
+              type="button"
+              onClick={() => { sound.toggle(!menuOpen); setMenuMounted(true); setMenuOpen(!menuOpen); }}
+              aria-label={menuOpen ? t("closeMenu") : t("openMenu")}
+              aria-expanded={menuOpen}
+              className={`${iconButton} text-foreground lg:hidden`}
+            >
+              <Menu className="size-6" strokeWidth={1.8} />
+            </button>
+          </div>
         </div>
+        </nav>
       </div>
 
-      {menuMounted && (
-        <MobileMenuSheet
-          open={menuOpen}
-          onOpenChange={setMenuOpen}
-          links={navLinks}
-        />
-      )}
-    </nav>
+      {menuMounted && <MobileMenuSheet open={menuOpen} onOpenChange={setMenuOpen} links={navLinks} contacts={contacts} />}
+    </header>
   );
 }

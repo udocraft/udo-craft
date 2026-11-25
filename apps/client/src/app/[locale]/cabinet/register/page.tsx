@@ -1,46 +1,14 @@
 "use client";
 
-// This page handles direct visits to /cabinet/register (bookmarks, links).
-// The primary auth flow is via AuthModal (inline, no page navigation).
+// Full-screen sign-up page (same form as /cabinet/login, opened on the register tab).
 
 import { Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Link } from "@/i18n/navigation";
-import { BrandLogoFull } from "@/components/brand-logo";
-import { AuthModal } from "@/components/AuthModal";
-
-function RegisterPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const returnTo = searchParams.get("returnTo") || "/cabinet";
-
-  return (
-    <main id="main" className="min-h-screen bg-gradient-to-br from-accent via-background to-background flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-sm space-y-6">
-        <div className="text-center">
-          <Link href="/" aria-label="U:DO CRAFT" className="inline-block">
-            <BrandLogoFull className="h-8 w-auto mx-auto" />
-          </Link>
-        </div>
-        {/* AuthModal rendered as a static overlay on this page */}
-        <AuthModal
-          open={true}
-          onClose={() => router.push("/")}
-          initialScreen="register"
-          onAuthSuccess={() => router.push(returnTo)}
-        />
-        <p className="text-center text-xs text-muted-foreground">
-          <Link href="/" className="hover:text-foreground transition-colors">← Повернутись на сайт</Link>
-        </p>
-      </div>
-    </main>
-  );
-}
+import { AuthPage } from "@/components/auth/AuthPage";
 
 export default function CabinetRegisterPage() {
   return (
     <Suspense>
-      <RegisterPage />
+      <AuthPage initialScreen="register" />
     </Suspense>
   );
 }

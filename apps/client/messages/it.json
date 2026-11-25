@@ -1,12 +1,14 @@
 {
   "meta": {
-    "title": "U:DO CRAFT — Corporate merch",
-    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA.",
+    "title": "U:DO CRAFT — abbigliamento con il tuo design",
+    "description": "Crea online una t-shirt, una felpa o una maglia a maniche lunghe con la tua stampa. Realizzazione in 7–14 giorni, consegna in tutta l'Ucraina.",
     "productTitle": "{name} | Personalizzazione e confezione | U:DO CRAFT",
     "productDescription": "Ordina l'abbigliamento aziendale {name} con stampa o ricamo personalizzato da {min} pezzi.",
     "productNotFound": "Prodotto non trovato | U:DO CRAFT",
     "popupTitle": "Popup merch per il tuo evento | U:DO CRAFT",
-    "popupDescription": "Un popup merch mobile: gli ospiti personalizzano i capi e li portano via subito. Per eventi aziendali, conferenze e festival."
+    "popupDescription": "Un popup merch mobile: gli ospiti personalizzano i capi e li portano via subito. Per eventi aziendali, conferenze e festival.",
+    "bizTitle": "U:DO CRAFT per le aziende — merch aziendale",
+    "bizDescription": "B2B merch platform. We create clothing that becomes part of your corporate DNA."
   },
   "nav": {
     "catalog": "Catalogo",
@@ -16,6 +18,11 @@
     "contacts": "Contatti",
     "startProject": "Avvia progetto",
     "openMenu": "Apri menu",
+    "menu": "Menu",
+    "language": "Lingua",
+    "directionsPrompt": "Aprire le indicazioni in Mappe?",
+    "directionsOpen": "Apri Mappe",
+    "directionsCancel": "Annulla",
     "closeMenu": "Chiudi menu",
     "goToAccount": "Vai all'account",
     "signIn": "Accedi",
@@ -24,7 +31,9 @@
     "logoLink": "U:DO CRAFT — torna alla home",
     "skipToContent": "Vai al contenuto principale",
     "designMerch": "Crea il tuo merch",
-    "getQuote": "Richiedi un preventivo"
+    "getQuote": "Richiedi un preventivo",
+    "business": "Aziende",
+    "createDesign": "Crea il tuo design"
   },
   "homeStats": {
     "stat3Suffix": " giorni",
@@ -45,7 +54,8 @@
   "homeContact": {
     "heading": "Contattaci",
     "subtext": "Raccontaci il tuo progetto — invieremo una proposta entro 24 ore.",
-    "address": "Leopoli, via Dzherelna 69"
+    "address": "Leopoli, via Dzherelna 69",
+    "visitNote": "visita allo showroom su appuntamento · lun⁠–⁠gio 10:00⁠–⁠18:00, ven 10:00⁠–⁠16:00"
   },
   "hero": {
     "heading": "Abbigliamento che diventa parte del DNA della tua azienda",
@@ -53,6 +63,7 @@
     "ctaPrimary": "Sfoglia il catalogo",
     "skipToCatalog": "Al catalogo",
     "watchVideo": "Guarda il video",
+    "showProcess": "Guarda il processo",
     "closeVideo": "Chiudi il video",
     "mainSection": "Hero section",
     "fullscreenVideo": "Video in fullscreen mode",
@@ -122,12 +133,12 @@
     "prevPage": "Precedente",
     "nextPage": "Successivo",
     "page": "Pagina {n}",
-    "fromPrice": "from ₴{price}",
+    "fromPrice": "da {price} ₴",
     "priceOnRequest": "Prezzo su richiesta",
-    "expand": "Expand",
-    "collapse": "Collapse",
-    "addPrint": "Add print",
-    "withoutPrint": "Without print"
+    "expand": "Mostra di più",
+    "collapse": "Mostra meno",
+    "addPrint": "Aggiungi stampa",
+    "withoutPrint": "Senza stampa"
   },
   "process": {
     "heading": "Dall'idea al merch — in 4 passaggi",
@@ -269,21 +280,21 @@
     "discount": "Sconto",
     "mm": "mm",
     "embroidery": "Ricamo",
-    "label": "Online constructor",
-    "heading": "Build your merch right in the interface",
-    "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
-    "openEditor": "Open constructor",
-    "productLabel": "Product",
-    "colorLabel": "Color",
-    "printsLabel": "Prints",
-    "textLabel": "Text",
+    "label": "Editor online",
+    "heading": "Provalo qui",
+    "desc": "Scegli un colore e carica la tua immagine per vedere come sarà il tuo capo.",
+    "openEditor": "Apri l'editor",
+    "productLabel": "Prodotto",
+    "colorLabel": "Colore",
+    "printsLabel": "Stampe",
+    "textLabel": "Testo",
     "fileLabel": "File",
-    "volumeLabel": "Volume & price",
-    "totalLabel": "Total",
-    "saved": "Draft saved",
-    "layersReady": "Layers ready",
-    "priceUpdated": "Price updated",
-    "sizeLabel": "Size"
+    "volumeLabel": "Quantità e prezzo",
+    "totalLabel": "Totale",
+    "saved": "Bozza salvata",
+    "layersReady": "Livelli pronti",
+    "priceUpdated": "Prezzo aggiornato",
+    "sizeLabel": "Taglia"
   },
   "trust": {
     "statsLabel": "Dati chiave",
@@ -419,10 +430,10 @@
     "address": "Address"
   },
   "footer": {
-    "tagline": "Piattaforma B2B di merch per team, brand ed eventi.",
+    "tagline": "Abbigliamento con il tuo design, dal pezzo unico ai grandi ordini.",
     "copyright": "U:DO CRAFT. Tutti i diritti riservati.",
     "readyToStart": "Pronto per iniziare?",
-    "readyDesc": "Da 10 pezzi · 7–14 giorni · Spedizione",
+    "readyDesc": "Da un pezzo · 7–14 giorni · Consegna in tutta l'Ucraina",
     "startProject": "Avvia progetto",
     "ariaLabel": "Piè di pagina",
     "homeLink": "U:DO CRAFT — torna alla home",
@@ -454,11 +465,28 @@
           "cabinet": "Account",
           "delivery": "Spedizione e pagamento"
         }
+      },
+      "business": {
+        "title": "Aziende",
+        "links": {
+          "overview": "Merch aziendale"
+        }
       }
     },
     "privacy": "Privacy",
     "terms": "Termini",
-    "cookies": "Cookie"
+    "cookies": "Cookie",
+    "newsletter": {
+      "title": "−{pct}% sul primo ordine",
+      "desc": "Iscriviti: nuovi capi, idee di stampa e drop limitati una volta al mese. Niente spam.",
+      "placeholder": "La tua email",
+      "label": "Email per la newsletter",
+      "submit": "Iscriviti",
+      "success": "Fatto. Il tuo codice del {pct}% è in arrivo.",
+      "error": "Iscrizione non riuscita. Riprova.",
+      "invalid": "Controlla l’email.",
+      "consent": "Iscrivendoti accetti l’informativa sulla privacy."
+    }
   },
   "cart": {
     "title": "Carrello",
@@ -661,7 +689,8 @@
       "attachLabel": "Allega file",
       "loading": "Caricamento messaggi...",
       "empty": "Ancora nessun messaggio",
-      "fileTooLarge": "\"{name}\" supera 10 MB"
+      "fileTooLarge": "\"{name}\" supera 10 MB",
+      "sendError": "Impossibile inviare il messaggio. Riprova."
     },
     "files": {
       "empty": "Ancora nessun file",
@@ -686,6 +715,66 @@
     "order": {
       "back": "Tutti gli ordini",
       "notFound": "Ordine non trovato"
+    },
+    "errorPage": {
+      "title": "Errore nell'area personale",
+      "text": "Impossibile caricare l'area personale. Riprova o torna alla home.",
+      "retry": "Riprova",
+      "home": "Home"
+    },
+    "file": "File",
+    "productFallback": "Prodotto ({color})",
+    "profile": {
+      "saved": "Profilo aggiornato",
+      "saveFailed": "Impossibile salvare il profilo. Controlla la connessione e riprova.",
+      "title": "Profilo",
+      "subtitle": "I tuoi dati di contatto per gli ordini",
+      "name": "Nome e cognome",
+      "namePlaceholder": "Mario Rossi",
+      "company": "Nome dell'azienda",
+      "companyPlaceholder": "Azienda S.r.l.",
+      "phone": "Telefono",
+      "edrpou": "Partita IVA / dati aziendali",
+      "socialPlaceholder": "@utente o link",
+      "saving": "Salvataggio...",
+      "save": "Salva profilo"
+    },
+    "security": {
+      "min": "La nuova password deve avere almeno 8 caratteri.",
+      "mismatch": "Le password non coincidono.",
+      "same": "La nuova password deve essere diversa da quella attuale.",
+      "wrongCurrent": "La password attuale è errata.",
+      "changed": "Password modificata",
+      "changeFailed": "Impossibile modificare la password. Controlla la connessione e riprova.",
+      "title": "Sicurezza",
+      "subtitle": "Modifica la password del tuo account",
+      "current": "Password attuale",
+      "currentPlaceholder": "Inserisci la password attuale",
+      "new": "Nuova password",
+      "newPlaceholder": "Almeno 8 caratteri",
+      "confirm": "Conferma la nuova password",
+      "confirmPlaceholder": "Ripeti la nuova password",
+      "changing": "Modifica in corso...",
+      "change": "Modifica password"
+    },
+    "prints": {
+      "title": "Le mie stampe",
+      "subtitle": "File che hai caricato per la stampa. Solo tu puoi vederli.",
+      "dropHint": "Trascina qui i file",
+      "formats": "JPG, PNG, WebP, GIF o PDF, fino a 10 MB",
+      "pickFiles": "Scegli file",
+      "uploading": "Caricamento…",
+      "empty": "Ancora nessun file. Carica la tua prima stampa.",
+      "delete": "Elimina file",
+      "confirmDelete": "Eliminare questo file? L'operazione è irreversibile.",
+      "loadError": "Impossibile caricare i file",
+      "uploadError": "Impossibile caricare il file",
+      "deleteError": "Impossibile eliminare il file",
+      "status": {
+        "uploaded": "In revisione",
+        "approved": "Approvato",
+        "rejected": "Rifiutato"
+      }
     }
   },
   "popup": {
@@ -912,8 +1001,8 @@
     "cookieSettings": "Impostazioni cookie"
   },
   "homeDemo": {
-    "upload": "Carica il tuo logo",
-    "remove": "Rimuovi logo",
+    "upload": "Carica immagine",
+    "remove": "Rimuovi immagine",
     "hint": "PNG, JPG, SVG o WebP, fino a 5 MB",
     "note": "Solo un'anteprima. L'editor completo imposta dimensioni e zone di stampa.",
     "tooLarge": "Il file supera i 5 MB. Scegli un'immagine più piccola."
@@ -966,5 +1055,486 @@
     "addComment": "Aggiungi un commento",
     "sendComment": "Invia",
     "commentsOff": "I commenti sono disattivati per questo link."
+  },
+  "home": {
+    "hero": {
+      "heading": "Abbigliamento, disegnato da te.",
+      "subheading": "Scegli un capo, aggiungi la tua stampa o un testo nell'editor: lo realizziamo e te lo consegniamo. Anche un solo pezzo."
+    },
+    "steps": {
+      "heading": "Tre passi per il tuo capo",
+      "items": {
+        "0": {
+          "title": "Scegli un capo",
+          "desc": "T-shirt, felpa o maniche lunghe: scegli modello, colore e taglia."
+        },
+        "1": {
+          "title": "Aggiungi il tuo design",
+          "desc": "Carica un'immagine o scrivi il tuo testo nell'editor e vedi subito il risultato."
+        },
+        "2": {
+          "title": "Ricevi l'ordine",
+          "desc": "Lo realizziamo in 7–14 giorni lavorativi e lo consegniamo in tutta l'Ucraina."
+        }
+      }
+    },
+    "faq": {
+      "single": {
+        "question": "Posso ordinare un solo capo?",
+        "answer": "Sì. Ordina quanti capi ti servono, anche uno solo con il tuo design."
+      },
+      "design": {
+        "question": "Come aggiungo il mio design?",
+        "answer": "Nell'editor: carica un'immagine o aggiungi un testo e scegli dove posizionarlo. Il prezzo è visibile subito."
+      }
+    },
+    "biz": {
+      "heading": "Merch per il tuo team o evento?",
+      "text": "Abbigliamento aziendale, stand pop-up e branding: in una pagina dedicata alle aziende."
+    }
+  },
+  "auth": {
+    "errors": {
+      "googleFailed": "Accesso con Google non riuscito. Riprova.",
+      "passkeyNeedsNameEmail": "Inserisci nome ed email per creare un account con passkey.",
+      "invalidCredentials": "Email o password errate.",
+      "passwordMin": "La password deve avere almeno 8 caratteri.",
+      "emailExistsRegister": "Questa email è già registrata. Accedi o reimposta la password.",
+      "codeSendFailed": "Impossibile inviare il codice. Riprova.",
+      "codeInvalid": "Codice errato. Controlla l'email e riprova.",
+      "codeExpired": "Il codice è scaduto. Richiedine uno nuovo.",
+      "tooManyAttempts": "Troppi tentativi. Richiedi un nuovo codice tra qualche minuto.",
+      "emailExistsLogin": "Questa email è già registrata. Prova ad accedere.",
+      "registerFailed": "Registrazione non riuscita. Riprova.",
+      "resetSendFailed": "Impossibile inviare il codice. Controlla l'indirizzo email.",
+      "passwordsMismatch": "Le password non coincidono.",
+      "resetFailed": "Codice errato o scaduto. Richiedine uno nuovo.",
+      "generic": "Qualcosa è andato storto. Riprova.",
+      "emailFormat": "Controlla il formato dell'email"
+    },
+    "notices": {
+      "passkeyCheckEmail": "Abbiamo inviato un'email a {email}. Confermala, poi accedi con la passkey.",
+      "accountCreated": "Account creato. Accedi con email e password.",
+      "passwordChanged": "Password modificata. Accedi con la nuova password."
+    },
+    "social": {
+      "google": "Continua con Google",
+      "telegram": "Continua con Telegram",
+      "passkey": "Continua con passkey",
+      "or": "oppure"
+    },
+    "login": {
+      "title": "Bentornato",
+      "subtitle": "Accedi per continuare l'ordine.",
+      "forgot": "Password dimenticata?",
+      "signingIn": "Accesso in corso...",
+      "submit": "Accedi"
+    },
+    "register": {
+      "title": "Crea un account",
+      "subtitle": "Ci vuole meno di un minuto.",
+      "sendingCode": "Invio del codice...",
+      "continue": "Continua"
+    },
+    "fields": {
+      "name": "Il tuo nome",
+      "namePlaceholder": "Mario Rossi",
+      "company": "Azienda",
+      "companyPlaceholder": "Nome dell'azienda",
+      "phone": "Telefono",
+      "password": "Password",
+      "passwordMin": "Almeno 8 caratteri",
+      "confirmPassword": "Conferma password",
+      "repeatPassword": "Ripeti la password",
+      "hide": "Nascondi",
+      "show": "Mostra"
+    },
+    "verify": {
+      "back": "Indietro",
+      "title": "Controlla la tua email",
+      "sentTo": "Abbiamo inviato un codice a 6 cifre a",
+      "checking": "Verifica in corso...",
+      "confirm": "Conferma",
+      "digit": "Cifra {n}"
+    },
+    "reset": {
+      "backToLogin": "Torna all'accesso",
+      "title": "Reimposta password",
+      "subtitle": "Inserisci l'email: ti invieremo un codice a 6 cifre.",
+      "sending": "Invio...",
+      "sendCode": "Invia codice",
+      "changeEmail": "Cambia email",
+      "enterCode": "Inserisci il codice",
+      "newTitle": "Nuova password",
+      "newSubtitle": "Scegli una nuova password sicura.",
+      "saving": "Salvataggio...",
+      "save": "Salva password"
+    },
+    "modes": {
+      "login": "Accedi",
+      "register": "Registrati"
+    },
+    "resend": {
+      "noCode": "Non hai ricevuto il codice?",
+      "in": "Nuovo invio tra {s} s",
+      "now": "Invia di nuovo"
+    },
+    "strength": {
+      "length": "8+ caratteri",
+      "upper": "Lettera maiuscola",
+      "digit": "Numero"
+    },
+    "backToSite": "Torna al sito",
+    "showcaseItem": "Recensione {n}",
+    "close": "Chiudi"
+  },
+  "editor": {
+    "common": {
+      "addToOrder": "Aggiungi all'ordine",
+      "adding": "Aggiunta...",
+      "all": "Tutti",
+      "back": "Indietro",
+      "cancel": "Annulla",
+      "change": "Cambia",
+      "close": "Chiudi",
+      "collapse": "Mostra meno",
+      "color": "Colore",
+      "delete": "Elimina",
+      "expand": "Mostra di più",
+      "fromPrice": "da {price} ₴",
+      "fromPricePer": "da {price} ₴ / pz",
+      "generate": "Genera",
+      "generating": "Generazione…",
+      "home": "Home",
+      "leaveConfirm": "Tornare indietro? Le modifiche non salvate andranno perse.",
+      "noColors": "Nessun colore configurato",
+      "perUnit": "/pz",
+      "print": "Stampa",
+      "productSettings": "Impostazioni prodotto",
+      "qty": "Quantità",
+      "qtyPrice": "Quantità e prezzo",
+      "removingBg": "Rimozione dello sfondo...",
+      "resetSearch": "Cancella ricerca",
+      "retry": "Riprova",
+      "retryShort": "Riprova",
+      "settings": "Impostazioni",
+      "size": "Taglia"
+    },
+    "tabs": {
+      "prints": "Stampe",
+      "draw": "Disegno",
+      "text": "Testo",
+      "upload": "File",
+      "layers": "Livelli",
+      "uploadTitle": "Carica",
+      "toolsLabel": "Strumenti dell'editor"
+    },
+    "errorPage": {
+      "title": "Impossibile caricare il catalogo",
+      "text": "La pagina dell'ordine non si è caricata. Riprova o torna alla home."
+    },
+    "main": {
+      "restoreFailed": "Impossibile ripristinare il carrello salvato. I dati restano salvati.",
+      "linkFailed": "Impossibile aprire il link",
+      "linkProductGone": "Il prodotto di questo link non è più disponibile",
+      "catalogFailed": "Impossibile caricare il catalogo",
+      "catalogFailedReload": "Impossibile caricare il catalogo. Prova ad aggiornare la pagina."
+    },
+    "grid": {
+      "title": "Scegli un capo",
+      "subtitle": "Tocca un capo per personalizzarlo e aggiungerlo all'ordine",
+      "empty": "Ancora nessun prodotto in questa categoria"
+    },
+    "genButton": {
+      "label": "Vedilo su una persona",
+      "needsDesign": "Aggiungi prima un design"
+    },
+    "textPanel": {
+      "search": "Cerca composizioni…",
+      "add": "Aggiungi un blocco di testo"
+    },
+    "shapes": {
+      "title": "Forme",
+      "search": "Cerca forme…",
+      "empty": "Nessuna forma trovata.",
+      "resetFilters": "Cancella filtri"
+    },
+    "ai": {
+      "noImage": "La risposta non conteneva immagini.",
+      "timeout": "Tempo scaduto. Riprova.",
+      "failed": "Impossibile generare l'immagine. Riprova."
+    },
+    "state": {
+      "restored": "La sessione di modifica precedente è stata ripristinata",
+      "chooseGarmentSize": "Scegli una taglia.",
+      "choosePrintSizes": "Scegli una dimensione per ogni stampa."
+    },
+    "qty": {
+      "fromQty": "da {n}",
+      "methods": {
+        "embroidery": "Ricamo",
+        "screen": "Serigrafia",
+        "sublimation": "Sublimazione",
+        "patch": "Toppa"
+      },
+      "product": "Articolo",
+      "chooseSize": "Scegli una dimensione",
+      "savings": "Risparmi",
+      "total": "Totale",
+      "totalLine": "{qty} pz × {price} ₴",
+      "noteLabel": "Importante:",
+      "noteText": "I prezzi sono indicativi. Il prezzo finale può cambiare dopo la conferma di un responsabile.",
+      "itemNote": "Nota per questo articolo",
+      "notePlaceholder": "Richieste particolari..."
+    },
+    "layout": {
+      "removeBgTitle": "Rimozione dello sfondo con l'IA",
+      "removeBgText": "Attendi. L'elaborazione in alta qualità richiede 15–20 secondi."
+    },
+    "customizer": {
+      "commentFailed": "Impossibile aggiungere il commento",
+      "previewTitle": "Anteprima del design",
+      "previewSignIn": "Accedi per modificare questo design.",
+      "previewViewOnly": "Questo link è di sola lettura. Il proprietario ha disattivato la modifica.",
+      "previewViewComment": "Questo link consente visualizzazione e commenti. Il proprietario ha disattivato la modifica.",
+      "signInToEdit": "Accedi per modificare",
+      "comments": "Commenti",
+      "noLayers": "Nessun livello. Aggiungi un'immagine o un testo.",
+      "tryOn": "Prova su una persona",
+      "withAi": "Con l'IA"
+    },
+    "gen": {
+      "presets": {
+        "0": "amici a una festa in terrazza",
+        "1": "qualcuno a passeggio in città in autunno",
+        "2": "un barista in un bar accogliente",
+        "3": "un musicista a un concerto all'aperto",
+        "4": "uno skater in un parco cittadino",
+        "5": "un team a una festa aziendale",
+        "6": "uno studente al campus",
+        "7": "una coppia a un festival estivo"
+      },
+      "progress": {
+        "0": "Analisi della richiesta...",
+        "1": "Scelta dello stile...",
+        "2": "Applicazione del design...",
+        "3": "Ultimi ritocchi..."
+      },
+      "inProgress": "Generazione in corso…",
+      "tapToView": "Tocca per vedere",
+      "yourPhoto": "La tua foto",
+      "photoUploaded": "Foto caricata",
+      "removePhoto": "Rimuovi foto",
+      "uploadPhoto": "Carica la tua foto",
+      "cameraOrGallery": "Apre la fotocamera o la galleria",
+      "title": "Guardalo indossato",
+      "subtitle": "L'IA mostra come appare il tuo design nella realtà",
+      "alreadyRunning": "È già in corso una generazione",
+      "result": "Risultato",
+      "usedFree": "Hai già usato la generazione gratuita per questo articolo.",
+      "viewResult": "Vedi risultato",
+      "tabSelfie": "Tua foto",
+      "tabScene": "Scena",
+      "sceneLabel": "Descrizione della scena",
+      "scenePlaceholder": "Descrivi una scena o scegli un'idea…",
+      "emptySide": "Questo lato è vuoto. Useremo il design del lato «{side}».",
+      "quotaUsed": "Hai usato tutte le {n} generazioni gratuite",
+      "generatingShort": "Genero…"
+    },
+    "toolbar": {
+      "opacity": "Opacità",
+      "fontSearch": "Cerca font...",
+      "nothingFound": "Nessun risultato",
+      "bold": "Grassetto",
+      "italic": "Corsivo",
+      "textColor": "Colore del testo",
+      "alignLeft": "Sinistra",
+      "alignCenter": "Centro",
+      "alignRight": "Destra",
+      "arc": "Arco",
+      "letterSpacing": "Spaziatura lettere",
+      "lineHeight": "Interlinea",
+      "fill": "Riempimento",
+      "stroke": "Contorno",
+      "fillColor": "Colore di riempimento",
+      "strokeColor": "Colore del contorno",
+      "removeBg": "Rimuovi sfondo",
+      "editDrawing": "Modifica disegno",
+      "center": "Centra",
+      "flip": "Rifletti",
+      "duplicate": "Duplica",
+      "fontCategories": {
+        "grotesque": "Bastoni",
+        "condensed": "Condensato",
+        "serif": "Graziato",
+        "display": "Display",
+        "decorative": "Decorativo",
+        "handwritten": "Scritto a mano",
+        "technical": "Tecnico"
+      }
+    },
+    "prints": {
+      "prompts": {
+        "0": "Un gatto astronauta in stile retrò, colori vivaci",
+        "1": "Montagne e sole minimal, line art",
+        "2": "Un mazzo di fiori di campo, acquerello",
+        "3": "Scritta «Good vibes» in stile anni '70",
+        "4": "Un drago pixelato, stile videogioco retrò",
+        "5": "Un'onda in stile giapponese, palette blu",
+        "6": "Una tazza di caffè con un cuore, flat design",
+        "7": "Un gufo con un libro, illustrazione vettoriale"
+      },
+      "aiTitle": "Illustrazione IA",
+      "aiDesc": "Crea illustrazioni pronte per la stampa da una descrizione.",
+      "aiLabel": "Descrizione per l'illustrazione IA",
+      "loadFailed": "Impossibile caricare le stampe",
+      "ready": "Stampe pronte",
+      "search": "Cerca stampe…",
+      "empty": "Nessuna stampa trovata."
+    },
+    "upload": {
+      "badType": "Tipo di file non supportato «{type}». Usa PNG, JPG/JPEG, SVG o PDF.",
+      "tooLarge": "Il file è troppo grande ({size} MB). Massimo: {max}.",
+      "addAgain": "Aggiungi di nuovo «{name}»",
+      "addFailed": "Impossibile aggiungere «{name}». Riprova.",
+      "title": "Carica un file",
+      "dropLabel": "Carica un file: fai clic o trascinalo qui",
+      "uploading": "Caricamento…",
+      "dropRelease": "Rilascia per caricare",
+      "dropHint": "Fai clic o trascina un file",
+      "formats": "PNG, JPG, SVG, PDF · fino a 20 MB",
+      "choose": "Scegli un file",
+      "recent": "Caricamenti recenti",
+      "noRecent": "Ancora nessun caricamento.",
+      "recentHint": "I file caricati appariranno qui per riutilizzarli rapidamente."
+    },
+    "canvas": {
+      "defaultText": "Testo",
+      "undo": "Annulla",
+      "undoTitle": "Annulla (Ctrl+Z)",
+      "redo": "Ripeti",
+      "redoTitle": "Ripeti (Ctrl+Maiusc+Z)",
+      "copy": "Copia",
+      "fontSmaller": "Riduci carattere",
+      "fontBigger": "Aumenta carattere",
+      "boldShort": "G",
+      "italicShort": "C",
+      "removeBgFailed": "Impossibile rimuovere lo sfondo. Riprova.",
+      "bgShort": "Sfondo",
+      "edit": "Modifica",
+      "layerOpacity": "Opacità del livello",
+      "deleteLayer": "Elimina livello",
+      "loadingImage": "Caricamento immagine...",
+      "sides": {
+        "front": "Fronte",
+        "back": "Retro",
+        "left": "Sinistra",
+        "right": "Destra",
+        "neck_inner": "Etichetta interna",
+        "sleeve_left": "Manica sinistra",
+        "sleeve_right": "Manica destra"
+      }
+    },
+    "layers": {
+      "layer": "Livello",
+      "setupTitle": "Configura questo livello",
+      "setupText": "Scegli tipo e dimensione di stampa. Il prezzo si aggiorna automaticamente.",
+      "printType": "Tipo di stampa",
+      "printSize": "Dimensione di stampa",
+      "image": "Immagine"
+    },
+    "paywall": {
+      "title": "Per l'IA serve un account",
+      "text": "Registrati gratis e ottieni 3 generazioni IA gratuite",
+      "register": "Registrati",
+      "login": "Accedi",
+      "skip": "Continua senza account"
+    },
+    "mode": {
+      "label": "Modalità di visualizzazione",
+      "edit": "Design",
+      "preview": "Anteprima"
+    },
+    "tour": {
+      "replay": "Mostra suggerimenti",
+      "counter": "{n} di {total}",
+      "close": "Chiudi",
+      "back": "Indietro",
+      "next": "Avanti",
+      "done": "Fatto",
+      "tools": {
+        "title": "Strumenti di design",
+        "body": "Carica il tuo file, scegli una stampa pronta, aggiungi testo o disegna qualcosa. Tutto parte da qui."
+      },
+      "canvas": {
+        "title": "Area di lavoro",
+        "body": "Trascina, ridimensiona e ruota gli elementi direttamente sul capo. I pulsanti sotto cambiano lato: davanti, retro, maniche."
+      },
+      "layers": {
+        "title": "Livelli",
+        "body": "Tutti gli elementi del design in un elenco. Riordina, duplica, elimina. Il livello selezionato ha la sua barra sopra l’area."
+      },
+      "mode": {
+        "title": "Design e anteprima",
+        "body": "Passa ad Anteprima per vedere il capo da più angolazioni senza gli strumenti di modifica."
+      },
+      "price": {
+        "title": "Quantità e prezzo",
+        "body": "Scegli colore, taglia e quantità. Il prezzo include lo sconto per quantità e il costo di stampa di ogni elemento."
+      },
+      "actions": {
+        "title": "Ordine e condivisione",
+        "body": "Quando il design è pronto, aggiungilo all’ordine o invia un link per ricevere commenti."
+      }
+    },
+    "preview": {
+      "close": "Chiudi",
+      "prev": "Precedente",
+      "next": "Successivo",
+      "withPrint": "Con la tua stampa",
+      "noPrint": "Senza stampa",
+      "sides": {
+        "front": "Davanti",
+        "back": "Retro",
+        "chest": "Petto",
+        "neck_inner": "Etichetta interna",
+        "sleeve_left": "Manica sinistra",
+        "sleeve_right": "Manica destra"
+      },
+      "tiles": {
+        "zone": "Stampa da vicino",
+        "zoneHint": "Area di stampa",
+        "collar": "Colletto e taglio",
+        "collarHint": "Dettaglio del capo",
+        "flat": "In piano",
+        "flatHint": "Flat lay"
+      },
+      "emptyTitle": "Qui apparirà il tuo capo",
+      "emptyBody": "Aggiungi un’immagine, un testo o una stampa in modalità design e mostreremo il capo da più angolazioni.",
+      "backToDesign": "Torna al design",
+      "readOnly": "Solo anteprima."
+    }
+  },
+  "sizeChart": {
+    "title": "Tabella taglie",
+    "empty": "La tabella è vuota",
+    "schemeAlt": "{name}: schema delle taglie",
+    "note": "Tutte le misure sono in centimetri. Se sei tra due taglie, scegli la più grande."
+  },
+  "editorial": {
+    "statement": {
+      "eyebrow": "U:DO CRAFT",
+      "part1": "Uniamo artigianato e tecnologia perché i capi con il tuo design",
+      "part2": "vengano indossati, non dimenticati nell’armadio —",
+      "part3": "capi di cui vai fiero ogni giorno.",
+      "cta": "Crea il tuo design"
+    },
+    "pair": {
+      "title1": "Fatto per essere indossato,",
+      "accent": "curato",
+      "title2": "nei dettagli",
+      "desc": "Cotone pesante, stampa precisa e ricamo che resistono a centinaia di lavaggi. Scegli la base, al resto pensiamo noi.",
+      "from": "da {price} ₴"
+    }
   }
 }

@@ -4,7 +4,7 @@ import { Section, SectionHeader } from "@udo-craft/ui";
 import { Link } from "@/i18n/navigation";
 
 const STEPS = [
-  { n: "1", href: "#catalog" },
+  { n: "1", href: "/#catalog" },
   { n: "2", href: "/order" },
   { n: "3", href: "#contact" },
   { n: "4", href: "#faq" },

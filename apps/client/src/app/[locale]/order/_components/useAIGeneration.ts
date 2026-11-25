@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { useState, useCallback } from "react";
 import type { PrintLayer } from "@udo-craft/shared";
 import { buildCanvasContext } from "../_lib/buildCanvasContext";
@@ -35,6 +37,7 @@ export function useAIGeneration({
   onSuccess,
   selfieDataUrl,
 }: UseAIGenerationOptions): UseAIGenerationReturn {
+  const t = useTranslations("editor");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -102,18 +105,18 @@ export function useAIGeneration({
         const data = await res.json() as { dataUrl?: string; error?: string };
 
         if (!data.dataUrl) {
-          throw new Error(data.error ?? "Відповідь не містить зображення");
+          throw new Error(t("ai.noImage"));
         }
 
         // 4. Return dataUrl via callback — caller handles addLayer
         onSuccess?.(data.dataUrl);
       } catch (err) {
         if (err instanceof DOMException && err.name === "AbortError") {
-          setError("Час очікування вичерпано. Спробуйте ще раз.");
+          setError(t("ai.timeout"));
         } else if (err instanceof Error) {
-          setError(`Помилка генерації: ${err.message}`);
+          setError(t("ai.failed"));
         } else {
-          setError("Невідома помилка під час генерації зображення.");
+          setError(t("ai.failed"));
         }
       } finally {
         setLoading(false);

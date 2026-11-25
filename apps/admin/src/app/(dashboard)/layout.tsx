@@ -16,11 +16,19 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <SidebarProvider className="bg-background">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-(--z-toast) focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:shadow"
+      >
+        До основного вмісту
+      </a>
       <AppSidebar user={sidebarUser} />
-      <SidebarInset className="overflow-hidden flex flex-col bg-surface">
-        <main className="flex-1 flex flex-col overflow-hidden bg-surface">
+      {/* SidebarInset renders the page's single <main> landmark. tabular-nums: prices,
+          quantities, dates and order numbers line up across the ops screens. */}
+      <SidebarInset id="main-content" tabIndex={-1} className="overflow-hidden flex flex-col bg-background tabular-nums outline-none">
+        <div className="flex-1 flex flex-col overflow-hidden">
           {children}
-        </main>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

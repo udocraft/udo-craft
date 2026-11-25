@@ -4,8 +4,12 @@ import { z } from "zod";
 export const PX_TO_MM_RATIO = 0.5; // Example ratio
 
 // Enums
-export const PrintZoneSideEnum = z.enum(["front", "back"]);
+export const PRINT_ZONE_SIDES = ["front", "back", "neck_inner", "sleeve_left", "sleeve_right"] as const;
+// Sides are free-form strings in the DB (text); the list above is the well-known set.
+export const PrintZoneSideEnum = z.string().min(1);
 export const LeadStatusEnum = z.enum(["draft", "new", "in_progress", "production", "completed", "archived"]);
+
+export * from "./src/orders";
 
 // ── Product image model ─────────────────────────────────────────────────────
 
@@ -191,6 +195,11 @@ export const PrintZoneSchema = z.object({
   width: z.number().int(),
   height: z.number().int(),
   allowed_print_types: z.array(z.string()).default(["dtf"]).optional(),
+  label: z.string().nullable().optional(),
+  sort_order: z.number().int().optional(),
+  width_mm: z.number().nullable().optional(),
+  height_mm: z.number().nullable().optional(),
+  print_area_id: z.string().uuid().nullable().optional(),
 });
 
 export const LeadSchema = z.object({
@@ -239,6 +248,8 @@ export type Lead = z.infer<typeof LeadSchema>;
 export type OrderItem = z.infer<typeof OrderItemSchema>;
 export type LeadStatus = z.infer<typeof LeadStatusEnum>;
 export type PrintZoneSide = z.infer<typeof PrintZoneSideEnum>;
+/** Zones keyed by side. Backward compatible with the old `{ front?, back? }` shape. */
+export type PrintZonesMap = Record<string, PrintZone | null | undefined>;
 
 // ── Catalog hierarchy ───────────────────────────────────────────────────────
 
@@ -430,7 +441,30 @@ export const PRINT_TYPES = [
   { id: "patch",       label: "Нашивка",    color: "#10b981", bg: "#ecfdf5", desc: "Тканинна нашивка" },
 ] as const;
 
-export type PrintTypeId = typeof PRINT_TYPES[number]["id"];
+/**
+ * Print type code. The list lives in the `print_types` table (admin: Принти → Типи друку);
+ * PRINT_TYPES above is only the built-in fallback, so this is a plain string.
+ */
+export type PrintTypeId = string;
+
+export interface PrintTypeDef {
+  id: string;
+  label: string;
+  color: string;
+  bg?: string;
+  desc?: string;
+}
+
+/** Light background for a print type badge: explicit bg, else the colour at ~10% opacity. */
+export function printTypeBg(t: Pick<PrintTypeDef, "color" | "bg">): string {
+  if (t.bg) return t.bg;
+  return /^#[0-9a-fA-F]{6}$/.test(t.color) ? `${t.color}1a` : "#f1f5f9";
+}
+
+/** Finds a print type by code; unknown codes (e.g. a deleted type on an old order) get a neutral badge. */
+export function findPrintType(id: string, list: readonly PrintTypeDef[] = PRINT_TYPES): PrintTypeDef {
+  return list.find((t) => t.id === id) ?? PRINT_TYPES.find((t) => t.id === id) ?? { id, label: id, color: "#64748b" };
+}
 
 /**
  * Google Fonts with full Cyrillic support — visually distinct families.
@@ -715,12 +749,6 @@ export const PREDEFINED_TAGS = [
   { id: "new_client", label: "Новий клієнт",  color: "#0284c7", bg: "#e0f2fe" },
 ] as const;
 
-export const DISCOUNT_TIERS = [
-  { min: 10, max: 49,   pct: 5  },
-  { min: 50, max: 99,   pct: 12 },
-  { min: 100, max: null, pct: 15 },
-] as const;
-
 // ── Lead validation ─────────────────────────────────────────────────────────
 
 export const CreateLeadSchema = z.object({
@@ -757,15 +785,54 @@ export const LeadOrderItemSchema = z.object({
   technical_metadata: z.record(z.unknown()).nullish(),
 });
 
-/** POST /api/leads. Extra customer_data keys (edrpou, delivery...) are kept. */
+/**
+ * Public POST /api/leads. Extra customer_data keys (edrpou, delivery...) are kept.
+ * `status` and any amounts in the body are ignored: the server always creates a
+ * `new` order and prices it from the catalogue.
+ */
 export const CreateLeadRequestSchema = CreateLeadSchema.extend({
+  status: LeadStatusEnum.optional(),
   customer_data: CreateLeadSchema.shape.customer_data
     .passthrough()
     .extend({ attachments: z.array(urlString).max(20).optional() }),
   order_items: z.array(LeadOrderItemSchema).max(100).optional(),
   initial_message: z.string().max(5000).nullish(),
+  /** Client-generated UUID, reused on retries of the same checkout (idempotency key). */
+  client_request_id: z.string().uuid().optional(),
 });
 export type CreateLeadRequest = z.infer<typeof CreateLeadRequestSchema>;
+
+/**
+ * Admin POST /api/leads. Staff may record an order with only a social contact,
+ * so email and phone are optional but at least one contact is required.
+ */
+export const AdminCreateLeadSchema = z.object({
+  status: z.enum(["draft", "new"]).default("new"),
+  customer_data: z
+    .object({
+      name: z.string().trim().min(1).max(200),
+      email: z.string().trim().email().max(254).optional(),
+      phone: z.string().trim().max(40).optional(),
+      social_channel: z.string().trim().max(200).optional(),
+    })
+    .passthrough()
+    .refine((c) => Boolean(c.email || c.phone || c.social_channel), {
+      message: "At least one contact (email, phone or social) is required",
+      path: ["email"],
+    }),
+  order_items: z
+    .array(
+      LeadOrderItemSchema.extend({
+        unit_price_cents: z.number().nonnegative().optional(),
+        print_cost_cents: z.number().nonnegative().optional(),
+      }),
+    )
+    .max(200)
+    .optional(),
+  tags: z.array(z.string().max(64)).max(50).optional(),
+  notes: z.string().max(10_000).optional(),
+});
+export type AdminCreateLead = z.infer<typeof AdminCreateLeadSchema>;
 
 /** `files` parts of POST /api/upload and /api/cabinet/upload (multipart, not JSON). */
 export const UploadFilesRequestSchema = z.array(z.instanceof(File)).max(10, "At most 10 files per request");
@@ -784,6 +851,17 @@ export const SendOtpRequestSchema = z.object({
   type: z.enum(["register", "reset"]).optional(),
 });
 
+/** POST /api/auth/register: the emailed code plus the signed token from send-otp. */
+export const RegisterRequestSchema = z.object({
+  email: emailField,
+  otp: otpField,
+  token: z.string().min(20).max(2048),
+  password: z.string().min(8, "Пароль має містити щонайменше 8 символів").max(128, "Пароль задовгий"),
+  name: z.string().trim().max(100).optional(),
+  company: z.string().trim().max(200).optional(),
+  phone: z.string().trim().max(40).optional(),
+});
+
 /** POST /api/auth/verify-otp */
 export const VerifyOtpRequestSchema = z.object({
   email: emailField,
@@ -793,6 +871,30 @@ export const VerifyOtpRequestSchema = z.object({
     .min(8, "Пароль має містити щонайменше 8 символів")
     .max(128, "Пароль задовгий"),
 });
+
+/** POST /api/auth/passkey/register/options */
+export const PasskeyRegisterOptionsRequestSchema = z.object({
+  email: emailField,
+  name: z.string().trim().min(1, "Name is required").max(100),
+});
+
+/** POST /api/auth/passkey/{register,login}/verify. The WebAuthn response is checked by @simplewebauthn/server. */
+export const PasskeyVerifyRequestSchema = z.object({
+  response: z.object({ id: z.string().min(1).max(1024) }).passthrough(),
+});
+
+/** POST /api/auth/telegram: the Telegram Login widget payload. Extra fields are kept for the signature check. */
+export const TelegramLoginRequestSchema = z
+  .object({
+    id: z.number().int().positive(),
+    auth_date: z.number().int().positive(),
+    hash: z.string().regex(/^[0-9a-f]{64}$/, "Invalid Telegram login"),
+    first_name: z.string().max(256).optional(),
+    last_name: z.string().max(256).optional(),
+    username: z.string().max(64).optional(),
+    photo_url: z.string().max(2048).optional(),
+  })
+  .passthrough();
 
 /** POST /api/cabinet/messages */
 export const CabinetMessageRequestSchema = z

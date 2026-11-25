@@ -5,9 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Loader2, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { AdminFilter, AdminSearch, AdminTablePanel, AdminToolbar } from "@/components/admin-layout";
+import { AdminFilter, AdminFilterReset, AdminSearch, AdminTablePanel, AdminToolbar } from "@/components/admin-layout";
 import { ListPage } from "@/components/page-templates";
 import { money, TypesDialog, useStockData } from "../_lib/stock";
 
@@ -15,13 +14,14 @@ export default function StockListPage() {
   const router = useRouter();
   const { materials, types, loading, refetch } = useStockData();
   const [query, setQuery] = useState("");
-  const [typeFilter, setTypeFilter] = useState("all");
+  // Multiple choice: "none" stands for items without a type.
+  const [typeFilter, setTypeFilter] = useState<string[]>([]);
   const [typesOpen, setTypesOpen] = useState(false);
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
     return materials.filter((m) => {
-      const matchesType = typeFilter === "all" || (typeFilter === "none" ? !m.type_id : m.type_id === typeFilter);
+      const matchesType = typeFilter.length === 0 || typeFilter.some((t) => (t === "none" ? !m.type_id : m.type_id === t));
       const matchesQuery = !needle || [m.name, m.sku, m.kind, m.supplier, m.type?.name].some((v) => String(v ?? "").toLowerCase().includes(needle));
       return matchesType && matchesQuery;
     });
@@ -38,31 +38,24 @@ export default function StockListPage() {
       actions={<Button variant="outline" size="sm" onClick={() => setTypesOpen(true)}>Типи</Button>}
       filters={
         <AdminToolbar>
-          <AdminSearch value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Швидкий пошук..." />
+          <AdminSearch value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Назва, SKU, постачальник…" />
           <AdminFilter
             label="Тип"
-            active={typeFilter !== "all"}
-            value={typeFilter === "all" ? undefined : typeFilter === "none" ? "Без типу" : types.find((t) => t.id === typeFilter)?.name}
-            onClear={() => setTypeFilter("all")}
             icon={Tag}
-            onClick={() => document.getElementById("type-filter-trigger")?.click()}
+            multiple
+            values={typeFilter}
+            onValuesChange={setTypeFilter}
+            options={[...types.map((t) => ({ value: t.id, label: t.name })), { value: "none", label: "Без типу" }]}
           />
-          <Select value={typeFilter} onValueChange={(value) => value && setTypeFilter(value)}>
-            <SelectTrigger className="sr-only h-0 w-0 p-0" id="type-filter-trigger"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Всі типи</SelectItem>
-              <SelectItem value="none">Без типу</SelectItem>
-              {types.map((t) => <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>)}
-            </SelectContent>
-          </Select>
-          <span className="ml-auto text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">{count}</span>
+          <AdminFilterReset active={typeFilter.length > 0 || query.trim() !== ""} onReset={() => { setTypeFilter([]); setQuery(""); }} />
+          <span className="ml-auto text-sm text-muted-foreground tabular-nums">{loading ? "" : count}</span>
         </AdminToolbar>
       }
     >
       {loading ? (
         <div className="flex h-64 items-center justify-center"><Loader2 className="size-6 animate-spin text-muted-foreground" /></div>
       ) : (
-        <AdminTablePanel>
+        <AdminTablePanel bleed>
           <Table className="min-w-[960px]">
             <TableHeader>
               <TableRow className="border-b hover:bg-transparent">

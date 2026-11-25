@@ -1,6 +1,8 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState, useCallback } from "react";
+import { LEAD_STATUSES, LEAD_STATUS_LABELS, canTransitionLead, leadStatusLabel } from "@udo-craft/shared";
+import { updateLeadStatus } from "@/lib/leads/status";
+import { Suspense, useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 import { PREDEFINED_TAGS } from "@udo-craft/shared";
@@ -8,6 +10,8 @@ import { createClient } from "@/lib/supabase/client";
 import { playNotificationTone } from "@/lib/notifications";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { BulkActionBar, TypedDeleteDialog, useRowSelection } from "@/components/bulk-actions";
+import { exportCsv, exportPdf, type ExportColumn } from "@/lib/export";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -32,7 +36,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { DashboardPage } from "@/components/dashboard-page";
-import { AdminToolbar, AdminSearch, AdminFilter, AdminEmptyState } from "@/components/admin-layout";
+import { AdminToolbar, AdminSearch, AdminFilter, AdminFilterReset, AdminEmptyState } from "@/components/admin-layout";
 import { KanbanColumn } from "./_components/KanbanColumn";
 import { OrderQuickSheet } from "./_components/OrderQuickSheet";
 import { useKanbanDrag, type Lead } from "./_components/useKanbanDrag";
@@ -42,11 +46,8 @@ import type { Lead as SharedLead } from "@udo-craft/shared";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type RealtimeLeadPayload = { eventType: "INSERT" | "UPDATE" | "DELETE"; new: SharedLead; old: Partial<SharedLead> };
 
-const STATUSES = ["draft", "new", "in_progress", "production", "completed", "archived"] as const;
-const STATUS_LABELS: Record<string, string> = {
-  draft: "Чернетка", new: "Новий", in_progress: "В роботі",
-  production: "Виробництво", completed: "Завершено", archived: "Архів",
-};
+const STATUSES = LEAD_STATUSES;
+const STATUS_LABELS: Record<string, string> = LEAD_STATUS_LABELS;
 const DATE_FILTER_LABELS: Record<DateFilter, string> = {
   all: "Весь час",
   today: "Сьогодні",
@@ -56,19 +57,12 @@ const DATE_FILTER_LABELS: Record<DateFilter, string> = {
 const UNASSIGNED_TAG_VALUE = "__untagged__";
 const CUSTOM_TAG_VALUE = "__custom__";
 
-type StatusFilter = "all" | (typeof STATUSES)[number];
-type TagFilter = "all" | typeof UNASSIGNED_TAG_VALUE | typeof CUSTOM_TAG_VALUE | (typeof PREDEFINED_TAGS)[number]["id"];
+type StatusValue = (typeof STATUSES)[number];
+type TagValue = typeof UNASSIGNED_TAG_VALUE | typeof CUSTOM_TAG_VALUE | (typeof PREDEFINED_TAGS)[number]["id"];
 type DateFilter = "all" | "today" | "week" | "month";
 type AmountFilter = "all" | "with_amount" | "without_amount";
 type SortFilter = "newest" | "oldest" | "amount_desc" | "amount_asc" | "updated";
 type ViewMode = "kanban" | "list";
-
-function getTagFilterLabel(filter: TagFilter) {
-  if (filter === "all") return "Всі теги";
-  if (filter === UNASSIGNED_TAG_VALUE) return "Без тегів";
-  if (filter === CUSTOM_TAG_VALUE) return "Інші теги";
-  return PREDEFINED_TAGS.find((tag) => tag.id === filter)?.label ?? filter;
-}
 
 function getDateStart(filter: DateFilter) {
   const now = new Date();
@@ -167,8 +161,9 @@ function OrdersBoard() {
   const [loading, setLoading] = useState(true);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
-  const [tagFilter, setTagFilter] = useState<TagFilter>("all");
+  // Multiple choice: an order matches if it has any of the picked statuses / tags.
+  const [statusFilter, setStatusFilter] = useState<StatusValue[]>([]);
+  const [tagFilter, setTagFilter] = useState<TagValue[]>([]);
   const [dateFilter, setDateFilter] = useState<DateFilter>("all");
   const [amountFilter, setAmountFilter] = useState<AmountFilter>("all");
   const [sortFilter, setSortFilter] = useState<SortFilter>("newest");
@@ -190,32 +185,74 @@ function OrdersBoard() {
       .catch(() => {});
   }, []);
 
+  // Leads with a status request in flight; a second drop or click on the same
+  // order is ignored until the first one settles.
+  const statusInFlight = useRef(new Set<string>());
   const handleStatusChange = useCallback(async (lead: Lead, newStatus: string) => {
+    if (statusInFlight.current.has(lead.id) || lead.status === newStatus) return;
+    if (!canTransitionLead(lead.status, newStatus)) {
+      toast.error(`Не можна змінити статус: ${leadStatusLabel(lead.status)} → ${leadStatusLabel(newStatus)}`);
+      return;
+    }
+    statusInFlight.current.add(lead.id);
     const updated = { ...lead, status: newStatus as Lead["status"] };
     setLeads((p) => p.map((l) => (l.id === lead.id ? updated : l)));
     setSelectedLead((c) => c?.id === lead.id ? updated : c);
     try {
-      const r = await fetch(`/api/leads/${lead.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: newStatus }) });
-      if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || `HTTP ${r.status}`);
+      await updateLeadStatus(lead.id, lead.status, newStatus);
     } catch (err) {
-      setLeads((p) => p.map((l) => (l.id === lead.id ? lead : l)));
-      setSelectedLead((c) => c?.id === lead.id ? lead : c);
+      // Roll back only this field so concurrent realtime edits to the lead survive.
+      setLeads((p) => p.map((l) => (l.id === lead.id ? { ...l, status: lead.status } : l)));
+      setSelectedLead((c) => c?.id === lead.id ? { ...c, status: lead.status } : c);
       console.error("[orders] update lead status failed", err);
-      toast.error("Не вдалося оновити статус. Зміну скасовано, спробуйте ще раз.");
+      toast.error(err instanceof Error ? err.message : "Не вдалося оновити статус");
+    } finally {
+      statusInFlight.current.delete(lead.id);
     }
   }, []);
 
   const drag = useKanbanDrag(selectedLead, setSelectedLead, handleStatusChange);
 
+  // The newest page of orders; older ones are added on demand ("Старіші").
+  const [hasMore, setHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const fetchLeads = useCallback(async (showLoading = true) => {
     if (showLoading) setLoading(true);
     try {
       const r = await fetch("/api/leads");
       if (!r.ok) throw new Error();
-      setLeads((await r.json()) || []);
-    } catch { toast.error("Помилка при завантаженні замовлень"); setLeads([]); }
+      const firstPage: Lead[] = (await r.json()) || [];
+      if (showLoading) {
+        setHasMore(r.headers.get("X-Has-More") === "1");
+        setLeads(firstPage);
+      } else {
+        // Background refresh (realtime, KeyCRM): update the newest page in place and
+        // keep older pages the user already loaded.
+        setLeads((prev) => {
+          const fresh = new Set(firstPage.map((l) => l.id));
+          const oldestFresh = firstPage[firstPage.length - 1]?.created_at ?? "";
+          return [...firstPage, ...prev.filter((l) => !fresh.has(l.id) && l.created_at < oldestFresh)];
+        });
+      }
+    } catch { toast.error("Помилка при завантаженні замовлень"); if (showLoading) setLeads([]); }
     finally { if (showLoading) setLoading(false); }
   }, []);
+  const loadOlder = useCallback(async () => {
+    const oldest = leads[leads.length - 1]?.created_at;
+    if (!oldest || loadingMore) return;
+    setLoadingMore(true);
+    try {
+      const r = await fetch(`/api/leads?before=${encodeURIComponent(oldest)}`);
+      if (!r.ok) throw new Error();
+      const older: Lead[] = (await r.json()) || [];
+      setHasMore(r.headers.get("X-Has-More") === "1");
+      setLeads((prev) => {
+        const seen = new Set(prev.map((l) => l.id));
+        return [...prev, ...older.filter((l) => !seen.has(l.id))];
+      });
+    } catch { toast.error("Не вдалося завантажити старіші замовлення"); }
+    finally { setLoadingMore(false); }
+  }, [leads, loadingMore]);
 
   const debouncedRealtimeFetch = useDebouncedCallback(() => {
     playNotificationTone();
@@ -274,15 +311,15 @@ function OrdersBoard() {
 
     return leads
       .filter((lead) => matchesSearch(lead, search))
-      .filter((lead) => statusFilter === "all" || lead.status === statusFilter)
+      .filter((lead) => statusFilter.length === 0 || statusFilter.includes(lead.status as StatusValue))
       .filter((lead) => {
+        if (tagFilter.length === 0) return true;
         const tags = lead.tags ?? [];
-        if (tagFilter === "all") return true;
-        if (tagFilter === UNASSIGNED_TAG_VALUE) return tags.length === 0;
-        if (tagFilter === CUSTOM_TAG_VALUE) {
-          return tags.some((tag) => !PREDEFINED_TAGS.some((predefined) => predefined.id === tag));
-        }
-        return tags.includes(tagFilter);
+        return tagFilter.some((f) => {
+          if (f === UNASSIGNED_TAG_VALUE) return tags.length === 0;
+          if (f === CUSTOM_TAG_VALUE) return tags.some((tag) => !PREDEFINED_TAGS.some((predefined) => predefined.id === tag));
+          return tags.includes(f);
+        });
       })
       .filter((lead) => {
         if (!dateStart) return true;
@@ -301,40 +338,96 @@ function OrdersBoard() {
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       });
   }, [amountFilter, dateFilter, leads, search, sortFilter, statusFilter, tagFilter]);
+  // One pass to group by kanban column instead of filtering per column per render.
+  const leadsByStatus = useMemo(() => {
+    const map = new Map<string, Lead[]>();
+    for (const lead of filteredLeads) {
+      const list = map.get(lead.status);
+      if (list) list.push(lead);
+      else map.set(lead.status, [lead]);
+    }
+    return map;
+  }, [filteredLeads]);
 
   const visibleStatuses = useMemo(() => {
-    if (statusFilter !== "all") return STATUSES.filter((status) => status === statusFilter);
+    if (statusFilter.length) return STATUSES.filter((status) => statusFilter.includes(status));
     return STATUSES;
   }, [statusFilter]);
 
   const hasFilters =
     search.trim() ||
-    statusFilter !== "all" ||
-    tagFilter !== "all" ||
+    statusFilter.length > 0 ||
+    tagFilter.length > 0 ||
     dateFilter !== "all" ||
     amountFilter !== "all" ||
     sortFilter !== "newest";
 
   const resetFilters = useCallback(() => {
     setSearch("");
-    setStatusFilter("all");
-    setTagFilter("all");
+    setStatusFilter([]);
+    setTagFilter([]);
     setDateFilter("all");
     setAmountFilter("all");
     setSortFilter("newest");
   }, []);
 
+  // ── Bulk actions (list view) ─────────────────────────────────────────
+  const selection = useRowSelection(viewMode === "list" ? filteredLeads.map((l) => l.id) : []);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
+  const selectedLeads = filteredLeads.filter((l) => selection.isSelected(l.id));
+  const ordersNoun = (n: number) => `${n} ${n % 10 === 1 && n % 100 !== 11 ? "замовлення" : "замовлень"}`;
+  const exportColumns: ExportColumn<Lead>[] = [
+    { header: "№", value: (l) => getOrderNumber(l) },
+    { header: "Створено", value: (l) => new Date(l.created_at).toLocaleString("uk-UA") },
+    { header: "Статус", value: (l) => LEAD_STATUS_LABELS[l.status as keyof typeof LEAD_STATUS_LABELS] ?? l.status },
+    { header: "Клієнт", value: (l) => l.customer_data?.name ?? "" },
+    { header: "Телефон", value: (l) => l.customer_data?.phone ?? "" },
+    { header: "Email", value: (l) => l.customer_data?.email ?? "" },
+    { header: "Компанія", value: (l) => l.customer_data?.company ?? "" },
+    { header: "Сума, ₴", value: (l) => (l.total_amount_cents / 100).toFixed(2) },
+  ];
+  const bulkDelete = async () => {
+    const ids = [...selection.selected];
+    try {
+      const res = await fetch("/api/leads/bulk-delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
+      toast.success(`Видалено ${ordersNoun(data?.deleted ?? ids.length)}`);
+      selection.clear();
+      await fetchLeads(false);
+    } catch (e) {
+      toast.error(`Не вдалося видалити: ${e instanceof Error ? e.message : "помилка"}`);
+      throw e;
+    }
+  };
+
   return (
-    <DashboardPage 
-      title="Замовлення" 
-      padding="px-0 py-0"
-      contentClassName="[&>header]:hidden"
+    <DashboardPage
+      title="Замовлення"
+      actions={
+        <>
+          {keycrmEnabled && (
+            <Button variant="outline" size="sm" className="gap-2" onClick={handleKeycrmSync} disabled={syncingKeycrm}>
+              {syncingKeycrm ? <Loader2 className="size-4 animate-spin" /> : <RefreshCw className="size-4" />}
+              <span className="hidden sm:inline">Sync KeyCRM</span>
+            </Button>
+          )}
+          <Button size="sm" className="gap-2" onClick={() => router.push("/orders/new")}>
+            <Plus className="size-4" />
+            <span className="hidden sm:inline">Нове замовлення</span>
+          </Button>
+        </>
+      }
     >
       {/* ── Toolbar ─────────────────────────────────────────────────────── */}
       <AdminToolbar>
         {/* Title + view-mode toggle */}
-        <div className="flex h-full items-center gap-4">
-          <div className="flex items-center gap-0.5">
+        <div className="flex h-full items-center">
+          <div role="group" aria-label="Вигляд" className="inline-flex h-9 items-center rounded-full border border-border bg-muted/60 p-0.5">
             <ViewModeButton
               active={viewMode === "kanban"}
               icon={Columns3}
@@ -351,16 +444,16 @@ function OrdersBoard() {
         </div>
 
         {/* Search */}
-        <AdminSearch value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Швидкий пошук..." />
+        <AdminSearch value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Номер, клієнт, email…" />
 
         {/* Filters */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-1.5">
           <AdminFilter
             label="Статус"
-            active={statusFilter !== "all"}
-            value={statusFilter === "all" ? undefined : statusFilter}
+            multiple
+            values={statusFilter}
+            onValuesChange={(v) => setStatusFilter(v as StatusValue[])}
             options={[
-              { value: "all", label: "Всі статуси" },
               { value: "draft", label: "Чернетка", color: "#94a3b8" },
               { value: "new", label: "Новий", color: "#3b82f6" },
               { value: "in_progress", label: "В роботі", color: "#f59e0b" },
@@ -368,22 +461,18 @@ function OrdersBoard() {
               { value: "completed", label: "Завершено", color: "#10b981" },
               { value: "archived", label: "Архів", color: "#94a3b8" },
             ]}
-            onSelect={(v) => setStatusFilter(v as StatusFilter)}
-            onClear={() => setStatusFilter("all")}
             icon={RefreshCw}
           />
           <AdminFilter
             label="Тег"
-            active={tagFilter !== "all"}
-            value={tagFilter === "all" ? undefined : tagFilter}
+            multiple
+            values={tagFilter}
+            onValuesChange={(v) => setTagFilter(v as TagValue[])}
             options={[
-              { value: "all", label: "Всі теги" },
               { value: UNASSIGNED_TAG_VALUE, label: "Без тегів" },
               ...PREDEFINED_TAGS.map((t) => ({ value: t.id, label: t.label, color: t.color })),
               { value: CUSTOM_TAG_VALUE, label: "Інші теги" },
             ]}
-            onSelect={(v) => setTagFilter(v as TagFilter)}
-            onClear={() => setTagFilter("all")}
             icon={Tag}
           />
           <AdminFilter
@@ -402,31 +491,17 @@ function OrdersBoard() {
           />
         </div>
 
-        {/* Right-side actions */}
-        <div className="ml-auto flex items-center gap-2">
-          <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
-            {loading ? "—" : `${filteredLeads.length} замовлень`}
+        <AdminFilterReset active={Boolean(hasFilters)} onReset={resetFilters} />
+
+        <div className="flex w-full items-center justify-between gap-2 sm:ml-auto sm:w-auto">
+          <span className="text-sm text-muted-foreground tabular-nums" aria-live="polite">
+            {loading ? "" : `${filteredLeads.length} замовлень`}
           </span>
-          {keycrmEnabled && (
-            <Button
-              variant="outline"
-              size="sm"
-              className="gap-2"
-              onClick={handleKeycrmSync}
-              disabled={syncingKeycrm}
-            >
-              {syncingKeycrm ? <Loader2 className="size-3.5 animate-spin" /> : <RefreshCw className="size-3.5" />}
-              <span className="hidden sm:inline">Sync KeyCRM</span>
+          {hasMore && !loading && (
+            <Button variant="ghost" size="sm" onClick={loadOlder} disabled={loadingMore}>
+              {loadingMore ? "Завантаження…" : "Завантажити старіші"}
             </Button>
           )}
-          <Button
-            size="sm"
-            className="gap-2 px-4"
-            onClick={() => router.push("/orders/new")}
-          >
-            <Plus className="size-4" />
-            <span>Нове замовлення</span>
-          </Button>
         </div>
       </AdminToolbar>
 
@@ -478,11 +553,12 @@ function OrdersBoard() {
             orders={filteredLeads}
             selectedOrderId={selectedLead?.id ?? null}
             onOrderClick={drag.onCardClick}
+            selection={selection}
           />
         ) : (
           <div className="flex h-full gap-4 px-6 py-6 animate-in" style={{ width: "max-content", minWidth: "100%" }}>
             {visibleStatuses.map((status) => {
-              const colLeads = filteredLeads.filter((l) => l.status === status);
+              const colLeads = leadsByStatus.get(status) ?? [];
               return (
                 <KanbanColumn
                   key={status}
@@ -518,6 +594,21 @@ function OrdersBoard() {
           if (lead) handleStatusChange(lead, status);
         }}
       />
+      <BulkActionBar
+        count={selection.count}
+        noun={ordersNoun}
+        onClear={selection.clear}
+        onExportCsv={() => exportCsv("orders", exportColumns, selectedLeads)}
+        onExportPdf={() => exportPdf("orders", "Замовлення", exportColumns, selectedLeads)}
+        onDelete={() => setBulkDeleteOpen(true)}
+      />
+      <TypedDeleteDialog
+        open={bulkDeleteOpen}
+        onOpenChange={setBulkDeleteOpen}
+        title={`Видалити ${ordersNoun(selection.count)}?`}
+        description="Замовлення, їхні позиції та листування буде видалено назавжди. Скасувати це не можна."
+        onConfirm={bulkDelete}
+      />
     </DashboardPage>
   );
 }
@@ -539,14 +630,14 @@ function ViewModeButton({
       aria-pressed={active}
       onClick={onClick}
       className={cn(
-        "relative inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md px-3 text-xs font-medium transition-all",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "relative inline-flex h-8 items-center justify-center whitespace-nowrap rounded-full px-3.5 text-sm font-medium transition-colors",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         active
-          ? "bg-primary/10 text-primary"
-          : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+          ? "bg-background text-foreground shadow-sm"
+          : "text-muted-foreground hover:text-foreground"
       )}
     >
-      <Icon className="size-3.5 mr-1.5" />
+      <Icon className="mr-1.5 size-4" />
       {label}
     </button>
   );
@@ -604,11 +695,11 @@ function TableSkeleton() {
   const COL_WIDTHS = ["w-[46px]", "w-[124px]", "w-[116px]", "w-[136px]", "w-[132px]", "w-[148px]", "w-[190px]", "w-[188px]", "w-[250px]", "w-[118px]", "w-[110px]"];
 
   return (
-    <div className="px-6 py-5">
-      <div className="overflow-hidden rounded-md border border-border bg-background shadow-sm">
+    <div>
+      <div className="overflow-hidden border-b border-border bg-background [&_th:first-child]:pl-4 [&_td:first-child]:pl-4 md:[&_th:first-child]:pl-6 md:[&_td:first-child]:pl-6">
         <Table className="min-w-[1280px] table-fixed">
           <TableHeader>
-            <TableRow className="h-11 bg-muted/30 hover:bg-muted/30">
+            <TableRow className="h-11 hover:bg-transparent">
               <TableHead className="w-[46px] px-3">
                 <Skeleton className="size-4 rounded" />
               </TableHead>
@@ -679,27 +770,31 @@ function OrdersListView({
   orders,
   selectedOrderId,
   onOrderClick,
+  selection,
 }: {
   orders: Lead[];
   selectedOrderId: string | null;
   onOrderClick: (lead: Lead) => void;
+  selection: ReturnType<typeof useRowSelection>;
 }) {
   return (
-    <div className="px-6 py-5 animate-in">
-      <div className="overflow-hidden rounded-md border border-border bg-background shadow-sm">
+    <div className="animate-in">
+      <div className="overflow-hidden border-b border-border bg-background [&_th:first-child]:pl-4 [&_td:first-child]:pl-4 md:[&_th:first-child]:pl-6 md:[&_td:first-child]:pl-6 [&_th:last-child]:pr-4 [&_td:last-child]:pr-4 md:[&_th:last-child]:pr-6 md:[&_td:last-child]:pr-6">
         <Table className="min-w-[1280px] table-fixed">
           <TableHeader>
-            <TableRow className="h-11 bg-muted/30 hover:bg-muted/30">
+            <TableRow className="h-11 hover:bg-transparent">
               <TableHead className="w-[46px] px-3">
-                <Checkbox aria-label="Вибрати всі замовлення" />
+                <Checkbox
+                  aria-label="Вибрати всі замовлення"
+                  checked={selection.allSelected}
+                  indeterminate={selection.someSelected}
+                  onCheckedChange={() => selection.toggleAll()}
+                />
               </TableHead>
               <TableHead className="w-[124px]">
                 <span className="inline-flex items-center gap-1.5 leading-tight">
                   <Hash className="size-3.5 text-muted-foreground" />
-                  <span className="flex flex-col">
-                    <span>№</span>
-                    <span>замовлення</span>
-                  </span>
+                  <span>№</span>
                 </span>
               </TableHead>
               <TableHead className="w-[116px]">Джерело</TableHead>
@@ -754,13 +849,17 @@ function OrdersListView({
                   tabIndex={0}
                   role="button"
                   aria-label={`Відкрити замовлення ${lead.customer_data?.name ?? lead.id}`}
-                  data-state={selectedOrderId === lead.id ? "selected" : undefined}
+                  data-state={selectedOrderId === lead.id || selection.isSelected(lead.id) ? "selected" : undefined}
                   onClick={() => onOrderClick(lead)}
                   onKeyDown={(event) => event.key === "Enter" && onOrderClick(lead)}
                   className="h-[74px] cursor-pointer align-top outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <TableCell className="px-3" onClick={(event) => event.stopPropagation()}>
-                    <Checkbox aria-label={`Вибрати замовлення ${getOrderNumber(lead)}`} />
+                    <Checkbox
+                      aria-label={`Вибрати замовлення ${getOrderNumber(lead)}`}
+                      checked={selection.isSelected(lead.id)}
+                      onCheckedChange={() => selection.toggle(lead.id)}
+                    />
                   </TableCell>
                   <TableCell>
                     <span className="text-sm font-semibold text-foreground">{getOrderNumber(lead)}</span>

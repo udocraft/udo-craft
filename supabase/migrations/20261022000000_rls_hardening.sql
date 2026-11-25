@@ -111,6 +111,8 @@ begin
     'cms_content'
   ]
   loop
+    -- Skip tables that exist only in some environments (no DDL in this repo).
+    continue when to_regclass('public.' || tbl) is null;
     execute format('drop policy if exists %I on public.%I', 'Staff write ' || tbl, tbl);
     execute format(
       'create policy %I on public.%I for all to authenticated using (public.is_staff_member()) with check (public.is_staff_member())',

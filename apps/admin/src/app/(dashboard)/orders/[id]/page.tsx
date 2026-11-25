@@ -1,5 +1,7 @@
 "use client";
 
+import { LEAD_STATUSES, LEAD_STATUS_LABELS, canTransitionLead } from "@udo-craft/shared";
+import { updateLeadStatus } from "@/lib/leads/status";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -82,11 +84,8 @@ interface Message {
   attachments?: string[];
 }
 
-const STATUSES = ["draft", "new", "in_progress", "production", "completed", "archived"] as const;
-const STATUS_LABELS: Record<string, string> = {
-  draft: "Чернетка", new: "Новий", in_progress: "В роботі",
-  production: "Виробництво", completed: "Завершено", archived: "Архів",
-};
+const STATUSES = LEAD_STATUSES;
+const STATUS_LABELS: Record<string, string> = LEAD_STATUS_LABELS;
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
@@ -234,29 +233,22 @@ export default function OrderDetailPage() {
 
   // ── Status change ───────────────────────────────────────────────────────────
 
+  const [statusSaving, setStatusSaving] = useState(false);
   const handleStatusChange = async (newStatus: Lead["status"]) => {
+    if (statusSaving || newStatus === status) return;
     const prev = status;
     setStatus(newStatus);
+    setStatusSaving(true);
     try {
-      const r = await fetch(`/api/leads/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
-      });
-      if (!r.ok) throw new Error();
+      // The server writes the "Статус змінено" note, so only the chat is refreshed here.
+      await updateLeadStatus(id, prev, newStatus);
       setLead((l) => l ? { ...l, status: newStatus } : l);
-      // Log status change as a message
-      const prevLabel = STATUS_LABELS[prev] || prev;
-      const label = STATUS_LABELS[newStatus] || newStatus;
-      await fetch("/api/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lead_id: id, body: `Статус змінено: ${prevLabel} → ${label}`, attachments: [] }),
-      });
-      fetchMessages();
-    } catch {
+    } catch (err) {
       setStatus(prev);
-      toast.error("Помилка зміни статусу");
+      toast.error(err instanceof Error ? err.message : "Помилка зміни статусу");
+    } finally {
+      setStatusSaving(false);
+      fetchMessages();
     }
   };
 
@@ -548,6 +540,8 @@ export default function OrderDetailPage() {
                         variant={status === s ? "default" : "outline"}
                         size="sm"
                         className="h-8 text-xs justify-start px-3"
+                        disabled={statusSaving || (s !== status && !canTransitionLead(status, s))}
+                        aria-pressed={status === s}
                         onClick={() => handleStatusChange(s)}
                       >
                         {STATUS_LABELS[s]}

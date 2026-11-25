@@ -2,17 +2,9 @@
 
 import { cn } from "@/lib/utils";
 import { OrderCard } from "./OrderCard";
-import type { LeadStatus } from "@/components/status-badge";
+import { STATUS_CONFIG, type LeadStatus } from "@/components/status-badge";
 import type { Lead } from "./useKanbanDrag";
 
-const STATUS_COLORS: Record<string, string> = {
-  draft: "bg-muted-foreground/20",
-  new: "bg-blue-500",
-  in_progress: "bg-amber-500",
-  production: "bg-primary",
-  completed: "bg-emerald-500",
-  archived: "bg-slate-400",
-};
 
 interface KanbanColumnProps {
   status: LeadStatus;
@@ -52,7 +44,7 @@ export function KanbanColumn({
   onColDrop,
 }: KanbanColumnProps) {
   const isOver = dragOverCol === status;
-  const dot = STATUS_COLORS[status] ?? "bg-muted-foreground";
+  const dot = STATUS_CONFIG[status]?.dot ?? "bg-muted-foreground";
 
   return (
     <div

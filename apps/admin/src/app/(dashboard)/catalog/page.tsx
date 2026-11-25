@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "sonner";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -31,11 +32,12 @@ export default function CatalogPage() {
   const { products, categories, loading, refresh, refreshProducts } = useProductsData();
 
   const handleToggleActive = async (product: { id: string; is_active: boolean }) => {
-    await fetch(`/api/products/${product.id}`, {
+    const res = await fetch(`/api/products/${product.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ is_active: !product.is_active }),
-    });
+    }).catch(() => null);
+    if (!res?.ok) toast.error("Не вдалося змінити видимість товару");
     refreshProducts();
   };
 

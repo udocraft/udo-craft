@@ -3,6 +3,7 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ArrowLeft, Check } from "lucide-react";
 
 type Step = "select" | "contact";
@@ -63,7 +64,9 @@ export function StepHeader({ step, stepIdx, cartLength, onNavigate }: StepHeader
           })}
         </div>
       </div>
-      <div className="z-10 ml-auto w-10 shrink-0" />
+      <div className="z-10 ml-auto shrink-0">
+        <LanguageSwitcher />
+      </div>
     </div>
   );
 }

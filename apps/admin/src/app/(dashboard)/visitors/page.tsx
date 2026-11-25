@@ -185,7 +185,7 @@ export default function VisitorsPage() {
         <AdminSearch value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Пошук за ID або сторінкою" />
       </AdminToolbar>
 
-      <AdminTablePanel className="mx-4 mb-6 md:mx-6">
+      <AdminTablePanel fullWidth className="mb-6">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">

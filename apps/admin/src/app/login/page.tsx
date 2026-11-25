@@ -2,17 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, CheckCircle2, Eye, EyeOff, KeyRound, Loader2, LogIn, Mail } from "lucide-react";
-import { AuthShell } from "@/components/auth-shell";
+import { CheckCircle2 } from "lucide-react";
+import { AuthAlert, AuthBackLink, AuthField, AuthPasswordField, AuthShell, AuthSubmit } from "@/components/auth-shell";
 import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 type View = "login" | "forgot" | "otp" | "new-password" | "done";
-
-const ALLOWED_ROLES = ["admin", "manager", "seamstress", "sewer"];
 
 export default function LoginPage() {
   const [view, setView] = useState<View>("login");
@@ -21,8 +15,7 @@ export default function LoginPage() {
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -139,135 +132,77 @@ export default function LoginPage() {
 
   return (
     <AuthShell title={title} description={desc}>
-      <Card>
-        <CardContent className="pt-6 space-y-4">
-
-          {/* ── Login ── */}
-          {view === "login" && (
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="admin@u-do-craft.store" value={email}
-                  onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Пароль</Label>
-                  <button type="button" onClick={() => reset("forgot")}
-                    className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-                    Забули пароль?
-                  </button>
-                </div>
-                <div className="relative">
-                  <Input id="password" type={showPassword ? "text" : "password"} placeholder="••••••••"
-                    value={password} onChange={(e) => setPassword(e.target.value)} required
-                    autoComplete="current-password" className="pr-10" />
-                  <button type="button" onClick={(e) => { e.preventDefault(); setShowPassword(!showPassword); }}
-                    aria-label={showPassword ? "Приховати пароль" : "Показати пароль"} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                    {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                  </button>
-                </div>
-              </div>
-              {error && <p className="text-sm text-destructive">{error}</p>}
-              <Button type="submit" disabled={loading} className="w-full">
-                {loading ? <Loader2 className="size-4 animate-spin" /> : <LogIn className="size-4" />}
-                {loading ? "Входимо..." : "Увійти"}
-              </Button>
-            </form>
-          )}
-
-          {/* ── Forgot — enter email ── */}
-          {view === "forgot" && (
-            <form onSubmit={handleSendOtp} className="space-y-4">
-              <button onClick={() => reset("login")} type="button"
-                className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                <ArrowLeft className="size-3.5" /> Назад до входу
+      {/* ── Login ── */}
+      {view === "login" && (
+        <form onSubmit={handleLogin} className="space-y-4">
+          <AuthField id="email" label="Email" type="email" inputMode="email" placeholder="you@u-do-craft.store"
+            value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" autoFocus />
+          <AuthPasswordField id="password" label="Пароль" placeholder="••••••••"
+            value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password"
+            labelRight={
+              <button type="button" onClick={() => reset("forgot")}
+                className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground">
+                Забули пароль?
               </button>
-              <div className="space-y-2">
-                <Label htmlFor="reset-email">Email</Label>
-                <Input id="reset-email" type="email" placeholder="admin@u-do-craft.store"
-                  value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
-              </div>
-              {error && <p className="text-sm text-destructive">{error}</p>}
-              <Button type="submit" disabled={loading} className="w-full">
-                {loading ? <Loader2 className="size-4 animate-spin" /> : <Mail className="size-4" />}
-                {loading ? "Надсилаємо..." : "Надіслати код"}
-              </Button>
-            </form>
-          )}
+            } />
+          <AuthAlert>{error}</AuthAlert>
+          <AuthSubmit loading={loading} loadingLabel="Входимо…">Увійти</AuthSubmit>
+        </form>
+      )}
 
-          {/* ── OTP entry ── */}
-          {view === "otp" && (
-            <form onSubmit={handleVerifyOtp} className="space-y-4">
-              <button onClick={() => reset("forgot")} type="button"
-                className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                <ArrowLeft className="size-3.5" /> Назад
-              </button>
-              <div className="space-y-2">
-                <Label htmlFor="otp">6-значний код</Label>
-                <Input id="otp" type="text" inputMode="numeric" pattern="[0-9]{6}" maxLength={6}
-                  placeholder="000000" value={otp} onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
-                  required autoComplete="one-time-code" className="text-center text-2xl tracking-[0.3em] font-mono" />
-              </div>
-              {error && <p className="text-sm text-destructive">{error}</p>}
-              <Button type="submit" className="w-full">
-                <KeyRound className="size-4" /> Підтвердити
-              </Button>
-              <button type="button" onClick={handleSendOtp}
-                className="w-full text-xs text-muted-foreground hover:text-foreground transition-colors text-center">
-                Надіслати код повторно
-              </button>
-            </form>
-          )}
+      {/* ── Forgot — enter email ── */}
+      {view === "forgot" && (
+        <form onSubmit={handleSendOtp} className="space-y-4">
+          <AuthBackLink onClick={() => reset("login")}>Назад до входу</AuthBackLink>
+          <AuthField id="reset-email" label="Email" type="email" inputMode="email" placeholder="you@u-do-craft.store"
+            value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" autoFocus />
+          <AuthAlert>{error}</AuthAlert>
+          <AuthSubmit loading={loading} loadingLabel="Надсилаємо…">Надіслати код</AuthSubmit>
+        </form>
+      )}
 
-          {/* ── New password ── */}
-          {view === "new-password" && (
-            <form onSubmit={handleSetPassword} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="new-pass">Новий пароль</Label>
-                <div className="relative">
-                  <Input id="new-pass" type={showPassword ? "text" : "password"} placeholder="••••••••"
-                    value={newPassword} onChange={(e) => setNewPassword(e.target.value)}
-                    required autoComplete="new-password" className="pr-10" />
-                  <button type="button" onClick={(e) => { e.preventDefault(); setShowPassword(!showPassword); }}
-                    aria-label={showPassword ? "Приховати пароль" : "Показати пароль"} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                    {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                  </button>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="confirm-pass">Підтвердьте пароль</Label>
-                <Input id="confirm-pass" type={showPassword ? "text" : "password"} placeholder="••••••••"
-                  value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
-                  required autoComplete="new-password" />
-              </div>
-              {error && <p className="text-sm text-destructive">{error}</p>}
-              <Button type="submit" disabled={loading} className="w-full">
-                {loading ? <Loader2 className="size-4 animate-spin" /> : <KeyRound className="size-4" />}
-                {loading ? "Зберігаємо..." : "Зберегти пароль"}
-              </Button>
-            </form>
-          )}
+      {/* ── OTP entry ── */}
+      {view === "otp" && (
+        <form onSubmit={handleVerifyOtp} className="space-y-4">
+          <AuthBackLink onClick={() => reset("forgot")}>Назад</AuthBackLink>
+          <AuthField id="otp" label="6-значний код" type="text" inputMode="numeric" pattern="[0-9]{6}" maxLength={6}
+            placeholder="000000" value={otp} onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+            required autoComplete="one-time-code" autoFocus className="text-center font-mono text-2xl tracking-[0.4em] md:text-2xl" />
+          <AuthAlert>{error}</AuthAlert>
+          <AuthSubmit disabled={otp.length !== 6}>Підтвердити</AuthSubmit>
+          <p className="text-center text-sm text-muted-foreground">
+            Не отримали код?{" "}
+            <button type="button" onClick={handleSendOtp} className="font-medium text-primary hover:underline">
+              Надіслати ще раз
+            </button>
+          </p>
+        </form>
+      )}
 
-          {/* ── Done ── */}
-          {view === "done" && (
-            <div className="space-y-4 text-center">
-              <div className="flex justify-center">
-                <div className="rounded-full bg-emerald-100 p-4">
-                  <CheckCircle2 className="size-8 text-emerald-600" />
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Пароль успішно змінено для <span className="font-medium text-foreground">{email}</span>.
-              </p>
-              <Button className="w-full" onClick={() => reset("login")}>
-                Увійти
-              </Button>
-            </div>
-          )}
+      {/* ── New password ── */}
+      {view === "new-password" && (
+        <form onSubmit={handleSetPassword} className="space-y-4">
+          <AuthPasswordField id="new-pass" label="Новий пароль" placeholder="Мінімум 8 символів"
+            value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required autoComplete="new-password" autoFocus />
+          <AuthPasswordField id="confirm-pass" label="Підтвердьте пароль" placeholder="••••••••"
+            value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required autoComplete="new-password" />
+          <AuthAlert>{error}</AuthAlert>
+          <AuthSubmit loading={loading} loadingLabel="Зберігаємо…">Зберегти пароль</AuthSubmit>
+        </form>
+      )}
 
-        </CardContent>
-      </Card>
+      {/* ── Done ── */}
+      {view === "done" && (
+        <div className="space-y-6">
+          <div className="inline-flex size-12 items-center justify-center rounded-full bg-emerald-500/10">
+            <CheckCircle2 className="size-6 text-emerald-600" />
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Пароль успішно змінено для <span className="font-medium text-foreground">{email}</span>.
+          </p>
+          <AuthSubmit type="button" onClick={() => reset("login")}>Увійти</AuthSubmit>
+        </div>
+      )}
     </AuthShell>
   );
 }

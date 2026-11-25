@@ -15,7 +15,8 @@ export async function GET() {
   const [{ data, error }, { data: leads }, { data: messages }] = await Promise.all([
     service.auth.admin.listUsers({ perPage: 200 }),
     service.from("leads").select("id, customer_data, total_amount_cents, created_at"),
-    service.from("messages").select("lead_id, sender, created_at"),
+    // Only manager replies count towards activity, so only those rows are loaded.
+    service.from("messages").select("lead_id, created_at").eq("sender", "manager"),
   ]);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
@@ -38,7 +39,6 @@ export async function GET() {
   }
 
   for (const message of messages || []) {
-    if (message.sender !== "manager") continue;
     const lead = leadsById.get(message.lead_id);
     const email = String(lead?.customer_data?.email || "").toLowerCase();
     if (!email) continue;

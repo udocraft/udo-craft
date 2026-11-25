@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import React from "react";
 import { ArrowLeft, Layers, LayoutList, Loader2, Palette, Pencil, PackageOpen, Type, Upload } from "lucide-react";
 import { type SidebarTabId } from "@udo-craft/shared";
@@ -7,12 +9,13 @@ import { CustomizerMobileSheet } from "./CustomizerMobileSheet";
 
 // ── Mobile tab config ─────────────────────────────────────────────────────
 
-const MOBILE_TABS: { id: SidebarTabId; label: string; Icon: React.ElementType }[] = [
-  { id: "prints",  label: "Принти",  Icon: Layers      },
-  { id: "draw",    label: "Малюнок", Icon: Pencil      },
-  { id: "text",    label: "Текст",   Icon: Type        },
-  { id: "upload",  label: "Файл",    Icon: Upload      },
-  { id: "layers",  label: "Шари",    Icon: LayoutList  },
+// Labels come from the "editor.tabs" translations.
+const MOBILE_TABS: { id: SidebarTabId; Icon: React.ElementType }[] = [
+  { id: "prints",  Icon: Layers      },
+  { id: "draw",    Icon: Pencil      },
+  { id: "text",    Icon: Type        },
+  { id: "upload",  Icon: Upload      },
+  { id: "layers",  Icon: LayoutList  },
 ];
 
 // ── Props ─────────────────────────────────────────────────────────────────
@@ -32,6 +35,8 @@ interface CustomizerLayoutProps {
   onPriceOpen?: () => void;
   /** @deprecated use sidebar + panel instead */
   leftPanel?: React.ReactNode;
+  /** Top bar above the canvas (mode switch, help) */
+  topBar?: React.ReactNode;
   canvas: React.ReactNode;
   rightPanel: React.ReactNode;
   stickyButton?: React.ReactNode;
@@ -48,10 +53,11 @@ interface CustomizerLayoutProps {
 export function CustomizerLayout({
   productName, total, mobileSheet, setMobileSheet, addingToCart, removingBg, onCancelRemoveBg,
   sidebar, panel, activeTab, onTabChange, onPriceOpen,
-  leftPanel, canvas, rightPanel, stickyButton,
+  leftPanel, topBar, canvas, rightPanel, stickyButton,
   mobileTabSheet, mobilePriceSheet,
   onClose, layerCount = 0,
 }: CustomizerLayoutProps) {
+  const t = useTranslations("editor");
   const isNewLayout = sidebar !== undefined || panel !== undefined;
 
   return (
@@ -73,22 +79,23 @@ export function CustomizerLayout({
           <div className="flex-1 min-h-0 overflow-y-auto flex flex-col items-center justify-start lg:justify-center p-3 lg:p-6 bg-muted/40">
             <div className="lg:hidden w-full h-11 mb-3 flex items-center justify-between bg-card rounded-xl px-3 border border-border">
               <button
-                onClick={() => { if (!confirm("Повернутися? Незбережені зміни буде втрачено.")) return; onClose(); }}
+                onClick={() => { if (!confirm(t("common.leaveConfirm"))) return; onClose(); }}
                 className="cursor-pointer flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
               >
-                <ArrowLeft className="size-3.5" /> Назад
+                <ArrowLeft className="size-3.5" /> {t("common.back")}
               </button>
               <p className="text-xs font-semibold truncate max-w-[140px]">{productName}</p>
               <p className="text-xs font-bold text-primary shrink-0">{total.toFixed(0)} ₴</p>
             </div>
+            {topBar && <div className="w-full mb-3 shrink-0">{topBar}</div>}
             {canvas}
           </div>
 
           {/* Right panel — desktop */}
-          <div className="hidden lg:flex lg:flex-col h-full overflow-hidden border-l border-border bg-card">
+          <div data-tour="price" className="hidden lg:flex lg:flex-col h-full overflow-hidden border-l border-border bg-card">
             <div className="flex-1 overflow-y-auto overflow-x-hidden p-4">
               <div className="space-y-5">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Тираж та ціна</p>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t("common.qtyPrice")}</p>
                 {rightPanel}
               </div>
             </div>
@@ -108,10 +115,10 @@ export function CustomizerLayout({
           <div className="flex-1 min-h-0 overflow-y-auto flex flex-col items-center justify-start lg:justify-center p-3 lg:p-6 bg-muted/40">
             <div className="lg:hidden w-full h-11 mb-3 flex items-center justify-between bg-card rounded-xl px-3 border border-border">
               <button
-                onClick={() => { if (!confirm("Повернутися? Незбережені зміни буде втрачено.")) return; onClose(); }}
+                onClick={() => { if (!confirm(t("common.leaveConfirm"))) return; onClose(); }}
                 className="cursor-pointer flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
               >
-                <ArrowLeft className="size-3.5" /> Назад
+                <ArrowLeft className="size-3.5" /> {t("common.back")}
               </button>
               <p className="text-xs font-semibold truncate max-w-[140px]">{productName}</p>
               <p className="text-xs font-bold text-primary shrink-0">{total.toFixed(0)} ₴</p>
@@ -121,7 +128,7 @@ export function CustomizerLayout({
           <div className="hidden lg:flex lg:flex-col h-full overflow-hidden border-l border-border bg-card">
             <div className="flex-1 overflow-y-auto overflow-x-hidden p-4">
               <div className="space-y-5">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Тираж та ціна</p>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t("common.qtyPrice")}</p>
                 {rightPanel}
               </div>
             </div>
@@ -137,13 +144,14 @@ export function CustomizerLayout({
       {/* ── Mobile bottom nav ── */}
       {isNewLayout ? (
         /* New layout: 5 tool tabs + Тираж */
-        <div className="lg:hidden relative z-[9999] shrink-0 border-t border-border bg-card overflow-hidden">
+        <div data-tour="tools" className="lg:hidden relative z-[9999] shrink-0 border-t border-border bg-card overflow-hidden">
           <div className="flex">
             {MOBILE_TABS.map((tab) => (
               <button
                 key={tab.id}
+                data-tour={tab.id === "layers" ? "layers" : undefined}
                 onClick={() => onTabChange?.(activeTab === tab.id ? null : tab.id)}
-                aria-label={tab.label}
+                aria-label={t(`tabs.${tab.id}`)}
                 aria-pressed={activeTab === tab.id}
                 className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 text-xs font-semibold transition-colors min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset ${activeTab === tab.id ? "text-primary border-t-2 border-primary -mt-px" : "text-muted-foreground"}`}
               >
@@ -155,16 +163,17 @@ export function CustomizerLayout({
                     </span>
                   )}
                 </span>
-                {tab.label}
+                {t(`tabs.${tab.id}`)}
               </button>
             ))}
             <button
               onClick={onPriceOpen}
-              aria-label="Тираж та ціна"
+              data-tour="price"
+              aria-label={t("common.qtyPrice")}
               className="flex-1 flex flex-col items-center gap-0.5 py-2.5 text-xs font-semibold transition-colors min-h-[44px] text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
             >
               <PackageOpen className="size-4" />
-              Тираж
+              {t("common.qty")}
             </button>
           </div>
         </div>
@@ -177,14 +186,14 @@ export function CustomizerLayout({
               className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset ${mobileSheet === "config" ? "text-primary border-t-2 border-primary -mt-px" : "text-muted-foreground"}`}
             >
               <Palette className="size-4" />
-              Налаштування
+              {t("common.settings")}
             </button>
             <button
               onClick={() => setMobileSheet(mobileSheet === "price" ? null : "price")}
               className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset ${mobileSheet === "price" ? "text-primary border-t-2 border-primary -mt-px" : "text-muted-foreground"}`}
             >
               <PackageOpen className="size-4" />
-              Тираж та ціна
+              {t("common.qtyPrice")}
             </button>
           </div>
         </div>
@@ -209,7 +218,7 @@ export function CustomizerLayout({
         <div className="fixed inset-0 z-[10001] bg-background/60 backdrop-blur-sm flex items-center justify-center">
           <div className="flex items-center gap-2.5 rounded-2xl border border-border bg-card px-5 py-3.5 shadow-xl text-sm font-semibold">
             <Loader2 className="size-4 animate-spin text-primary" />
-            Додаємо...
+            {t("common.adding")}
           </div>
         </div>
       )}
@@ -218,9 +227,9 @@ export function CustomizerLayout({
           <div className="flex flex-col items-center gap-3 rounded-3xl border border-border bg-card px-6 py-6 shadow-2xl max-w-sm text-center animate-in fade-in zoom-in-95 duration-200">
             <Loader2 className="size-8 animate-spin text-primary" />
             <div className="space-y-1">
-              <p className="text-base font-bold">Видалення фону з допомогою AI</p>
+              <p className="text-base font-bold">{t("layout.removeBgTitle")}</p>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Будь ласка, зачекайте. Обробка зображення високої якості може зайняти <span className="font-semibold text-foreground">15–20 секунд</span>.
+                {t("layout.removeBgText")}
               </p>
             </div>
             {onCancelRemoveBg && (
@@ -229,7 +238,7 @@ export function CustomizerLayout({
                 onClick={onCancelRemoveBg}
                 className="mt-2 h-9 px-4 rounded-xl border border-border text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
               >
-                Скасувати
+                {t("common.cancel")}
               </button>
             )}
           </div>

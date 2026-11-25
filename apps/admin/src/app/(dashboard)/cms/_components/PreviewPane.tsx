@@ -58,7 +58,7 @@ export function PreviewPane({ previewKey, url }: { previewKey: number; url: stri
             </span>
             LIVE
           </span>
-          <Button
+          <Button aria-label="Відкрити в новій вкладці"
             variant="ghost"
             size="icon"
             className="h-8 w-8 rounded-full"

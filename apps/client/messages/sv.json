@@ -1,12 +1,14 @@
 {
   "meta": {
-    "title": "U:DO CRAFT — Corporate merch",
-    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA.",
+    "title": "U:DO CRAFT — kläder med din design",
+    "description": "Skapa en t-shirt, hoodie eller långärmad tröja med eget tryck online. Tillverkas på 7–14 dagar, levereras i hela Ukraina.",
     "productTitle": "{name} | Anpassning och sömnad | U:DO CRAFT",
     "productDescription": "Beställ företagskläder {name} med eget tryck eller brodyr från {min} st.",
     "productNotFound": "Produkten hittades inte | U:DO CRAFT",
     "popupTitle": "Merch-popup för ditt event | U:DO CRAFT",
-    "popupDescription": "En mobil merch-popup: gäster anpassar kläder och tar med dem direkt. För företagsevent, konferenser och festivaler."
+    "popupDescription": "En mobil merch-popup: gäster anpassar kläder och tar med dem direkt. För företagsevent, konferenser och festivaler.",
+    "bizTitle": "U:DO CRAFT för företag — företagsmerch",
+    "bizDescription": "B2B merch platform. We create clothing that becomes part of your corporate DNA."
   },
   "nav": {
     "catalog": "Katalog",
@@ -16,6 +18,11 @@
     "contacts": "Kontakt",
     "startProject": "Starta projekt",
     "openMenu": "Öppna meny",
+    "menu": "Meny",
+    "language": "Språk",
+    "directionsPrompt": "Öppna vägbeskrivning i Kartor?",
+    "directionsOpen": "Öppna Kartor",
+    "directionsCancel": "Avbryt",
     "closeMenu": "Stäng meny",
     "goToAccount": "Till kontot",
     "signIn": "Logga in",
@@ -24,7 +31,9 @@
     "logoLink": "U:DO CRAFT — tillbaka till startsidan",
     "skipToContent": "Hoppa till huvudinnehållet",
     "designMerch": "Designa din merch",
-    "getQuote": "Begär offert"
+    "getQuote": "Begär offert",
+    "business": "För företag",
+    "createDesign": "Skapa design"
   },
   "homeStats": {
     "stat3Suffix": " dagar",
@@ -45,7 +54,8 @@
   "homeContact": {
     "heading": "Kontakta oss",
     "subtext": "Berätta om ditt projekt — vi skickar ett förslag inom 24 timmar.",
-    "address": "Lviv, Dzherelna 69"
+    "address": "Lviv, Dzherelna 69",
+    "visitNote": "besök i showroomet efter bokning · mån⁠–⁠tor 10:00⁠–⁠18:00, fre 10:00⁠–⁠16:00"
   },
   "hero": {
     "heading": "Kläder som blir en del av ditt företags DNA",
@@ -53,6 +63,7 @@
     "ctaPrimary": "Bläddra i katalogen",
     "skipToCatalog": "Till katalog",
     "watchVideo": "Se video",
+    "showProcess": "Se processen",
     "closeVideo": "Stäng video",
     "mainSection": "Hero section",
     "fullscreenVideo": "Video in fullscreen mode",
@@ -122,12 +133,12 @@
     "prevPage": "Föregående",
     "nextPage": "Nästa",
     "page": "Sida {n}",
-    "fromPrice": "from ₴{price}",
+    "fromPrice": "från {price} ₴",
     "priceOnRequest": "Pris på förfrågan",
-    "expand": "Expand",
-    "collapse": "Collapse",
-    "addPrint": "Add print",
-    "withoutPrint": "Without print"
+    "expand": "Visa mer",
+    "collapse": "Visa mindre",
+    "addPrint": "Lägg till tryck",
+    "withoutPrint": "Utan tryck"
   },
   "process": {
     "heading": "Från idé till merch — i 4 steg",
@@ -269,21 +280,21 @@
     "discount": "Rabatt",
     "mm": "mm",
     "embroidery": "Broderi",
-    "label": "Online constructor",
-    "heading": "Build your merch right in the interface",
-    "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
-    "openEditor": "Open constructor",
-    "productLabel": "Product",
-    "colorLabel": "Color",
-    "printsLabel": "Prints",
+    "label": "Onlineeditor",
+    "heading": "Prova direkt här",
+    "desc": "Välj en färg och ladda upp din bild för att se hur ditt plagg blir.",
+    "openEditor": "Öppna editorn",
+    "productLabel": "Produkt",
+    "colorLabel": "Färg",
+    "printsLabel": "Tryck",
     "textLabel": "Text",
-    "fileLabel": "File",
-    "volumeLabel": "Volume & price",
-    "totalLabel": "Total",
-    "saved": "Draft saved",
-    "layersReady": "Layers ready",
-    "priceUpdated": "Price updated",
-    "sizeLabel": "Size"
+    "fileLabel": "Fil",
+    "volumeLabel": "Antal och pris",
+    "totalLabel": "Totalt",
+    "saved": "Utkast sparat",
+    "layersReady": "Lager klara",
+    "priceUpdated": "Priset uppdaterat",
+    "sizeLabel": "Storlek"
   },
   "trust": {
     "statsLabel": "Nyckeltal",
@@ -419,10 +430,10 @@
     "address": "Address"
   },
   "footer": {
-    "tagline": "B2B-plattform för merch till team, varumärken och evenemang.",
+    "tagline": "Kläder med din design — från ett enda plagg till stora beställningar.",
     "copyright": "U:DO CRAFT. Alla rättigheter förbehållna.",
     "readyToStart": "Redo att börja?",
-    "readyDesc": "Från 10 exemplar · 7–14 dagar · Leverans",
+    "readyDesc": "Från ett plagg · 7–14 dagar · Leverans i hela Ukraina",
     "startProject": "Starta projekt",
     "ariaLabel": "Sidfot",
     "homeLink": "U:DO CRAFT — tillbaka till startsidan",
@@ -454,11 +465,28 @@
           "cabinet": "Konto",
           "delivery": "Frakt & betalning"
         }
+      },
+      "business": {
+        "title": "För företag",
+        "links": {
+          "overview": "Företagsmerch"
+        }
       }
     },
     "privacy": "Integritet",
     "terms": "Villkor",
-    "cookies": "Cookies"
+    "cookies": "Cookies",
+    "newsletter": {
+      "title": "{pct}% rabatt på din första beställning",
+      "desc": "Prenumerera: nya plagg, tryckidéer och begränsade släpp en gång i månaden. Ingen spam.",
+      "placeholder": "Din e-post",
+      "label": "E-post för nyhetsbrevet",
+      "submit": "Prenumerera",
+      "success": "Klart. Din kod på {pct}% är på väg.",
+      "error": "Det gick inte att prenumerera. Försök igen.",
+      "invalid": "Kontrollera din e-post.",
+      "consent": "Genom att prenumerera godkänner du integritetspolicyn."
+    }
   },
   "cart": {
     "title": "Kundvagn",
@@ -661,7 +689,8 @@
       "attachLabel": "Bifoga fil",
       "loading": "Laddar meddelanden...",
       "empty": "Inga meddelanden ännu",
-      "fileTooLarge": "\"{name}\" överstiger 10 MB"
+      "fileTooLarge": "\"{name}\" överstiger 10 MB",
+      "sendError": "Det gick inte att skicka meddelandet. Försök igen."
     },
     "files": {
       "empty": "Inga filer ännu",
@@ -686,6 +715,66 @@
     "order": {
       "back": "Alla beställningar",
       "notFound": "Beställningen hittades inte"
+    },
+    "errorPage": {
+      "title": "Fel i kundkontot",
+      "text": "Det gick inte att läsa in kontot. Försök igen eller gå till startsidan.",
+      "retry": "Försök igen",
+      "home": "Till startsidan"
+    },
+    "file": "Fil",
+    "productFallback": "Produkt ({color})",
+    "profile": {
+      "saved": "Profilen har uppdaterats",
+      "saveFailed": "Det gick inte att spara profilen. Kontrollera anslutningen och försök igen.",
+      "title": "Profil",
+      "subtitle": "Dina kontaktuppgifter för beställningar",
+      "name": "För- och efternamn",
+      "namePlaceholder": "Anna Andersson",
+      "company": "Företagsnamn",
+      "companyPlaceholder": "Företag AB",
+      "phone": "Telefon",
+      "edrpou": "Org.nr / företagsuppgifter",
+      "socialPlaceholder": "@användarnamn eller länk",
+      "saving": "Sparar...",
+      "save": "Spara profil"
+    },
+    "security": {
+      "min": "Det nya lösenordet måste ha minst 8 tecken.",
+      "mismatch": "Lösenorden matchar inte.",
+      "same": "Det nya lösenordet måste skilja sig från det nuvarande.",
+      "wrongCurrent": "Det nuvarande lösenordet är fel.",
+      "changed": "Lösenordet har ändrats",
+      "changeFailed": "Det gick inte att ändra lösenordet. Kontrollera anslutningen och försök igen.",
+      "title": "Säkerhet",
+      "subtitle": "Ändra lösenordet till ditt konto",
+      "current": "Nuvarande lösenord",
+      "currentPlaceholder": "Ange ditt nuvarande lösenord",
+      "new": "Nytt lösenord",
+      "newPlaceholder": "Minst 8 tecken",
+      "confirm": "Bekräfta nytt lösenord",
+      "confirmPlaceholder": "Upprepa det nya lösenordet",
+      "changing": "Ändrar...",
+      "change": "Ändra lösenord"
+    },
+    "prints": {
+      "title": "Mina tryck",
+      "subtitle": "Filer du har laddat upp för tryck. Bara du kan se dem.",
+      "dropHint": "Släpp filerna här",
+      "formats": "JPG, PNG, WebP, GIF eller PDF, upp till 10 MB",
+      "pickFiles": "Välj filer",
+      "uploading": "Laddar upp…",
+      "empty": "Inga filer än. Ladda upp ditt första tryck.",
+      "delete": "Ta bort fil",
+      "confirmDelete": "Ta bort den här filen? Det går inte att ångra.",
+      "loadError": "Det gick inte att läsa in filerna",
+      "uploadError": "Det gick inte att ladda upp filen",
+      "deleteError": "Det gick inte att ta bort filen",
+      "status": {
+        "uploaded": "Granskas",
+        "approved": "Godkänd",
+        "rejected": "Avvisad"
+      }
     }
   },
   "popup": {
@@ -912,8 +1001,8 @@
     "cookieSettings": "Cookieinställningar"
   },
   "homeDemo": {
-    "upload": "Ladda upp din logotyp",
-    "remove": "Ta bort logotyp",
+    "upload": "Ladda upp bild",
+    "remove": "Ta bort bild",
     "hint": "PNG, JPG, SVG eller WebP, upp till 5 MB",
     "note": "Bara en förhandsvisning. Storlek och tryckzoner ställer du in i den fullständiga editorn.",
     "tooLarge": "Filen är större än 5 MB. Välj en mindre bild."
@@ -966,5 +1055,486 @@
     "addComment": "Lägg till en kommentar",
     "sendComment": "Skicka",
     "commentsOff": "Kommentarer är avstängda för den här länken."
+  },
+  "home": {
+    "hero": {
+      "heading": "Kläder, designade av dig.",
+      "subheading": "Välj ett plagg, lägg till ditt tryck eller din text i editorn — vi tillverkar och levererar. Även ett enda plagg."
+    },
+    "steps": {
+      "heading": "Tre steg till ditt plagg",
+      "items": {
+        "0": {
+          "title": "Välj ett plagg",
+          "desc": "T-shirt, hoodie eller långärmad — välj modell, färg och storlek."
+        },
+        "1": {
+          "title": "Lägg till din design",
+          "desc": "Ladda upp en bild eller skriv din text i editorn och se resultatet direkt."
+        },
+        "2": {
+          "title": "Få din beställning",
+          "desc": "Vi tillverkar på 7–14 arbetsdagar och levererar i hela Ukraina."
+        }
+      }
+    },
+    "faq": {
+      "single": {
+        "question": "Kan jag beställa bara ett plagg?",
+        "answer": "Ja. Beställ så många du behöver — även ett enda plagg med din egen design."
+      },
+      "design": {
+        "question": "Hur lägger jag till min design?",
+        "answer": "I editorn: ladda upp en bild eller lägg till text och välj var den ska sitta. Priset syns direkt."
+      }
+    },
+    "biz": {
+      "heading": "Merch till ditt team eller event?",
+      "text": "Företagskläder, popup-montrar och branding — på en egen sida för företag."
+    }
+  },
+  "auth": {
+    "errors": {
+      "googleFailed": "Det gick inte att logga in med Google. Försök igen.",
+      "passkeyNeedsNameEmail": "Ange namn och e-post för att skapa ett konto med passkey.",
+      "invalidCredentials": "Fel e-post eller lösenord.",
+      "passwordMin": "Lösenordet måste ha minst 8 tecken.",
+      "emailExistsRegister": "E-postadressen är redan registrerad. Logga in eller återställ lösenordet.",
+      "codeSendFailed": "Det gick inte att skicka koden. Försök igen.",
+      "codeInvalid": "Fel kod. Kontrollera din e-post och försök igen.",
+      "codeExpired": "Koden har gått ut. Begär en ny.",
+      "tooManyAttempts": "För många försök. Begär en ny kod om några minuter.",
+      "emailExistsLogin": "E-postadressen är redan registrerad. Försök logga in.",
+      "registerFailed": "Registreringen misslyckades. Försök igen.",
+      "resetSendFailed": "Det gick inte att skicka koden. Kontrollera e-postadressen.",
+      "passwordsMismatch": "Lösenorden matchar inte.",
+      "resetFailed": "Fel eller utgången kod. Begär en ny.",
+      "generic": "Något gick fel. Försök igen.",
+      "emailFormat": "Kontrollera e-postformatet"
+    },
+    "notices": {
+      "passkeyCheckEmail": "Vi har skickat ett mejl till {email}. Bekräfta det och logga sedan in med din passkey.",
+      "accountCreated": "Kontot har skapats. Logga in med e-post och lösenord.",
+      "passwordChanged": "Lösenordet har ändrats. Logga in med det nya lösenordet."
+    },
+    "social": {
+      "google": "Fortsätt med Google",
+      "telegram": "Fortsätt med Telegram",
+      "passkey": "Fortsätt med passkey",
+      "or": "eller"
+    },
+    "login": {
+      "title": "Välkommen tillbaka",
+      "subtitle": "Logga in för att fortsätta din beställning.",
+      "forgot": "Glömt lösenordet?",
+      "signingIn": "Loggar in...",
+      "submit": "Logga in"
+    },
+    "register": {
+      "title": "Skapa konto",
+      "subtitle": "Det tar mindre än en minut.",
+      "sendingCode": "Skickar kod...",
+      "continue": "Fortsätt"
+    },
+    "fields": {
+      "name": "Ditt namn",
+      "namePlaceholder": "Anna Andersson",
+      "company": "Företag",
+      "companyPlaceholder": "Företagsnamn",
+      "phone": "Telefon",
+      "password": "Lösenord",
+      "passwordMin": "Minst 8 tecken",
+      "confirmPassword": "Bekräfta lösenord",
+      "repeatPassword": "Upprepa lösenordet",
+      "hide": "Dölj",
+      "show": "Visa"
+    },
+    "verify": {
+      "back": "Tillbaka",
+      "title": "Kolla din e-post",
+      "sentTo": "Vi har skickat en 6-siffrig kod till",
+      "checking": "Kontrollerar...",
+      "confirm": "Bekräfta",
+      "digit": "Siffra {n}"
+    },
+    "reset": {
+      "backToLogin": "Tillbaka till inloggning",
+      "title": "Återställ lösenord",
+      "subtitle": "Ange din e-post så skickar vi en 6-siffrig kod.",
+      "sending": "Skickar...",
+      "sendCode": "Skicka kod",
+      "changeEmail": "Ändra e-post",
+      "enterCode": "Ange koden",
+      "newTitle": "Nytt lösenord",
+      "newSubtitle": "Välj ett nytt, säkert lösenord.",
+      "saving": "Sparar...",
+      "save": "Spara lösenord"
+    },
+    "modes": {
+      "login": "Logga in",
+      "register": "Registrera"
+    },
+    "resend": {
+      "noCode": "Fick du ingen kod?",
+      "in": "Skicka igen om {s} s",
+      "now": "Skicka igen"
+    },
+    "strength": {
+      "length": "8+ tecken",
+      "upper": "Stor bokstav",
+      "digit": "Siffra"
+    },
+    "backToSite": "Till webbplatsen",
+    "showcaseItem": "Omdöme {n}",
+    "close": "Stäng"
+  },
+  "editor": {
+    "common": {
+      "addToOrder": "Lägg till i beställningen",
+      "adding": "Lägger till...",
+      "all": "Alla",
+      "back": "Tillbaka",
+      "cancel": "Avbryt",
+      "change": "Ändra",
+      "close": "Stäng",
+      "collapse": "Visa mindre",
+      "color": "Färg",
+      "delete": "Ta bort",
+      "expand": "Visa mer",
+      "fromPrice": "från {price} ₴",
+      "fromPricePer": "från {price} ₴ / st",
+      "generate": "Generera",
+      "generating": "Genererar…",
+      "home": "Till startsidan",
+      "leaveConfirm": "Gå tillbaka? Osparade ändringar går förlorade.",
+      "noColors": "Inga färger inställda",
+      "perUnit": "/st",
+      "print": "Tryck",
+      "productSettings": "Produktinställningar",
+      "qty": "Antal",
+      "qtyPrice": "Antal och pris",
+      "removingBg": "Tar bort bakgrund...",
+      "resetSearch": "Rensa sökning",
+      "retry": "Försök igen",
+      "retryShort": "Försök igen",
+      "settings": "Inställningar",
+      "size": "Storlek"
+    },
+    "tabs": {
+      "prints": "Tryck",
+      "draw": "Teckning",
+      "text": "Text",
+      "upload": "Fil",
+      "layers": "Lager",
+      "uploadTitle": "Ladda upp",
+      "toolsLabel": "Redigeringsverktyg"
+    },
+    "errorPage": {
+      "title": "Det gick inte att läsa in katalogen",
+      "text": "Beställningssidan kunde inte läsas in. Försök igen eller gå till startsidan."
+    },
+    "main": {
+      "restoreFailed": "Det gick inte att återställa den sparade varukorgen. Dina uppgifter finns kvar.",
+      "linkFailed": "Det gick inte att öppna länken",
+      "linkProductGone": "Produkten i länken finns inte längre",
+      "catalogFailed": "Det gick inte att läsa in katalogen",
+      "catalogFailedReload": "Det gick inte att läsa in katalogen. Ladda om sidan."
+    },
+    "grid": {
+      "title": "Välj ett plagg",
+      "subtitle": "Tryck på ett plagg för att anpassa det och lägga till det i beställningen",
+      "empty": "Inga produkter i den här kategorin än"
+    },
+    "genButton": {
+      "label": "Se det på en person",
+      "needsDesign": "Lägg först till en design"
+    },
+    "textPanel": {
+      "search": "Sök layouter…",
+      "add": "Lägg till textblock"
+    },
+    "shapes": {
+      "title": "Former",
+      "search": "Sök former…",
+      "empty": "Inga former hittades.",
+      "resetFilters": "Rensa filter"
+    },
+    "ai": {
+      "noImage": "Svaret innehöll ingen bild.",
+      "timeout": "Det tog för lång tid. Försök igen.",
+      "failed": "Det gick inte att generera bilden. Försök igen."
+    },
+    "state": {
+      "restored": "Din tidigare redigering har återställts",
+      "chooseGarmentSize": "Välj en storlek.",
+      "choosePrintSizes": "Välj en storlek för varje tryck."
+    },
+    "qty": {
+      "fromQty": "från {n}",
+      "methods": {
+        "embroidery": "Brodyr",
+        "screen": "Screentryck",
+        "sublimation": "Sublimering",
+        "patch": "Tygmärke"
+      },
+      "product": "Plagg",
+      "chooseSize": "Välj storlek",
+      "savings": "Du sparar",
+      "total": "Totalt",
+      "totalLine": "{qty} st × {price} ₴",
+      "noteLabel": "Obs:",
+      "noteText": "Priserna är ungefärliga. Slutpriset kan ändras när en handläggare bekräftat beställningen.",
+      "itemNote": "Anteckning för artikeln",
+      "notePlaceholder": "Särskilda önskemål..."
+    },
+    "layout": {
+      "removeBgTitle": "Tar bort bakgrunden med AI",
+      "removeBgText": "Vänta lite. Bearbetning i hög kvalitet tar 15–20 sekunder."
+    },
+    "customizer": {
+      "commentFailed": "Det gick inte att lägga till kommentaren",
+      "previewTitle": "Förhandsvisning av design",
+      "previewSignIn": "Logga in för att redigera designen.",
+      "previewViewOnly": "Länken är endast för visning. Ägaren har stängt av redigering.",
+      "previewViewComment": "Länken tillåter visning och kommentarer. Ägaren har stängt av redigering.",
+      "signInToEdit": "Logga in för att redigera",
+      "comments": "Kommentarer",
+      "noLayers": "Inga lager än. Lägg till en bild eller text.",
+      "tryOn": "Prova på en person",
+      "withAi": "Med AI"
+    },
+    "gen": {
+      "presets": {
+        "0": "vänner på en takterrassfest",
+        "1": "någon på en höstpromenad i staden",
+        "2": "en barista på ett mysigt kafé",
+        "3": "en musiker på en utomhuskonsert",
+        "4": "en skejtare i en stadspark",
+        "5": "ett team på en företagsfest",
+        "6": "en student på campus",
+        "7": "ett par på en sommarfestival"
+      },
+      "progress": {
+        "0": "Läser din förfrågan...",
+        "1": "Väljer stil...",
+        "2": "Placerar din design...",
+        "3": "Sista detaljerna..."
+      },
+      "inProgress": "Genererar…",
+      "tapToView": "Tryck för att visa",
+      "yourPhoto": "Ditt foto",
+      "photoUploaded": "Foto uppladdat",
+      "removePhoto": "Ta bort foto",
+      "uploadPhoto": "Ladda upp ditt foto",
+      "cameraOrGallery": "Öppnar kameran eller galleriet",
+      "title": "Se det på en person",
+      "subtitle": "AI visar hur din design ser ut i verkligheten",
+      "alreadyRunning": "En generering pågår redan",
+      "result": "Resultat",
+      "usedFree": "Du har redan använt den kostnadsfria genereringen för det här plagget.",
+      "viewResult": "Visa resultat",
+      "tabSelfie": "Eget foto",
+      "tabScene": "Scen",
+      "sceneLabel": "Beskrivning av scenen",
+      "scenePlaceholder": "Beskriv en scen eller välj en idé…",
+      "emptySide": "Den här sidan är tom. Vi använder designen från sidan ”{side}”.",
+      "quotaUsed": "Du har använt alla {n} kostnadsfria genereringar",
+      "generatingShort": "Genererar…"
+    },
+    "toolbar": {
+      "opacity": "Opacitet",
+      "fontSearch": "Sök typsnitt...",
+      "nothingFound": "Inget hittades",
+      "bold": "Fet",
+      "italic": "Kursiv",
+      "textColor": "Textfärg",
+      "alignLeft": "Vänster",
+      "alignCenter": "Mitten",
+      "alignRight": "Höger",
+      "arc": "Båge",
+      "letterSpacing": "Teckenavstånd",
+      "lineHeight": "Radavstånd",
+      "fill": "Fyllning",
+      "stroke": "Kontur",
+      "fillColor": "Fyllnadsfärg",
+      "strokeColor": "Konturfärg",
+      "removeBg": "Ta bort bakgrund",
+      "editDrawing": "Redigera teckning",
+      "center": "Centrera",
+      "flip": "Spegelvänd",
+      "duplicate": "Duplicera",
+      "fontCategories": {
+        "grotesque": "Sans serif",
+        "condensed": "Smal",
+        "serif": "Serif",
+        "display": "Display",
+        "decorative": "Dekorativ",
+        "handwritten": "Handskrivet",
+        "technical": "Teknisk"
+      }
+    },
+    "prints": {
+      "prompts": {
+        "0": "En astronautkatt i retrostil, starka färger",
+        "1": "Minimalistiska berg och sol, linjekonst",
+        "2": "En bukett ängsblommor, akvarell",
+        "3": "Texten ”Good vibes” i 70-talsstil",
+        "4": "En pixeldrake i retrospelsstil",
+        "5": "En våg i japansk stil, blå palett",
+        "6": "En kaffekopp med ett hjärta, flat design",
+        "7": "En uggla med en bok, vektorillustration"
+      },
+      "aiTitle": "AI-illustration",
+      "aiDesc": "Skapa tryckfärdiga illustrationer från en textbeskrivning.",
+      "aiLabel": "Beskrivning för AI-illustrationen",
+      "loadFailed": "Det gick inte att läsa in trycken",
+      "ready": "Färdiga tryck",
+      "search": "Sök tryck…",
+      "empty": "Inga tryck hittades."
+    },
+    "upload": {
+      "badType": "Filtypen ”{type}” stöds inte. Använd PNG, JPG/JPEG, SVG eller PDF.",
+      "tooLarge": "Filen är för stor ({size} MB). Max: {max}.",
+      "addAgain": "Lägg till ”{name}” igen",
+      "addFailed": "Det gick inte att lägga till ”{name}”. Försök igen.",
+      "title": "Ladda upp en fil",
+      "dropLabel": "Ladda upp en fil: klicka eller dra hit den",
+      "uploading": "Laddar upp…",
+      "dropRelease": "Släpp för att ladda upp",
+      "dropHint": "Klicka eller dra en fil",
+      "formats": "PNG, JPG, SVG, PDF · upp till 20 MB",
+      "choose": "Välj en fil",
+      "recent": "Senaste uppladdningar",
+      "noRecent": "Inga uppladdningar än.",
+      "recentHint": "Uppladdade filer visas här så att du snabbt kan använda dem igen."
+    },
+    "canvas": {
+      "defaultText": "Text",
+      "undo": "Ångra",
+      "undoTitle": "Ångra (Ctrl+Z)",
+      "redo": "Gör om",
+      "redoTitle": "Gör om (Ctrl+Skift+Z)",
+      "copy": "Kopia",
+      "fontSmaller": "Mindre typsnitt",
+      "fontBigger": "Större typsnitt",
+      "boldShort": "F",
+      "italicShort": "K",
+      "removeBgFailed": "Det gick inte att ta bort bakgrunden. Försök igen.",
+      "bgShort": "Bakgrund",
+      "edit": "Redigera",
+      "layerOpacity": "Lageropacitet",
+      "deleteLayer": "Ta bort lager",
+      "loadingImage": "Läser in bild...",
+      "sides": {
+        "front": "Fram",
+        "back": "Bak",
+        "left": "Vänster",
+        "right": "Höger",
+        "neck_inner": "Innerlapp",
+        "sleeve_left": "Vänster ärm",
+        "sleeve_right": "Höger ärm"
+      }
+    },
+    "layers": {
+      "layer": "Lager",
+      "setupTitle": "Ställ in lagret",
+      "setupText": "Välj trycktyp och storlek. Priset uppdateras automatiskt.",
+      "printType": "Trycktyp",
+      "printSize": "Tryckstorlek",
+      "image": "Bild"
+    },
+    "paywall": {
+      "title": "AI kräver ett konto",
+      "text": "Registrera dig gratis och få 3 kostnadsfria AI-genereringar",
+      "register": "Registrera",
+      "login": "Logga in",
+      "skip": "Fortsätt utan konto"
+    },
+    "mode": {
+      "label": "Visningsläge",
+      "edit": "Design",
+      "preview": "Förhandsvisning"
+    },
+    "tour": {
+      "replay": "Visa tips",
+      "counter": "{n} av {total}",
+      "close": "Stäng",
+      "back": "Tillbaka",
+      "next": "Nästa",
+      "done": "Klar",
+      "tools": {
+        "title": "Designverktyg",
+        "body": "Ladda upp din egen fil, välj ett färdigt tryck, lägg till text eller rita något. Allt börjar här."
+      },
+      "canvas": {
+        "title": "Arbetsyta",
+        "body": "Dra, skala och rotera element direkt på plagget. Knapparna nedanför byter sida: fram, bak, ärmar."
+      },
+      "layers": {
+        "title": "Lager",
+        "body": "Alla element i designen i en lista. Ändra ordning, duplicera, ta bort. Det valda lagret har en egen verktygsrad ovanför ytan."
+      },
+      "mode": {
+        "title": "Design och förhandsvisning",
+        "body": "Byt till Förhandsvisning för att se plagget från flera vinklar utan redigeringsverktygen."
+      },
+      "price": {
+        "title": "Antal och pris",
+        "body": "Välj färg, storlek och antal. Priset inkluderar mängdrabatt och tryckkostnad för varje element."
+      },
+      "actions": {
+        "title": "Beställning och delning",
+        "body": "När designen är klar, lägg den i beställningen eller skicka en länk för kommentarer."
+      }
+    },
+    "preview": {
+      "close": "Stäng",
+      "prev": "Föregående",
+      "next": "Nästa",
+      "withPrint": "Med ditt tryck",
+      "noPrint": "Utan tryck",
+      "sides": {
+        "front": "Fram",
+        "back": "Bak",
+        "chest": "Bröst",
+        "neck_inner": "Innerlapp",
+        "sleeve_left": "Vänster ärm",
+        "sleeve_right": "Höger ärm"
+      },
+      "tiles": {
+        "zone": "Trycket på nära håll",
+        "zoneHint": "Tryckyta",
+        "collar": "Krage och passform",
+        "collarHint": "Detalj",
+        "flat": "Platt",
+        "flatHint": "Flat lay"
+      },
+      "emptyTitle": "Ditt plagg visas här",
+      "emptyBody": "Lägg till en bild, text eller ett tryck i designläget så visar vi plagget från flera vinklar.",
+      "backToDesign": "Tillbaka till design",
+      "readOnly": "Endast förhandsvisning."
+    }
+  },
+  "sizeChart": {
+    "title": "Storleksguide",
+    "empty": "Tabellen är tom",
+    "schemeAlt": "{name}: storleksschema",
+    "note": "Alla mått är i centimeter. Om du är mellan två storlekar, välj den större."
+  },
+  "editorial": {
+    "statement": {
+      "eyebrow": "U:DO CRAFT",
+      "part1": "Vi förenar hantverk och teknik så att kläder med din design",
+      "part2": "blir burna, inte bortglömda i garderoben —",
+      "part3": "plagg du är stolt över varje dag.",
+      "cta": "Skapa din design"
+    },
+    "pair": {
+      "title1": "Gjort för att bäras,",
+      "accent": "fulländat",
+      "title2": "in i detalj",
+      "desc": "Tjock bomull, exakt tryck och brodyr som klarar hundratals tvättar. Välj basen, vi fixar resten.",
+      "from": "från {price} ₴"
+    }
   }
 }

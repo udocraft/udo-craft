@@ -49,7 +49,7 @@ function UsersContent() {
         </AdminToolbar>
       }
     >
-      <AdminTablePanel>
+      <AdminTablePanel bleed>
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { apiError, requireErpUser } from "../_lib";
+import { syncLeadFromWorkflow } from "@/lib/leads/server";
 
 const ProductionLine = z.object({
   variant_sku_id: z.string().uuid().nullable().optional(),
@@ -61,7 +62,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const { service, error } = await requireErpUser("erp.manage");
+  const { service, user, error } = await requireErpUser("erp.manage");
   if (error) return error;
   try {
     const parsed = ProductionPayload.parse(await req.json());
@@ -99,6 +100,17 @@ export async function POST(req: NextRequest) {
       .eq("id", order.id)
       .single();
     if (reloadError) return apiError(reloadError);
+
+    // A production document for an order moves that order to "Виробництво"
+    // (when the shared transition rules allow it) and leaves a note in its chat.
+    if (parsed.lead_id) {
+      await syncLeadFromWorkflow(service!, parsed.lead_id, {
+        to: "production",
+        note: `Створено виробничий документ #${String(order.id).slice(0, 8).toUpperCase()}`,
+        actorEmail: user?.email,
+      });
+    }
+
     return NextResponse.json(data, { status: 201 });
   } catch (err) {
     return apiError(err, 400);

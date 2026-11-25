@@ -37,12 +37,18 @@ END $$;
 CREATE TABLE IF NOT EXISTS print_zones (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   product_id UUID REFERENCES products(id) ON DELETE CASCADE NOT NULL,
-  side print_zone_side NOT NULL,
+  side TEXT NOT NULL, -- front | back | neck_inner | sleeve_left | sleeve_right | ...
   x INTEGER NOT NULL,
   y INTEGER NOT NULL,
   width INTEGER NOT NULL,
   height INTEGER NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  label TEXT,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  width_mm NUMERIC,
+  height_mm NUMERIC,
+  print_area_id UUID, -- FK to print_areas added below (table is created later in this file)
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT print_zones_product_side_key UNIQUE (product_id, side)
 );
 
 -- ─────────────────────────────────────────────
@@ -61,6 +67,7 @@ CREATE TABLE IF NOT EXISTS leads (
   customer_data JSONB NOT NULL DEFAULT '{}',
   total_amount_cents INTEGER NOT NULL DEFAULT 0,
   notes TEXT,
+  tags TEXT[] NOT NULL DEFAULT '{}',
   visitor_id TEXT,
   session_id TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -339,6 +346,14 @@ DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE indexname = 'idx_print_areas_created_at') THEN
     CREATE INDEX idx_print_areas_created_at ON print_areas(created_at DESC);
+  END IF;
+END $$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'print_zones_print_area_id_fkey') THEN
+    ALTER TABLE print_zones ADD CONSTRAINT print_zones_print_area_id_fkey
+      FOREIGN KEY (print_area_id) REFERENCES print_areas(id) ON DELETE SET NULL;
   END IF;
 END $$;
 

@@ -72,3 +72,20 @@ supabase migration list
 
 > **Note:** The Supabase service role key bypasses all RLS policies by default.
 > Admin operations in `apps/admin` use the service role key and are therefore unrestricted.
+
+## Baseline and production (2026-11-25)
+
+`20231231000000_core_baseline.sql` creates the core tables that used to exist only
+in `schema.sql` (products, leads, order_items, messages, ...), so `supabase db reset`
+can build a database from the migrations alone. Production already has these
+tables, so record the baseline as applied instead of running it:
+
+```bash
+supabase migration repair --status applied 20231231000000
+supabase db push
+```
+
+The baseline has no policies and no seed data; running it by mistake is harmless.
+
+Checked on a scratch Postgres 15 with Supabase roles stubbed: every migration in
+this folder applies in order from an empty database.

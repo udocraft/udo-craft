@@ -54,7 +54,7 @@ export function ListPage<T extends string = string>({
       title={title}
       subtitle={subtitle}
       breadcrumbs={breadcrumbs}
-      maxWidth="7xl"
+      maxWidth="full"
       toolbar={
         tabs && tab !== undefined && onTabChange ? (
           <AdminTabs tabs={tabs} value={tab} onValueChange={onTabChange} className="px-4 md:px-6" />
@@ -64,9 +64,9 @@ export function ListPage<T extends string = string>({
         <>
           {actions}
           {createHref && (
-            <Button size="sm" nativeButton={false} render={<Link href={createHref} />}>
+            <Button size="sm" nativeButton={false} render={<Link href={createHref} aria-label={createLabel} />}>
               <Plus className="size-4" />
-              {createLabel}
+              <span className="hidden sm:inline">{createLabel}</span>
             </Button>
           )}
         </>

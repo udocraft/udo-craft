@@ -1,8 +1,10 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { fabric } from "fabric";
-import { Product, PrintZone, PRINT_TYPES, TEXT_FONTS, type PrintLayer, type PrintTypeId, type TextFontId, resolveProductImages, getCustomizableImages } from "@udo-craft/shared";
+import { Product, PrintZone, PrintZonesMap, PRINT_TYPES, TEXT_FONTS, type PrintLayer, type PrintTypeId, type TextFontId, resolveProductImages, getCustomizableImages } from "@udo-craft/shared";
 import { AlignCenter, AlignLeft, AlignRight, Bold, Copy, Eraser, Focus, Italic, Loader2, Pencil, RotateCcw, RotateCw, Shirt, Trash2 } from "lucide-react";
 import { removeBgClient } from "@/lib/remove-bg-client";
 import { toast } from "sonner";
@@ -26,7 +28,7 @@ function ensureFont(fontFamily: string): Promise<void> {
 
 interface ProductCanvasProps {
   product: Product;
-  printZones: { front?: PrintZone | null; back?: PrintZone | null };
+  printZones: PrintZonesMap;
   layers: PrintLayer[];
   activeSide: string;
   onSideChange?: (side: string) => void;
@@ -85,6 +87,7 @@ export default function ProductCanvas({
   canRedo,
   readOnly = false,
 }: ProductCanvasProps) {
+  const t = useTranslations("editor");
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const fabricRef = useRef<fabric.Canvas | null>(null);
@@ -94,6 +97,7 @@ export default function ProductCanvas({
   const [removingBg, setRemovingBg] = useState(false);
   const [backgroundLoaded, setBackgroundLoaded] = useState(false);
   const [isCentered, setIsCentered] = useState(false);
+  const [canvasHovered, setCanvasHovered] = useState(false);
   const loadingIds = useRef<Set<string>>(new Set());
   const layerTransforms = useRef<Record<string, { left: number; top: number; scaleX: number; scaleY: number; angle: number; flipX: boolean }>>({});
   const backgroundUrlRef = useRef<string | null>(null);
@@ -374,6 +378,8 @@ export default function ProductCanvas({
   const getLayerSizeSignature = (layer: PrintLayer) => `${layer.sizeLabel ?? ""}:${layer.sizeMinCm ?? ""}:${layer.sizeMaxCm ?? ""}`;
 
   const getPrintZone = (side: string) => {
+    const exact = printZones[side];
+    if (exact) return exact;
     if (side === "back") return printZones.back ?? printZones.front ?? null;
     return printZones.front ?? printZones.back ?? null;
   };
@@ -467,7 +473,7 @@ export default function ProductCanvas({
     const fontFamily = layer.textFont ?? "Montserrat";
     const fontSize = layer.textFontSize ?? 48;
     const fill = layer.textColor ?? INK_BLACK;
-    const content = layer.textContent ?? "Текст";
+    const content = layer.textContent ?? t("canvas.defaultText");
     const align = layer.textAlign ?? "center";
     const curve = layer.textCurve ?? 0;
     const baseLeft = saved?.left ?? CANVAS_SIZE / 2 - 80;
@@ -641,7 +647,7 @@ export default function ProductCanvas({
                 const fontStyle = layer.textItalic ? "italic" : "normal";
 
                 textObj.set({
-                  text: layer.textContent ?? "Текст",
+                  text: layer.textContent ?? t("canvas.defaultText"),
                   fill: layer.textColor ?? INK_BLACK,
                   fontFamily: layer.textFont ?? "Montserrat",
                   fontSize: layer.textFontSize ?? 48,
@@ -962,21 +968,21 @@ export default function ProductCanvas({
           <div className="flex items-center gap-1 bg-card border border-border rounded-xl px-2 py-1.5 shadow-sm overflow-x-auto max-w-full">
 
             {/* ── Undo / Redo ── */}
-            <ToolBtn onClick={() => onUndo?.()} title="Скасувати (Ctrl+Z)" label="Скасувати" disabled={!canUndo}>
+            <ToolBtn onClick={() => onUndo?.()} title={t("canvas.undoTitle")} label={t("canvas.undo")} disabled={!canUndo}>
               <RotateCcw className="size-3.5" />
             </ToolBtn>
-            <ToolBtn onClick={() => onRedo?.()} title="Повторити (Ctrl+Shift+Z)" label="Повторити" disabled={!canRedo}>
+            <ToolBtn onClick={() => onRedo?.()} title={t("canvas.redoTitle")} label={t("canvas.redo")} disabled={!canRedo}>
               <RotateCw className="size-3.5" />
             </ToolBtn>
 
             <div className="w-px h-4 bg-border mx-1 shrink-0" />
 
             {/* ── Generic actions ── */}
-            <ToolBtn onClick={centerSelected} title="По центру" label="Центр" disabled={isCentered}>
+            <ToolBtn onClick={centerSelected} title={t("toolbar.center")} label={t("toolbar.alignCenter")} disabled={isCentered}>
               <Focus className="size-3.5" />
             </ToolBtn>
             {onLayerDuplicate && (
-              <ToolBtn onClick={() => onLayerDuplicate(activeLayer)} title="Дублювати" label="Копія">
+              <ToolBtn onClick={() => onLayerDuplicate(activeLayer)} title={t("toolbar.duplicate")} label={t("canvas.copy")}>
                 <Copy className="size-3.5" />
               </ToolBtn>
             )}
@@ -999,34 +1005,34 @@ export default function ProductCanvas({
                 </select>
                 {/* Font size */}
                 <div className="flex items-center gap-0.5 shrink-0">
-                  <button type="button" aria-label="Зменшити розмір шрифту" onClick={() => patch({ textFontSize: Math.max(8, (activeLayer.textFontSize ?? 36) - 2) })}
+                  <button type="button" aria-label={t("canvas.fontSmaller")} onClick={() => patch({ textFontSize: Math.max(8, (activeLayer.textFontSize ?? 36) - 2) })}
                     className="size-6 flex items-center justify-center rounded border border-border text-muted-foreground hover:bg-muted text-xs font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">−</button>
                   <span className="w-8 text-center text-xs tabular-nums">{activeLayer.textFontSize ?? 36}</span>
-                  <button type="button" aria-label="Збільшити розмір шрифту" onClick={() => patch({ textFontSize: Math.min(200, (activeLayer.textFontSize ?? 36) + 2) })}
+                  <button type="button" aria-label={t("canvas.fontBigger")} onClick={() => patch({ textFontSize: Math.min(200, (activeLayer.textFontSize ?? 36) + 2) })}
                     className="size-6 flex items-center justify-center rounded border border-border text-muted-foreground hover:bg-muted text-xs font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">+</button>
                 </div>
-                <ToolBtn title="Жирний" label="Ж" active={!!activeLayer.textBold} onClick={() => patch({ textBold: !activeLayer.textBold })}>
+                <ToolBtn title={t("toolbar.bold")} label={t("canvas.boldShort")} active={!!activeLayer.textBold} onClick={() => patch({ textBold: !activeLayer.textBold })}>
                   <Bold className="size-3.5" />
                 </ToolBtn>
-                <ToolBtn title="Курсив" label="К" active={!!activeLayer.textItalic} onClick={() => patch({ textItalic: !activeLayer.textItalic })}>
+                <ToolBtn title={t("toolbar.italic")} label={t("canvas.italicShort")} active={!!activeLayer.textItalic} onClick={() => patch({ textItalic: !activeLayer.textItalic })}>
                   <Italic className="size-3.5" />
                 </ToolBtn>
                 {/* Text color */}
                 <div className="flex flex-col items-center gap-0.5 shrink-0 min-w-[44px] min-h-[48px] justify-center">
                   <input type="color" value={activeLayer.textColor ?? INK_BLACK}
                     onChange={(e) => patch({ textColor: e.target.value })}
-                    aria-label="Колір тексту"
+                    aria-label={t("toolbar.textColor")}
                     className="w-6 h-6 rounded border border-border cursor-pointer p-0.5 bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
-                  <span className="text-xs leading-none text-muted-foreground">Колір</span>
+                  <span className="text-xs leading-none text-muted-foreground">{t("common.color")}</span>
                 </div>
                 {/* Align */}
-                <ToolBtn title="Ліво" label="←" active={(activeLayer.textAlign ?? "center") === "left"} onClick={() => patch({ textAlign: "left" })}>
+                <ToolBtn title={t("toolbar.alignLeft")} label="←" active={(activeLayer.textAlign ?? "center") === "left"} onClick={() => patch({ textAlign: "left" })}>
                   <AlignLeft className="size-3.5" />
                 </ToolBtn>
-                <ToolBtn title="Центр" label="↔" active={(activeLayer.textAlign ?? "center") === "center"} onClick={() => patch({ textAlign: "center" })}>
+                <ToolBtn title={t("toolbar.alignCenter")} label="↔" active={(activeLayer.textAlign ?? "center") === "center"} onClick={() => patch({ textAlign: "center" })}>
                   <AlignCenter className="size-3.5" />
                 </ToolBtn>
-                <ToolBtn title="Право" label="→" active={(activeLayer.textAlign ?? "center") === "right"} onClick={() => patch({ textAlign: "right" })}>
+                <ToolBtn title={t("toolbar.alignRight")} label="→" active={(activeLayer.textAlign ?? "center") === "right"} onClick={() => patch({ textAlign: "right" })}>
                   <AlignRight className="size-3.5" />
                 </ToolBtn>
                 <div className="w-px h-4 bg-border mx-1 shrink-0" />
@@ -1039,16 +1045,16 @@ export default function ProductCanvas({
                 <div className="flex flex-col items-center gap-0.5 shrink-0 min-w-[44px] min-h-[48px] justify-center">
                   <input type="color" value={activeLayer.svgFillColor ?? INK_BLACK}
                     onChange={(e) => patch({ svgFillColor: e.target.value })}
-                    aria-label="Колір заливки"
+                    aria-label={t("toolbar.fillColor")}
                     className="w-6 h-6 rounded border border-border cursor-pointer p-0.5 bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
-                  <span className="text-xs leading-none text-muted-foreground">Заливка</span>
+                  <span className="text-xs leading-none text-muted-foreground">{t("toolbar.fill")}</span>
                 </div>
                 <div className="flex flex-col items-center gap-0.5 shrink-0 min-w-[44px] min-h-[48px] justify-center">
                   <input type="color" value={activeLayer.svgStrokeColor ?? INK_BLACK}
                     onChange={(e) => patch({ svgStrokeColor: e.target.value })}
-                    aria-label="Колір обводки"
+                    aria-label={t("toolbar.strokeColor")}
                     className="w-6 h-6 rounded border border-border cursor-pointer p-0.5 bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
-                  <span className="text-xs leading-none text-muted-foreground">Обводка</span>
+                  <span className="text-xs leading-none text-muted-foreground">{t("toolbar.stroke")}</span>
                 </div>
                 <div className="w-px h-4 bg-border mx-1 shrink-0" />
               </>
@@ -1065,10 +1071,10 @@ export default function ProductCanvas({
                       const objectUrl = await removeBgClient(activeLayer.url);
                       onRemoveBg?.(activeLayerId, objectUrl);
                     } catch (err) {
-                      toast.error(`Помилка видалення фону: ${err instanceof Error ? err.message : String(err)}`);
+                      toast.error(t("canvas.removeBgFailed"));
                     } finally { setRemovingBg(false); }
                   }}
-                  title="Видалити фон" label="Фон" disabled={!canRemoveBg}
+                  title={t("toolbar.removeBg")} label={t("canvas.bgShort")} disabled={!canRemoveBg}
                 >
                   {removingBg ? <Loader2 className="size-3.5 animate-spin" /> : <Eraser className="size-3.5" />}
                 </ToolBtn>
@@ -1079,7 +1085,7 @@ export default function ProductCanvas({
             {/* ── Drawing: edit in studio ── */}
             {isDrawing && onOpenDrawingStudio && (
               <>
-                <ToolBtn onClick={() => onOpenDrawingStudio(activeLayerId)} title="Редагувати малюнок" label="Редагувати">
+                <ToolBtn onClick={() => onOpenDrawingStudio(activeLayerId)} title={t("toolbar.editDrawing")} label={t("canvas.edit")}>
                   <Pencil className="size-3.5" />
                 </ToolBtn>
                 <div className="w-px h-4 bg-border mx-1 shrink-0" />
@@ -1088,9 +1094,9 @@ export default function ProductCanvas({
 
             {/* ── Opacity — all types ── */}
             <div className="flex items-center gap-1.5 shrink-0">
-              <span className="text-xs text-muted-foreground">Прозорість</span>
+              <span className="text-xs text-muted-foreground">{t("toolbar.opacity")}</span>
               <input type="range" min={0} max={100}
-                aria-label="Прозорість шару"
+                aria-label={t("canvas.layerOpacity")}
                 value={Math.round((activeLayer.opacity ?? 1) * 100)}
                 onChange={(e) => {
                   const v = Number(e.target.value) / 100;
@@ -1107,7 +1113,7 @@ export default function ProductCanvas({
             <div className="w-px h-4 bg-border mx-1 shrink-0" />
 
             {/* ── Delete ── */}
-            <ToolBtn onClick={deleteSelected} title="Видалити шар" label="Видалити" danger>
+            <ToolBtn onClick={deleteSelected} title={t("canvas.deleteLayer")} label={t("common.delete")} danger>
               <Trash2 className="size-3.5" />
             </ToolBtn>
           </div>
@@ -1115,16 +1121,47 @@ export default function ProductCanvas({
       })()}
 
       <div ref={containerRef} className="w-full" style={{ height: canvasSize }}>
-        <div className="relative mx-auto" style={{ width: canvasSize, height: canvasSize }}>
+        <div
+          className="relative mx-auto"
+          style={{ width: canvasSize, height: canvasSize }}
+          onPointerEnter={() => setCanvasHovered(true)}
+          onPointerLeave={() => setCanvasHovered(false)}
+        >
           <div className="rounded-2xl overflow-hidden shadow-lg border border-border/60 w-full h-full">
             <canvas ref={canvasRef} />
           </div>
+          {/* Print area: dashed rectangle, size label on hover or while a layer is selected */}
+          {(() => {
+            const zone = printZones[activeSide];
+            if (!zone || !backgroundLoaded) return null;
+            const k = canvasSize / CANVAS_SIZE;
+            const ratio = product.px_to_mm_ratio || 0;
+            const wMm = zone.width_mm ?? (ratio ? zone.width / ratio : null);
+            const hMm = zone.height_mm ?? (ratio ? zone.height / ratio : null);
+            const cm = (v: number) => (Math.round(v) / 10).toString().replace(".", ",");
+            const showLabel = canvasHovered || !!activeLayerId;
+            return (
+              <div
+                aria-hidden="true"
+                className="absolute z-[5] pointer-events-none rounded-[3px] border border-dashed border-foreground/35"
+                style={{ left: zone.x * k, top: zone.y * k, width: zone.width * k, height: zone.height * k }}
+              >
+                {wMm && hMm && (
+                  <span
+                    className={`absolute -top-5 left-0 rounded bg-foreground/80 px-1.5 py-0.5 text-xs font-medium leading-none text-background whitespace-nowrap transition-opacity ${showLabel ? "opacity-100" : "opacity-0"}`}
+                  >
+                    {cm(wMm)} × {cm(hMm)} см
+                  </span>
+                )}
+              </div>
+            );
+          })()}
           {/* Skeleton overlay — shown until background image is loaded */}
           {!backgroundLoaded && (
             <div className="absolute inset-0 rounded-2xl overflow-hidden z-10 pointer-events-none bg-muted/60">
               <div className="w-full h-full flex flex-col items-center justify-center gap-3">
                 <Shirt className="w-12 h-12 opacity-15 text-foreground" aria-hidden="true" />
-                <span className="text-xs font-medium text-muted-foreground/60 tracking-wide select-none">Завантаження зображення...</span>
+                <span className="text-xs font-medium text-muted-foreground/60 tracking-wide select-none">{t("canvas.loadingImage")}</span>
               </div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-[shimmer_1.4s_ease-in-out_infinite]"
                 style={{ backgroundSize: "200% 100%", animation: "shimmer 1.4s ease-in-out infinite" }}
@@ -1139,9 +1176,19 @@ export default function ProductCanvas({
         const images = variantImages && Object.keys(variantImages).length > 0
           ? variantImages
           : getCustomizableImages(productImgs);
-        const keys = Object.keys(images).filter((key) => images[key]);
+        const order = ["front", "back", "neck_inner", "sleeve_left", "sleeve_right"];
+        const keys = Array.from(new Set([
+          ...Object.keys(images).filter((key) => images[key]),
+          ...Object.keys(printZones).filter((key) => printZones[key]),
+        ])).sort((a, b) => {
+          const ia = order.indexOf(a), ib = order.indexOf(b);
+          return (ia === -1 ? order.length : ia) - (ib === -1 ? order.length : ib);
+        });
         if (keys.length <= 1) return null;
-        const labelMap: Record<string, string> = { front: "Перед", back: "Зад", left: "Ліво", right: "Право" };
+        const labelMap: Record<string, string> = {
+          front: t("canvas.sides.front"), back: t("canvas.sides.back"), left: t("canvas.sides.left"), right: t("canvas.sides.right"),
+          neck_inner: t("canvas.sides.neck_inner"), sleeve_left: t("canvas.sides.sleeve_left"), sleeve_right: t("canvas.sides.sleeve_right"),
+        };
         return (
           <div className="flex items-center gap-2 justify-center flex-wrap overflow-x-auto max-w-full pb-0.5">
             {keys.map((key) => (
@@ -1154,7 +1201,7 @@ export default function ProductCanvas({
                   activeSide === key ? "bg-primary text-primary-foreground border-primary" : "bg-background text-muted-foreground border-border hover:border-primary/50"
                 }`}
               >
-                {labelMap[key] ?? key}
+                {printZones[key]?.label || labelMap[key] || key}
               </button>
             ))}
           </div>

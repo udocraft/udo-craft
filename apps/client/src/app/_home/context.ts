@@ -1,3 +1,4 @@
+import { getAllImages, resolveProductImages } from "@udo-craft/shared/product-images";
 import type { Material, Product, ProductColorVariant } from "@udo-craft/shared";
 
 export interface HomeCategory {
@@ -44,4 +45,24 @@ export function cmsValue(ctx: Pick<HomeCtx, "cms">, slug: string, key: string, f
 /** Attributes that let the admin live-preview bridge patch this text node. */
 export function cmsAttrs(ctx: Pick<HomeCtx, "locale">, slug: string, key: string) {
   return ctx.locale === "uk" ? ({ "data-cms": `${slug}.${key}` } as const) : ({} as const);
+}
+
+/**
+ * Active products with a cover image: the product's own front image, else the
+ * first colour variant's (many products only have variant images).
+ */
+export function coverImages(ctx: Pick<HomeCtx, "products" | "colorVariants">, limit: number) {
+  const pick = (m: Record<string, string>) => m.front ?? Object.values(m)[0] ?? "";
+  const out: { product: HomeProduct; image: string }[] = [];
+  for (const p of ctx.products) {
+    if (!p.is_active) continue;
+    let image = pick(getAllImages(resolveProductImages(p.product_images, p.images)));
+    if (!image) {
+      const v = ctx.colorVariants.find((cv) => cv.product_id === p.id);
+      if (v) image = pick(getAllImages(resolveProductImages(v.variant_images, v.images)));
+    }
+    if (image) out.push({ product: p, image });
+    if (out.length >= limit) break;
+  }
+  return out;
 }

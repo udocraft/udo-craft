@@ -1,12 +1,14 @@
 {
   "meta": {
-    "title": "U:DO CRAFT — Corporate merch",
-    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA.",
+    "title": "U:DO CRAFT — kleding met jouw ontwerp",
+    "description": "Maak online een T-shirt, hoodie of longsleeve met je eigen print. Gemaakt in 7–14 dagen, bezorgd in heel Oekraïne.",
     "productTitle": "{name} | Personalisatie en confectie | U:DO CRAFT",
     "productDescription": "Bestel bedrijfskleding {name} met eigen print of borduurwerk vanaf {min} stuks.",
     "productNotFound": "Product niet gevonden | U:DO CRAFT",
     "popupTitle": "Merch-popup voor jouw evenement | U:DO CRAFT",
-    "popupDescription": "Een mobiele merch-popup: gasten personaliseren kleding en nemen die direct mee. Voor bedrijfsevenementen, conferenties en festivals."
+    "popupDescription": "Een mobiele merch-popup: gasten personaliseren kleding en nemen die direct mee. Voor bedrijfsevenementen, conferenties en festivals.",
+    "bizTitle": "U:DO CRAFT zakelijk — bedrijfsmerch",
+    "bizDescription": "B2B merch platform. We create clothing that becomes part of your corporate DNA."
   },
   "nav": {
     "catalog": "Catalogus",
@@ -16,6 +18,11 @@
     "contacts": "Contact",
     "startProject": "Project starten",
     "openMenu": "Menu openen",
+    "menu": "Menu",
+    "language": "Taal",
+    "directionsPrompt": "Routebeschrijving openen in Kaarten?",
+    "directionsOpen": "Kaarten openen",
+    "directionsCancel": "Annuleren",
     "closeMenu": "Menu sluiten",
     "goToAccount": "Naar account",
     "signIn": "Inloggen",
@@ -24,7 +31,9 @@
     "logoLink": "U:DO CRAFT — terug naar home",
     "skipToContent": "Ga naar hoofdinhoud",
     "designMerch": "Ontwerp je merch",
-    "getQuote": "Offerte aanvragen"
+    "getQuote": "Offerte aanvragen",
+    "business": "Zakelijk",
+    "createDesign": "Ontwerp maken"
   },
   "homeStats": {
     "stat3Suffix": " dagen",
@@ -45,7 +54,8 @@
   "homeContact": {
     "heading": "Neem contact op",
     "subtext": "Vertel ons over je project — we sturen binnen 24 uur een voorstel.",
-    "address": "Lviv, Dzherelna 69"
+    "address": "Lviv, Dzherelna 69",
+    "visitNote": "showroombezoek op afspraak · ma⁠–⁠do 10:00⁠–⁠18:00, vr 10:00⁠–⁠16:00"
   },
   "hero": {
     "heading": "Kleding die deel wordt van het DNA van uw bedrijf",
@@ -53,6 +63,7 @@
     "ctaPrimary": "Bekijk de catalogus",
     "skipToCatalog": "Naar catalogus",
     "watchVideo": "Video bekijken",
+    "showProcess": "Bekijk het proces",
     "closeVideo": "Video sluiten",
     "mainSection": "Hero section",
     "fullscreenVideo": "Video in fullscreen mode",
@@ -122,12 +133,12 @@
     "prevPage": "Vorige",
     "nextPage": "Volgende",
     "page": "Pagina {n}",
-    "fromPrice": "from ₴{price}",
+    "fromPrice": "vanaf {price} ₴",
     "priceOnRequest": "Prijs op aanvraag",
-    "expand": "Expand",
-    "collapse": "Collapse",
-    "addPrint": "Add print",
-    "withoutPrint": "Without print"
+    "expand": "Meer tonen",
+    "collapse": "Minder tonen",
+    "addPrint": "Print toevoegen",
+    "withoutPrint": "Zonder print"
   },
   "process": {
     "heading": "Van idee naar merch — in 4 stappen",
@@ -269,21 +280,21 @@
     "discount": "Korting",
     "mm": "mm",
     "embroidery": "Borduren",
-    "label": "Online constructor",
-    "heading": "Build your merch right in the interface",
-    "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
-    "openEditor": "Open constructor",
+    "label": "Online-editor",
+    "heading": "Probeer het hier",
+    "desc": "Kies een kleur en upload je afbeelding om te zien hoe je item eruitziet.",
+    "openEditor": "Editor openen",
     "productLabel": "Product",
-    "colorLabel": "Color",
+    "colorLabel": "Kleur",
     "printsLabel": "Prints",
-    "textLabel": "Text",
-    "fileLabel": "File",
-    "volumeLabel": "Volume & price",
-    "totalLabel": "Total",
-    "saved": "Draft saved",
-    "layersReady": "Layers ready",
-    "priceUpdated": "Price updated",
-    "sizeLabel": "Size"
+    "textLabel": "Tekst",
+    "fileLabel": "Bestand",
+    "volumeLabel": "Aantal en prijs",
+    "totalLabel": "Totaal",
+    "saved": "Concept opgeslagen",
+    "layersReady": "Lagen klaar",
+    "priceUpdated": "Prijs bijgewerkt",
+    "sizeLabel": "Maat"
   },
   "trust": {
     "statsLabel": "Kerncijfers",
@@ -419,10 +430,10 @@
     "address": "Address"
   },
   "footer": {
-    "tagline": "B2B-merchplatform voor teams, merken en evenementen.",
+    "tagline": "Kleding met jouw ontwerp — van één stuk tot een grote bestelling.",
     "copyright": "U:DO CRAFT. Alle rechten voorbehouden.",
     "readyToStart": "Klaar om te beginnen?",
-    "readyDesc": "Vanaf 10 stuks · 7–14 dagen · Levering",
+    "readyDesc": "Vanaf één stuk · 7–14 dagen · Bezorging in heel Oekraïne",
     "startProject": "Project starten",
     "ariaLabel": "Voettekst",
     "homeLink": "U:DO CRAFT — terug naar home",
@@ -454,11 +465,28 @@
           "cabinet": "Account",
           "delivery": "Verzending & betaling"
         }
+      },
+      "business": {
+        "title": "Zakelijk",
+        "links": {
+          "overview": "Bedrijfsmerch"
+        }
       }
     },
     "privacy": "Privacy",
     "terms": "Voorwaarden",
-    "cookies": "Cookies"
+    "cookies": "Cookies",
+    "newsletter": {
+      "title": "{pct}% korting op je eerste bestelling",
+      "desc": "Schrijf je in: nieuwe items, printideeën en beperkte drops, één keer per maand. Geen spam.",
+      "placeholder": "Je e-mail",
+      "label": "E-mail voor de nieuwsbrief",
+      "submit": "Inschrijven",
+      "success": "Klaar. Je code voor {pct}% is onderweg.",
+      "error": "Inschrijven mislukt. Probeer het opnieuw.",
+      "invalid": "Controleer je e-mail.",
+      "consent": "Door je in te schrijven ga je akkoord met het privacybeleid."
+    }
   },
   "cart": {
     "title": "Winkelwagen",
@@ -661,7 +689,8 @@
       "attachLabel": "Bestand bijvoegen",
       "loading": "Berichten worden geladen...",
       "empty": "Nog geen berichten",
-      "fileTooLarge": "\"{name}\" overschrijdt 10 MB"
+      "fileTooLarge": "\"{name}\" overschrijdt 10 MB",
+      "sendError": "Het bericht kon niet worden verzonden. Probeer het opnieuw."
     },
     "files": {
       "empty": "Nog geen bestanden",
@@ -686,6 +715,66 @@
     "order": {
       "back": "Alle bestellingen",
       "notFound": "Bestelling niet gevonden"
+    },
+    "errorPage": {
+      "title": "Fout in je account",
+      "text": "Je account kon niet worden geladen. Probeer het opnieuw of ga naar de homepage.",
+      "retry": "Opnieuw proberen",
+      "home": "Naar home"
+    },
+    "file": "Bestand",
+    "productFallback": "Product ({color})",
+    "profile": {
+      "saved": "Profiel bijgewerkt",
+      "saveFailed": "Profiel kon niet worden opgeslagen. Controleer je verbinding en probeer het opnieuw.",
+      "title": "Profiel",
+      "subtitle": "Je contactgegevens voor bestellingen",
+      "name": "Voor- en achternaam",
+      "namePlaceholder": "Jan Jansen",
+      "company": "Bedrijfsnaam",
+      "companyPlaceholder": "Bedrijf B.V.",
+      "phone": "Telefoon",
+      "edrpou": "Btw-nummer / bedrijfsgegevens",
+      "socialPlaceholder": "@gebruikersnaam of link",
+      "saving": "Opslaan...",
+      "save": "Profiel opslaan"
+    },
+    "security": {
+      "min": "Het nieuwe wachtwoord moet minstens 8 tekens hebben.",
+      "mismatch": "De wachtwoorden komen niet overeen.",
+      "same": "Het nieuwe wachtwoord moet anders zijn dan het huidige.",
+      "wrongCurrent": "Het huidige wachtwoord is onjuist.",
+      "changed": "Wachtwoord gewijzigd",
+      "changeFailed": "Wachtwoord kon niet worden gewijzigd. Controleer je verbinding en probeer het opnieuw.",
+      "title": "Beveiliging",
+      "subtitle": "Wijzig het wachtwoord van je account",
+      "current": "Huidig wachtwoord",
+      "currentPlaceholder": "Voer je huidige wachtwoord in",
+      "new": "Nieuw wachtwoord",
+      "newPlaceholder": "Minstens 8 tekens",
+      "confirm": "Bevestig nieuw wachtwoord",
+      "confirmPlaceholder": "Herhaal het nieuwe wachtwoord",
+      "changing": "Wijzigen...",
+      "change": "Wachtwoord wijzigen"
+    },
+    "prints": {
+      "title": "Mijn prints",
+      "subtitle": "Bestanden die je voor druk hebt geüpload. Alleen jij kunt ze zien.",
+      "dropHint": "Zet bestanden hier neer",
+      "formats": "JPG, PNG, WebP, GIF of PDF, tot 10 MB",
+      "pickFiles": "Bestanden kiezen",
+      "uploading": "Uploaden…",
+      "empty": "Nog geen bestanden. Upload je eerste print.",
+      "delete": "Bestand verwijderen",
+      "confirmDelete": "Dit bestand verwijderen? Dit kan niet ongedaan worden gemaakt.",
+      "loadError": "Bestanden konden niet worden geladen",
+      "uploadError": "Bestand kon niet worden geüpload",
+      "deleteError": "Bestand kon niet worden verwijderd",
+      "status": {
+        "uploaded": "Wordt beoordeeld",
+        "approved": "Goedgekeurd",
+        "rejected": "Afgewezen"
+      }
     }
   },
   "popup": {
@@ -912,8 +1001,8 @@
     "cookieSettings": "Cookie-instellingen"
   },
   "homeDemo": {
-    "upload": "Upload je logo",
-    "remove": "Logo verwijderen",
+    "upload": "Afbeelding uploaden",
+    "remove": "Afbeelding verwijderen",
     "hint": "PNG, JPG, SVG of WebP, tot 5 MB",
     "note": "Alleen een voorbeeld. In de volledige editor stel je formaat en drukzones in.",
     "tooLarge": "Het bestand is groter dan 5 MB. Kies een kleinere afbeelding."
@@ -966,5 +1055,486 @@
     "addComment": "Reactie toevoegen",
     "sendComment": "Versturen",
     "commentsOff": "Reacties zijn uitgeschakeld voor deze link."
+  },
+  "home": {
+    "hero": {
+      "heading": "Kleding, door jou ontworpen.",
+      "subheading": "Kies een item, voeg je print of tekst toe in de editor — wij maken en bezorgen het. Ook per stuk."
+    },
+    "steps": {
+      "heading": "In drie stappen naar jouw item",
+      "items": {
+        "0": {
+          "title": "Kies een item",
+          "desc": "T-shirt, hoodie of longsleeve — kies model, kleur en maat."
+        },
+        "1": {
+          "title": "Voeg je ontwerp toe",
+          "desc": "Upload een afbeelding of typ je tekst in de editor en zie meteen het resultaat."
+        },
+        "2": {
+          "title": "Ontvang je bestelling",
+          "desc": "We maken het in 7–14 werkdagen en bezorgen in heel Oekraïne."
+        }
+      }
+    },
+    "faq": {
+      "single": {
+        "question": "Kan ik maar één item bestellen?",
+        "answer": "Ja. Bestel zoveel als je nodig hebt — ook één item met je eigen ontwerp."
+      },
+      "design": {
+        "question": "Hoe voeg ik mijn ontwerp toe?",
+        "answer": "In de editor: upload een afbeelding of voeg tekst toe en kies de plek op het kledingstuk. Je ziet de prijs meteen."
+      }
+    },
+    "biz": {
+      "heading": "Merch voor je team of evenement?",
+      "text": "Bedrijfskleding, pop-upstands en branding — op een aparte pagina voor bedrijven."
+    }
+  },
+  "auth": {
+    "errors": {
+      "googleFailed": "Inloggen met Google is mislukt. Probeer het opnieuw.",
+      "passkeyNeedsNameEmail": "Vul je naam en e-mail in om een account met passkey te maken.",
+      "invalidCredentials": "Onjuist e-mailadres of wachtwoord.",
+      "passwordMin": "Het wachtwoord moet minstens 8 tekens hebben.",
+      "emailExistsRegister": "Dit e-mailadres is al geregistreerd. Log in of stel je wachtwoord opnieuw in.",
+      "codeSendFailed": "De code kon niet worden verzonden. Probeer het opnieuw.",
+      "codeInvalid": "Onjuiste code. Controleer je e-mail en probeer het opnieuw.",
+      "codeExpired": "De code is verlopen. Vraag een nieuwe aan.",
+      "tooManyAttempts": "Te veel pogingen. Vraag over een paar minuten een nieuwe code aan.",
+      "emailExistsLogin": "Dit e-mailadres is al geregistreerd. Probeer in te loggen.",
+      "registerFailed": "Registratie mislukt. Probeer het opnieuw.",
+      "resetSendFailed": "De code kon niet worden verzonden. Controleer het e-mailadres.",
+      "passwordsMismatch": "De wachtwoorden komen niet overeen.",
+      "resetFailed": "Onjuiste of verlopen code. Vraag een nieuwe aan.",
+      "generic": "Er ging iets mis. Probeer het opnieuw.",
+      "emailFormat": "Controleer het e-mailformaat"
+    },
+    "notices": {
+      "passkeyCheckEmail": "We hebben een e-mail gestuurd naar {email}. Bevestig die en log daarna in met je passkey.",
+      "accountCreated": "Account aangemaakt. Log in met je e-mail en wachtwoord.",
+      "passwordChanged": "Wachtwoord gewijzigd. Log in met je nieuwe wachtwoord."
+    },
+    "social": {
+      "google": "Doorgaan met Google",
+      "telegram": "Doorgaan met Telegram",
+      "passkey": "Doorgaan met passkey",
+      "or": "of"
+    },
+    "login": {
+      "title": "Welkom terug",
+      "subtitle": "Log in om je bestelling voort te zetten.",
+      "forgot": "Wachtwoord vergeten?",
+      "signingIn": "Inloggen...",
+      "submit": "Inloggen"
+    },
+    "register": {
+      "title": "Account aanmaken",
+      "subtitle": "Duurt minder dan een minuut.",
+      "sendingCode": "Code wordt verzonden...",
+      "continue": "Doorgaan"
+    },
+    "fields": {
+      "name": "Je naam",
+      "namePlaceholder": "Jan Jansen",
+      "company": "Bedrijf",
+      "companyPlaceholder": "Bedrijfsnaam",
+      "phone": "Telefoon",
+      "password": "Wachtwoord",
+      "passwordMin": "Minstens 8 tekens",
+      "confirmPassword": "Bevestig wachtwoord",
+      "repeatPassword": "Herhaal wachtwoord",
+      "hide": "Verbergen",
+      "show": "Tonen"
+    },
+    "verify": {
+      "back": "Terug",
+      "title": "Controleer je e-mail",
+      "sentTo": "We hebben een 6-cijferige code gestuurd naar",
+      "checking": "Controleren...",
+      "confirm": "Bevestigen",
+      "digit": "Cijfer {n}"
+    },
+    "reset": {
+      "backToLogin": "Terug naar inloggen",
+      "title": "Wachtwoord herstellen",
+      "subtitle": "Vul je e-mail in, dan sturen we een 6-cijferige code.",
+      "sending": "Verzenden...",
+      "sendCode": "Code versturen",
+      "changeEmail": "E-mail wijzigen",
+      "enterCode": "Voer de code in",
+      "newTitle": "Nieuw wachtwoord",
+      "newSubtitle": "Kies een nieuw, sterk wachtwoord.",
+      "saving": "Opslaan...",
+      "save": "Wachtwoord opslaan"
+    },
+    "modes": {
+      "login": "Inloggen",
+      "register": "Registreren"
+    },
+    "resend": {
+      "noCode": "Geen code ontvangen?",
+      "in": "Opnieuw over {s} s",
+      "now": "Opnieuw versturen"
+    },
+    "strength": {
+      "length": "8+ tekens",
+      "upper": "Hoofdletter",
+      "digit": "Cijfer"
+    },
+    "backToSite": "Naar de site",
+    "showcaseItem": "Review {n}",
+    "close": "Sluiten"
+  },
+  "editor": {
+    "common": {
+      "addToOrder": "Toevoegen aan bestelling",
+      "adding": "Toevoegen...",
+      "all": "Alle",
+      "back": "Terug",
+      "cancel": "Annuleren",
+      "change": "Wijzigen",
+      "close": "Sluiten",
+      "collapse": "Minder tonen",
+      "color": "Kleur",
+      "delete": "Verwijderen",
+      "expand": "Meer tonen",
+      "fromPrice": "vanaf {price} ₴",
+      "fromPricePer": "vanaf {price} ₴ / st.",
+      "generate": "Genereren",
+      "generating": "Genereren…",
+      "home": "Naar home",
+      "leaveConfirm": "Teruggaan? Niet-opgeslagen wijzigingen gaan verloren.",
+      "noColors": "Geen kleuren ingesteld",
+      "perUnit": "/st.",
+      "print": "Bedrukking",
+      "productSettings": "Productinstellingen",
+      "qty": "Aantal",
+      "qtyPrice": "Aantal en prijs",
+      "removingBg": "Achtergrond verwijderen...",
+      "resetSearch": "Zoekopdracht wissen",
+      "retry": "Opnieuw proberen",
+      "retryShort": "Opnieuw",
+      "settings": "Instellingen",
+      "size": "Maat"
+    },
+    "tabs": {
+      "prints": "Prints",
+      "draw": "Tekening",
+      "text": "Tekst",
+      "upload": "Bestand",
+      "layers": "Lagen",
+      "uploadTitle": "Uploaden",
+      "toolsLabel": "Editorgereedschap"
+    },
+    "errorPage": {
+      "title": "Catalogus kon niet worden geladen",
+      "text": "De bestelpagina kon niet worden geladen. Probeer het opnieuw of ga naar de homepage."
+    },
+    "main": {
+      "restoreFailed": "Je opgeslagen winkelwagen kon niet worden hersteld. Je gegevens zijn nog bewaard.",
+      "linkFailed": "De link kon niet worden geopend",
+      "linkProductGone": "Het product uit deze link is niet meer beschikbaar",
+      "catalogFailed": "Catalogus kon niet worden geladen",
+      "catalogFailedReload": "Catalogus kon niet worden geladen. Vernieuw de pagina."
+    },
+    "grid": {
+      "title": "Kies een item",
+      "subtitle": "Tik op een item om het aan te passen en aan je bestelling toe te voegen",
+      "empty": "Nog geen producten in deze categorie"
+    },
+    "genButton": {
+      "label": "Bekijk het op iemand",
+      "needsDesign": "Voeg eerst een ontwerp toe"
+    },
+    "textPanel": {
+      "search": "Zoek lay-outs…",
+      "add": "Tekstblok toevoegen"
+    },
+    "shapes": {
+      "title": "Vormen",
+      "search": "Zoek vormen…",
+      "empty": "Geen vormen gevonden.",
+      "resetFilters": "Filters wissen"
+    },
+    "ai": {
+      "noImage": "Het antwoord bevatte geen afbeelding.",
+      "timeout": "Het duurde te lang. Probeer het opnieuw.",
+      "failed": "De afbeelding kon niet worden gegenereerd. Probeer het opnieuw."
+    },
+    "state": {
+      "restored": "Je vorige bewerkingssessie is hersteld",
+      "chooseGarmentSize": "Kies een maat.",
+      "choosePrintSizes": "Kies een formaat voor elke bedrukking."
+    },
+    "qty": {
+      "fromQty": "vanaf {n}",
+      "methods": {
+        "embroidery": "Borduursel",
+        "screen": "Zeefdruk",
+        "sublimation": "Sublimatie",
+        "patch": "Patch"
+      },
+      "product": "Item",
+      "chooseSize": "Kies een formaat",
+      "savings": "Je bespaart",
+      "total": "Totaal",
+      "totalLine": "{qty} st. × {price} ₴",
+      "noteLabel": "Let op:",
+      "noteText": "Prijzen zijn indicatief. De eindprijs kan veranderen nadat een medewerker de bestelling bevestigt.",
+      "itemNote": "Notitie bij dit item",
+      "notePlaceholder": "Speciale wensen..."
+    },
+    "layout": {
+      "removeBgTitle": "Achtergrond verwijderen met AI",
+      "removeBgText": "Even geduld. Verwerken in hoge kwaliteit duurt 15–20 seconden."
+    },
+    "customizer": {
+      "commentFailed": "De opmerking kon niet worden toegevoegd",
+      "previewTitle": "Ontwerpvoorbeeld",
+      "previewSignIn": "Log in om dit ontwerp te bewerken.",
+      "previewViewOnly": "Deze link is alleen-lezen. De eigenaar heeft bewerken uitgezet.",
+      "previewViewComment": "Met deze link kun je bekijken en reageren. De eigenaar heeft bewerken uitgezet.",
+      "signInToEdit": "Inloggen om te bewerken",
+      "comments": "Opmerkingen",
+      "noLayers": "Nog geen lagen. Voeg een afbeelding of tekst toe.",
+      "tryOn": "Pas het aan op iemand",
+      "withAi": "Met AI"
+    },
+    "gen": {
+      "presets": {
+        "0": "vrienden op een dakfeest",
+        "1": "iemand op een herfstwandeling door de stad",
+        "2": "een barista in een gezellig café",
+        "3": "een muzikant op een openluchtconcert",
+        "4": "een skater in een stadspark",
+        "5": "een team op een bedrijfsfeest",
+        "6": "een student op de campus",
+        "7": "een stel op een zomerfestival"
+      },
+      "progress": {
+        "0": "Verzoek analyseren...",
+        "1": "Look kiezen...",
+        "2": "Ontwerp plaatsen...",
+        "3": "Laatste details..."
+      },
+      "inProgress": "Bezig met genereren…",
+      "tapToView": "Tik om te bekijken",
+      "yourPhoto": "Je foto",
+      "photoUploaded": "Foto geüpload",
+      "removePhoto": "Foto verwijderen",
+      "uploadPhoto": "Upload je foto",
+      "cameraOrGallery": "Opent je camera of galerij",
+      "title": "Bekijk het gedragen",
+      "subtitle": "AI laat zien hoe je ontwerp er in het echt uitziet",
+      "alreadyRunning": "Er loopt al een generatie",
+      "result": "Resultaat",
+      "usedFree": "Je hebt de gratis generatie voor dit item al gebruikt.",
+      "viewResult": "Resultaat bekijken",
+      "tabSelfie": "Eigen foto",
+      "tabScene": "Scène",
+      "sceneLabel": "Beschrijving van de scène",
+      "scenePlaceholder": "Beschrijf een scène of kies een idee…",
+      "emptySide": "Deze kant is leeg. We gebruiken het ontwerp van de kant ‘{side}’.",
+      "quotaUsed": "Je hebt alle {n} gratis generaties gebruikt",
+      "generatingShort": "Genereren…"
+    },
+    "toolbar": {
+      "opacity": "Dekking",
+      "fontSearch": "Lettertype zoeken...",
+      "nothingFound": "Niets gevonden",
+      "bold": "Vet",
+      "italic": "Cursief",
+      "textColor": "Tekstkleur",
+      "alignLeft": "Links",
+      "alignCenter": "Midden",
+      "alignRight": "Rechts",
+      "arc": "Boog",
+      "letterSpacing": "Letterafstand",
+      "lineHeight": "Regelhoogte",
+      "fill": "Vulling",
+      "stroke": "Omtrek",
+      "fillColor": "Vulkleur",
+      "strokeColor": "Omtrekkleur",
+      "removeBg": "Achtergrond verwijderen",
+      "editDrawing": "Tekening bewerken",
+      "center": "Centreren",
+      "flip": "Spiegelen",
+      "duplicate": "Dupliceren",
+      "fontCategories": {
+        "grotesque": "Schreefloos",
+        "condensed": "Smal",
+        "serif": "Schreef",
+        "display": "Display",
+        "decorative": "Decoratief",
+        "handwritten": "Handgeschreven",
+        "technical": "Technisch"
+      }
+    },
+    "prints": {
+      "prompts": {
+        "0": "Een astronautenkat in retrostijl, felle kleuren",
+        "1": "Minimalistische bergen en zon, lijntekening",
+        "2": "Een boeket wilde bloemen, aquarel",
+        "3": "Belettering ‘Good vibes’ in jaren 70-stijl",
+        "4": "Een pixeldraak in retrogamestijl",
+        "5": "Een golf in Japanse stijl, blauw palet",
+        "6": "Een koffiekop met een hartje, flat design",
+        "7": "Een uil met een boek, vectorillustratie"
+      },
+      "aiTitle": "AI-illustratie",
+      "aiDesc": "Maak drukklare illustraties op basis van een tekst.",
+      "aiLabel": "Beschrijving voor de AI-illustratie",
+      "loadFailed": "Prints konden niet worden geladen",
+      "ready": "Kant-en-klare prints",
+      "search": "Zoek prints…",
+      "empty": "Geen prints gevonden."
+    },
+    "upload": {
+      "badType": "Niet-ondersteund bestandstype ‘{type}’. Gebruik PNG, JPG/JPEG, SVG of PDF.",
+      "tooLarge": "Het bestand is te groot ({size} MB). Maximum: {max}.",
+      "addAgain": "‘{name}’ opnieuw toevoegen",
+      "addFailed": "‘{name}’ kon niet worden toegevoegd. Probeer het opnieuw.",
+      "title": "Bestand uploaden",
+      "dropLabel": "Bestand uploaden: klik of sleep het hierheen",
+      "uploading": "Uploaden…",
+      "dropRelease": "Loslaten om te uploaden",
+      "dropHint": "Klik of sleep een bestand",
+      "formats": "PNG, JPG, SVG, PDF · tot 20 MB",
+      "choose": "Bestand kiezen",
+      "recent": "Recente uploads",
+      "noRecent": "Nog geen uploads.",
+      "recentHint": "Geüploade bestanden verschijnen hier zodat je ze snel opnieuw kunt gebruiken."
+    },
+    "canvas": {
+      "defaultText": "Tekst",
+      "undo": "Ongedaan maken",
+      "undoTitle": "Ongedaan maken (Ctrl+Z)",
+      "redo": "Opnieuw",
+      "redoTitle": "Opnieuw (Ctrl+Shift+Z)",
+      "copy": "Kopie",
+      "fontSmaller": "Kleiner lettertype",
+      "fontBigger": "Groter lettertype",
+      "boldShort": "V",
+      "italicShort": "C",
+      "removeBgFailed": "De achtergrond kon niet worden verwijderd. Probeer het opnieuw.",
+      "bgShort": "Achtergrond",
+      "edit": "Bewerken",
+      "layerOpacity": "Laagdekking",
+      "deleteLayer": "Laag verwijderen",
+      "loadingImage": "Afbeelding laden...",
+      "sides": {
+        "front": "Voorkant",
+        "back": "Achterkant",
+        "left": "Links",
+        "right": "Rechts",
+        "neck_inner": "Binnenlabel",
+        "sleeve_left": "Linkermouw",
+        "sleeve_right": "Rechtermouw"
+      }
+    },
+    "layers": {
+      "layer": "Laag",
+      "setupTitle": "Stel deze laag in",
+      "setupText": "Kies type en formaat van de bedrukking. De prijs wordt automatisch bijgewerkt.",
+      "printType": "Type bedrukking",
+      "printSize": "Formaat bedrukking",
+      "image": "Afbeelding"
+    },
+    "paywall": {
+      "title": "Voor AI heb je een account nodig",
+      "text": "Meld je gratis aan en krijg 3 gratis AI-generaties",
+      "register": "Aanmelden",
+      "login": "Inloggen",
+      "skip": "Doorgaan zonder account"
+    },
+    "mode": {
+      "label": "Weergave",
+      "edit": "Ontwerp",
+      "preview": "Voorbeeld"
+    },
+    "tour": {
+      "replay": "Tips tonen",
+      "counter": "{n} van {total}",
+      "close": "Sluiten",
+      "back": "Terug",
+      "next": "Volgende",
+      "done": "Klaar",
+      "tools": {
+        "title": "Ontwerptools",
+        "body": "Upload je eigen bestand, kies een kant-en-klare print, voeg tekst toe of teken iets. Alles begint hier."
+      },
+      "canvas": {
+        "title": "Canvas",
+        "body": "Sleep, schaal en draai elementen direct op het kledingstuk. De knoppen eronder wisselen van kant: voor, achter, mouwen."
+      },
+      "layers": {
+        "title": "Lagen",
+        "body": "Alle elementen van je ontwerp in één lijst. Herschikken, dupliceren, verwijderen. De gekozen laag heeft een eigen balk boven het canvas."
+      },
+      "mode": {
+        "title": "Ontwerp en voorbeeld",
+        "body": "Schakel naar Voorbeeld om het kledingstuk vanuit meerdere hoeken te zien, zonder bewerkingstools."
+      },
+      "price": {
+        "title": "Aantal en prijs",
+        "body": "Kies kleur, maat en aantal. De prijs bevat de staffelkorting en de printkosten van elk element."
+      },
+      "actions": {
+        "title": "Bestellen en delen",
+        "body": "Is het ontwerp klaar, voeg het toe aan je bestelling of stuur een link voor opmerkingen."
+      }
+    },
+    "preview": {
+      "close": "Sluiten",
+      "prev": "Vorige",
+      "next": "Volgende",
+      "withPrint": "Met jouw print",
+      "noPrint": "Zonder print",
+      "sides": {
+        "front": "Voor",
+        "back": "Achter",
+        "chest": "Borst",
+        "neck_inner": "Binnenlabel",
+        "sleeve_left": "Linkermouw",
+        "sleeve_right": "Rechtermouw"
+      },
+      "tiles": {
+        "zone": "Print van dichtbij",
+        "zoneHint": "Printgebied",
+        "collar": "Kraag en snit",
+        "collarHint": "Detail",
+        "flat": "Flat lay",
+        "flatHint": "Flat lay"
+      },
+      "emptyTitle": "Hier verschijnt je kledingstuk",
+      "emptyBody": "Voeg in ontwerpmodus een afbeelding, tekst of print toe en we tonen het kledingstuk vanuit meerdere hoeken.",
+      "backToDesign": "Terug naar ontwerp",
+      "readOnly": "Alleen voorbeeld."
+    }
+  },
+  "sizeChart": {
+    "title": "Maattabel",
+    "empty": "De tabel is leeg",
+    "schemeAlt": "{name}: maatschema",
+    "note": "Alle maten zijn in centimeters. Zit je tussen twee maten, kies dan de grotere."
+  },
+  "editorial": {
+    "statement": {
+      "eyebrow": "U:DO CRAFT",
+      "part1": "We combineren vakmanschap met technologie, zodat kleding met jouw ontwerp",
+      "part2": "gedragen wordt en niet in de kast blijft —",
+      "part3": "items waar je elke dag trots op bent.",
+      "cta": "Maak je ontwerp"
+    },
+    "pair": {
+      "title1": "Gemaakt om te dragen,",
+      "accent": "verfijnd",
+      "title2": "tot in detail",
+      "desc": "Zwaar katoen, precieze print en borduurwerk die honderden wasbeurten doorstaan. Kies de basis, wij doen de rest.",
+      "from": "vanaf {price} ₴"
+    }
   }
 }

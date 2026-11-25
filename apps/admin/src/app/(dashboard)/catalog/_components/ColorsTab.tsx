@@ -125,7 +125,7 @@ export default function ColorsTab({
         actions={showSectionAction ? <Button size="sm" onClick={openCreate}>Додати колір</Button> : undefined}
       >
 
-      <AdminTablePanel>
+      <AdminTablePanel bleed>
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
@@ -188,10 +188,10 @@ export default function ColorsTab({
               <TableCell className="text-xs text-muted-foreground font-mono">{m.hex_code}</TableCell>
               <TableCell>
                 <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button variant="ghost" size="icon" onClick={() => openEdit(m)}>
+                  <Button aria-label="Редагувати" variant="ghost" size="icon" onClick={() => openEdit(m)}>
                     <Pencil className="w-3.5 h-3.5" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => setDeleteTarget(m)}>
+                  <Button aria-label="Видалити" variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => setDeleteTarget(m)}>
                     <Trash2 className="w-3.5 h-3.5" />
                   </Button>
                 </div>

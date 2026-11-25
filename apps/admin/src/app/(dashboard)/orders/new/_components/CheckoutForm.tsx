@@ -15,6 +15,14 @@ export interface ContactData {
   novaPoshtaDetails: string; deadline: string; comment: string;
 }
 
+/** Required contact fields for an order: name, phone, and Nova Poshta details when that delivery is chosen. */
+export function isContactComplete(contact: ContactData): boolean {
+  return Boolean(
+    contact.name.trim() && contact.phone.trim() &&
+    (contact.delivery !== "nova_poshta" || contact.novaPoshtaDetails.trim()),
+  );
+}
+
 interface CheckoutFormProps {
   contact: ContactData;
   setContact: React.Dispatch<React.SetStateAction<ContactData>>;
@@ -48,8 +56,7 @@ export function CheckoutForm({
   const toggleTag = (id: string) =>
     setOrderTags((prev) => prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]);
 
-  const canProceed = contact.name.trim() && contact.phone.trim() &&
-    (contact.delivery !== "nova_poshta" || contact.novaPoshtaDetails.trim());
+  const canProceed = isContactComplete(contact);
 
   const handleNext = () => {
     if (!canProceed) { setHighlightRequired(true); setTimeout(() => setHighlightRequired(false), 1000); return; }
@@ -73,24 +80,24 @@ export function CheckoutForm({
               <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Ім&apos;я та прізвище *</Label>
               <Input type="text" value={contact.name} onChange={set("name")}
                 placeholder={cipherText}
-                className={`h-11 rounded-xl border-border/40 bg-background/50 focus:bg-background transition-all font-mono placeholder:font-mono ${!contact.name && highlightRequired ? "ring-2 ring-destructive/20 border-destructive animate-shake" : ""}`} />
+                className={`h-11 rounded-lg border-border/40 bg-background/50 focus:bg-background transition-all font-mono placeholder:font-mono ${!contact.name && highlightRequired ? "ring-2 ring-destructive/20 border-destructive animate-shake" : ""}`} />
             </div>
             <div className="space-y-2">
               <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Телефон *</Label>
               <Input type="tel" value={contact.phone} onChange={set("phone")}
                 placeholder="+380 XX XXX XX XX"
-                className={`h-11 rounded-xl border-border/40 bg-background/50 focus:bg-background transition-all ${!contact.phone && highlightRequired ? "ring-2 ring-destructive/20 border-destructive animate-shake" : ""}`} />
+                className={`h-11 rounded-lg border-border/40 bg-background/50 focus:bg-background transition-all ${!contact.phone && highlightRequired ? "ring-2 ring-destructive/20 border-destructive animate-shake" : ""}`} />
             </div>
             <div className="space-y-2">
               <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Email</Label>
               <Input type="email" value={contact.email} onChange={set("email")} placeholder="hr@company.com" 
-                className="h-11 rounded-xl border-border/40 bg-background/50 focus:bg-background transition-all" />
+                className="h-11 rounded-lg border-border/40 bg-background/50 focus:bg-background transition-all" />
             </div>
             <div className="space-y-2">
               <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Компанія / ЄДРПОУ</Label>
               <div className="flex gap-2">
-                <Input type="text" value={contact.company} onChange={set("company")} placeholder="Назва..." className="h-11 rounded-xl border-border/40 bg-background/50 focus:bg-background transition-all flex-1" />
-                <Input type="text" value={contact.edrpou} onChange={set("edrpou")} placeholder="ЄДРПОУ" className="h-11 rounded-xl border-border/40 bg-background/50 focus:bg-background transition-all w-28" />
+                <Input type="text" value={contact.company} onChange={set("company")} placeholder="Назва..." className="h-11 rounded-lg border-border/40 bg-background/50 focus:bg-background transition-all flex-1" />
+                <Input type="text" value={contact.edrpou} onChange={set("edrpou")} placeholder="ЄДРПОУ" className="h-11 rounded-lg border-border/40 bg-background/50 focus:bg-background transition-all w-28" />
               </div>
             </div>
             <div className="sm:col-span-2 space-y-2">
@@ -103,7 +110,7 @@ export function CheckoutForm({
                   ))}
                 </select>
                 <Input type="text" value={contact.socialHandle} onChange={set("socialHandle")}
-                  placeholder="@username" className="h-11 rounded-xl border-border/40 bg-background/50 focus:bg-background transition-all flex-1" />
+                  placeholder="@username" className="h-11 rounded-lg border-border/40 bg-background/50 focus:bg-background transition-all flex-1" />
               </div>
             </div>
           </div>
@@ -132,7 +139,7 @@ export function CheckoutForm({
               <div className="animate-in slide-in-from-top-2 fade-in duration-300">
                 <Input type="text" value={contact.novaPoshtaDetails} onChange={set("novaPoshtaDetails")}
                   placeholder="Місто, відділення або номер поштомату"
-                  className={`h-11 rounded-xl border-border/40 bg-background/50 focus:bg-background transition-all ${!contact.novaPoshtaDetails.trim() && highlightRequired ? "ring-2 ring-destructive/20 border-destructive animate-shake" : ""}`} />
+                  className={`h-11 rounded-lg border-border/40 bg-background/50 focus:bg-background transition-all ${!contact.novaPoshtaDetails.trim() && highlightRequired ? "ring-2 ring-destructive/20 border-destructive animate-shake" : ""}`} />
               </div>
             )}
           </div>
@@ -196,10 +203,10 @@ export function CheckoutForm({
                   value={customTagInput}
                   onChange={(e) => setCustomTagInput(e.target.value)}
                   placeholder="Свій тег..."
-                  className="h-9 text-xs font-bold border border-dashed border-border/60 rounded-xl px-4 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 bg-transparent placeholder:text-muted-foreground/50 w-28 transition-all focus:w-40"
+                  className="h-9 text-xs font-bold border border-dashed border-border/60 rounded-lg px-4 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 bg-transparent placeholder:text-muted-foreground/50 w-28 transition-all focus:w-40"
                 />
                 {customTagInput.trim() && (
-                  <Button type="submit" size="icon" className="size-9 rounded-xl shadow-md">
+                  <Button aria-label="Додати" type="submit" size="icon" className="size-9 rounded-xl shadow-md">
                     <Plus className="size-4" />
                   </Button>
                 )}
@@ -224,7 +231,7 @@ export function CheckoutForm({
               <div className="mt-6 space-y-6 animate-in slide-in-from-top-4 fade-in duration-500">
                 <div className="space-y-2">
                   <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Бажаний дедлайн</Label>
-                  <Input type="date" value={contact.deadline} onChange={set("deadline")} className="h-11 rounded-xl border-border/40 bg-background/50 focus:bg-background transition-all w-full sm:w-60" />
+                  <Input type="date" value={contact.deadline} onChange={set("deadline")} className="h-11 rounded-lg border-border/40 bg-background/50 focus:bg-background transition-all w-full sm:w-60" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Коментар до замовлення</Label>
@@ -233,7 +240,7 @@ export function CheckoutForm({
                     onChange={set("comment")}
                     placeholder="Будь-які додаткові побажання..." 
                     rows={4}
-                    className="w-full px-4 py-3 border border-border/40 rounded-2xl text-sm font-medium bg-background/50 focus:bg-background focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none" 
+                    className="w-full px-4 py-3 border border-border/40 rounded-lg text-sm font-medium bg-background/50 focus:bg-background focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none" 
                   />
                 </div>
                 <div className="space-y-4">

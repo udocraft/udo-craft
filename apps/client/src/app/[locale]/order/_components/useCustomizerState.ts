@@ -1,8 +1,10 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useCustomizer, type PrintLayer, type SidebarTabId } from "@udo-craft/shared";
-import type { Product, PrintZone, Material, ProductColorVariant } from "@udo-craft/shared";
+import { useCustomizer, discountPctForQty, type PrintLayer, type SidebarTabId } from "@udo-craft/shared";
+import type { Product, PrintZonesMap, Material, ProductColorVariant } from "@udo-craft/shared";
 import { type PrintTypePricingRow } from "@/components/LayersPanel";
 import { toast } from "sonner";
 import { useLayerHandlers } from "./useLayerHandlers";
@@ -18,7 +20,7 @@ interface ProductWithConfig extends Product {
 
 interface UseCustomizerStateProps {
   product: ProductWithConfig;
-  printZones: { front?: PrintZone | null; back?: PrintZone | null };
+  printZones: PrintZonesMap;
   materials: Material[];
   variants: ProductColorVariant[];
   onAdd: (item: CartItem) => void;
@@ -41,6 +43,7 @@ export function useCustomizerState({
   existingMockupUploadedUrl,
   initialSharePayload,
 }: UseCustomizerStateProps) {
+  const t = useTranslations("editor");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasSaveRef = useRef<(() => string) | null>(null);
   const fabricCanvasRef = useRef<import("fabric").fabric.Canvas | null>(null);
@@ -124,7 +127,7 @@ export function useCustomizerState({
     } else if (draft?.layers && draft.layers.length > 0) {
       // Restore draft layers (only uploaded images + text layers survive reload)
       setLayersWithRef(draft.layers);
-      toast.info("Відновлено попередній сеанс редагування", { duration: 3000 });
+      toast.info(t("state.restored"), { duration: 3000 });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -141,18 +144,14 @@ export function useCustomizerState({
     const images = selectedVariant?.images && Object.keys(selectedVariant.images).length > 0
       ? selectedVariant.images : product.images ?? {};
     const keys = Object.keys(images).filter((key) => (images as Record<string, string>)[key]);
-    if (keys.length > 0 && !(images as Record<string, string>)[activeSide]) setActiveSide(keys[0]);
-  }, [selectedVariant, product.images, activeSide]);
+    if (keys.length > 0 && !(images as Record<string, string>)[activeSide] && !printZones[activeSide]) setActiveSide(keys[0]);
+  }, [selectedVariant, product.images, activeSide, printZones]);
 
   // Derived pricing values
-  const discountPct = (() => {
-    const grid = (product as any).discount_grid as { qty: number; discount_pct: number }[] | undefined;
-    if (!grid?.length) return 0;
-    const sorted = [...grid].sort((a, b) => b.qty - a.qty);
-    return sorted.find((t) => quantity >= t.qty)?.discount_pct ?? 0;
-  })();
+  // Same rules as the server (packages/shared/src/orders.ts), so the cart total is what gets stored.
+  const discountPct = discountPctForQty((product as { discount_grid?: unknown }).discount_grid, quantity);
   const unitPrice = product.base_price_cents / 100;
-  const discounted = unitPrice * (1 - discountPct / 100);
+  const discounted = Math.round(product.base_price_cents * (1 - discountPct / 100)) / 100;
   const resolveLayerPrice = (layer: PrintLayer): number =>
     resolveLayerPriceFromHook(layer, quantity, printPricing);
   const printCostPerUnit = layers.reduce((sum, layer) => sum + resolveLayerPrice(layer) / 100, 0);
@@ -160,8 +159,8 @@ export function useCustomizerState({
   const requiresGarmentSize = Array.isArray(product.available_sizes) && product.available_sizes.length > 0;
   const hasIncompletePrintSizes = layers.some((layer) => !layer.sizeLabel);
   const addDisabledReason = requiresGarmentSize && !selectedSize
-    ? "Оберіть розмір товару."
-    : hasIncompletePrintSizes ? "Оберіть розмір для кожного нанесення." : null;
+    ? t("state.chooseGarmentSize")
+    : hasIncompletePrintSizes ? t("state.choosePrintSizes") : null;
 
   const addLayer = (file: File) => addLayerFromHook(file, activeSide, printPricing);
   const addLayerFull = (file: File, side: string, pricing: typeof printPricing) =>
@@ -254,8 +253,8 @@ export function useCustomizerState({
 
   const handleAddToCart = async () => {
     if (addingToCart) return;
-    if (requiresGarmentSize && !selectedSize) { toast.error("Оберіть розмір товару"); return; }
-    if (hasIncompletePrintSizes) { toast.error("Оберіть розмір для кожного нанесення"); return; }
+    if (requiresGarmentSize && !selectedSize) { toast.error(t("state.chooseGarmentSize")); return; }
+    if (hasIncompletePrintSizes) { toast.error(t("state.choosePrintSizes")); return; }
     setAddingToCart(true);
     try {
       const item = await handleAddToCartFromHook({

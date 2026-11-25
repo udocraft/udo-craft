@@ -137,7 +137,17 @@ export function ProductsTab({
   // ── Loading state ───────────────────────────────────────────────────────────
 
   if (loading) {
-    return <TableSkeleton rows={10} />;
+    return (
+      <div className="px-4 pb-6 pt-4 md:px-6" aria-busy="true" aria-label="Завантаження товарів">
+        <AdminTablePanel bleed>
+          <Table>
+            <TableBody>
+              <TableSkeleton rows={10} />
+            </TableBody>
+          </Table>
+        </AdminTablePanel>
+      </div>
+    );
   }
 
   // ── Empty state ─────────────────────────────────────────────────────────────
@@ -216,7 +226,7 @@ export function ProductsTab({
       )}
 
       <div className="px-4 md:px-6 pb-6">
-        <AdminTablePanel>
+        <AdminTablePanel bleed>
           <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">

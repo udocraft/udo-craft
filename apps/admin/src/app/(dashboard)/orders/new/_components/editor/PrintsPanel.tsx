@@ -82,7 +82,7 @@ function AIIllustrationSection({ onAddLayer }: { onAddLayer: (file: File) => voi
           onBlur={() => setFocused(false)}
           rows={4}
           placeholder=""
-          className="w-full px-3 py-2.5 text-xs font-sans rounded-xl border border-input bg-background resize-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary leading-relaxed"
+          className="w-full px-3 py-2.5 text-xs font-sans rounded-lg border border-input bg-background resize-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary leading-relaxed"
           aria-label="Запит для AI ілюстрації"
         />
 

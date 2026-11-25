@@ -1,5 +1,7 @@
 "use client";
 
+import { LEAD_STATUS_LABELS } from "@udo-craft/shared";
+import { updateLeadStatus } from "@/lib/leads/status";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -18,6 +20,7 @@ import {
 import { toast } from "sonner";
 import { fmtTime, cn } from "@/lib/utils";
 import { DashboardPage } from "@/components/dashboard-page";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback } from "@udo-craft/ui";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -76,10 +79,7 @@ const SOURCE_CONFIG = {
 } as const;
 
 const STATUSES = ["new", "in_progress", "production", "completed", "archived"] as const;
-const STATUS_LABELS: Record<string, string> = {
-  new: "Новий", in_progress: "В роботі", production: "Виробництво",
-  completed: "Завершено", archived: "Архів",
-};
+const STATUS_LABELS: Record<string, string> = LEAD_STATUS_LABELS;
 
 function initials(name: string) {
   return (name || "?").split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
@@ -117,7 +117,8 @@ export default function MessagesPage() {
   const fetchLeads = useCallback(async () => {
     setLoading(true);
     try {
-      const r = await fetch("/api/leads");
+      // Chats only need the lead itself; the newest 500 cover the active inbox.
+      const r = await fetch("/api/leads?view=summary&limit=500");
       if (!r.ok) throw new Error();
       setLeads(await r.json());
     } catch { toast.error("Помилка завантаження"); }
@@ -141,10 +142,21 @@ export default function MessagesPage() {
 
   useEffect(() => {
     if (!leads.length) return;
-    const ids = leads.map((l) => l.id).join(",");
-    fetch(`/api/messages?lead_ids=${ids}`)
-      .then((r) => r.ok ? r.json() : {})
-      .then((map: Record<string, Message>) => setLastMessages(map));
+    // Previews in chunks: one URL with hundreds of ids exceeds the request size limit.
+    const CHUNK = 100;
+    const chunks: string[][] = [];
+    for (let i = 0; i < leads.length; i += CHUNK) chunks.push(leads.slice(i, i + CHUNK).map((l) => l.id));
+    let alive = true;
+    Promise.all(
+      chunks.map((ids) =>
+        fetch(`/api/messages?lead_ids=${ids.join(",")}`)
+          .then((r) => (r.ok ? r.json() : {}))
+          .catch(() => ({})),
+      ),
+    ).then((maps: Record<string, Message>[]) => {
+      if (alive) setLastMessages(Object.assign({}, ...maps));
+    });
+    return () => { alive = false; };
   }, [leads]);
 
   useEffect(() => {
@@ -243,23 +255,18 @@ export default function MessagesPage() {
   const handleStatusChange = async (newStatus: string) => {
     if (!selectedLead) return;
     const prev = selectedLead.status;
+    if (prev === newStatus) return;
+    const leadId = selectedLead.id;
     setSelectedLead(s => s ? { ...s, status: newStatus } : s);
-    setLeads(ls => ls.map(l => l.id === selectedLead.id ? { ...l, status: newStatus } : l));
+    setLeads(ls => ls.map(l => l.id === leadId ? { ...l, status: newStatus } : l));
     try {
-      const r = await fetch(`/api/leads/${selectedLead.id}`, {
-        method: "PATCH", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
-      });
-      if (!r.ok) throw new Error();
-      const sysBody = `Статус змінено: ${STATUS_LABELS[prev] || prev} → ${STATUS_LABELS[newStatus] || newStatus}`;
-      const sysMsg: Message = { id: `sys-${Date.now()}`, lead_id: selectedLead.id, body: sysBody, sender: "manager", created_at: new Date().toISOString(), attachments: [] };
-      setMessages(ms => [...ms, sysMsg]);
-      const msgRes = await fetch("/api/messages", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ lead_id: selectedLead.id, body: sysBody, attachments: [] }) });
-      if (msgRes.ok) { const realMsg = await msgRes.json() as Message; setMessages(ms => ms.map(m => m.id === sysMsg.id ? realMsg : m)); }
-    } catch {
-      setSelectedLead(s => s ? { ...s, status: prev } : s);
-      setLeads(ls => ls.map(l => l.id === selectedLead.id ? { ...l, status: prev } : l));
-      toast.error("Помилка зміни статусу");
+      // The server checks the move and writes the "Статус змінено" note.
+      await updateLeadStatus(leadId, prev, newStatus);
+      fetchMessages(leadId);
+    } catch (err) {
+      setSelectedLead(s => s?.id === leadId ? { ...s, status: prev } : s);
+      setLeads(ls => ls.map(l => l.id === leadId ? { ...l, status: prev } : l));
+      toast.error(err instanceof Error ? err.message : "Помилка зміни статусу");
     }
   };
 
@@ -326,7 +333,7 @@ export default function MessagesPage() {
   };
 
   return (
-    <DashboardPage title="Повідомлення" contentClassName="flex-1 flex flex-col overflow-hidden p-0 [&>div]:flex [&>div]:flex-col [&>div]:flex-1 [&>div]:overflow-hidden">
+    <DashboardPage title="Повідомлення" contentClassName="overflow-hidden">
       {viewerUrl && <FileViewer url={viewerUrl} onClose={() => setViewerUrl(null)} />}
       <div className="flex flex-1 min-h-0 overflow-hidden">
 
@@ -369,8 +376,16 @@ export default function MessagesPage() {
           {/* List */}
           <div className="flex-1 overflow-y-auto">
             {loading ? (
-              <div className="flex justify-center items-center h-full">
-                <Loader2 className="size-5 animate-spin text-muted-foreground" />
+              <div aria-busy="true" aria-label="Завантаження розмов">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className="flex items-center gap-3 border-b border-border/60 px-4 py-3">
+                    <Skeleton className="size-9 shrink-0 rounded-full" />
+                    <div className="min-w-0 flex-1 space-y-2">
+                      <Skeleton className="h-3.5 w-2/3" />
+                      <Skeleton className="h-3 w-full" />
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : filteredLeads.length === 0 ? (
               <EmptyState icon={MessageCircle} title={searchQuery ? "Нічого не знайдено" : "Немає розмов"} className="py-12" />
@@ -407,7 +422,7 @@ export default function MessagesPage() {
                         <p className="text-[11px] text-muted-foreground truncate flex-1 leading-relaxed">
                           {last ? (
                             <>{last.sender === "manager" && <span className="font-medium text-foreground/60">Ви: </span>}
-                            {last.attachments?.length && !last.body ? "📎 Вкладення" : last.body.slice(0, 50)}</>
+                            {last.attachments?.length && !last.body ? "Вкладення" : last.body.slice(0, 50)}</>
                           ) : lead.customer_data?.message?.slice(0, 50)}
                         </p>
                         {isUnread && <span className="size-1.5 rounded-full bg-primary shrink-0 mb-0.5" />}
@@ -460,7 +475,7 @@ export default function MessagesPage() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                   <Separator orientation="vertical" className="h-4" />
-                  <Button variant={showInfo ? "secondary" : "ghost"} size="icon-sm"
+                  <Button aria-label="Деталі замовлення" variant={showInfo ? "secondary" : "ghost"} size="icon-sm"
                     className={cn("transition-colors", showInfo && "text-primary")}
                     onClick={() => setShowInfo((v) => !v)}>
                     <Info className="size-4" />
@@ -589,7 +604,7 @@ export default function MessagesPage() {
                     disabled={sending}
                     className="flex-1 h-9 text-sm"
                   />
-                  <Button onClick={handleSend} disabled={sending || uploading || (!replyText.trim() && !pendingFiles.length)} size="icon" className="size-9 shrink-0">
+                  <Button aria-label="Надіслати" onClick={handleSend} disabled={sending || uploading || (!replyText.trim() && !pendingFiles.length)} size="icon" className="size-9 shrink-0">
                     {sending || uploading ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
                   </Button>
                 </div>
@@ -602,10 +617,10 @@ export default function MessagesPage() {
                 <div className="flex items-center justify-between px-4 py-3 border-b border-border/60 shrink-0">
                   <span className="text-sm font-semibold">Деталі</span>
                   <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="icon-sm" className="text-destructive/60 hover:text-destructive hover:bg-destructive/10" onClick={() => handleDeleteLead(selectedLead)}>
+                    <Button aria-label="Видалити чат" variant="ghost" size="icon-sm" className="text-destructive/60 hover:text-destructive hover:bg-destructive/10" onClick={() => handleDeleteLead(selectedLead)}>
                       <Trash2 className="size-3.5" />
                     </Button>
-                    <Button variant="ghost" size="icon-sm" className="text-muted-foreground" onClick={() => setShowInfo(false)}>
+                    <Button aria-label="Закрити деталі" variant="ghost" size="icon-sm" className="text-muted-foreground" onClick={() => setShowInfo(false)}>
                       <X className="size-4" />
                     </Button>
                   </div>

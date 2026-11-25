@@ -1,8 +1,10 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import type { Product, PrintZone, Material, ProductColorVariant } from "@udo-craft/shared";
+import type { Product, PrintZone, PrintZonesMap, Material, ProductColorVariant } from "@udo-craft/shared";
 import { resolveProductImages, getCustomizableImages } from "@udo-craft/shared";
 import { LogoLoader } from "@udo-craft/ui";
 
@@ -25,11 +27,12 @@ interface ProductWithConfig extends Product {
 interface SizeChart { id: string; name: string; rows: Record<string, string>[]; }
 
 function OrderPageLoader() {
+  const t = useTranslations("editor");
   const searchParams = useSearchParams();
 
   const [products, setProducts] = useState<ProductWithConfig[]>([]);
   const [sizeCharts, setSizeCharts] = useState<Record<string, SizeChart>>({});
-  const [printZones, setPrintZones] = useState<Record<string, { front?: PrintZone | null; back?: PrintZone | null }>>({});
+  const [printZones, setPrintZones] = useState<Record<string, PrintZonesMap>>({});
   const [materials, setMaterials] = useState<Material[]>([]);
   const [variants, setVariants] = useState<ProductColorVariant[]>([]);
   const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
@@ -74,11 +77,11 @@ function OrderPageLoader() {
       (charts || []).forEach((c) => { map[c.id] = c; });
       setSizeCharts(map);
 
-      const zoneMap: Record<string, { front?: PrintZone | null; back?: PrintZone | null }> = {};
+      const zoneMap: Record<string, PrintZonesMap> = {};
       prodList.forEach((p) => { zoneMap[p.id] = {}; });
       (zones || []).forEach((z) => {
         if (!zoneMap[z.product_id]) zoneMap[z.product_id] = {};
-        const side = (z as any).side as "front" | "back";
+        const side = String((z as any).side ?? "front");
         if (!zoneMap[z.product_id][side]) zoneMap[z.product_id][side] = z;
       });
       setPrintZones(zoneMap);
@@ -86,7 +89,7 @@ function OrderPageLoader() {
     };
     load().catch(() => {
       if (cancelled) return;
-      setLoadError("Не вдалося завантажити каталог. Спробуйте оновити сторінку.");
+      setLoadError(t("main.catalogFailedReload"));
       setLoading(false);
     });
 

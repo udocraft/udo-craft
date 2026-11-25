@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import React from "react";
 import { X } from "lucide-react";
 
@@ -13,6 +15,7 @@ interface CustomizerMobileSheetProps {
 export function CustomizerMobileSheet({
   activeSheet, onClose, configContent, priceContent,
 }: CustomizerMobileSheetProps) {
+  const t = useTranslations("editor");
   if (!activeSheet) return null;
 
   return (
@@ -30,7 +33,7 @@ export function CustomizerMobileSheet({
         </div>
         <div className="flex items-center justify-between px-4 pb-3 shrink-0">
           <p className="text-sm font-semibold">
-            {activeSheet === "config" ? "Налаштування товару" : "Тираж та ціна"}
+            {activeSheet === "config" ? t("common.productSettings") : t("common.qtyPrice")}
           </p>
           <button
             onClick={onClose}

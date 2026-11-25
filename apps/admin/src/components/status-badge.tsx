@@ -1,17 +1,18 @@
 import { cn } from "@/lib/utils";
+import { LEAD_STATUS_LABELS as L, type LeadStatusValue } from "@udo-craft/shared";
 
-export type LeadStatus = "draft" | "new" | "in_progress" | "production" | "completed" | "archived";
+export type LeadStatus = LeadStatusValue;
 
 const STATUS_CONFIG: Record<
   LeadStatus,
   { label: string; dot: string; text: string; bg: string; className: string }
 > = {
-  draft:       { label: "Чернетка",    dot: "bg-slate-400",   text: "text-slate-600",   bg: "bg-slate-100",   className: "bg-slate-400" },
-  new:         { label: "Новий",       dot: "bg-blue-500",    text: "text-blue-700",    bg: "bg-blue-50",     className: "bg-blue-500" },
-  in_progress: { label: "В роботі",    dot: "bg-amber-500",   text: "text-amber-700",   bg: "bg-amber-50",    className: "bg-amber-500" },
-  production:  { label: "Виробництво", dot: "bg-violet-500",  text: "text-violet-700",  bg: "bg-violet-50",   className: "bg-violet-500" },
-  completed:   { label: "Завершено",   dot: "bg-emerald-500", text: "text-emerald-700", bg: "bg-emerald-50",  className: "bg-emerald-500" },
-  archived:    { label: "Архів",       dot: "bg-slate-300",   text: "text-slate-500",   bg: "bg-slate-50",    className: "bg-slate-400" },
+  draft:       { label: L.draft,    dot: "bg-slate-400",   text: "text-slate-600",   bg: "bg-slate-100",   className: "bg-slate-400" },
+  new:         { label: L.new,       dot: "bg-blue-500",    text: "text-blue-700",    bg: "bg-blue-50",     className: "bg-blue-500" },
+  in_progress: { label: L.in_progress,    dot: "bg-amber-500",   text: "text-amber-700",   bg: "bg-amber-50",    className: "bg-amber-500" },
+  production:  { label: L.production, dot: "bg-violet-500",  text: "text-violet-700",  bg: "bg-violet-50",   className: "bg-violet-500" },
+  completed:   { label: L.completed,   dot: "bg-emerald-500", text: "text-emerald-700", bg: "bg-emerald-50",  className: "bg-emerald-500" },
+  archived:    { label: L.archived,       dot: "bg-slate-300",   text: "text-slate-500",   bg: "bg-slate-50",    className: "bg-slate-400" },
 };
 
 interface StatusBadgeProps {

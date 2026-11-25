@@ -1,5 +1,9 @@
 "use client";
 
+import { DEFAULT_DISCOUNT_GRID, findPrintType } from "@udo-craft/shared";
+import { usePrintTypes } from "@/lib/use-print-types";
+import { useTranslations } from "next-intl";
+
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -66,14 +70,16 @@ export function QtyPriceContent({
   disabled = false,
   hideButton = false,
 }: QtyPriceContentProps) {
+  const t = useTranslations("editor");
+  const printTypes = usePrintTypes();
   const [noteOpen, setNoteOpen] = React.useState(false);
-  const sortedDiscounts = [...(product.discount_grid ?? [])].sort((a, b) => a.qty - b.qty);
+  const sortedDiscounts = [...(product.discount_grid?.length ? product.discount_grid : DEFAULT_DISCOUNT_GRID)].sort((a, b) => a.qty - b.qty);
 
   return (
     <div className={`space-y-5 pb-4 ${disabled ? "opacity-50 pointer-events-none" : ""}`}>
       {showTitle && (
         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-          Тираж та ціна
+          {t("common.qtyPrice")}
         </p>
       )}
 
@@ -128,7 +134,7 @@ export function QtyPriceContent({
                     : "border-primary/40 text-primary hover:border-primary hover:bg-primary/5"
                 }`}
               >
-                <div className="font-bold whitespace-nowrap">від {tier.qty}</div>
+                <div className="font-bold whitespace-nowrap">{t("qty.fromQty", { n: tier.qty })}</div>
                 <div className="text-xs opacity-80">−{tier.discount_pct}%</div>
               </button>
             );
@@ -139,8 +145,8 @@ export function QtyPriceContent({
       {/* Price breakdown */}
       {(() => {
         const printTypeLabels: Record<string, string> = {
-          dtf: "DTF", embroidery: "Вишивка", screen: "Шовкодрук",
-          sublimation: "Сублімація", patch: "Нашивка",
+          dtf: "DTF", embroidery: t("qty.methods.embroidery"), screen: t("qty.methods.screen"),
+          sublimation: t("qty.methods.sublimation"), patch: t("qty.methods.patch"),
         };
 
         // Per-layer print cost with qty-tier pricing
@@ -169,7 +175,7 @@ export function QtyPriceContent({
             basePriceCents,
             hasDiscount: hasDiscount && discountPctPrint > 0,
             discountPctPrint,
-            label: printTypeLabels[layer.type] ?? layer.type,
+            label: printTypeLabels[layer.type] ?? findPrintType(layer.type, printTypes).label,
           };
         });
 
@@ -185,7 +191,7 @@ export function QtyPriceContent({
             {/* Item row */}
             <div className="px-3.5 py-3 flex items-center justify-between gap-2">
               <div className="min-w-0">
-                <p className="text-sm font-medium text-foreground">Товар</p>
+                <p className="text-sm font-medium text-foreground">{t("qty.product")}</p>
                 {discountPct > 0 && (
                   <p className="text-xs text-muted-foreground mt-0.5">
                     <span className="line-through">{(itemBaseCents / 100).toFixed(0)} ₴</span>
@@ -194,7 +200,7 @@ export function QtyPriceContent({
                 )}
               </div>
               <p className="text-sm font-semibold shrink-0 tabular-nums">
-                {(itemDiscountedCents / 100).toFixed(0)} ₴<span className="text-muted-foreground font-normal">/шт</span>
+                {(itemDiscountedCents / 100).toFixed(0)} ₴<span className="text-muted-foreground font-normal">{t("common.perUnit")}</span>
               </p>
             </div>
 
@@ -218,13 +224,13 @@ export function QtyPriceContent({
                         </p>
                       )}
                       {!sizeLabel && (
-                        <p className="text-xs text-amber-600 mt-0.5">Оберіть розмір</p>
+                        <p className="text-xs text-amber-600 mt-0.5">{t("qty.chooseSize")}</p>
                       )}
                     </div>
                     <p className="text-sm font-semibold shrink-0 tabular-nums">
                       {sizeLabel
                         ? priceCents > 0
-                          ? <>{(priceCents / 100).toFixed(0)} ₴<span className="text-muted-foreground font-normal">/шт</span></>
+                          ? <>{(priceCents / 100).toFixed(0)} ₴<span className="text-muted-foreground font-normal">{t("common.perUnit")}</span></>
                           : <span className="text-muted-foreground">—</span>
                         : <span className="text-muted-foreground text-xs">—</span>
                       }
@@ -237,7 +243,7 @@ export function QtyPriceContent({
             {/* Savings row */}
             {totalSavings > 0 && (
               <div className="border-t border-border/40 px-3.5 py-2.5 flex items-center justify-between gap-2 bg-emerald-50/60">
-                <p className="text-sm text-emerald-700 font-medium">Економія</p>
+                <p className="text-sm text-emerald-700 font-medium">{t("qty.savings")}</p>
                 <p className="text-sm font-semibold text-emerald-700 tabular-nums">−{(totalSavings / 100).toFixed(0)} ₴</p>
               </div>
             )}
@@ -245,10 +251,10 @@ export function QtyPriceContent({
             {/* Total row */}
             <div className="border-t border-border/60 px-3.5 py-3 flex items-baseline justify-between gap-2 bg-background/60">
               <div>
-                <p className="text-base font-bold">Разом</p>
+                <p className="text-base font-bold">{t("qty.total")}</p>
                 {quantity > 1 && (
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    {quantity} шт × {((itemDiscountedCents / 100) + (totalPrintCents / 100)).toFixed(0)} ₴
+                    {t("qty.totalLine", { qty: quantity, price: ((itemDiscountedCents / 100) + (totalPrintCents / 100)).toFixed(0) })}
                   </p>
                 )}
               </div>
@@ -264,7 +270,7 @@ export function QtyPriceContent({
       {/* Disclaimer — right below total */}
       <div className="rounded-lg border border-amber-200 bg-amber-50 p-2.5">
         <p className="text-xs text-amber-900">
-          <span className="font-semibold">Важливо:</span> Ціни є орієнтовними. Остаточна вартість може змінитися після обговорення з менеджером.
+          <span className="font-semibold">{t("qty.noteLabel")}</span> {t("qty.noteText")}
         </p>
       </div>
 
@@ -276,7 +282,7 @@ export function QtyPriceContent({
           disabled={disabled}
           className="w-full flex items-center justify-between px-3 py-2.5 text-left hover:bg-muted/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Нотатка до позиції</span>
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t("qty.itemNote")}</span>
           {noteOpen ? <Minus className="size-3.5 text-muted-foreground shrink-0" /> : <Plus className="size-3.5 text-muted-foreground shrink-0" />}
         </button>
         <AnimatePresence initial={false}>
@@ -294,7 +300,7 @@ export function QtyPriceContent({
                   value={itemNote}
                   onChange={(e) => setItemNote(e.target.value)}
                   disabled={disabled}
-                  placeholder="Особливі побажання..."
+                  placeholder={t("qty.notePlaceholder")}
                   rows={2}
                   className="w-full resize-none rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder:text-muted-foreground disabled:opacity-50 disabled:cursor-not-allowed"
                 />
@@ -316,8 +322,8 @@ export function QtyPriceContent({
             onClick={onAddToCart}
           >
             {loading
-              ? <><Loader2 className="size-3.5 animate-spin" /> Додаємо...</>
-              : "Додати до замовлення"}
+              ? <><Loader2 className="size-3.5 animate-spin" /> {t("common.adding")}</>
+              : t("common.addToOrder")}
           </Button>
         </>
       )}

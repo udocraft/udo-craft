@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import React, { useState } from "react";
 import type { Product, Material, ProductColorVariant, PrintLayer } from "@udo-craft/shared";
 import LayersPanel, { type PrintTypePricingRow } from "@/components/LayersPanel";
@@ -51,19 +53,20 @@ export function CustomizerLeftPanel({
   onLayerDuplicate, onLayerRemoveBg, onLayerTypeChange, onLayerSizeLabelChange,
   onLayerReorder, onAddClick, onAddText, onTextChange, onFileChange,
 }: CustomizerLeftPanelProps) {
+  const t = useTranslations("editor");
   const [descExpanded, setDescExpanded] = useState(false);
 
   return (
     <div className="space-y-5">
       <div>
         <button
-          onClick={() => { if (!confirm("Повернутися? Незбережені зміни буде втрачено.")) return; onClose(); }}
+          onClick={() => { if (!confirm(t("common.leaveConfirm"))) return; onClose(); }}
           className="cursor-pointer flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors mb-3"
         >
-          <ArrowLeft className="size-3.5" /> Назад
+          <ArrowLeft className="size-3.5" /> {t("common.back")}
         </button>
         <p className="text-sm font-bold leading-tight">{product.name}</p>
-        <p className="text-xs text-muted-foreground mt-0.5 mb-2">від {unitPrice.toFixed(0)} ₴ / шт</p>
+        <p className="text-xs text-muted-foreground mt-0.5 mb-2">{t("common.fromPricePer", { price: unitPrice.toFixed(0) })}</p>
         
         {product.description && (
           <div className="mt-2">
@@ -75,7 +78,7 @@ export function CustomizerLeftPanel({
                 onClick={() => setDescExpanded(!descExpanded)}
                 className="text-xs text-primary font-semibold hover:underline mt-1 touch-manipulation cursor-pointer"
               >
-                {descExpanded ? "Згорнути" : "Розгорнути"}
+                {descExpanded ? t("common.collapse") : t("common.expand")}
               </button>
             )}
           </div>
@@ -83,7 +86,7 @@ export function CustomizerLeftPanel({
       </div>
 
       <div className="space-y-2">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Колір</p>
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t("common.color")}</p>
         {variants.length > 0 ? (
           <div className="flex gap-2 flex-wrap">
             {variants.map((v) => {
@@ -100,12 +103,12 @@ export function CustomizerLeftPanel({
               );
             })}
           </div>
-        ) : <p className="text-xs text-muted-foreground">Кольори не налаштовані</p>}
+        ) : <p className="text-xs text-muted-foreground">{t("common.noColors")}</p>}
         {selectedColor && <p className="text-xs text-muted-foreground">{selectedColor}</p>}
       </div>
 
       <div className="space-y-2">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Розмір</p>
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t("common.size")}</p>
         <div className="flex gap-1.5 flex-wrap">
           {(Array.isArray(product.available_sizes) && product.available_sizes.length > 0
             ? product.available_sizes as string[] : []
@@ -119,7 +122,7 @@ export function CustomizerLeftPanel({
       </div>
 
       <div className="space-y-2">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Нанесення</p>
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t("common.print")}</p>
         <LayersPanel
           layers={layers}
           activeSide={activeSide}

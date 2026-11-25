@@ -139,7 +139,7 @@ export function CategoriesTab({
       >
 
       {loading ? (
-        <AdminTablePanel>
+        <AdminTablePanel bleed>
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -166,7 +166,7 @@ export function CategoriesTab({
           action={<Button size="sm" onClick={openCreate}><Plus className="w-3.5 h-3.5 mr-1" /> Нова категорія</Button>}
         />
       ) : (
-        <AdminTablePanel>
+        <AdminTablePanel bleed>
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -255,11 +255,11 @@ export function CategoriesTab({
                   <TableCell onClick={e => e.stopPropagation()}>
                     {isEditing ? (
                       <div className="flex gap-1">
-                        <Button variant="ghost" size="icon" className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                        <Button aria-label="Зберегти" variant="ghost" size="icon" className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
                           onClick={() => saveInlineEdit(cat)} disabled={savingInline}>
                           <Check className="w-3.5 h-3.5" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="text-muted-foreground"
+                        <Button aria-label="Скасувати" variant="ghost" size="icon" className="text-muted-foreground"
                           onClick={cancelInlineEdit}>
                           <XIcon className="w-3.5 h-3.5" />
                         </Button>
@@ -270,7 +270,7 @@ export function CategoriesTab({
                           onClick={e => startInlineEdit(cat, e)} title="Редагувати">
                           <Pencil className="w-3.5 h-3.5" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive"
+                        <Button aria-label="Видалити" variant="ghost" size="icon" className="text-destructive hover:text-destructive"
                           onClick={() => setDeleteTarget(cat)}>
                           <Trash2 className="w-3.5 h-3.5" />
                         </Button>

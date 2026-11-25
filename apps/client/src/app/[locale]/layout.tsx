@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { PageTracker } from "@/components/PageTracker";
+import { BootSplash } from "@udo-craft/ui";
 import { Toaster } from "@/components/ui/sonner";
 import { ConsentBanner } from "@/components/consent/ConsentBanner";
 import { ConsentScripts } from "@/components/consent/ConsentScripts";
@@ -31,6 +32,16 @@ const geistMono = localFont({
   adjustFontFallback: "Arial",
   preload: false,
 });
+
+/**
+ * Telegram's in-app browser and Safari tint their floating toolbars from this.
+ * White matches the header, so the bars read as part of it instead of showing
+ * the dark hero through the glass.
+ */
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
+  colorScheme: "light",
+};
 
 export async function generateMetadata({
   params,
@@ -80,6 +91,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <body className="min-h-screen bg-background text-foreground antialiased" suppressHydrationWarning>
+        <BootSplash />
         <a href="#main" className="skip-link">
           {tNav("skipToContent")}
         </a>

@@ -14,14 +14,14 @@ create index if not exists cms_content_slug_idx on public.cms_content (slug);
 
 alter table public.cms_content enable row level security;
 
-create policy if not exists "Public can read cms_content"
-  on public.cms_content for select using (true);
+drop policy if exists "Public can read cms_content" on public.cms_content;
+create policy "Public can read cms_content" on public.cms_content for select using (true);
 
-create policy if not exists "Authenticated users can upsert cms_content"
-  on public.cms_content for insert to authenticated with check (true);
+drop policy if exists "Authenticated users can upsert cms_content" on public.cms_content;
+create policy "Authenticated users can upsert cms_content" on public.cms_content for insert to authenticated with check (true);
 
-create policy if not exists "Authenticated users can update cms_content"
-  on public.cms_content for update to authenticated using (true);
+drop policy if exists "Authenticated users can update cms_content" on public.cms_content;
+create policy "Authenticated users can update cms_content" on public.cms_content for update to authenticated using (true);
 
 -- ── Seed with current hardcoded landing values ────────────────────────────────
 -- Uses INSERT ... ON CONFLICT DO UPDATE so re-running is safe and updates existing empty rows
@@ -35,7 +35,7 @@ insert into public.cms_content (slug, title, body) values
     "subheading": "Ринок перенасичений дешевим трендовим одягом. Ми створюємо речі, які стають улюбленими в гардеробі. Ваш мерч — це інструмент стратегічної комунікації.",
     "cta_primary_text": "Переглянути каталог",
     "cta_primary_url": "#collections",
-    "cta_secondary_text": "Зв'\''язатись",
+    "cta_secondary_text": "Зв''язатись",
     "cta_secondary_url": "#contact",
     "badge1": "Від 10 одиниць",
     "badge2": "Гарантія якості",
@@ -83,7 +83,7 @@ insert into public.cms_content (slug, title, body) values
   'home_contact',
   'Контакти',
   '{
-    "heading": "Зв'\''яжіться з нами",
+    "heading": "Зв''яжіться з нами",
     "subtext": "Розкажіть про ваш проєкт — ми підберемо оптимальне рішення та надішлемо пропозицію протягом 24 годин.",
     "email": "info@udocraft.com",
     "phone": "+380 63 070 33 072",

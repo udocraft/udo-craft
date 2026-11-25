@@ -1,0 +1,6 @@
+# Changes here need the owner's review. The agent pipeline is also blocked from editing them.
+/.github/                 @andriihukco
+/.claude/                 @andriihukco
+/scripts/agent/           @andriihukco
+/apps/client/e2e/         @andriihukco
+/supabase/migrations/     @andriihukco

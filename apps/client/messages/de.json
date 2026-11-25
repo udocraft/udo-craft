@@ -1,12 +1,14 @@
 {
   "meta": {
-    "title": "U:DO CRAFT — Corporate merch",
-    "description": "B2B merch platform. We create clothing that becomes part of your corporate DNA.",
+    "title": "U:DO CRAFT – Kleidung mit deinem Design",
+    "description": "Gestalte T-Shirt, Hoodie oder Longsleeve online mit deinem eigenen Print. Fertigung in 7–14 Tagen, Lieferung in die ganze Ukraine.",
     "productTitle": "{name} | Individuelle Veredelung & Fertigung | U:DO CRAFT",
     "productDescription": "Bestellen Sie Firmenkleidung {name} mit individuellem Druck oder Stickerei ab {min} Stück.",
     "productNotFound": "Produkt nicht gefunden | U:DO CRAFT",
     "popupTitle": "Merch-Popup für Ihre Veranstaltung | U:DO CRAFT",
-    "popupDescription": "Ein mobiles Merch-Popup: Gäste gestalten Kleidung selbst und nehmen sie sofort mit. Für Firmenevents, Konferenzen und Festivals."
+    "popupDescription": "Ein mobiles Merch-Popup: Gäste gestalten Kleidung selbst und nehmen sie sofort mit. Für Firmenevents, Konferenzen und Festivals.",
+    "bizTitle": "U:DO CRAFT für Unternehmen – Corporate Merch",
+    "bizDescription": "B2B merch platform. We create clothing that becomes part of your corporate DNA."
   },
   "nav": {
     "catalog": "Katalog",
@@ -16,6 +18,11 @@
     "contacts": "Kontakt",
     "startProject": "Projekt starten",
     "openMenu": "Menü öffnen",
+    "menu": "Menü",
+    "language": "Sprache",
+    "directionsPrompt": "Route in Karten öffnen?",
+    "directionsOpen": "Karten öffnen",
+    "directionsCancel": "Abbrechen",
     "closeMenu": "Menü schließen",
     "goToAccount": "Zum Konto",
     "signIn": "Anmelden",
@@ -24,7 +31,9 @@
     "logoLink": "U:DO CRAFT — zur Startseite",
     "skipToContent": "Zum Hauptinhalt springen",
     "designMerch": "Merch gestalten",
-    "getQuote": "Angebot anfordern"
+    "getQuote": "Angebot anfordern",
+    "business": "Für Unternehmen",
+    "createDesign": "Design erstellen"
   },
   "homeStats": {
     "stat3Suffix": " Tage",
@@ -45,7 +54,8 @@
   "homeContact": {
     "heading": "Kontaktieren Sie uns",
     "subtext": "Erzählen Sie uns von Ihrem Projekt — Sie erhalten innerhalb von 24 Stunden ein Angebot.",
-    "address": "Lwiw, Dscherelna-Str. 69"
+    "address": "Lwiw, Dscherelna-Str. 69",
+    "visitNote": "Showroom-Besuch nach Vereinbarung · Mo⁠–⁠Do 10:00⁠–⁠18:00, Fr 10:00⁠–⁠16:00"
   },
   "hero": {
     "heading": "Kleidung, die Teil Ihrer Unternehmens-DNA wird",
@@ -53,6 +63,7 @@
     "ctaPrimary": "Katalog ansehen",
     "skipToCatalog": "Zum Katalog",
     "watchVideo": "Video ansehen",
+    "showProcess": "Prozess ansehen",
     "closeVideo": "Video schließen",
     "mainSection": "Hero-Bereich",
     "fullscreenVideo": "Video im Vollbildmodus",
@@ -122,12 +133,12 @@
     "prevPage": "Zurück",
     "nextPage": "Weiter",
     "page": "Seite {n}",
-    "fromPrice": "from ₴{price}",
+    "fromPrice": "ab {price} ₴",
     "priceOnRequest": "Preis auf Anfrage",
-    "expand": "Expand",
-    "collapse": "Collapse",
-    "addPrint": "Add print",
-    "withoutPrint": "Without print"
+    "expand": "Mehr anzeigen",
+    "collapse": "Weniger anzeigen",
+    "addPrint": "Print hinzufügen",
+    "withoutPrint": "Ohne Print"
   },
   "process": {
     "heading": "Von der Idee zum Merch — in 4 Schritten",
@@ -269,21 +280,21 @@
     "discount": "Rabatt",
     "mm": "mm",
     "embroidery": "Stickerei",
-    "label": "Online constructor",
-    "heading": "Build your merch right in the interface",
-    "desc": "Real workspace for selecting product, color, prints, layers and volume pricing before placing an order.",
-    "openEditor": "Open constructor",
-    "productLabel": "Product",
-    "colorLabel": "Color",
+    "label": "Online-Editor",
+    "heading": "Gleich hier ausprobieren",
+    "desc": "Wähle eine Farbe und lade dein Bild hoch – so sieht dein Teil aus.",
+    "openEditor": "Editor öffnen",
+    "productLabel": "Produkt",
+    "colorLabel": "Farbe",
     "printsLabel": "Prints",
     "textLabel": "Text",
-    "fileLabel": "File",
-    "volumeLabel": "Volume & price",
-    "totalLabel": "Total",
-    "saved": "Draft saved",
-    "layersReady": "Layers ready",
-    "priceUpdated": "Price updated",
-    "sizeLabel": "Size"
+    "fileLabel": "Datei",
+    "volumeLabel": "Menge und Preis",
+    "totalLabel": "Gesamt",
+    "saved": "Entwurf gespeichert",
+    "layersReady": "Ebenen bereit",
+    "priceUpdated": "Preis aktualisiert",
+    "sizeLabel": "Größe"
   },
   "trust": {
     "statsLabel": "Kennzahlen",
@@ -419,10 +430,10 @@
     "address": "Address"
   },
   "footer": {
-    "tagline": "B2B-Merch-Plattform für Teams, Marken und Events.",
+    "tagline": "Kleidung mit deinem Design – vom Einzelstück bis zur Großbestellung.",
     "copyright": "U:DO CRAFT. Alle Rechte vorbehalten.",
     "readyToStart": "Bereit anzufangen?",
-    "readyDesc": "Ab 10 Stück · 7–14 Tage · Lieferung",
+    "readyDesc": "Ab einem Stück · 7–14 Tage · Lieferung in die ganze Ukraine",
     "startProject": "Projekt starten",
     "ariaLabel": "Fußzeile",
     "homeLink": "U:DO CRAFT — zur Startseite",
@@ -454,11 +465,28 @@
           "cabinet": "Konto",
           "delivery": "Versand & Zahlung"
         }
+      },
+      "business": {
+        "title": "Für Unternehmen",
+        "links": {
+          "overview": "Corporate Merch"
+        }
       }
     },
     "privacy": "Datenschutz",
     "terms": "AGB",
-    "cookies": "Cookies"
+    "cookies": "Cookies",
+    "newsletter": {
+      "title": "{pct}% Rabatt auf deine erste Bestellung",
+      "desc": "Newsletter abonnieren: neue Teile, Print-Ideen und limitierte Drops einmal im Monat. Kein Spam.",
+      "placeholder": "Deine E-Mail",
+      "label": "E-Mail für den Newsletter",
+      "submit": "Abonnieren",
+      "success": "Fertig. Dein {pct}%-Code ist unterwegs.",
+      "error": "Anmeldung fehlgeschlagen. Bitte versuche es erneut.",
+      "invalid": "Bitte prüfe deine E-Mail.",
+      "consent": "Mit der Anmeldung stimmst du der Datenschutzerklärung zu."
+    }
   },
   "cart": {
     "title": "Warenkorb",
@@ -661,7 +689,8 @@
       "attachLabel": "Datei anhängen",
       "loading": "Nachrichten werden geladen...",
       "empty": "Noch keine Nachrichten",
-      "fileTooLarge": "\"{name}\" überschreitet 10 MB"
+      "fileTooLarge": "\"{name}\" überschreitet 10 MB",
+      "sendError": "Nachricht konnte nicht gesendet werden. Bitte erneut versuchen."
     },
     "files": {
       "empty": "Noch keine Dateien",
@@ -686,6 +715,66 @@
     "order": {
       "back": "Alle Bestellungen",
       "notFound": "Bestellung nicht gefunden"
+    },
+    "errorPage": {
+      "title": "Fehler im Kundenkonto",
+      "text": "Dein Konto konnte nicht geladen werden. Versuche es erneut oder gehe zur Startseite.",
+      "retry": "Erneut versuchen",
+      "home": "Zur Startseite"
+    },
+    "file": "Datei",
+    "productFallback": "Produkt ({color})",
+    "profile": {
+      "saved": "Profil aktualisiert",
+      "saveFailed": "Profil konnte nicht gespeichert werden. Prüfe deine Verbindung und versuche es erneut.",
+      "title": "Profil",
+      "subtitle": "Deine Kontaktdaten für Bestellungen",
+      "name": "Vor- und Nachname",
+      "namePlaceholder": "Max Mustermann",
+      "company": "Firmenname",
+      "companyPlaceholder": "Firma GmbH",
+      "phone": "Telefon",
+      "edrpou": "Steuernummer / Firmendaten",
+      "socialPlaceholder": "@username oder Link",
+      "saving": "Wird gespeichert...",
+      "save": "Profil speichern"
+    },
+    "security": {
+      "min": "Das neue Passwort muss mindestens 8 Zeichen haben.",
+      "mismatch": "Die Passwörter stimmen nicht überein.",
+      "same": "Das neue Passwort muss sich vom aktuellen unterscheiden.",
+      "wrongCurrent": "Das aktuelle Passwort ist falsch.",
+      "changed": "Passwort geändert",
+      "changeFailed": "Passwort konnte nicht geändert werden. Prüfe deine Verbindung und versuche es erneut.",
+      "title": "Sicherheit",
+      "subtitle": "Ändere das Passwort für dein Konto",
+      "current": "Aktuelles Passwort",
+      "currentPlaceholder": "Aktuelles Passwort eingeben",
+      "new": "Neues Passwort",
+      "newPlaceholder": "Mindestens 8 Zeichen",
+      "confirm": "Neues Passwort bestätigen",
+      "confirmPlaceholder": "Neues Passwort wiederholen",
+      "changing": "Wird geändert...",
+      "change": "Passwort ändern"
+    },
+    "prints": {
+      "title": "Meine Prints",
+      "subtitle": "Dateien, die du zum Drucken hochgeladen hast. Nur du kannst sie sehen.",
+      "dropHint": "Dateien hier ablegen",
+      "formats": "JPG, PNG, WebP, GIF oder PDF, bis 10 MB",
+      "pickFiles": "Dateien auswählen",
+      "uploading": "Wird hochgeladen…",
+      "empty": "Noch keine Dateien. Lade deinen ersten Print hoch.",
+      "delete": "Datei löschen",
+      "confirmDelete": "Diese Datei löschen? Das kann nicht rückgängig gemacht werden.",
+      "loadError": "Dateien konnten nicht geladen werden",
+      "uploadError": "Datei konnte nicht hochgeladen werden",
+      "deleteError": "Datei konnte nicht gelöscht werden",
+      "status": {
+        "uploaded": "In Prüfung",
+        "approved": "Freigegeben",
+        "rejected": "Abgelehnt"
+      }
     }
   },
   "popup": {
@@ -912,8 +1001,8 @@
     "cookieSettings": "Cookie-Einstellungen"
   },
   "homeDemo": {
-    "upload": "Logo hochladen",
-    "remove": "Logo entfernen",
+    "upload": "Bild hochladen",
+    "remove": "Bild entfernen",
     "hint": "PNG, JPG, SVG oder WebP, bis 5 MB",
     "note": "Nur eine Vorschau. Größe und Druckzonen legen Sie im vollständigen Editor fest.",
     "tooLarge": "Die Datei ist größer als 5 MB. Wählen Sie ein kleineres Bild."
@@ -966,5 +1055,486 @@
     "addComment": "Kommentar hinzufügen",
     "sendComment": "Senden",
     "commentsOff": "Kommentare sind für diesen Link deaktiviert."
+  },
+  "home": {
+    "hero": {
+      "heading": "Kleidung, von dir gestaltet.",
+      "subheading": "Wähle ein Teil, füge im Editor deinen Print oder Text hinzu – wir fertigen und liefern. Schon ab einem Stück."
+    },
+    "steps": {
+      "heading": "In drei Schritten zu deinem Teil",
+      "items": {
+        "0": {
+          "title": "Teil auswählen",
+          "desc": "T-Shirt, Hoodie oder Longsleeve – wähle Modell, Farbe und Größe."
+        },
+        "1": {
+          "title": "Design hinzufügen",
+          "desc": "Lade ein Bild hoch oder schreibe einen Text im Editor und sieh sofort das Ergebnis."
+        },
+        "2": {
+          "title": "Bestellung erhalten",
+          "desc": "Wir fertigen in 7–14 Werktagen und liefern in die ganze Ukraine."
+        }
+      }
+    },
+    "faq": {
+      "single": {
+        "question": "Kann ich nur ein Teil bestellen?",
+        "answer": "Ja. Bestelle so viele, wie du brauchst – auch ein einzelnes Teil mit deinem eigenen Design."
+      },
+      "design": {
+        "question": "Wie füge ich mein Design hinzu?",
+        "answer": "Im Editor: Bild hochladen oder Text hinzufügen und die Position auf dem Teil wählen. Den Preis siehst du sofort."
+      }
+    },
+    "biz": {
+      "heading": "Merch für dein Team oder Event?",
+      "text": "Firmenkleidung, Pop-up-Stände und Branding – auf einer eigenen Seite für Unternehmen."
+    }
+  },
+  "auth": {
+    "errors": {
+      "googleFailed": "Anmeldung mit Google fehlgeschlagen. Bitte erneut versuchen.",
+      "passkeyNeedsNameEmail": "Gib Namen und E-Mail ein, um ein Passkey-Konto zu erstellen.",
+      "invalidCredentials": "Falsche E-Mail oder falsches Passwort.",
+      "passwordMin": "Das Passwort muss mindestens 8 Zeichen haben.",
+      "emailExistsRegister": "Diese E-Mail ist bereits registriert. Melde dich an oder setze dein Passwort zurück.",
+      "codeSendFailed": "Code konnte nicht gesendet werden. Bitte erneut versuchen.",
+      "codeInvalid": "Falscher Code. Prüfe deine E-Mail und versuche es erneut.",
+      "codeExpired": "Der Code ist abgelaufen. Fordere einen neuen an.",
+      "tooManyAttempts": "Zu viele Versuche. Fordere in ein paar Minuten einen neuen Code an.",
+      "emailExistsLogin": "Diese E-Mail ist bereits registriert. Bitte melde dich an.",
+      "registerFailed": "Registrierung fehlgeschlagen. Bitte erneut versuchen.",
+      "resetSendFailed": "Code konnte nicht gesendet werden. Prüfe die E-Mail-Adresse.",
+      "passwordsMismatch": "Die Passwörter stimmen nicht überein.",
+      "resetFailed": "Falscher oder abgelaufener Code. Fordere einen neuen an.",
+      "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+      "emailFormat": "Prüfe das E-Mail-Format"
+    },
+    "notices": {
+      "passkeyCheckEmail": "Wir haben eine E-Mail an {email} gesendet. Bestätige sie und melde dich dann mit deinem Passkey an.",
+      "accountCreated": "Konto erstellt. Melde dich mit E-Mail und Passwort an.",
+      "passwordChanged": "Passwort geändert. Melde dich mit dem neuen Passwort an."
+    },
+    "social": {
+      "google": "Weiter mit Google",
+      "telegram": "Weiter mit Telegram",
+      "passkey": "Weiter mit Passkey",
+      "or": "oder"
+    },
+    "login": {
+      "title": "Willkommen zurück",
+      "subtitle": "Melde dich an, um deine Bestellung fortzusetzen.",
+      "forgot": "Passwort vergessen?",
+      "signingIn": "Anmeldung...",
+      "submit": "Anmelden"
+    },
+    "register": {
+      "title": "Konto erstellen",
+      "subtitle": "Dauert weniger als eine Minute.",
+      "sendingCode": "Code wird gesendet...",
+      "continue": "Weiter"
+    },
+    "fields": {
+      "name": "Dein Name",
+      "namePlaceholder": "Max Mustermann",
+      "company": "Firma",
+      "companyPlaceholder": "Firmenname",
+      "phone": "Telefon",
+      "password": "Passwort",
+      "passwordMin": "Mindestens 8 Zeichen",
+      "confirmPassword": "Passwort bestätigen",
+      "repeatPassword": "Passwort wiederholen",
+      "hide": "Verbergen",
+      "show": "Anzeigen"
+    },
+    "verify": {
+      "back": "Zurück",
+      "title": "Prüfe deine E-Mails",
+      "sentTo": "Wir haben einen 6-stelligen Code gesendet an",
+      "checking": "Wird geprüft...",
+      "confirm": "Bestätigen",
+      "digit": "Ziffer {n}"
+    },
+    "reset": {
+      "backToLogin": "Zurück zur Anmeldung",
+      "title": "Passwort zurücksetzen",
+      "subtitle": "Gib deine E-Mail ein – wir senden einen 6-stelligen Code.",
+      "sending": "Wird gesendet...",
+      "sendCode": "Code senden",
+      "changeEmail": "E-Mail ändern",
+      "enterCode": "Code eingeben",
+      "newTitle": "Neues Passwort",
+      "newSubtitle": "Wähle ein neues, sicheres Passwort.",
+      "saving": "Wird gespeichert...",
+      "save": "Passwort speichern"
+    },
+    "modes": {
+      "login": "Anmelden",
+      "register": "Registrieren"
+    },
+    "resend": {
+      "noCode": "Keinen Code erhalten?",
+      "in": "Erneut in {s} s",
+      "now": "Erneut senden"
+    },
+    "strength": {
+      "length": "8+ Zeichen",
+      "upper": "Großbuchstabe",
+      "digit": "Ziffer"
+    },
+    "backToSite": "Zur Website",
+    "showcaseItem": "Bewertung {n}",
+    "close": "Schließen"
+  },
+  "editor": {
+    "common": {
+      "addToOrder": "Zur Bestellung hinzufügen",
+      "adding": "Wird hinzugefügt...",
+      "all": "Alle",
+      "back": "Zurück",
+      "cancel": "Abbrechen",
+      "change": "Ändern",
+      "close": "Schließen",
+      "collapse": "Weniger anzeigen",
+      "color": "Farbe",
+      "delete": "Löschen",
+      "expand": "Mehr anzeigen",
+      "fromPrice": "ab {price} ₴",
+      "fromPricePer": "ab {price} ₴ / Stk.",
+      "generate": "Generieren",
+      "generating": "Wird generiert…",
+      "home": "Zur Startseite",
+      "leaveConfirm": "Zurück? Nicht gespeicherte Änderungen gehen verloren.",
+      "noColors": "Keine Farben eingerichtet",
+      "perUnit": "/Stk.",
+      "print": "Druck",
+      "productSettings": "Produkteinstellungen",
+      "qty": "Menge",
+      "qtyPrice": "Menge und Preis",
+      "removingBg": "Hintergrund wird entfernt...",
+      "resetSearch": "Suche zurücksetzen",
+      "retry": "Erneut versuchen",
+      "retryShort": "Wiederholen",
+      "settings": "Einstellungen",
+      "size": "Größe"
+    },
+    "tabs": {
+      "prints": "Prints",
+      "draw": "Zeichnung",
+      "text": "Text",
+      "upload": "Datei",
+      "layers": "Ebenen",
+      "uploadTitle": "Hochladen",
+      "toolsLabel": "Editor-Werkzeuge"
+    },
+    "errorPage": {
+      "title": "Katalog konnte nicht geladen werden",
+      "text": "Die Bestellseite konnte nicht geladen werden. Versuche es erneut oder gehe zur Startseite."
+    },
+    "main": {
+      "restoreFailed": "Gespeicherter Warenkorb konnte nicht wiederhergestellt werden. Deine Daten sind noch gespeichert.",
+      "linkFailed": "Link konnte nicht geöffnet werden",
+      "linkProductGone": "Das Produkt aus dem Link ist nicht mehr verfügbar",
+      "catalogFailed": "Katalog konnte nicht geladen werden",
+      "catalogFailedReload": "Katalog konnte nicht geladen werden. Lade die Seite neu."
+    },
+    "grid": {
+      "title": "Wähle ein Teil",
+      "subtitle": "Tippe auf ein Teil, um es zu gestalten und zur Bestellung hinzuzufügen",
+      "empty": "In dieser Kategorie gibt es noch keine Produkte"
+    },
+    "genButton": {
+      "label": "An einer Person ansehen",
+      "needsDesign": "Füge zuerst ein Design hinzu"
+    },
+    "textPanel": {
+      "search": "Layouts suchen…",
+      "add": "Textblock hinzufügen"
+    },
+    "shapes": {
+      "title": "Formen",
+      "search": "Formen suchen…",
+      "empty": "Keine Formen gefunden.",
+      "resetFilters": "Filter zurücksetzen"
+    },
+    "ai": {
+      "noImage": "Die Antwort enthielt kein Bild.",
+      "timeout": "Zeitüberschreitung. Bitte erneut versuchen.",
+      "failed": "Bild konnte nicht generiert werden. Bitte erneut versuchen."
+    },
+    "state": {
+      "restored": "Deine letzte Bearbeitung wurde wiederhergestellt",
+      "chooseGarmentSize": "Wähle eine Größe.",
+      "choosePrintSizes": "Wähle eine Größe für jeden Druck."
+    },
+    "qty": {
+      "fromQty": "ab {n}",
+      "methods": {
+        "embroidery": "Stickerei",
+        "screen": "Siebdruck",
+        "sublimation": "Sublimation",
+        "patch": "Aufnäher"
+      },
+      "product": "Artikel",
+      "chooseSize": "Größe wählen",
+      "savings": "Du sparst",
+      "total": "Gesamt",
+      "totalLine": "{qty} Stk. × {price} ₴",
+      "noteLabel": "Hinweis:",
+      "noteText": "Die Preise sind Richtwerte. Der Endpreis kann sich nach Bestätigung durch einen Manager ändern.",
+      "itemNote": "Notiz zu diesem Artikel",
+      "notePlaceholder": "Besondere Wünsche..."
+    },
+    "layout": {
+      "removeBgTitle": "Hintergrund wird mit KI entfernt",
+      "removeBgText": "Bitte warten. Die Verarbeitung in hoher Qualität dauert 15–20 Sekunden."
+    },
+    "customizer": {
+      "commentFailed": "Kommentar konnte nicht hinzugefügt werden",
+      "previewTitle": "Designvorschau",
+      "previewSignIn": "Melde dich an, um dieses Design zu bearbeiten.",
+      "previewViewOnly": "Dieser Link ist nur zum Ansehen. Der Eigentümer hat das Bearbeiten deaktiviert.",
+      "previewViewComment": "Dieser Link erlaubt Ansehen und Kommentieren. Der Eigentümer hat das Bearbeiten deaktiviert.",
+      "signInToEdit": "Zum Bearbeiten anmelden",
+      "comments": "Kommentare",
+      "noLayers": "Noch keine Ebenen. Füge ein Bild oder Text hinzu.",
+      "tryOn": "An einer Person anprobieren",
+      "withAi": "Mit KI"
+    },
+    "gen": {
+      "presets": {
+        "0": "Freunde auf einer Dachterrassenparty",
+        "1": "jemand bei einem Herbstspaziergang durch die Stadt",
+        "2": "eine Barista in einem gemütlichen Café",
+        "3": "ein Musiker bei einem Open-Air-Konzert",
+        "4": "ein Skater in einem Stadtpark",
+        "5": "ein Team bei einer Firmenfeier",
+        "6": "ein Student auf dem Campus",
+        "7": "ein Paar auf einem Sommerfestival"
+      },
+      "progress": {
+        "0": "Anfrage wird analysiert...",
+        "1": "Look wird ausgewählt...",
+        "2": "Design wird aufgebracht...",
+        "3": "Letzte Feinschliffe..."
+      },
+      "inProgress": "Wird generiert…",
+      "tapToView": "Zum Ansehen tippen",
+      "yourPhoto": "Dein Foto",
+      "photoUploaded": "Foto hochgeladen",
+      "removePhoto": "Foto entfernen",
+      "uploadPhoto": "Lade dein Foto hoch",
+      "cameraOrGallery": "Öffnet Kamera oder Galerie",
+      "title": "Sieh es an einer Person",
+      "subtitle": "Die KI zeigt, wie dein Design im echten Leben aussieht",
+      "alreadyRunning": "Eine Generierung läuft bereits",
+      "result": "Ergebnis",
+      "usedFree": "Du hast die kostenlose Generierung für diesen Artikel bereits genutzt.",
+      "viewResult": "Ergebnis ansehen",
+      "tabSelfie": "Eigenes Foto",
+      "tabScene": "Szene",
+      "sceneLabel": "Szenenbeschreibung",
+      "scenePlaceholder": "Beschreibe eine Szene oder wähle eine Idee…",
+      "emptySide": "Diese Seite ist leer. Wir nehmen das Design von der Seite „{side}“.",
+      "quotaUsed": "Du hast alle {n} kostenlosen Generierungen genutzt",
+      "generatingShort": "Generiere…"
+    },
+    "toolbar": {
+      "opacity": "Deckkraft",
+      "fontSearch": "Schrift suchen...",
+      "nothingFound": "Nichts gefunden",
+      "bold": "Fett",
+      "italic": "Kursiv",
+      "textColor": "Textfarbe",
+      "alignLeft": "Links",
+      "alignCenter": "Mitte",
+      "alignRight": "Rechts",
+      "arc": "Bogen",
+      "letterSpacing": "Zeichenabstand",
+      "lineHeight": "Zeilenabstand",
+      "fill": "Füllung",
+      "stroke": "Kontur",
+      "fillColor": "Füllfarbe",
+      "strokeColor": "Konturfarbe",
+      "removeBg": "Hintergrund entfernen",
+      "editDrawing": "Zeichnung bearbeiten",
+      "center": "Zentrieren",
+      "flip": "Spiegeln",
+      "duplicate": "Duplizieren",
+      "fontCategories": {
+        "grotesque": "Serifenlos",
+        "condensed": "Schmal",
+        "serif": "Serifen",
+        "display": "Display",
+        "decorative": "Dekorativ",
+        "handwritten": "Handschrift",
+        "technical": "Technisch"
+      }
+    },
+    "prints": {
+      "prompts": {
+        "0": "Eine Astronauten-Katze im Retro-Stil, kräftige Farben",
+        "1": "Minimalistische Berge und Sonne, Line Art",
+        "2": "Ein Strauß Wildblumen, Aquarell",
+        "3": "Schriftzug „Good vibes“ im 70er-Stil",
+        "4": "Ein Pixel-Drache im Retro-Game-Stil",
+        "5": "Eine Welle im japanischen Stil, blaue Palette",
+        "6": "Eine Kaffeetasse mit Herz, Flat Design",
+        "7": "Eine Eule mit Buch, Vektorillustration"
+      },
+      "aiTitle": "KI-Illustration",
+      "aiDesc": "Erstelle druckfertige Illustrationen aus einer Textbeschreibung.",
+      "aiLabel": "Beschreibung für die KI-Illustration",
+      "loadFailed": "Prints konnten nicht geladen werden",
+      "ready": "Fertige Prints",
+      "search": "Prints suchen…",
+      "empty": "Keine Prints gefunden."
+    },
+    "upload": {
+      "badType": "Nicht unterstützter Dateityp „{type}“. Erlaubt: PNG, JPG/JPEG, SVG, PDF.",
+      "tooLarge": "Die Datei ist zu groß ({size} MB). Maximum: {max}.",
+      "addAgain": "„{name}“ erneut hinzufügen",
+      "addFailed": "„{name}“ konnte nicht hinzugefügt werden. Bitte erneut versuchen.",
+      "title": "Datei hochladen",
+      "dropLabel": "Datei hochladen: klicken oder hierher ziehen",
+      "uploading": "Wird hochgeladen…",
+      "dropRelease": "Zum Hochladen loslassen",
+      "dropHint": "Klicken oder Datei ziehen",
+      "formats": "PNG, JPG, SVG, PDF · bis 20 MB",
+      "choose": "Datei auswählen",
+      "recent": "Letzte Uploads",
+      "noRecent": "Noch keine Uploads.",
+      "recentHint": "Hochgeladene Dateien erscheinen hier, damit du sie schnell wiederverwenden kannst."
+    },
+    "canvas": {
+      "defaultText": "Text",
+      "undo": "Rückgängig",
+      "undoTitle": "Rückgängig (Strg+Z)",
+      "redo": "Wiederholen",
+      "redoTitle": "Wiederholen (Strg+Umschalt+Z)",
+      "copy": "Kopie",
+      "fontSmaller": "Schrift verkleinern",
+      "fontBigger": "Schrift vergrößern",
+      "boldShort": "F",
+      "italicShort": "K",
+      "removeBgFailed": "Hintergrund konnte nicht entfernt werden. Bitte erneut versuchen.",
+      "bgShort": "Hintergrund",
+      "edit": "Bearbeiten",
+      "layerOpacity": "Ebenendeckkraft",
+      "deleteLayer": "Ebene löschen",
+      "loadingImage": "Bild wird geladen...",
+      "sides": {
+        "front": "Vorne",
+        "back": "Hinten",
+        "left": "Links",
+        "right": "Rechts",
+        "neck_inner": "Innenetikett",
+        "sleeve_left": "Linker Ärmel",
+        "sleeve_right": "Rechter Ärmel"
+      }
+    },
+    "layers": {
+      "layer": "Ebene",
+      "setupTitle": "Ebene einrichten",
+      "setupText": "Wähle Druckart und Größe. Der Preis aktualisiert sich automatisch.",
+      "printType": "Druckart",
+      "printSize": "Druckgröße",
+      "image": "Bild"
+    },
+    "paywall": {
+      "title": "Für KI brauchst du ein Konto",
+      "text": "Registriere dich kostenlos und erhalte 3 kostenlose KI-Generierungen",
+      "register": "Registrieren",
+      "login": "Anmelden",
+      "skip": "Ohne Konto fortfahren"
+    },
+    "mode": {
+      "label": "Ansicht",
+      "edit": "Design",
+      "preview": "Vorschau"
+    },
+    "tour": {
+      "replay": "Tipps anzeigen",
+      "counter": "{n} von {total}",
+      "close": "Schließen",
+      "back": "Zurück",
+      "next": "Weiter",
+      "done": "Fertig",
+      "tools": {
+        "title": "Design-Werkzeuge",
+        "body": "Lade deine eigene Datei hoch, wähle einen fertigen Print, füge Text hinzu oder zeichne etwas. Hier fängt alles an."
+      },
+      "canvas": {
+        "title": "Arbeitsfläche",
+        "body": "Ziehe, skaliere und drehe Elemente direkt auf dem Kleidungsstück. Die Buttons darunter wechseln die Seite: vorne, hinten, Ärmel."
+      },
+      "layers": {
+        "title": "Ebenen",
+        "body": "Alle Elemente deines Designs in einer Liste. Neu ordnen, duplizieren, löschen. Die gewählte Ebene hat eine eigene Leiste über der Fläche."
+      },
+      "mode": {
+        "title": "Design und Vorschau",
+        "body": "Wechsle zur Vorschau, um das Kleidungsstück aus mehreren Blickwinkeln ohne Werkzeuge zu sehen."
+      },
+      "price": {
+        "title": "Menge und Preis",
+        "body": "Wähle Farbe, Größe und Menge. Der Preis enthält den Mengenrabatt und die Druckkosten jedes Elements."
+      },
+      "actions": {
+        "title": "Bestellen und teilen",
+        "body": "Ist das Design fertig, lege es in die Bestellung oder sende einen Link für Kommentare."
+      }
+    },
+    "preview": {
+      "close": "Schließen",
+      "prev": "Zurück",
+      "next": "Weiter",
+      "withPrint": "Mit deinem Print",
+      "noPrint": "Ohne Print",
+      "sides": {
+        "front": "Vorne",
+        "back": "Hinten",
+        "chest": "Brust",
+        "neck_inner": "Innenetikett",
+        "sleeve_left": "Linker Ärmel",
+        "sleeve_right": "Rechter Ärmel"
+      },
+      "tiles": {
+        "zone": "Print in Nahaufnahme",
+        "zoneHint": "Druckbereich",
+        "collar": "Kragen und Schnitt",
+        "collarHint": "Detail",
+        "flat": "Flat Lay",
+        "flatHint": "Flat Lay"
+      },
+      "emptyTitle": "Hier erscheint dein Kleidungsstück",
+      "emptyBody": "Füge im Designmodus ein Bild, Text oder einen Print hinzu, und wir zeigen das Kleidungsstück aus mehreren Blickwinkeln.",
+      "backToDesign": "Zurück zum Design",
+      "readOnly": "Nur Vorschau."
+    }
+  },
+  "sizeChart": {
+    "title": "Größentabelle",
+    "empty": "Die Tabelle ist leer",
+    "schemeAlt": "{name}: Größenschema",
+    "note": "Alle Maße in Zentimetern. Liegst du zwischen zwei Größen, wähle die größere."
+  },
+  "editorial": {
+    "statement": {
+      "eyebrow": "U:DO CRAFT",
+      "part1": "Wir verbinden Handwerk und Technologie, damit Kleidung mit deinem Design",
+      "part2": "getragen wird und nicht im Schrank liegt —",
+      "part3": "Teile, auf die du jeden Tag stolz bist.",
+      "cta": "Design erstellen"
+    },
+    "pair": {
+      "title1": "Gemacht zum Tragen,",
+      "accent": "perfektioniert",
+      "title2": "bis ins Detail",
+      "desc": "Schwere Baumwolle, präziser Druck und Stickerei, die Hunderte Wäschen hält. Wähle die Basis, den Rest machen wir.",
+      "from": "ab {price} ₴"
+    }
   }
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { canTransitionLead } from "@udo-craft/shared";
 import { useRouter } from "next/navigation";
 import {
   Mail, Phone, Building2, Package, ArrowRight, CreditCard, Truck,
@@ -133,7 +134,7 @@ export function OrderQuickSheet({ lead, open, onClose, onStatusChange }: OrderQu
             <p className="text-xs text-muted-foreground mt-0.5">{cd.name}</p>
           </div>
           <div className="flex items-center gap-1">
-            <Button
+            <Button aria-label="Відкрити замовлення в новій вкладці"
               variant="ghost"
               size="icon-sm"
               className="text-muted-foreground hover:text-foreground"
@@ -173,6 +174,7 @@ export function OrderQuickSheet({ lead, open, onClose, onStatusChange }: OrderQu
                   return (
                     <DropdownMenuItem
                       key={s}
+                      disabled={s !== status && !canTransitionLead(status, s)}
                       onClick={() => { if (s !== status) onStatusChange(id, s); }}
                       className={cn("gap-2.5", s === status && "font-semibold")}
                     >

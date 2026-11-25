@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { apiError, requireErpUser } from "../_lib";
+import { adjustMaterialStock, apiError, requireErpUser } from "../_lib";
 
 const ReceiptLine = z.object({
   erp_material_id: z.string().uuid(),
@@ -60,18 +60,23 @@ export async function POST(req: NextRequest) {
     if (linesError) return apiError(linesError);
 
     if (parsed.post) {
+      // Lines for the same material are summed, then each material changes in one
+      // atomic update (see adjustMaterialStock).
+      const addById = new Map<string, { qty: number; unitCost: number }>();
       for (const line of lines) {
-        const { data: material } = await service!
-          .from("erp_materials")
-          .select("stock_quantity")
-          .eq("id", line.erp_material_id)
-          .single();
-        const nextQty = Number(material?.stock_quantity || 0) + Number(line.quantity);
-        await service!
-          .from("erp_materials")
-          .update({ stock_quantity: nextQty, unit_cost_cents: line.unit_cost_cents })
-          .eq("id", line.erp_material_id);
-        await service!.from("erp_stock_movements").insert({
+        const prev = addById.get(line.erp_material_id);
+        // The last line's unit cost wins, as it did when lines were applied one by one.
+        addById.set(line.erp_material_id, { qty: (prev?.qty ?? 0) + Number(line.quantity), unitCost: line.unit_cost_cents });
+      }
+      try {
+        for (const [id, { qty, unitCost }] of addById) {
+          await adjustMaterialStock(service!, id, qty, unitCost);
+        }
+      } catch (err) {
+        return apiError(err);
+      }
+      const { error: movementsError } = await service!.from("erp_stock_movements").insert(
+        lines.map((line) => ({
           erp_material_id: line.erp_material_id,
           receipt_id: receipt.id,
           warehouse_id: parsed.warehouse_id,
@@ -80,8 +85,9 @@ export async function POST(req: NextRequest) {
           unit_cost_cents: line.unit_cost_cents,
           note: parsed.comment,
           created_by: user!.id,
-        });
-      }
+        })),
+      );
+      if (movementsError) return apiError(movementsError);
     }
 
     const { data, error: reloadError } = await service!
