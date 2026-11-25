@@ -158,25 +158,45 @@ function itemRows(order: KeycrmOrder, leadId: string) {
   });
 }
 
-async function syncOrder(order: KeycrmOrder) {
+type ExistingLead = { id: string; status: string; notes: string | null; customer_data: Record<string, any> | null };
+
+/**
+ * Upsert one KeyCRM order without clobbering work done in the admin:
+ * - unchanged remote orders (same updated_at) are skipped;
+ * - the local status is kept unless the KeyCRM status group itself changed;
+ * - local-only customer_data keys and non-empty staff notes are kept;
+ * - items are matched by KeyCRM product id, so rows linked to ERP production
+ *   orders keep their ids.
+ */
+async function syncOrder(order: KeycrmOrder, existing: ExistingLead | undefined): Promise<"created" | "updated" | "skipped"> {
   const service = createServiceClient();
-  const { data: existing, error: lookupError } = await service
-    .from("leads")
-    .select("id")
-    .filter("customer_data->>keycrm_id", "eq", String(order.id))
-    .maybeSingle();
+  const remoteUpdatedAt = order.updated_at ? String(order.updated_at) : null;
+  const remoteCustomer = { ...customerData(order), keycrm_updated_at: remoteUpdatedAt };
+  const tags = (order.tags ?? []).map((tag: any) => tag.name || tag.alias || String(tag.id)).filter(Boolean);
 
-  if (lookupError) throw new Error(`Lead lookup failed for KeyCRM ${order.id}: ${lookupError.message}`);
+  if (existing && remoteUpdatedAt && existing.customer_data?.keycrm_updated_at === remoteUpdatedAt) {
+    return "skipped";
+  }
 
-  const payload = {
-    status: mapStatus(order.status_group_id),
-    total_amount_cents: moneyToCents(order.grand_total),
-    customer_data: customerData(order),
-    notes: orderNotes(order),
-    tags: (order.tags ?? []).map((tag: any) => tag.name || tag.alias || String(tag.id)).filter(Boolean),
-    created_at: order.created_at || new Date().toISOString(),
-    updated_at: order.updated_at || new Date().toISOString(),
-  };
+  const statusGroupChanged = existing?.customer_data?.keycrm_status_group_id !== (order.status_group_id ?? null);
+  const payload: Record<string, unknown> = existing
+    ? {
+        customer_data: { ...(existing.customer_data ?? {}), ...remoteCustomer },
+        total_amount_cents: moneyToCents(order.grand_total),
+        tags,
+        updated_at: order.updated_at || new Date().toISOString(),
+        ...(statusGroupChanged ? { status: mapStatus(order.status_group_id) } : {}),
+        ...(existing.notes?.trim() ? {} : { notes: orderNotes(order) }),
+      }
+    : {
+        status: mapStatus(order.status_group_id),
+        total_amount_cents: moneyToCents(order.grand_total),
+        customer_data: remoteCustomer,
+        notes: orderNotes(order),
+        tags,
+        created_at: order.created_at || new Date().toISOString(),
+        updated_at: order.updated_at || new Date().toISOString(),
+      };
 
   const result = existing
     ? await service.from("leads").update(payload).eq("id", existing.id).select("id").single()
@@ -185,15 +205,60 @@ async function syncOrder(order: KeycrmOrder) {
   if (result.error || !result.data) {
     throw new Error(`Lead sync failed for KeyCRM ${order.id}: ${result.error?.message}`);
   }
+  const leadId = result.data.id as string;
 
-  await service.from("order_items").delete().eq("lead_id", result.data.id);
-  const rows = itemRows(order, result.data.id);
-  if (rows.length) {
-    const { error } = await service.from("order_items").insert(rows);
+  const rows = itemRows(order, leadId);
+  const { data: currentItems, error: itemsLookupError } = await service
+    .from("order_items")
+    .select("id, technical_metadata")
+    .eq("lead_id", leadId);
+  if (itemsLookupError) throw new Error(`Item lookup failed for KeyCRM ${order.id}: ${itemsLookupError.message}`);
+
+  const idByRemote = new Map<string, string>();
+  for (const item of currentItems ?? []) {
+    const remoteId = (item.technical_metadata as Record<string, unknown> | null)?.keycrm_order_product_id;
+    if (remoteId != null) idByRemote.set(String(remoteId), item.id);
+  }
+  const keep = new Set<string>();
+  const inserts: typeof rows = [];
+  for (const row of rows) {
+    const localId = idByRemote.get(String(row.technical_metadata?.keycrm_order_product_id));
+    if (localId) {
+      keep.add(localId);
+      const { error } = await service.from("order_items").update(row).eq("id", localId);
+      if (error) throw new Error(`Item update failed for KeyCRM ${order.id}: ${error.message}`);
+    } else {
+      inserts.push(row);
+    }
+  }
+  const stale = (currentItems ?? []).map((i) => i.id).filter((id) => !keep.has(id));
+  if (stale.length) {
+    const { error } = await service.from("order_items").delete().in("id", stale);
+    if (error) throw new Error(`Item cleanup failed for KeyCRM ${order.id}: ${error.message}`);
+  }
+  if (inserts.length) {
+    const { error } = await service.from("order_items").insert(inserts);
     if (error) throw new Error(`Item sync failed for KeyCRM ${order.id}: ${error.message}`);
   }
 
   return existing ? "updated" : "created";
+}
+
+/** All leads already linked to these KeyCRM orders, in one query. */
+async function existingLeadsFor(orders: KeycrmOrder[]): Promise<Map<string, ExistingLead>> {
+  const ids = [...new Set(orders.map((o) => String(o.id)))].filter((id) => /^\d+$/.test(id));
+  const map = new Map<string, ExistingLead>();
+  if (!ids.length) return map;
+  const { data, error } = await createServiceClient()
+    .from("leads")
+    .select("id, status, notes, customer_data")
+    .filter("customer_data->>keycrm_id", "in", `(${ids.join(",")})`);
+  if (error) throw new Error(`Lead lookup failed: ${error.message}`);
+  for (const lead of data ?? []) {
+    const keycrmId = (lead.customer_data as Record<string, unknown> | null)?.keycrm_id;
+    if (keycrmId != null) map.set(String(keycrmId), lead as ExistingLead);
+  }
+  return map;
 }
 
 export async function POST(request: NextRequest) {
@@ -222,11 +287,14 @@ export async function POST(request: NextRequest) {
     const orders = await fetchRecentOrders(apiKey, pages);
     let created = 0;
     let updated = 0;
+    let skipped = 0;
 
+    const existingById = await existingLeadsFor(orders);
     for (const order of orders) {
-      const result = await syncOrder(order);
+      const result = await syncOrder(order, existingById.get(String(order.id)));
       if (result === "created") created += 1;
-      else updated += 1;
+      else if (result === "updated") updated += 1;
+      else skipped += 1;
     }
 
     // Update last sync time
@@ -242,6 +310,7 @@ export async function POST(request: NextRequest) {
       fetched: orders.length,
       created,
       updated,
+      skipped,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);

@@ -10,6 +10,9 @@ function getServiceClient() {
   );
 }
 
+const DEFAULT_PAGE = 500;
+const MAX_PAGE = 2000;
+
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();
@@ -23,20 +26,33 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const limit = Number(request.nextUrl.searchParams.get("limit")) || 5000;
+    // Newest first, one page at a time. `before` is the created_at of the last row
+    // already loaded; `view=summary` skips the order_items join for list screens
+    // that only need the lead itself (messages sidebar).
+    const params = request.nextUrl.searchParams;
+    const limit = Math.min(Math.max(Number(params.get("limit")) || DEFAULT_PAGE, 1), MAX_PAGE);
+    const before = params.get("before");
+    const summary = params.get("view") === "summary";
 
-    const { data, error } = await getServiceClient()
+    let query = getServiceClient()
       .from("leads")
-      .select("*, order_items!order_items_lead_id_fkey(*)")
+      .select(summary ? "*" : "*, order_items!order_items_lead_id_fkey(*)")
       .order("created_at", { ascending: false })
-      .limit(limit);
+      .limit(limit + 1);
+    if (before && !Number.isNaN(Date.parse(before))) query = query.lt("created_at", before);
+
+    const { data, error } = await query;
 
     if (error) {
       console.error("Database error:", error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json(data);
+    const rows = data ?? [];
+    const hasMore = rows.length > limit;
+    return NextResponse.json(hasMore ? rows.slice(0, limit) : rows, {
+      headers: { "X-Has-More": hasMore ? "1" : "0" },
+    });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("API error:", message);

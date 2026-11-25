@@ -60,18 +60,34 @@ export async function POST(req: NextRequest) {
     if (linesError) return apiError(linesError);
 
     if (parsed.post) {
+      // One read for all materials, one update per distinct material, one insert for
+      // all movements. Lines for the same material are summed first.
+      // Note: stock is still read-then-written; an atomic increment needs a DB function.
+      const materialIds = [...new Set(lines.map((l) => l.erp_material_id))];
+      const { data: materials, error: materialsError } = await service!
+        .from("erp_materials")
+        .select("id, stock_quantity")
+        .in("id", materialIds);
+      if (materialsError) return apiError(materialsError);
+      const stockById = new Map((materials ?? []).map((m) => [m.id as string, Number(m.stock_quantity || 0)]));
+      const addById = new Map<string, { qty: number; unitCost: number }>();
       for (const line of lines) {
-        const { data: material } = await service!
-          .from("erp_materials")
-          .select("stock_quantity")
-          .eq("id", line.erp_material_id)
-          .single();
-        const nextQty = Number(material?.stock_quantity || 0) + Number(line.quantity);
-        await service!
-          .from("erp_materials")
-          .update({ stock_quantity: nextQty, unit_cost_cents: line.unit_cost_cents })
-          .eq("id", line.erp_material_id);
-        await service!.from("erp_stock_movements").insert({
+        const prev = addById.get(line.erp_material_id);
+        // The last line's unit cost wins, as it did when lines were applied one by one.
+        addById.set(line.erp_material_id, { qty: (prev?.qty ?? 0) + Number(line.quantity), unitCost: line.unit_cost_cents });
+      }
+      const updates = await Promise.all(
+        [...addById].map(([id, { qty, unitCost }]) =>
+          service!
+            .from("erp_materials")
+            .update({ stock_quantity: (stockById.get(id) ?? 0) + qty, unit_cost_cents: unitCost })
+            .eq("id", id),
+        ),
+      );
+      const updateError = updates.find((u) => u.error)?.error;
+      if (updateError) return apiError(updateError);
+      const { error: movementsError } = await service!.from("erp_stock_movements").insert(
+        lines.map((line) => ({
           erp_material_id: line.erp_material_id,
           receipt_id: receipt.id,
           warehouse_id: parsed.warehouse_id,
@@ -80,8 +96,9 @@ export async function POST(req: NextRequest) {
           unit_cost_cents: line.unit_cost_cents,
           note: parsed.comment,
           created_by: user!.id,
-        });
-      }
+        })),
+      );
+      if (movementsError) return apiError(movementsError);
     }
 
     const { data, error: reloadError } = await service!

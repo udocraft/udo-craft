@@ -116,7 +116,8 @@ export default function MessagesPage() {
   const fetchLeads = useCallback(async () => {
     setLoading(true);
     try {
-      const r = await fetch("/api/leads");
+      // Chats only need the lead itself; the newest 500 cover the active inbox.
+      const r = await fetch("/api/leads?view=summary&limit=500");
       if (!r.ok) throw new Error();
       setLeads(await r.json());
     } catch { toast.error("Помилка завантаження"); }

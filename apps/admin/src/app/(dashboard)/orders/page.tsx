@@ -217,15 +217,35 @@ function OrdersBoard() {
 
   const drag = useKanbanDrag(selectedLead, setSelectedLead, handleStatusChange);
 
+  // The newest page of orders; older ones are added on demand ("Старіші").
+  const [hasMore, setHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const fetchLeads = useCallback(async (showLoading = true) => {
     if (showLoading) setLoading(true);
     try {
       const r = await fetch("/api/leads");
       if (!r.ok) throw new Error();
+      setHasMore(r.headers.get("X-Has-More") === "1");
       setLeads((await r.json()) || []);
     } catch { toast.error("Помилка при завантаженні замовлень"); setLeads([]); }
     finally { if (showLoading) setLoading(false); }
   }, []);
+  const loadOlder = useCallback(async () => {
+    const oldest = leads[leads.length - 1]?.created_at;
+    if (!oldest || loadingMore) return;
+    setLoadingMore(true);
+    try {
+      const r = await fetch(`/api/leads?before=${encodeURIComponent(oldest)}`);
+      if (!r.ok) throw new Error();
+      const older: Lead[] = (await r.json()) || [];
+      setHasMore(r.headers.get("X-Has-More") === "1");
+      setLeads((prev) => {
+        const seen = new Set(prev.map((l) => l.id));
+        return [...prev, ...older.filter((l) => !seen.has(l.id))];
+      });
+    } catch { toast.error("Не вдалося завантажити старіші замовлення"); }
+    finally { setLoadingMore(false); }
+  }, [leads, loadingMore]);
 
   const debouncedRealtimeFetch = useDebouncedCallback(() => {
     playNotificationTone();
@@ -311,6 +331,16 @@ function OrdersBoard() {
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       });
   }, [amountFilter, dateFilter, leads, search, sortFilter, statusFilter, tagFilter]);
+  // One pass to group by kanban column instead of filtering per column per render.
+  const leadsByStatus = useMemo(() => {
+    const map = new Map<string, Lead[]>();
+    for (const lead of filteredLeads) {
+      const list = map.get(lead.status);
+      if (list) list.push(lead);
+      else map.set(lead.status, [lead]);
+    }
+    return map;
+  }, [filteredLeads]);
 
   const visibleStatuses = useMemo(() => {
     if (statusFilter !== "all") return STATUSES.filter((status) => status === statusFilter);
@@ -414,9 +444,14 @@ function OrdersBoard() {
 
         {/* Right-side actions */}
         <div className="ml-auto flex items-center gap-2">
-          <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
+          <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60 tabular-nums" aria-live="polite">
             {loading ? "—" : `${filteredLeads.length} замовлень`}
           </span>
+          {hasMore && !loading && (
+            <Button variant="ghost" size="sm" onClick={loadOlder} disabled={loadingMore}>
+              {loadingMore ? "Завантаження…" : "Старіші"}
+            </Button>
+          )}
           {keycrmEnabled && (
             <Button
               variant="outline"
@@ -492,7 +527,7 @@ function OrdersBoard() {
         ) : (
           <div className="flex h-full gap-4 px-6 py-6 animate-in" style={{ width: "max-content", minWidth: "100%" }}>
             {visibleStatuses.map((status) => {
-              const colLeads = filteredLeads.filter((l) => l.status === status);
+              const colLeads = leadsByStatus.get(status) ?? [];
               return (
                 <KanbanColumn
                   key={status}
