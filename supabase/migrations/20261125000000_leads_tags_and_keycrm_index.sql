@@ -6,5 +6,4 @@ alter table if exists public.leads
 
 -- KeyCRM sync looks leads up by customer_data->>'keycrm_id' in one batch query.
 create index if not exists idx_leads_keycrm_id
-  on public.leads ((customer_data->>'keycrm_id'))
-  where customer_data ? 'keycrm_id';
+  on public.leads ((customer_data->>'keycrm_id'));

@@ -107,8 +107,19 @@ export async function POST(request: NextRequest) {
     const { data: lead, error: leadError } = await supabase.from("leads").insert(leadPayload).select().single();
 
     if (leadError?.code === "23505" && client_request_id) {
-      const { data: existing } = await supabase.from("leads").select().eq("id", client_request_id).single();
-      if (existing) return NextResponse.json(existing, { status: 200 });
+      // Only a genuine retry of the same checkout gets an answer: same email, still
+      // "new", and only the id is returned so a guessed UUID reveals nothing.
+      const { data: existing } = await supabase
+        .from("leads")
+        .select("id, status, customer_data")
+        .eq("id", client_request_id)
+        .maybeSingle();
+      const sameCustomer =
+        existing?.status === "new" &&
+        typeof customer_data.email === "string" &&
+        String(existing.customer_data?.email ?? "").toLowerCase() === customer_data.email;
+      if (sameCustomer) return NextResponse.json({ id: existing.id }, { status: 200 });
+      return NextResponse.json({ error: "Повторний запит не збігається із замовленням" }, { status: 409 });
     }
     if (leadError || !lead) {
       console.error("Lead insert error:", leadError);

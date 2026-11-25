@@ -55,15 +55,14 @@ function Button({
   ...props
 }: ButtonPrimitive.Props & VariantProps<typeof buttonVariants> & { asChild?: boolean }) {
   if (asChild && React.isValidElement(children)) {
-    return (
-      <ButtonPrimitive
-        data-slot="button"
-        nativeButton={false}
-        className={cn(buttonVariants({ variant, size, className }))}
-        render={children as React.ReactElement<Record<string, unknown>>}
-        {...props}
-      />
-    )
+    // Clone rather than render through ButtonPrimitive: Base UI would add
+    // role="button" to the link, and screen readers would announce a button.
+    const child = children as React.ReactElement<{ className?: string }>
+    return React.cloneElement(child, {
+      ...(props as Record<string, unknown>),
+      "data-slot": "button",
+      className: cn(buttonVariants({ variant, size, className }), child.props.className),
+    } as Record<string, unknown>)
   }
   return (
     <ButtonPrimitive

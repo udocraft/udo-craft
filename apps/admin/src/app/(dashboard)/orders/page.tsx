@@ -225,9 +225,20 @@ function OrdersBoard() {
     try {
       const r = await fetch("/api/leads");
       if (!r.ok) throw new Error();
-      setHasMore(r.headers.get("X-Has-More") === "1");
-      setLeads((await r.json()) || []);
-    } catch { toast.error("Помилка при завантаженні замовлень"); setLeads([]); }
+      const firstPage: Lead[] = (await r.json()) || [];
+      if (showLoading) {
+        setHasMore(r.headers.get("X-Has-More") === "1");
+        setLeads(firstPage);
+      } else {
+        // Background refresh (realtime, KeyCRM): update the newest page in place and
+        // keep older pages the user already loaded.
+        setLeads((prev) => {
+          const fresh = new Set(firstPage.map((l) => l.id));
+          const oldestFresh = firstPage[firstPage.length - 1]?.created_at ?? "";
+          return [...firstPage, ...prev.filter((l) => !fresh.has(l.id) && l.created_at < oldestFresh)];
+        });
+      }
+    } catch { toast.error("Помилка при завантаженні замовлень"); if (showLoading) setLeads([]); }
     finally { if (showLoading) setLoading(false); }
   }, []);
   const loadOlder = useCallback(async () => {

@@ -81,6 +81,9 @@ export async function PATCH(
 
     const { data, error } = await query.select().maybeSingle();
 
+    if (!error && !data && !update.status) {
+      return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    }
     if (!error && !data) {
       return NextResponse.json({ error: "Статус уже змінено іншим користувачем. Оновіть сторінку.", code: "conflict" }, { status: 409 });
     }

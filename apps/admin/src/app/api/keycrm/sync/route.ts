@@ -158,7 +158,7 @@ function itemRows(order: KeycrmOrder, leadId: string) {
   });
 }
 
-type ExistingLead = { id: string; status: string; notes: string | null; customer_data: Record<string, any> | null };
+type ExistingLead = { id: string; status: string; notes: string | null; tags: string[] | null; customer_data: Record<string, any> | null };
 
 /**
  * Upsert one KeyCRM order without clobbering work done in the admin:
@@ -183,7 +183,8 @@ async function syncOrder(order: KeycrmOrder, existing: ExistingLead | undefined)
     ? {
         customer_data: { ...(existing.customer_data ?? {}), ...remoteCustomer },
         total_amount_cents: moneyToCents(order.grand_total),
-        tags,
+        // Staff tags are kept; KeyCRM tags are added to them.
+        tags: [...new Set([...(existing.tags ?? []), ...tags])],
         updated_at: order.updated_at || new Date().toISOString(),
         ...(statusGroupChanged ? { status: mapStatus(order.status_group_id) } : {}),
         ...(existing.notes?.trim() ? {} : { notes: orderNotes(order) }),
@@ -215,8 +216,11 @@ async function syncOrder(order: KeycrmOrder, existing: ExistingLead | undefined)
   if (itemsLookupError) throw new Error(`Item lookup failed for KeyCRM ${order.id}: ${itemsLookupError.message}`);
 
   const idByRemote = new Map<string, string>();
+  const metaById = new Map<string, Record<string, unknown>>();
   for (const item of currentItems ?? []) {
-    const remoteId = (item.technical_metadata as Record<string, unknown> | null)?.keycrm_order_product_id;
+    const meta = (item.technical_metadata as Record<string, unknown> | null) ?? {};
+    metaById.set(item.id, meta);
+    const remoteId = meta.keycrm_order_product_id;
     if (remoteId != null) idByRemote.set(String(remoteId), item.id);
   }
   const keep = new Set<string>();
@@ -225,7 +229,9 @@ async function syncOrder(order: KeycrmOrder, existing: ExistingLead | undefined)
     const localId = idByRemote.get(String(row.technical_metadata?.keycrm_order_product_id));
     if (localId) {
       keep.add(localId);
-      const { error } = await service.from("order_items").update(row).eq("id", localId);
+      // Merge metadata so keys added in the admin (notes, mockups) survive.
+      const merged = { ...row, technical_metadata: { ...(metaById.get(localId) ?? {}), ...(row.technical_metadata ?? {}) } };
+      const { error } = await service.from("order_items").update(merged).eq("id", localId);
       if (error) throw new Error(`Item update failed for KeyCRM ${order.id}: ${error.message}`);
     } else {
       inserts.push(row);
@@ -251,7 +257,7 @@ async function existingLeadsFor(orders: KeycrmOrder[]): Promise<Map<string, Exis
   if (!ids.length) return map;
   const { data, error } = await createServiceClient()
     .from("leads")
-    .select("id, status, notes, customer_data")
+    .select("id, status, notes, tags, customer_data")
     .filter("customer_data->>keycrm_id", "in", `(${ids.join(",")})`);
   if (error) throw new Error(`Lead lookup failed: ${error.message}`);
   for (const lead of data ?? []) {
