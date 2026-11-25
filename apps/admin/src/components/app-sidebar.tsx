@@ -380,11 +380,11 @@ export function AppSidebar({ user }: AppSidebarProps) {
 
   return (
     <>
-      <Sidebar collapsible="icon" className="border-r border-border/60 bg-sidebar">
+      <Sidebar collapsible="icon" className="bg-sidebar">
         {/* Brand header: U:DO mark + Admin label */}
         {/* Brand header: logo + Admin label and the collapse button. Collapsed, the logo
             gives way to the open button. */}
-        <SidebarHeader className="relative h-16 shrink-0 flex-row items-center justify-between gap-2 border-b border-sidebar-border px-3 py-0 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2">
+        <SidebarHeader className="relative h-16 shrink-0 flex-row items-center justify-between gap-2 border-b border-border px-3 py-0 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2">
           <Link
             href="/"
             aria-label="U:DO Admin — на головну"
@@ -396,7 +396,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
               Admin
             </span>
           </Link>
-          <SidebarTrigger className="size-9 min-h-0 min-w-0 shrink-0 rounded-full bg-transparent text-muted-foreground hover:bg-transparent hover:text-foreground active:bg-transparent aria-expanded:bg-transparent" />
+          <SidebarTrigger className="size-9 min-h-0 min-w-0 shrink-0 rounded-full bg-transparent text-muted-foreground hover:bg-muted hover:text-foreground aria-expanded:bg-transparent aria-expanded:hover:bg-muted" />
         </SidebarHeader>
 
         <SidebarContent id="admin-sidebar-nav" role="navigation" aria-label="Основна навігація" className="gap-4 px-3 py-3 group-data-[collapsible=icon]:px-2.5">
@@ -450,7 +450,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
           {!isSeamstress && renderSection("Система", SYSTEM_NAV)}
         </SidebarContent>
 
-        <SidebarFooter className="relative border-t border-sidebar-border p-3 group-data-[collapsible=icon]:p-2">
+        <SidebarFooter className="relative border-t border-border p-3 group-data-[collapsible=icon]:p-2">
           <SidebarScrollHint targetId="admin-sidebar-nav" />
           <SidebarMenu>
             <SidebarMenuItem>
@@ -513,7 +513,7 @@ function SidebarScrollHint({ targetId }: { targetId: string }) {
     <div
       aria-hidden={!more}
       className={cn(
-        "pointer-events-none absolute inset-x-0 -top-12 flex h-12 items-end justify-center bg-gradient-to-t from-sidebar to-transparent pb-1.5 transition-opacity duration-200",
+        "pointer-events-none absolute left-0 right-px -top-12 flex h-12 items-end justify-center bg-gradient-to-t from-sidebar to-transparent pb-1.5 transition-opacity duration-200",
         more ? "opacity-100" : "opacity-0",
       )}
     >

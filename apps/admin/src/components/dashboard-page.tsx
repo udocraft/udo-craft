@@ -68,7 +68,7 @@ export function DashboardPage({
             so both bottom lines sit at the same pixel. With tabs, the tabs' rule closes the header. */}
         <div className={cn("flex h-16 items-center gap-2 px-4 md:px-6", !toolbar && "border-b border-border")}>
           {/* Desktop toggles from the sidebar header; on phones the sidebar is a sheet, so it opens from here. */}
-          <SidebarTrigger className="-ml-2 size-9 min-h-0 min-w-0 shrink-0 rounded-full bg-transparent text-muted-foreground hover:bg-transparent hover:text-foreground md:hidden" />
+          <SidebarTrigger className="-ml-2 size-9 min-h-0 min-w-0 shrink-0 rounded-full bg-transparent text-muted-foreground hover:bg-muted hover:text-foreground md:hidden" />
 
           <div className="min-w-0 flex-1">
             {trail.length > 0 && (
