@@ -3,6 +3,8 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Check } from "lucide-react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
 
 type Step = "catalog" | "checkout" | "review";
 
@@ -24,21 +26,25 @@ export function StepHeader({ step, cartLength, onNavigate }: StepHeaderProps) {
   const stepIdx = STEPS.indexOf(step);
 
   return (
-    <div className="h-16 px-6 border-b border-border/40 shrink-0 flex items-center bg-background/60 backdrop-blur-xl sticky top-0 z-40 transition-all">
+    <div className="sticky top-0 z-40 flex min-h-16 shrink-0 items-center gap-3 border-b border-border bg-background px-4 md:px-6">
+      <SidebarTrigger className="-ml-1.5 z-10 size-9 shrink-0 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground" />
+      <Separator orientation="vertical" className="z-10 h-5" />
       <button
+        type="button"
         onClick={() => router.push("/orders")}
-        className="size-8 rounded-xl border border-border/60 bg-background/50 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/20 transition-all shrink-0 z-10 shadow-sm hover:shadow-md active:scale-95"
+        aria-label="Назад до замовлень"
+        className="z-10 flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
       >
         <ArrowLeft className="size-4" />
       </button>
-      
-      <div className="flex flex-col ml-4 z-10 hidden md:flex">
-        <p className="font-bold text-sm tracking-tight">Нове замовлення</p>
-        <p className="text-[10px] text-muted-foreground/80 font-medium uppercase tracking-widest">{STEP_LABELS[step]}</p>
+
+      <div className="z-10 hidden min-w-0 flex-col md:flex">
+        <h1 className="text-lg font-semibold leading-tight tracking-tight md:text-xl">Нове замовлення</h1>
+        <p className="text-xs text-muted-foreground">Крок {stepIdx + 1} з {STEPS.length} · {STEP_LABELS[step]}</p>
       </div>
 
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="flex items-center gap-1.5 pointer-events-auto bg-muted/30 p-1.5 rounded-2xl border border-border/40 shadow-inner">
+        <div className="flex items-center gap-1.5 pointer-events-auto bg-muted/60 p-1 rounded-xl border border-border">
           {STEPS.map((s, i) => {
             const isCurrent = i === stepIdx;
             const isVisited = i < stepIdx;

@@ -11,7 +11,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { LogoLoader } from "@udo-craft/ui";
 
 interface Material { id: string; name: string; hex_code: string; is_active: boolean; }
 
@@ -126,7 +125,7 @@ export default function ColorsTab({
         actions={showSectionAction ? <Button size="sm" onClick={openCreate}>Додати колір</Button> : undefined}
       >
 
-      <AdminTablePanel>
+      <AdminTablePanel bleed>
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
@@ -140,7 +139,13 @@ export default function ColorsTab({
         </TableHeader>
         <TableBody>
           {loading ? (
-            <TableRow className="hover:bg-transparent"><TableCell colSpan={6}><LogoLoader variant="block" /></TableCell></TableRow>
+            Array.from({ length: 5 }).map((_, i) => (
+              <TableRow key={i}>
+                {[6, 10, 10, 32, 16, 8].map((w, j) => (
+                  <TableCell key={j}><div className={`h-4 w-${w} bg-muted rounded animate-pulse`} /></TableCell>
+                ))}
+              </TableRow>
+            ))
           ) : materials.length === 0 ? (
             <TableRow>
               <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">

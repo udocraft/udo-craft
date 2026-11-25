@@ -10,7 +10,6 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
-import { LogoLoader } from "@udo-craft/ui";
 
 // ── Types ─────────────────────────────────────────────────────────────────
 
@@ -263,7 +262,11 @@ create policy "Admins manage" on public.print_presets
 
       {/* Grid */}
       {loading ? (
-        <LogoLoader variant="block" />
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div key={i} className="aspect-square rounded-xl bg-muted animate-pulse" />
+          ))}
+        </div>
       ) : presets.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-3 py-16 text-center border-2 border-dashed border-border rounded-xl">
           <Upload className="size-8 text-muted-foreground/40" />

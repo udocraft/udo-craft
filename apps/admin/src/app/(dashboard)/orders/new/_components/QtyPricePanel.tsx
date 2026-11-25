@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Loader2, Plus, Minus } from "lucide-react";
 import type { PrintLayer } from "@/components/print-types";
+import { findPrintType } from "@udo-craft/shared";
+import { useActivePrintTypes } from "@/hooks/use-print-types";
 
 interface PrintTypePricingRow {
   id: string;
@@ -39,14 +41,6 @@ interface QtyPricePanelProps {
   hideButton?: boolean;
 }
 
-const PRINT_TYPE_LABELS: Record<string, string> = {
-  dtf: "DTF",
-  embroidery: "Вишивка",
-  screen: "Шовкодрук",
-  sublimation: "Сублімація",
-  patch: "Нашивка",
-};
-
 export function QtyPricePanel({
   quantity,
   setQuantity,
@@ -65,6 +59,7 @@ export function QtyPricePanel({
   onAddToCart,
   hideButton = false,
 }: QtyPricePanelProps) {
+  const printTypes = useActivePrintTypes();
   const [qtyStr, setQtyStr] = useState(String(quantity));
   const [noteOpen, setNoteOpen] = useState(false);
   const total = (discounted + printCostPerUnit) * quantity;
@@ -143,7 +138,7 @@ export function QtyPricePanel({
           const priceCents = tier?.price_cents ?? (layer as any).priceCents ?? 0;
           const hasDiscount = basePriceCents > 0 && priceCents < basePriceCents;
           const discountPctPrint = hasDiscount ? Math.round((1 - priceCents / basePriceCents) * 100) : 0;
-          return { layer, sizeLabel, priceCents, basePriceCents, hasDiscount: hasDiscount && discountPctPrint > 0, discountPctPrint, label: PRINT_TYPE_LABELS[layer.type] ?? layer.type };
+          return { layer, sizeLabel, priceCents, basePriceCents, hasDiscount: hasDiscount && discountPctPrint > 0, discountPctPrint, label: findPrintType(layer.type, printTypes).label };
         });
 
         const totalPrintCents = layerBreakdown.reduce((s, l) => s + l.priceCents, 0);

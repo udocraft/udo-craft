@@ -441,7 +441,30 @@ export const PRINT_TYPES = [
   { id: "patch",       label: "Нашивка",    color: "#10b981", bg: "#ecfdf5", desc: "Тканинна нашивка" },
 ] as const;
 
-export type PrintTypeId = typeof PRINT_TYPES[number]["id"];
+/**
+ * Print type code. The list lives in the `print_types` table (admin: Принти → Типи друку);
+ * PRINT_TYPES above is only the built-in fallback, so this is a plain string.
+ */
+export type PrintTypeId = string;
+
+export interface PrintTypeDef {
+  id: string;
+  label: string;
+  color: string;
+  bg?: string;
+  desc?: string;
+}
+
+/** Light background for a print type badge: explicit bg, else the colour at ~10% opacity. */
+export function printTypeBg(t: Pick<PrintTypeDef, "color" | "bg">): string {
+  if (t.bg) return t.bg;
+  return /^#[0-9a-fA-F]{6}$/.test(t.color) ? `${t.color}1a` : "#f1f5f9";
+}
+
+/** Finds a print type by code; unknown codes (e.g. a deleted type on an old order) get a neutral badge. */
+export function findPrintType(id: string, list: readonly PrintTypeDef[] = PRINT_TYPES): PrintTypeDef {
+  return list.find((t) => t.id === id) ?? PRINT_TYPES.find((t) => t.id === id) ?? { id, label: id, color: "#64748b" };
+}
 
 /**
  * Google Fonts with full Cyrillic support — visually distinct families.

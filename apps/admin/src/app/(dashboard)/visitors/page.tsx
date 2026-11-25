@@ -7,9 +7,9 @@ import { DashboardPage } from "@/components/dashboard-page";
 import { AdminEmptyState, AdminSearch, AdminTablePanel, AdminToolbar } from "@/components/admin-layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { LogoLoader } from "@udo-craft/ui";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -127,7 +127,15 @@ const VisitorRow = memo(function VisitorRow({ v }: { v: Visitor }) {
 });
 
 function SkeletonRows() {
-  return <TableRow className="hover:bg-transparent"><TableCell colSpan={7}><LogoLoader variant="block" /></TableCell></TableRow>;
+  return Array.from({ length: 6 }).map((_, i) => (
+    <TableRow key={i} className="hover:bg-transparent">
+      {Array.from({ length: 7 }).map((__, j) => (
+        <TableCell key={j} className="px-4 py-3">
+          <Skeleton className="h-4 w-full max-w-24" />
+        </TableCell>
+      ))}
+    </TableRow>
+  ));
 }
 
 // ── Page ──────────────────────────────────────────────────────────────────────
@@ -177,7 +185,7 @@ export default function VisitorsPage() {
         <AdminSearch value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Пошук за ID або сторінкою" />
       </AdminToolbar>
 
-      <AdminTablePanel className="mx-4 mb-6 md:mx-6">
+      <AdminTablePanel fullWidth className="mb-6">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">

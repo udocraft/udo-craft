@@ -94,7 +94,7 @@ export default function ClientsPage() {
           <EmptyState icon={Users} title="Клієнтів ще немає" description="Додайте першого клієнта вручну або він з'явиться після першого замовлення" />
         )
       ) : (
-        <AdminTablePanel>
+        <AdminTablePanel bleed>
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">

@@ -12,7 +12,6 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { useAIIllustration } from "./useAIIllustration";
 import type { AiQuotaState } from "@/hooks/useAiQuota";
-import { LogoLoader } from "@udo-craft/ui";
 
 export interface PrintsPanelProps {
   activeSide: string;
@@ -21,6 +20,10 @@ export interface PrintsPanelProps {
   isAuthenticated: boolean;
   aiQuota: AiQuotaState;
   onPaywall: () => void;
+}
+
+function SkeletonCard() {
+  return <div className="rounded-lg bg-muted animate-pulse aspect-square" />;
 }
 
 // ── Prompt placeholders: "editor.prints.prompts.0..7" ────────────────────
@@ -229,7 +232,9 @@ export default function PrintsPanel({ onAddLayer, isAuthenticated, aiQuota, onPa
           </div>
 
           {loading && (
-            <LogoLoader variant="block" className="min-h-[160px] py-6" markClassName="w-16" />
+            <div className="grid grid-cols-3 gap-2">
+              {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
+            </div>
           )}
 
           {!loading && error && (

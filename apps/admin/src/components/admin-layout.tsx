@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Check, ChevronDown, Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import {
   Popover,
@@ -237,12 +238,31 @@ export function AdminFilter({
 
 // ── AdminTablePanel ───────────────────────────────────────────────────────────
 
+/** Edge padding so the first/last column lines up with the page's px-4 / md:px-6. */
+const TABLE_EDGE =
+  "[&_th:first-child]:pl-4 [&_td:first-child]:pl-4 [&_th:last-child]:pr-4 [&_td:last-child]:pr-4 md:[&_th:first-child]:pl-6 md:[&_td:first-child]:pl-6 md:[&_th:last-child]:pr-6 md:[&_td:last-child]:pr-6";
+
+/**
+ * Container for admin data.
+ * - Default: a bordered card, for key/value panels on detail pages.
+ * - `fullWidth`: a data table with no card — only top/bottom rules, columns aligned to the page edge.
+ *   Add `bleed` when the parent has the standard page padding (px-4 md:px-6) so the table spans edge to edge.
+ */
 export function AdminTablePanel({
   children,
   className,
-}: React.PropsWithChildren<{ className?: string }>) {
+  fullWidth,
+  bleed,
+}: React.PropsWithChildren<{ className?: string; fullWidth?: boolean; bleed?: boolean }>) {
+  if (fullWidth || bleed) {
+    return (
+      <div className={cn("border-y border-border bg-background", TABLE_EDGE, bleed && "-mx-4 md:-mx-6", className)}>
+        {children}
+      </div>
+    );
+  }
   return (
-    <div className={cn("overflow-hidden rounded-lg border border-border bg-card", className)}>
+    <div className={cn("overflow-hidden rounded-xl border border-border bg-background", className)}>
       {children}
     </div>
   );
@@ -333,5 +353,24 @@ export function AdminEmptyState({
       {description && <p className="text-xs text-muted-foreground mt-1 max-w-xs">{description}</p>}
       {action && <div className="mt-4">{action}</div>}
     </div>
+  );
+}
+
+// ── AdminTableSkeletonRows ───────────────────────────────────────────────────
+// Skeleton rows that sit inside a real <TableBody>, so headers stay put while loading.
+
+export function AdminTableSkeletonRows({ rows = 6, cols }: { rows?: number; cols: number }) {
+  return (
+    <>
+      {Array.from({ length: rows }).map((_, r) => (
+        <tr key={r} className="h-14 border-b border-border last:border-0" aria-hidden="true">
+          {Array.from({ length: cols }).map((__, c) => (
+            <td key={c} className="px-3">
+              <Skeleton className={cn("h-3.5", c === 0 ? "w-32" : c === cols - 1 ? "ml-auto w-12" : "w-20")} />
+            </td>
+          ))}
+        </tr>
+      ))}
+    </>
   );
 }

@@ -1,10 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { Loader2, MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 
-import { AdminSection, AdminTablePanel } from "@/components/admin-layout";
+import { AdminEmptyState, AdminTablePanel, AdminTableSkeletonRows } from "@/components/admin-layout";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,14 +36,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const PRINT_TYPES = [
-  { id: "dtf", label: "DTF" },
-  { id: "embroidery", label: "Вишивка" },
-  { id: "screen", label: "Шовкодрук" },
-  { id: "sublimation", label: "Сублімація" },
-  { id: "patch", label: "Нашивка" },
-] as const;
-
 interface QtyTier {
   min_qty: number;
   price_cents: number;
@@ -71,11 +64,6 @@ const createDraft = (printType: string, sortOrder: number): PricingDraft => ({
   is_active: true,
 });
 
-function formatTiers(tiers: QtyTier[]) {
-  return tiers
-    .map((tier) => `${tier.min_qty} шт / ${(tier.price_cents / 100).toFixed(0)} ₴`)
-    .join(", ");
-}
 
 function parseNumber(value: string, fallback = 0) {
   const next = Number(value);
@@ -149,20 +137,23 @@ function QtyTiersEditor({
         size="sm"
         onClick={() => onChange([...tiers, { min_qty: 1, price_cents: 10000 }])}
       >
-        Додати тир
+        Додати поріг
       </Button>
     </div>
   );
 }
 
-export default function PrintSizesTab({
+/** Price grid for one print type: sizes (cm range) with quantity tiers. */
+export default function PriceGrid({
+  printType,
+  printTypeLabel,
   onCreateActionReady,
-  showSectionAction = true,
 }: {
+  printType: string;
+  printTypeLabel: string;
   onCreateActionReady?: (handler: () => void) => void;
-  showSectionAction?: boolean;
 }) {
-  const [activeType, setActiveType] = useState<(typeof PRINT_TYPES)[number]["id"]>("dtf");
+  const activeType = printType;
   const [rows, setRows] = useState<PricingRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -170,11 +161,6 @@ export default function PrintSizesTab({
   const [deleteTarget, setDeleteTarget] = useState<PricingRow | null>(null);
   const [saving, setSaving] = useState(false);
   const [savingToggleId, setSavingToggleId] = useState<string | null>(null);
-
-  const currentType = useMemo(
-    () => PRINT_TYPES.find((type) => type.id === activeType) ?? PRINT_TYPES[0],
-    [activeType]
-  );
 
   const openCreate = useCallback(() => {
     setDraft(createDraft(activeType, rows.length));
@@ -222,6 +208,19 @@ export default function PrintSizesTab({
       toast.error("Вкажіть назву розміру");
       return;
     }
+    if (draft.size_max_cm > 0 && draft.size_min_cm > draft.size_max_cm) {
+      toast.error("Мінімальний розмір більший за максимальний");
+      return;
+    }
+    const qtys = draft.qty_tiers.map((t) => t.min_qty);
+    if (new Set(qtys).size !== qtys.length) {
+      toast.error("Кількості в тирах повторюються");
+      return;
+    }
+    if (!qtys.includes(1)) {
+      toast.error("Перший тир має починатися з 1 шт");
+      return;
+    }
 
     setSaving(true);
 
@@ -232,11 +231,16 @@ export default function PrintSizesTab({
       const response = await fetch(endpoint, {
         method: isEditing ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(draft),
+        body: JSON.stringify({
+          ...draft,
+          size_label: draft.size_label.trim(),
+          qty_tiers: [...draft.qty_tiers].sort((x, y) => x.min_qty - y.min_qty),
+        }),
       });
 
       if (!response.ok) {
-        throw new Error(isEditing ? "Помилка збереження" : "Помилка створення");
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.error || (isEditing ? "Помилка збереження" : "Помилка створення"));
       }
 
       toast.success(isEditing ? "Збережено" : "Додано");
@@ -276,7 +280,7 @@ export default function PrintSizesTab({
       const response = await fetch(`/api/print-type-pricing/${row.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...row, is_active: !row.is_active }),
+        body: JSON.stringify({ is_active: !row.is_active }),
       });
 
       if (!response.ok) {
@@ -296,128 +300,106 @@ export default function PrintSizesTab({
     }
   };
 
-  return (
-    <div className="space-y-6 p-4 md:p-6">
-      <AdminSection
-        title="Розміри друку"
-        description={`Сітка цін для ${currentType.label}`}
-        actions={showSectionAction ? (
-          <Button type="button" size="sm" onClick={openCreate}>
-            Додати розмір
-          </Button>
-        ) : undefined}
-      >
-        <div className="mb-4 flex flex-wrap gap-1.5">
-          {PRINT_TYPES.map((type) => (
-            <Button
-              key={type.id}
-              type="button"
-              variant={activeType === type.id ? "default" : "outline"}
-              size="sm"
-              onClick={() => setActiveType(type.id)}
-            >
-              {type.label}
-            </Button>
-          ))}
-        </div>
+  const COLS = 6;
 
-      {loading ? (
-        <div className="flex min-h-44 items-center justify-center rounded-lg border border-border bg-card">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Loader2 className="size-4 animate-spin" />
-            Завантаження сітки цін
-          </div>
-        </div>
-      ) : error ? (
-        <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-4">
-          <p className="text-sm font-medium text-destructive">{error}</p>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="mt-3"
-            onClick={() => fetchRows(activeType)}
-          >
-            Спробувати ще раз
-          </Button>
-        </div>
-      ) : rows.length === 0 ? (
-        <div className="flex min-h-44 flex-col items-center justify-center rounded-lg border border-dashed border-border bg-card p-6 text-center">
-          <p className="text-sm font-medium text-foreground">Немає записів для цього типу</p>
-          <p className="mt-1 text-xs text-muted-foreground">Додайте перший розмір і тири цін.</p>
-          <Button
-            type="button"
-            size="sm"
-            className="mt-4"
-            onClick={() => setDraft(createDraft(activeType, 0))}
-          >
-            Додати розмір
-          </Button>
-        </div>
+  return (
+    <div className="px-4 pb-6 md:px-6">
+      {error ? (
+        <AdminEmptyState
+          title="Не вдалося завантажити ціни"
+          description={error}
+          action={<Button type="button" variant="outline" size="sm" onClick={() => fetchRows(activeType)}>Спробувати ще раз</Button>}
+        />
       ) : (
-        <AdminTablePanel>
-        <Table>
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="w-24">Статус</TableHead>
-              <TableHead>Розмір</TableHead>
-              <TableHead className="text-right">Мін., см</TableHead>
-              <TableHead className="text-right">Макс., см</TableHead>
-              <TableHead>Тири кількості</TableHead>
-              <TableHead className="w-32 text-right">Дії</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>
-                  <Switch
-                    checked={row.is_active}
-                    disabled={savingToggleId === row.id}
-                    onCheckedChange={() => handleToggle(row)}
-                  />
-                </TableCell>
-                <TableCell className="font-medium">{row.size_label}</TableCell>
-                <TableCell className="text-right tabular-nums">{row.size_min_cm}</TableCell>
-                <TableCell className="text-right tabular-nums">{row.size_max_cm}</TableCell>
-                <TableCell className="max-w-[360px] truncate text-muted-foreground">
-                  {formatTiers(row.qty_tiers)}
-                </TableCell>
-                <TableCell>
-                  <div className="flex justify-end gap-1">
-                    <Button type="button" variant="ghost" size="sm" onClick={() => setDraft({ ...row })}>
-                      Редагувати
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="text-destructive hover:text-destructive"
-                      onClick={() => setDeleteTarget(row)}
-                    >
-                      Видалити
-                    </Button>
-                  </div>
-                </TableCell>
+        <AdminTablePanel bleed>
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead>Розмір</TableHead>
+                <TableHead className="text-right">Від, см</TableHead>
+                <TableHead className="text-right">До, см</TableHead>
+                <TableHead>Ціна за кількість</TableHead>
+                <TableHead className="w-24">Активна</TableHead>
+                <TableHead className="w-12"><span className="sr-only">Дії</span></TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {loading ? (
+                <AdminTableSkeletonRows rows={5} cols={COLS} />
+              ) : rows.length === 0 ? (
+                <TableRow className="hover:bg-transparent">
+                  <TableCell colSpan={COLS}>
+                    <AdminEmptyState
+                      title={`Цін для «${printTypeLabel}» ще немає`}
+                      description="Додайте розмір і ціни за кількість — вони з'являться в конструкторі."
+                      action={<Button type="button" size="sm" onClick={() => setDraft(createDraft(activeType, 0))}><Plus className="size-4" />Додати ціну</Button>}
+                    />
+                  </TableCell>
+                </TableRow>
+              ) : (
+                rows.map((row) => (
+                  <TableRow key={row.id} className={!row.is_active ? "text-muted-foreground" : undefined}>
+                    <TableCell>
+                      <button type="button" onClick={() => setDraft({ ...row })} className="rounded text-left font-medium hover:text-primary">
+                        {row.size_label}
+                      </button>
+                    </TableCell>
+                    <TableCell className="text-right tabular-nums">{row.size_min_cm}</TableCell>
+                    <TableCell className="text-right tabular-nums">{row.size_max_cm}</TableCell>
+                    <TableCell className="max-w-[420px]">
+                      <div className="flex flex-wrap gap-1.5">
+                        {[...row.qty_tiers].sort((x, y) => x.min_qty - y.min_qty).map((t) => (
+                          <span key={t.min_qty} className="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-0.5 text-xs tabular-nums">
+                            <span className="text-muted-foreground">від {t.min_qty} шт</span>
+                            <span className="font-medium text-foreground">{Math.round(t.price_cents / 100)} ₴</span>
+                          </span>
+                        ))}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Switch
+                        checked={row.is_active}
+                        disabled={savingToggleId === row.id}
+                        onCheckedChange={() => handleToggle(row)}
+                        aria-label={`Активна ціна ${row.size_label}`}
+                      />
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger
+                          aria-label={`Дії для ${row.size_label}`}
+                          className="inline-flex size-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+                        >
+                          <MoreHorizontal className="size-4" />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="min-w-40">
+                          <DropdownMenuItem onClick={() => setDraft({ ...row })}><Pencil className="size-4" />Редагувати</DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem className="text-destructive focus:bg-destructive/10 focus:text-destructive" onClick={() => setDeleteTarget(row)}>
+                            <Trash2 className="size-4" />Видалити
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
         </AdminTablePanel>
       )}
-      </AdminSection>
 
       <Dialog open={Boolean(draft)} onOpenChange={(open) => !open && closeDialog()}>
         <DialogContent className="max-w-xl">
           <DialogHeader>
-            <DialogTitle>{draft?.id ? "Редагувати розмір" : "Додати розмір"}</DialogTitle>
+            <DialogTitle>{draft?.id ? "Редагувати ціну" : `Нова ціна · ${printTypeLabel}`}</DialogTitle>
           </DialogHeader>
 
           {draft && (
             <div className="space-y-5">
               <div className="grid gap-3 sm:grid-cols-3">
                 <div className="space-y-1.5">
-                  <Label htmlFor="size-label">Назва</Label>
+                  <Label htmlFor="size-label">Назва розміру</Label>
                   <Input
                     id="size-label"
                     value={draft.size_label}
@@ -425,7 +407,7 @@ export default function PrintSizesTab({
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="size-min">Мін., см</Label>
+                  <Label htmlFor="size-min">Від, см</Label>
                   <Input
                     id="size-min"
                     type="number"
@@ -436,7 +418,7 @@ export default function PrintSizesTab({
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="size-max">Макс., см</Label>
+                  <Label htmlFor="size-max">До, см</Label>
                   <Input
                     id="size-max"
                     type="number"
@@ -449,7 +431,7 @@ export default function PrintSizesTab({
               </div>
 
               <div className="space-y-1.5">
-                <Label>Тири кількості</Label>
+                <Label>Ціна за кількість</Label>
                 <QtyTiersEditor
                   tiers={draft.qty_tiers}
                   onChange={(tiers) => setDraft({ ...draft, qty_tiers: tiers })}
@@ -473,9 +455,9 @@ export default function PrintSizesTab({
       <AlertDialog open={Boolean(deleteTarget)} onOpenChange={(open) => !open && setDeleteTarget(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Видалити розмір?</AlertDialogTitle>
+            <AlertDialogTitle>Видалити ціну?</AlertDialogTitle>
             <AlertDialogDescription>
-              {deleteTarget?.size_label} буде видалено з сітки цін без можливості відновлення.
+              «{deleteTarget?.size_label}» зникне з конструктора. Це не можна скасувати.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

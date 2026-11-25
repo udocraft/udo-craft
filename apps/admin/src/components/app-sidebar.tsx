@@ -6,7 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   BarChart3, Users, MessageCircle, ShoppingBag, ImagePlus,
   Settings, ChevronRight, UserCog, ShelvingUnit,
-  FileEdit, Globe, Search, Tag, Plus,
+  FileEdit, Globe, Search, Tag, Plus, BadgeDollarSign,
 } from "lucide-react";
 import { BrandLogo, BrandLogoFull } from "@/components/brand-logo";
 import { cn } from "@/lib/utils";
@@ -94,11 +94,11 @@ const CATALOG_NAV: NavItem[] = [
     url: "/prints",
     icon: ImagePlus,
     children: [
-      { title: "Бібліотека принтів", url: "/prints?tab=prints" },
-      { title: "Технології друку", url: "/prints?tab=types" },
-      { title: "Формати друку", url: "/prints?tab=sizes" },
+      { title: "Бібліотека", url: "/prints?tab=prints" },
+      { title: "Типи друку", url: "/prints?tab=types" },
     ],
   },
+  { title: "Ціни", url: "/prices", icon: BadgeDollarSign },
   {
     title: "Склад",
     url: "/erp",

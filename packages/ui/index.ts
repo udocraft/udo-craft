@@ -10,6 +10,7 @@ export * from './components/file-viewer';
 export { MockupViewer } from './components/MockupViewer';
 export { ClarityInit } from './components/ClarityInit';
 export { LogoLoader, LogoMarkShimmer } from './components/LogoLoader';
+export { BootSplash } from './components/BootSplash';
 export type { LogoLoaderProps, LogoMarkShimmerProps } from './components/LogoLoader';
 export { ProductImageManager } from './components/ProductImageManager';
 export type { ProductImageManagerProps } from './components/ProductImageManager';
