@@ -39,7 +39,7 @@ function renderB2c(id: HomeSectionId, ctx: HomeCtx, faqItems: FaqItems): ReactNo
     case "process": return <Steps locale={ctx.locale} />;
     // Customer stories sit right before the FAQ; they render nothing until real entries exist.
     case "faq":
-      return <><Testimonials locale={ctx.locale} /><HomeFaq locale={ctx.locale} items={faqItems} telegram={cmsValue(ctx, "home_contact", "telegram", "https://t.me/udostore")} /></>;
+      return <><Testimonials ctx={ctx} /><HomeFaq locale={ctx.locale} items={faqItems} telegram={cmsValue(ctx, "home_contact", "telegram", "https://t.me/udostore")} /></>;
     default: return null;
   }
 }
