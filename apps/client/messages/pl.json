@@ -1091,6 +1091,11 @@
     "biz": {
       "heading": "Merch dla zespołu lub na wydarzenie?",
       "text": "Odzież firmowa, stoiska pop-up i branding — na osobnej stronie dla firm."
+    },
+    "testimonials": {
+      "eyebrow": "Opinie",
+      "heading": "Ci, którzy już noszą swoje",
+      "listLabel": "Opinie klientów"
     }
   },
   "auth": {

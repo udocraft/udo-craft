@@ -1091,6 +1091,11 @@
     "biz": {
       "heading": "Du merch pour votre équipe ou votre événement ?",
       "text": "Vêtements d'entreprise, stands pop-up et personnalisation : sur une page dédiée aux entreprises."
+    },
+    "testimonials": {
+      "eyebrow": "Avis",
+      "heading": "Ceux qui portent déjà le leur",
+      "listLabel": "Avis clients"
     }
   },
   "auth": {

@@ -1091,6 +1091,11 @@
     "biz": {
       "heading": "Merch till ditt team eller event?",
       "text": "Företagskläder, popup-montrar och branding — på en egen sida för företag."
+    },
+    "testimonials": {
+      "eyebrow": "Omdömen",
+      "heading": "De som redan bär sitt eget",
+      "listLabel": "Kundomdömen"
     }
   },
   "auth": {

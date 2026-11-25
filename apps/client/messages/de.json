@@ -1091,6 +1091,11 @@
     "biz": {
       "heading": "Merch für dein Team oder Event?",
       "text": "Firmenkleidung, Pop-up-Stände und Branding – auf einer eigenen Seite für Unternehmen."
+    },
+    "testimonials": {
+      "eyebrow": "Bewertungen",
+      "heading": "Menschen, die schon ihr eigenes tragen",
+      "listLabel": "Kundenbewertungen"
     }
   },
   "auth": {

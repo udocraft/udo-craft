@@ -207,7 +207,7 @@ export function FooterSection({ tagline, copyright, instagram, telegram, showCta
           </div>
         </div>
 
-        {/* Closing wordmark: only the top ~30% of the logo shows, as a faded strip that
+        {/* Closing wordmark: the logo shows its top 95% as a faint watermark that
             spans the content width and grows up from its bottom edge once it scrolls into view. */}
         {/* The observer watches the unscaled link: a box at scale(0) has no area and never "enters" the viewport.
             Reduced motion is handled in CSS (transform-none!), so server and client render the same markup. */}
@@ -219,7 +219,7 @@ export function FooterSection({ tagline, copyright, instagram, telegram, showCta
           <Link href="/" aria-label={t("homeLink")} className="block focus-visible:outline-none focus-visible:opacity-80">
             <motion.div
               aria-hidden="true"
-              className="aspect-[780/72] origin-bottom overflow-hidden opacity-35 motion-reduce:transform-none!"
+              className="aspect-[780/228] origin-bottom overflow-hidden opacity-15 motion-reduce:transform-none!"
               variants={{ hidden: { scale: 0 }, shown: { scale: 1 } }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >

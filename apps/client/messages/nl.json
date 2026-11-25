@@ -1091,6 +1091,11 @@
     "biz": {
       "heading": "Merch voor je team of evenement?",
       "text": "Bedrijfskleding, pop-upstands en branding — op een aparte pagina voor bedrijven."
+    },
+    "testimonials": {
+      "eyebrow": "Reviews",
+      "heading": "Mensen die hun eigen ontwerp al dragen",
+      "listLabel": "Klantreviews"
     }
   },
   "auth": {

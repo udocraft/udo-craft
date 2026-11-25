@@ -1091,6 +1091,11 @@
     "biz": {
       "heading": "¿Merch para tu equipo o evento?",
       "text": "Ropa corporativa, stands pop-up y personalización: en una página aparte para empresas."
+    },
+    "testimonials": {
+      "eyebrow": "Opiniones",
+      "heading": "Quienes ya llevan lo suyo",
+      "listLabel": "Opiniones de clientes"
     }
   },
   "auth": {

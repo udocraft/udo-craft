@@ -1091,6 +1091,11 @@
     "biz": {
       "heading": "Merch for your team or event?",
       "text": "Corporate clothing, pop-up stands and branding — on a separate page for companies."
+    },
+    "testimonials": {
+      "eyebrow": "Reviews",
+      "heading": "People already wearing their own",
+      "listLabel": "Customer reviews"
     }
   },
   "auth": {

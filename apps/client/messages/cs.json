@@ -1091,6 +1091,11 @@
     "biz": {
       "heading": "Merch pro tým nebo akci?",
       "text": "Firemní oblečení, pop-up stánky a branding — na samostatné stránce pro firmy."
+    },
+    "testimonials": {
+      "eyebrow": "Recenze",
+      "heading": "Lidé, kteří už nosí to své",
+      "listLabel": "Recenze zákazníků"
     }
   },
   "auth": {
