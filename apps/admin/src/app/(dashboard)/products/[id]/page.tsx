@@ -33,13 +33,14 @@ interface Product {
   size_chart_id?: string | null;
   print_area_ids?: string[];
   product_images?: ProductImage[];
+  px_to_mm_ratio?: number;
   discount_grid?: { qty: number; discount_pct: number }[];
   marketing_meta?: ProductMarketingMeta;
 }
 
 interface Category { id: string; name: string; slug: string; is_active: boolean; sort_order: number; }
 interface SizeChart { id: string; name: string; rows: Record<string, string>[]; image_url?: string | null; }
-interface PrintArea { id: string; name: string; label: string; }
+interface PrintArea { id: string; name: string; label: string; width_mm?: number; height_mm?: number; }
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 

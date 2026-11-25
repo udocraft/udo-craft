@@ -70,7 +70,7 @@ export function CollectionsGrid({
       {items.length === 0 ? (
         <p className="py-16 text-center text-muted-foreground">{t("empty")}</p>
       ) : (
-        <ul className="grid grid-cols-2 items-stretch gap-3 sm:gap-4 lg:grid-cols-4">
+        <ul className="grid grid-cols-2 items-stretch gap-x-3 gap-y-10 sm:gap-x-5 sm:gap-y-14 lg:grid-cols-4">
           {items.map((item) => (
             <li key={item.id} className="h-full">
               <ProductCardDetailed

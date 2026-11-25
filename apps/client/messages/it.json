@@ -475,7 +475,18 @@
     },
     "privacy": "Privacy",
     "terms": "Termini",
-    "cookies": "Cookie"
+    "cookies": "Cookie",
+    "newsletter": {
+      "title": "−{pct}% sul primo ordine",
+      "desc": "Iscriviti: nuovi capi, idee di stampa e drop limitati una volta al mese. Niente spam.",
+      "placeholder": "La tua email",
+      "label": "Email per la newsletter",
+      "submit": "Iscriviti",
+      "success": "Fatto. Il tuo codice del {pct}% è in arrivo.",
+      "error": "Iscrizione non riuscita. Riprova.",
+      "invalid": "Controlla l’email.",
+      "consent": "Iscrivendoti accetti l’informativa sulla privacy."
+    }
   },
   "cart": {
     "title": "Carrello",
@@ -1418,7 +1429,10 @@
         "front": "Fronte",
         "back": "Retro",
         "left": "Sinistra",
-        "right": "Destra"
+        "right": "Destra",
+        "neck_inner": "Etichetta interna",
+        "sleeve_left": "Manica sinistra",
+        "sleeve_right": "Manica destra"
       }
     },
     "layers": {
@@ -1435,6 +1449,70 @@
       "register": "Registrati",
       "login": "Accedi",
       "skip": "Continua senza account"
+    },
+    "mode": {
+      "label": "Modalità di visualizzazione",
+      "edit": "Design",
+      "preview": "Anteprima"
+    },
+    "tour": {
+      "replay": "Mostra suggerimenti",
+      "counter": "{n} di {total}",
+      "close": "Chiudi",
+      "back": "Indietro",
+      "next": "Avanti",
+      "done": "Fatto",
+      "tools": {
+        "title": "Strumenti di design",
+        "body": "Carica il tuo file, scegli una stampa pronta, aggiungi testo o disegna qualcosa. Tutto parte da qui."
+      },
+      "canvas": {
+        "title": "Area di lavoro",
+        "body": "Trascina, ridimensiona e ruota gli elementi direttamente sul capo. I pulsanti sotto cambiano lato: davanti, retro, maniche."
+      },
+      "layers": {
+        "title": "Livelli",
+        "body": "Tutti gli elementi del design in un elenco. Riordina, duplica, elimina. Il livello selezionato ha la sua barra sopra l’area."
+      },
+      "mode": {
+        "title": "Design e anteprima",
+        "body": "Passa ad Anteprima per vedere il capo da più angolazioni senza gli strumenti di modifica."
+      },
+      "price": {
+        "title": "Quantità e prezzo",
+        "body": "Scegli colore, taglia e quantità. Il prezzo include lo sconto per quantità e il costo di stampa di ogni elemento."
+      },
+      "actions": {
+        "title": "Ordine e condivisione",
+        "body": "Quando il design è pronto, aggiungilo all’ordine o invia un link per ricevere commenti."
+      }
+    },
+    "preview": {
+      "close": "Chiudi",
+      "prev": "Precedente",
+      "next": "Successivo",
+      "withPrint": "Con la tua stampa",
+      "noPrint": "Senza stampa",
+      "sides": {
+        "front": "Davanti",
+        "back": "Retro",
+        "chest": "Petto",
+        "neck_inner": "Etichetta interna",
+        "sleeve_left": "Manica sinistra",
+        "sleeve_right": "Manica destra"
+      },
+      "tiles": {
+        "zone": "Stampa da vicino",
+        "zoneHint": "Area di stampa",
+        "collar": "Colletto e taglio",
+        "collarHint": "Dettaglio del capo",
+        "flat": "In piano",
+        "flatHint": "Flat lay"
+      },
+      "emptyTitle": "Qui apparirà il tuo capo",
+      "emptyBody": "Aggiungi un’immagine, un testo o una stampa in modalità design e mostreremo il capo da più angolazioni.",
+      "backToDesign": "Torna al design",
+      "readOnly": "Solo anteprima."
     }
   },
   "sizeChart": {
@@ -1442,5 +1520,21 @@
     "empty": "La tabella è vuota",
     "schemeAlt": "{name}: schema delle taglie",
     "note": "Tutte le misure sono in centimetri. Se sei tra due taglie, scegli la più grande."
+  },
+  "editorial": {
+    "statement": {
+      "eyebrow": "U:DO CRAFT",
+      "part1": "Uniamo artigianato e tecnologia perché i capi con il tuo design",
+      "part2": "vengano indossati, non dimenticati nell’armadio —",
+      "part3": "capi di cui vai fiero ogni giorno.",
+      "cta": "Crea il tuo design"
+    },
+    "pair": {
+      "title1": "Fatto per essere indossato,",
+      "accent": "curato",
+      "title2": "nei dettagli",
+      "desc": "Cotone pesante, stampa precisa e ricamo che resistono a centinaia di lavaggi. Scegli la base, al resto pensiamo noi.",
+      "from": "da {price} ₴"
+    }
   }
 }

@@ -475,7 +475,18 @@
     },
     "privacy": "Prywatność",
     "terms": "Regulamin",
-    "cookies": "Pliki cookie"
+    "cookies": "Pliki cookie",
+    "newsletter": {
+      "title": "−{pct}% na pierwsze zamówienie",
+      "desc": "Zapisz się: nowe produkty, pomysły na nadruki i limitowane dropy raz w miesiącu. Bez spamu.",
+      "placeholder": "Twój e-mail",
+      "label": "E-mail do newslettera",
+      "submit": "Zapisz się",
+      "success": "Gotowe. Kod −{pct}% jest już w drodze.",
+      "error": "Nie udało się zapisać. Spróbuj ponownie.",
+      "invalid": "Sprawdź e-mail.",
+      "consent": "Zapisując się, akceptujesz politykę prywatności."
+    }
   },
   "cart": {
     "title": "Koszyk",
@@ -1418,7 +1429,10 @@
         "front": "Przód",
         "back": "Tył",
         "left": "Lewo",
-        "right": "Prawo"
+        "right": "Prawo",
+        "neck_inner": "Metka wewnętrzna",
+        "sleeve_left": "Lewy rękaw",
+        "sleeve_right": "Prawy rękaw"
       }
     },
     "layers": {
@@ -1435,6 +1449,70 @@
       "register": "Zarejestruj się",
       "login": "Zaloguj się",
       "skip": "Kontynuuj bez konta"
+    },
+    "mode": {
+      "label": "Tryb widoku",
+      "edit": "Projekt",
+      "preview": "Podgląd"
+    },
+    "tour": {
+      "replay": "Pokaż wskazówki",
+      "counter": "{n} z {total}",
+      "close": "Zamknij",
+      "back": "Wstecz",
+      "next": "Dalej",
+      "done": "Gotowe",
+      "tools": {
+        "title": "Narzędzia projektu",
+        "body": "Wgraj własny plik, wybierz gotowy nadruk, dodaj tekst albo coś narysuj. Tu wszystko się zaczyna."
+      },
+      "canvas": {
+        "title": "Płótno",
+        "body": "Przeciągaj, skaluj i obracaj elementy bezpośrednio na ubraniu. Przyciski pod spodem zmieniają stronę: przód, tył, rękawy."
+      },
+      "layers": {
+        "title": "Warstwy",
+        "body": "Wszystkie elementy projektu na jednej liście. Zmieniaj kolejność, duplikuj, usuwaj. Wybrana warstwa ma własny pasek nad płótnem."
+      },
+      "mode": {
+        "title": "Projekt i podgląd",
+        "body": "Przełącz na Podgląd, aby zobaczyć ubranie z kilku stron bez narzędzi edycji."
+      },
+      "price": {
+        "title": "Ilość i cena",
+        "body": "Wybierz kolor, rozmiar i ilość. Cena uwzględnia rabat ilościowy i koszt druku każdego elementu."
+      },
+      "actions": {
+        "title": "Zamówienie i udostępnianie",
+        "body": "Gdy projekt jest gotowy, dodaj go do zamówienia albo wyślij link do komentarzy."
+      }
+    },
+    "preview": {
+      "close": "Zamknij",
+      "prev": "Poprzedni",
+      "next": "Następny",
+      "withPrint": "Z twoim nadrukiem",
+      "noPrint": "Bez nadruku",
+      "sides": {
+        "front": "Przód",
+        "back": "Tył",
+        "chest": "Klatka",
+        "neck_inner": "Metka wewnętrzna",
+        "sleeve_left": "Lewy rękaw",
+        "sleeve_right": "Prawy rękaw"
+      },
+      "tiles": {
+        "zone": "Nadruk z bliska",
+        "zoneHint": "Obszar druku",
+        "collar": "Kołnierz i krój",
+        "collarHint": "Detal",
+        "flat": "Na płasko",
+        "flatHint": "Flat lay"
+      },
+      "emptyTitle": "Tu pojawi się twoje ubranie",
+      "emptyBody": "Dodaj obraz, tekst lub nadruk w trybie projektu, a pokażemy ubranie z kilku stron.",
+      "backToDesign": "Wróć do projektu",
+      "readOnly": "Tylko podgląd."
     }
   },
   "sizeChart": {
@@ -1442,5 +1520,21 @@
     "empty": "Tabela jest pusta",
     "schemeAlt": "{name}: schemat rozmiarów",
     "note": "Wszystkie wymiary w centymetrach. Jeśli jesteś pomiędzy rozmiarami, wybierz większy."
+  },
+  "editorial": {
+    "statement": {
+      "eyebrow": "U:DO CRAFT",
+      "part1": "Łączymy rzemiosło z technologią, żeby ubrania z twoim projektem",
+      "part2": "były noszone, a nie leżały w szafie —",
+      "part3": "rzeczy, z których jesteś dumny każdego dnia.",
+      "cta": "Stwórz projekt"
+    },
+    "pair": {
+      "title1": "Stworzone do noszenia,",
+      "accent": "dopracowane",
+      "title2": "w każdym detalu",
+      "desc": "Gruba bawełna, precyzyjny druk i haft, które wytrzymują setki prań. Wybierz bazę, resztą zajmiemy się my.",
+      "from": "od {price} ₴"
+    }
   }
 }
