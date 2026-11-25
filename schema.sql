@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS leads (
   customer_data JSONB NOT NULL DEFAULT '{}',
   total_amount_cents INTEGER NOT NULL DEFAULT 0,
   notes TEXT,
+  tags TEXT[] NOT NULL DEFAULT '{}',
   visitor_id TEXT,
   session_id TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),

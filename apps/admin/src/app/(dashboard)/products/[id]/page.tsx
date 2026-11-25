@@ -72,7 +72,7 @@ export default function ProductDetailPage() {
 
       if (!productRes.ok) {
         toast.error("Товар не знайдено");
-        router.push("/products");
+        router.push("/catalog?tab=products");
         return;
       }
 
@@ -142,7 +142,7 @@ export default function ProductDetailPage() {
       if (!res.ok) throw new Error("Помилка видалення");
       toast.success("Товар видалено");
       setIsDirty(false);
-      router.push("/products");
+      router.push("/catalog?tab=products");
     } catch {
       toast.error("Помилка видалення");
       setDeleting(false);
