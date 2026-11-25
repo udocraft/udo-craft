@@ -28,6 +28,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useAiQuota } from "@/hooks/useAiQuota";
 import type { LoadedCustomizerShare } from "./_lib/customizerShare";
 import { migrateLegacyCheckoutCart } from "./_lib/cart-migration";
+import { takeHandoffFile } from "@/lib/upload-handoff";
 
 // ── Types ─────────────────────────────────────────────────────────────────
 
@@ -88,6 +89,7 @@ export function OrderPageInner({
   const [editingCartIndex, setEditingCartIndex] = useState<number | null>(null);
   const [customizerInitialSize, setCustomizerInitialSize] = useState<string | null>(null);
   const [customizerInitialColor, setCustomizerInitialColor] = useState<string | null>(null);
+  const [customizerInitialFile, setCustomizerInitialFile] = useState<File | null>(null);
   const [activeShare, setActiveShare] = useState<LoadedCustomizerShare | null>(null);
   const [contact, setContact] = useState<ContactData>({ name: "", email: "", phone: "", company: "", edrpou: "", socialNetwork: "telegram", socialHandle: "", delivery: "nova_poshta", novaPoshtaDetails: "", payment: "card", source: "", sourceDetails: "", deadline: "", comment: "" });
   const [extraFiles, setExtraFiles] = useState<File[]>([]);
@@ -229,6 +231,11 @@ export function OrderPageInner({
         setCustomizerInitialSize(searchParams.get("size"));
         setCustomizerInitialColor(searchParams.get("color"));
         setCustomizing(p);
+        // Image picked on the home page try-on: take it out of IndexedDB (once).
+        const uploadId = searchParams.get("upload");
+        if (uploadId) {
+          void takeHandoffFile(uploadId).then((file) => { if (file) setCustomizerInitialFile(file); });
+        }
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -279,10 +286,11 @@ export function OrderPageInner({
           materials={materials}
           variants={variants.filter((v) => v.product_id === customizing.id)}
           onAdd={handleAddItem}
-          onClose={() => { setCustomizing(null); setEditingCartIndex(null); setCustomizerInitialSize(null); setCustomizerInitialColor(null); setActiveShare(null); }}
+          onClose={() => { setCustomizing(null); setEditingCartIndex(null); setCustomizerInitialSize(null); setCustomizerInitialColor(null); setCustomizerInitialFile(null); setActiveShare(null); }}
           initialSize={editingCartIndex !== null ? cart[editingCartIndex]?.size : (customizerInitialSize ?? searchParams.get("size") ?? undefined)}
           initialColor={editingCartIndex !== null ? cart[editingCartIndex]?.color : (customizerInitialColor ?? searchParams.get("color") ?? undefined)}
           initialLayers={editingCartIndex !== null ? cart[editingCartIndex]?.layers : undefined}
+          initialFile={editingCartIndex === null ? customizerInitialFile ?? undefined : undefined}
           existingMockupUploadedUrl={editingCartIndex !== null ? cart[editingCartIndex]?.mockupUploadedUrl : undefined}
           initialShare={activeShare ?? undefined}
           isAuthenticated={isAuthenticated}

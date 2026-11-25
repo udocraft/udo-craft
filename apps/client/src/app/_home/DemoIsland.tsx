@@ -2,15 +2,25 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Upload, X } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Loader2, Upload, X } from "lucide-react";
 import { Button } from "@udo-craft/ui";
-import { Link } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
+import { saveHandoffFile } from "@/lib/upload-handoff";
 
 export interface DemoVariant {
   id: string;
   name: string;
   hex: string;
   image: string;
+}
+
+export interface DemoItem {
+  id: string;
+  slug: string;
+  name: string;
+  priceLabel: string | null;
+  variants: DemoVariant[];
+  fallbackImage: string | null;
 }
 
 interface DemoLabels {
@@ -21,39 +31,39 @@ interface DemoLabels {
   note: string;
   tooLarge: string;
   editor: string;
+  prev: string;
+  next: string;
 }
 
 const MAX_BYTES = 5 * 1024 * 1024;
 
 /**
- * Live demo island: pick a colour, drop a logo on the product, see the price.
- * Preview only, nothing is uploaded. The full editor lives on /order.
+ * «Спробуй наші бестселери»: cycle through bestseller products with chevrons, pick a
+ * colour, drop an image on the product. The button opens the builder on /order with
+ * that product, colour and image already in place (the file is handed over through
+ * this browser's IndexedDB, nothing is uploaded before checkout).
  */
-export function DemoIsland({
-  variants,
-  fallbackImage,
-  productName,
-  priceLabel,
-  orderHref,
-  labels,
-  children,
-}: {
-  variants: DemoVariant[];
-  fallbackImage: string | null;
-  productName: string | null;
-  priceLabel: string | null;
-  orderHref: string;
-  labels: DemoLabels;
-  children?: React.ReactNode;
-}) {
-  const [active, setActive] = useState(0);
-  const [logo, setLogo] = useState<{ url: string; name: string } | null>(null);
+export function DemoIsland({ items, labels }: { items: DemoItem[]; labels: DemoLabels }) {
+  const router = useRouter();
+  const [index, setIndex] = useState(0);
+  const [colorIdx, setColorIdx] = useState(0);
+  const [logo, setLogo] = useState<{ url: string; file: File } | null>(null);
   const [error, setError] = useState(false);
+  const [opening, setOpening] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => () => { if (logo) URL.revokeObjectURL(logo.url); }, [logo]);
 
-  const image = variants[active]?.image ?? fallbackImage;
+  if (items.length === 0) return null;
+  const item = items[index];
+  const variant = item.variants[colorIdx] ?? item.variants[0];
+  const image = variant?.image ?? item.fallbackImage;
+  const many = items.length > 1;
+
+  const go = (delta: number) => {
+    setIndex((i) => (i + delta + items.length) % items.length);
+    setColorIdx(0);
+  };
 
   const onFile = (file: File | undefined) => {
     if (!file) return;
@@ -62,88 +72,42 @@ export function DemoIsland({
       return;
     }
     setError(false);
-    setLogo({ url: URL.createObjectURL(file), name: file.name });
+    setLogo({ url: URL.createObjectURL(file), file });
+  };
+
+  const openEditor = async () => {
+    const params = new URLSearchParams({ product: item.slug });
+    if (variant) params.set("variant", variant.id);
+    if (logo) {
+      setOpening(true);
+      const id = await saveHandoffFile(logo.file);
+      if (id) params.set("upload", id);
+    }
+    router.push(`/order?${params.toString()}`);
   };
 
   return (
-    <div className="grid items-center gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
-      <div className="order-2 lg:order-1">
-        {productName && <p className="text-h3 font-semibold">{productName}</p>}
-        {priceLabel && <p className="mt-1 text-muted-foreground">{priceLabel}</p>}
-
-        {variants.length > 1 && (
-          <div className="mt-8">
-            <p className="text-sm font-medium" id="demo-color-label">{labels.color}</p>
-            <div className="mt-2 flex flex-wrap gap-1" role="group" aria-labelledby="demo-color-label">
-              {variants.map((v, i) => (
-                <button
-                  key={v.id}
-                  type="button"
-                  aria-label={v.name}
-                  aria-pressed={i === active}
-                  onClick={() => setActive(i)}
-                  className="flex size-11 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  <span
-                    className={`size-7 rounded-full border border-border transition-shadow duration-fast ${i === active ? "ring-2 ring-foreground ring-offset-2 ring-offset-background" : ""}`}
-                    style={{ backgroundColor: v.hex }}
-                  />
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div className="mt-8">
-          <input
-            ref={inputRef}
-            type="file"
-            accept="image/png,image/jpeg,image/svg+xml,image/webp"
-            className="hidden"
-            onChange={(e) => {
-              onFile(e.target.files?.[0]);
-              e.target.value = "";
-            }}
-          />
-          <div className="flex flex-wrap items-center gap-3">
-            <Button type="button" variant="outline" onClick={() => inputRef.current?.click()}>
-              <Upload aria-hidden="true" /> {labels.upload}
-            </Button>
-            {logo && (
-              <Button type="button" variant="ghost" onClick={() => setLogo(null)}>
-                <X aria-hidden="true" /> {labels.remove}
-              </Button>
-            )}
-          </div>
-          <p className="mt-2 text-sm text-muted-foreground">{labels.hint}</p>
-          {error && (
-            <p role="alert" className="mt-2 text-sm text-destructive">
-              {labels.tooLarge}
-            </p>
-          )}
-        </div>
-
-        <div className="mt-8">
-          <Button asChild variant="primary" size="lg">
-            <Link href={orderHref}>
-              {labels.editor} <ArrowRight aria-hidden="true" />
-            </Link>
+    <div className="mx-auto flex max-w-[40rem] flex-col items-center text-center">
+      {/* Preview with chevrons on both sides */}
+      <div className="flex w-full items-center justify-center gap-3 sm:gap-5">
+        {many && (
+          <Button variant="outline" size="icon" aria-label={labels.prev} aria-controls="demo-preview" onClick={() => go(-1)} className="shrink-0">
+            <ChevronLeft aria-hidden="true" />
           </Button>
-          <p className="mt-3 text-sm text-muted-foreground">{labels.note}</p>
-        </div>
-
-        {children}
-      </div>
-
-      <div className="order-1 lg:order-2">
-        <div className="relative mx-auto aspect-square w-full max-w-[34rem] overflow-hidden rounded-media bg-white ring-1 ring-foreground/10">
+        )}
+        <div
+          id="demo-preview"
+          aria-live="polite"
+          className="relative aspect-square w-full max-w-[30rem] overflow-hidden rounded-media bg-white ring-1 ring-foreground/10"
+        >
           {image && (
             <Image
+              key={image}
               src={image}
-              alt={productName ?? ""}
+              alt={item.name}
               fill
-              sizes="(min-width: 1024px) 34rem, 92vw"
-              className="object-contain p-6 sm:p-10"
+              sizes="(min-width: 640px) 30rem, 70vw"
+              className="object-contain p-6 sm:p-10 animate-in fade-in duration-300"
             />
           )}
           {logo && (
@@ -151,11 +115,84 @@ export function DemoIsland({
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={logo.url}
-              alt={logo.name}
+              alt={logo.file.name}
               className="absolute left-1/2 top-[30%] max-h-[22%] w-[26%] -translate-x-1/2 object-contain"
             />
           )}
         </div>
+        {many && (
+          <Button variant="outline" size="icon" aria-label={labels.next} aria-controls="demo-preview" onClick={() => go(1)} className="shrink-0">
+            <ChevronRight aria-hidden="true" />
+          </Button>
+        )}
+      </div>
+
+      {many && (
+        <p className="mt-4 text-sm tabular-nums text-muted-foreground" aria-hidden="true">
+          {index + 1} / {items.length}
+        </p>
+      )}
+
+      <p className="mt-6 text-h3 font-semibold">{item.name}</p>
+      {item.priceLabel && <p className="mt-1 text-muted-foreground">{item.priceLabel}</p>}
+
+      {item.variants.length > 1 && (
+        <div className="mt-6">
+          <p className="text-sm font-medium" id="demo-color-label">{labels.color}</p>
+          <div className="mt-2 flex flex-wrap justify-center gap-1" role="group" aria-labelledby="demo-color-label">
+            {item.variants.map((v, i) => (
+              <button
+                key={v.id}
+                type="button"
+                aria-label={v.name}
+                aria-pressed={i === colorIdx}
+                onClick={() => setColorIdx(i)}
+                className="flex size-11 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <span
+                  className={`size-7 rounded-full border border-border transition-shadow duration-fast ${i === colorIdx ? "ring-2 ring-foreground ring-offset-2 ring-offset-background" : ""}`}
+                  style={{ backgroundColor: v.hex }}
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="mt-6">
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/png,image/jpeg,image/svg+xml,image/webp"
+          className="hidden"
+          onChange={(e) => {
+            onFile(e.target.files?.[0]);
+            e.target.value = "";
+          }}
+        />
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <Button type="button" variant="outline" onClick={() => inputRef.current?.click()}>
+            <Upload aria-hidden="true" /> {labels.upload}
+          </Button>
+          {logo && (
+            <Button type="button" variant="ghost" onClick={() => setLogo(null)}>
+              <X aria-hidden="true" /> {labels.remove}
+            </Button>
+          )}
+        </div>
+        <p className="mt-2 text-sm text-muted-foreground">{labels.hint}</p>
+        {error && (
+          <p role="alert" className="mt-2 text-sm text-destructive">
+            {labels.tooLarge}
+          </p>
+        )}
+      </div>
+
+      <div className="mt-8 flex flex-col items-center">
+        <Button type="button" variant="primary" size="lg" onClick={openEditor} disabled={opening}>
+          {labels.editor} {opening ? <Loader2 className="animate-spin" aria-hidden="true" /> : <ArrowRight aria-hidden="true" />}
+        </Button>
+        <p className="mt-3 max-w-md text-sm text-muted-foreground">{labels.note}</p>
       </div>
     </div>
   );

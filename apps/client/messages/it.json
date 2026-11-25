@@ -1004,8 +1004,11 @@
     "upload": "Carica immagine",
     "remove": "Rimuovi immagine",
     "hint": "PNG, JPG, SVG o WebP, fino a 5 MB",
-    "note": "Solo un'anteprima. L'editor completo imposta dimensioni e zone di stampa.",
-    "tooLarge": "Il file supera i 5 MB. Scegli un'immagine più piccola."
+    "note": "La tua immagine passa all’editor, dove scegli dimensione e posizione della stampa.",
+    "tooLarge": "Il file supera i 5 MB. Scegli un'immagine più piccola.",
+    "heading": "Prova i nostri bestseller",
+    "prev": "Articolo precedente",
+    "next": "Articolo successivo"
   },
   "checkoutErrors": {
     "required": "Campo obbligatorio",

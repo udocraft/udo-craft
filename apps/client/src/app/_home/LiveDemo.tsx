@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Section, SectionHeader } from "@udo-craft/ui";
 import { getAllImages, resolveProductImages } from "@udo-craft/shared/product-images";
 import { localizedField } from "@/lib/localized-field";
-import { DemoIsland, type DemoVariant } from "./DemoIsland";
+import { DemoIsland, type DemoItem, type DemoVariant } from "./DemoIsland";
 import type { HomeCtx } from "./context";
 
 const front = (images: ReturnType<typeof resolveProductImages>) => {
@@ -10,26 +10,38 @@ const front = (images: ReturnType<typeof resolveProductImages>) => {
   return map.front ?? Object.values(map)[0] ?? null;
 };
 
-function pickDemo(ctx: HomeCtx) {
-  let best: { product: HomeCtx["products"][number]; variants: DemoVariant[] } | null = null;
-  for (const product of ctx.products) {
-    if (!product.is_active) continue;
-    const variants: DemoVariant[] = [];
-    for (const v of ctx.colorVariants) {
-      if (v.product_id !== product.id) continue;
-      const image = front(resolveProductImages(v.variant_images, v.images));
-      const material = ctx.materials.find((m) => m.id === v.material_id);
-      if (image && material) variants.push({ id: v.id, name: material.name, hex: material.hex_code, image });
-    }
-    if (variants.length > (best?.variants.length ?? 0)) best = { product, variants: variants.slice(0, 8) };
+type Product = HomeCtx["products"][number];
+
+/** Colour variants of a product that have a front image and a known material. */
+function variantsOf(ctx: HomeCtx, product: Product): DemoVariant[] {
+  const out: DemoVariant[] = [];
+  for (const v of ctx.colorVariants) {
+    if (v.product_id !== product.id) continue;
+    const image = front(resolveProductImages(v.variant_images, v.images));
+    const material = ctx.materials.find((m) => m.id === v.material_id);
+    if (image && material) out.push({ id: v.id, name: material.name, hex: material.hex_code, image });
   }
-  if (best) return { product: best.product, variants: best.variants, fallback: null as string | null };
-  const product = ctx.products.find((p) => p.is_active && front(resolveProductImages(p.product_images, p.images))) ?? null;
-  return {
+  return out.slice(0, 8);
+}
+
+const MAX_ITEMS = 8;
+
+/**
+ * Products for the try-on: active products flagged «Бестселер» in admin. With none
+ * flagged, the products with the most colours (the old automatic pick). Products
+ * without any usable image are skipped.
+ */
+function pickItems(ctx: HomeCtx): { product: Product; variants: DemoVariant[]; fallback: string | null }[] {
+  const active = ctx.products.filter((p) => p.is_active);
+  const flagged = active.filter((p) => (p as Product & { is_bestseller?: boolean }).is_bestseller);
+  const candidates = (flagged.length ? flagged : active).map((product) => ({
     product,
-    variants: [] as DemoVariant[],
-    fallback: product ? front(resolveProductImages(product.product_images, product.images)) : null,
-  };
+    variants: variantsOf(ctx, product),
+    fallback: front(resolveProductImages(product.product_images, product.images)),
+  }));
+  const usable = candidates.filter((c) => c.variants.length > 0 || c.fallback);
+  if (!flagged.length) usable.sort((x, y) => y.variants.length - x.variants.length);
+  return usable.slice(0, MAX_ITEMS);
 }
 
 export async function LiveDemo({ ctx }: { ctx: HomeCtx }) {
@@ -39,19 +51,20 @@ export async function LiveDemo({ ctx }: { ctx: HomeCtx }) {
     getTranslations({ locale, namespace: "homeDemo" }),
     getTranslations({ locale, namespace: "collections" }),
   ]);
-  const { product, variants, fallback } = pickDemo(ctx);
-  const name = product ? localizedField(product.name, product.name_en, locale) : null;
-  const price = product && product.base_price_cents > 0 ? tCollections("fromPrice", { price: Math.round(product.base_price_cents / 100) }) : null;
+  const items: DemoItem[] = pickItems(ctx).map(({ product, variants, fallback }) => ({
+    id: product.id,
+    slug: product.slug || product.id,
+    name: localizedField(product.name, product.name_en, locale),
+    priceLabel: product.base_price_cents > 0 ? tCollections("fromPrice", { price: Math.round(product.base_price_cents / 100) }) : null,
+    variants,
+    fallbackImage: fallback,
+  }));
 
   return (
     <Section id="demo" tone="inverse" aria-labelledby="demo-heading">
-      <SectionHeader titleId="demo-heading" title={t("heading")} lede={t("desc")} />
+      <SectionHeader titleId="demo-heading" title={tDemo("heading")} lede={t("desc")} align="center" />
       <DemoIsland
-        variants={variants}
-        fallbackImage={fallback}
-        productName={name}
-        priceLabel={price}
-        orderHref={product ? `/order?product=${encodeURIComponent(product.slug || product.id)}` : "/order"}
+        items={items}
         labels={{
           color: t("colorLabel"),
           upload: tDemo("upload"),
@@ -60,6 +73,8 @@ export async function LiveDemo({ ctx }: { ctx: HomeCtx }) {
           note: tDemo("note"),
           tooLarge: tDemo("tooLarge"),
           editor: t("openEditor"),
+          prev: tDemo("prev"),
+          next: tDemo("next"),
         }}
       />
     </Section>
