@@ -64,9 +64,9 @@ export function ListPage<T extends string = string>({
         <>
           {actions}
           {createHref && (
-            <Button size="sm" nativeButton={false} render={<Link href={createHref} />}>
+            <Button size="sm" nativeButton={false} render={<Link href={createHref} aria-label={createLabel} />}>
               <Plus className="size-4" />
-              {createLabel}
+              <span className="hidden sm:inline">{createLabel}</span>
             </Button>
           )}
         </>

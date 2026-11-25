@@ -20,6 +20,7 @@ import {
 import { toast } from "sonner";
 import { fmtTime, cn } from "@/lib/utils";
 import { DashboardPage } from "@/components/dashboard-page";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback } from "@udo-craft/ui";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -141,10 +142,21 @@ export default function MessagesPage() {
 
   useEffect(() => {
     if (!leads.length) return;
-    const ids = leads.map((l) => l.id).join(",");
-    fetch(`/api/messages?lead_ids=${ids}`)
-      .then((r) => r.ok ? r.json() : {})
-      .then((map: Record<string, Message>) => setLastMessages(map));
+    // Previews in chunks: one URL with hundreds of ids exceeds the request size limit.
+    const CHUNK = 100;
+    const chunks: string[][] = [];
+    for (let i = 0; i < leads.length; i += CHUNK) chunks.push(leads.slice(i, i + CHUNK).map((l) => l.id));
+    let alive = true;
+    Promise.all(
+      chunks.map((ids) =>
+        fetch(`/api/messages?lead_ids=${ids.join(",")}`)
+          .then((r) => (r.ok ? r.json() : {}))
+          .catch(() => ({})),
+      ),
+    ).then((maps: Record<string, Message>[]) => {
+      if (alive) setLastMessages(Object.assign({}, ...maps));
+    });
+    return () => { alive = false; };
   }, [leads]);
 
   useEffect(() => {
@@ -321,7 +333,7 @@ export default function MessagesPage() {
   };
 
   return (
-    <DashboardPage title="Повідомлення" contentClassName="flex-1 flex flex-col overflow-hidden p-0 [&>div]:flex [&>div]:flex-col [&>div]:flex-1 [&>div]:overflow-hidden">
+    <DashboardPage title="Повідомлення" contentClassName="overflow-hidden">
       {viewerUrl && <FileViewer url={viewerUrl} onClose={() => setViewerUrl(null)} />}
       <div className="flex flex-1 min-h-0 overflow-hidden">
 
@@ -364,8 +376,16 @@ export default function MessagesPage() {
           {/* List */}
           <div className="flex-1 overflow-y-auto">
             {loading ? (
-              <div className="flex justify-center items-center h-full">
-                <Loader2 className="size-5 animate-spin text-muted-foreground" />
+              <div aria-busy="true" aria-label="Завантаження розмов">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className="flex items-center gap-3 border-b border-border/60 px-4 py-3">
+                    <Skeleton className="size-9 shrink-0 rounded-full" />
+                    <div className="min-w-0 flex-1 space-y-2">
+                      <Skeleton className="h-3.5 w-2/3" />
+                      <Skeleton className="h-3 w-full" />
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : filteredLeads.length === 0 ? (
               <EmptyState icon={MessageCircle} title={searchQuery ? "Нічого не знайдено" : "Немає розмов"} className="py-12" />

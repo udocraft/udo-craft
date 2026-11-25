@@ -241,7 +241,7 @@ export function PrintZonesEditor({ productId, images, printAreas, pxToMmRatio }:
         ))}
         {addable.length > 0 && (
           <Select value="" onValueChange={(s) => { if (!s) return; setExtraSides((a) => [...a, s]); setSide(s); }}>
-            <SelectTrigger className="h-8 w-auto gap-1 rounded-full text-xs"><Plus className="size-3" /><SelectValue placeholder="Додати сторону" /></SelectTrigger>
+            <SelectTrigger className="h-8 w-auto gap-1 rounded-lg text-xs"><Plus className="size-3" /><SelectValue placeholder="Додати сторону" /></SelectTrigger>
             <SelectContent>{addable.map((s) => <SelectItem key={s} value={s}>{SIDE_LABELS[s] ?? s}</SelectItem>)}</SelectContent>
           </Select>
         )}

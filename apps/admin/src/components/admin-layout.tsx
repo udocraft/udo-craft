@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Check, ChevronDown, Search, X } from "lucide-react";
+import { ArrowUpDown, Check, Plus, Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -74,13 +74,13 @@ export function AdminSearch({
   ...props
 }: Omit<React.ComponentProps<typeof Input>, "type">) {
   return (
-    <div className={cn("relative w-full max-w-xs", className)}>
-      <Search className="pointer-events-none absolute left-3.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+    <div className={cn("relative w-full sm:max-w-xs", className)}>
+      <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
       <Input
         type="search"
         placeholder={placeholder}
         aria-label={placeholder}
-        className="h-9 min-h-0 bg-background pl-9 text-sm"
+        className="h-9 min-h-0 rounded-lg bg-background pl-9 text-sm md:text-sm"
         {...props}
       />
     </div>
@@ -88,8 +88,11 @@ export function AdminSearch({
 }
 
 // ── AdminFilter ───────────────────────────────────────────────────────────────
-// Renders a pill that opens a Popover with a list of options.
-// Pass `options` for the dropdown list, or just `onClick` for a custom handler.
+// Faceted filter chip (shadcn data-table pattern), single or multiple choice:
+//  - inactive: dashed outline "+ Статус"
+//  - active:   solid chip "Статус | Новий" (multiple: "Статус | Новий, В роботі" or "3 вибрано")
+// The popover lists options with a check on the chosen one and a "Скинути" row.
+// An option with value "all" is treated as "no filter" and is not listed.
 
 export interface FilterOption {
   value: string;
@@ -103,14 +106,17 @@ interface AdminFilterProps {
   /** Currently selected value key */
   value?: string;
   active?: boolean;
-  /** Structured options — renders a built-in popover checklist */
   options?: FilterOption[];
   onSelect?: (value: string) => void;
-  /** Called when the × clear button is pressed */
+  /** Resets this filter (also offered inside the popover). */
   onClear?: () => void;
-  /** Fallback custom click handler when no options provided */
+  /** Toggle chips without options (e.g. "Лише непрочитані"). */
   onClick?: () => void;
   icon?: React.ComponentType<{ className?: string }>;
+  /** Multiple choice: checkboxes, popover stays open; use `values` + `onValuesChange`. */
+  multiple?: boolean;
+  values?: string[];
+  onValuesChange?: (values: string[]) => void;
 }
 
 export function AdminFilter({
@@ -122,117 +128,165 @@ export function AdminFilter({
   onClear,
   onClick,
   icon: Icon,
+  multiple,
+  values,
+  onValuesChange,
 }: AdminFilterProps) {
   const [open, setOpen] = React.useState(false);
-
-  // Display label for the active value
-  const activeLabel = React.useMemo(() => {
-    if (!value || value === "all") return undefined;
-    return options?.find((o) => o.value === value)?.label ?? value;
-  }, [value, options]);
+  const choices = React.useMemo(() => (options ?? []).filter((o) => o.value !== "all"), [options]);
+  const picked = multiple
+    ? choices.filter((o) => values?.includes(o.value))
+    : value && value !== "all" ? choices.filter((o) => o.value === value) : [];
+  const selected = picked[0];
+  const isActive = active ?? picked.length > 0;
+  const clear = () => (multiple ? onValuesChange?.([]) : onClear?.());
 
   const triggerCls = cn(
-    "flex h-9 items-center gap-1.5 rounded-full border px-3 text-xs font-medium transition-all",
+    "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-sm font-medium transition-colors",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-    active
-      ? "border-primary/30 bg-primary/5 text-primary"
-      : "border-border/60 bg-background text-muted-foreground hover:border-border hover:bg-muted/40 hover:text-foreground"
+    isActive
+      ? "border-primary/40 bg-primary/5 text-foreground hover:bg-primary/10"
+      : "border-dashed border-border text-muted-foreground hover:border-foreground/30 hover:bg-muted hover:text-foreground"
   );
 
-  const triggerContent = (
+  const content = (
     <>
-      {Icon && (
-        <Icon className={cn("size-3.5 shrink-0", active ? "text-primary" : "text-muted-foreground/60")} />
+      {isActive ? (
+        Icon ? <Icon className="size-4 shrink-0 text-primary" /> : null
+      ) : (
+        <Plus className="size-4 shrink-0" aria-hidden="true" />
       )}
       <span>{label}</span>
-      {activeLabel && (
+      {picked.length > 0 && (
         <>
-          <span className="opacity-30">:</span>
-          <span className="max-w-[100px] truncate font-semibold text-foreground">{activeLabel}</span>
+          <span className="mx-0.5 h-4 w-px bg-border" aria-hidden="true" />
+          {picked.length === 1 && selected.color && <span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: selected.color }} aria-hidden="true" />}
+          <span className="max-w-[160px] truncate font-semibold text-primary">
+            {picked.length === 1 ? selected.label : picked.length === 2 ? picked.map((p) => p.label).join(", ") : `${picked.length} вибрано`}
+          </span>
         </>
-      )}
-      {options && (
-        <ChevronDown
-          className={cn(
-            "size-3 shrink-0 transition-transform duration-150",
-            open ? "rotate-180" : "",
-            active ? "text-primary/60" : "text-muted-foreground/40"
-          )}
-        />
       )}
     </>
   );
 
-  const clearButton = active && onClear && (
-    <button
-      type="button"
-      onClick={(e) => {
-        e.stopPropagation();
-        onClear();
-        setOpen(false);
-      }}
-      aria-label={`Скинути фільтр ${label}`}
-      className="ml-0.5 flex size-6 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
-    >
-      <X className="size-3" />
-    </button>
-  );
-
-  if (!options || options.length === 0) {
+  if (!choices.length) {
     return (
-      <div className="flex items-center">
-        <button type="button" onClick={onClick} aria-pressed={active} className={triggerCls}>
-          {triggerContent}
-        </button>
-        {clearButton}
-      </div>
+      <button type="button" onClick={onClick} aria-pressed={isActive} className={triggerCls}>
+        {content}
+      </button>
     );
   }
 
   return (
-    <div className="flex items-center">
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger className={triggerCls}>{triggerContent}</PopoverTrigger>
-        <PopoverContent
-          align="start"
-          side="bottom"
-          sideOffset={6}
-          className="w-48 p-1.5"
-        >
-          <div className="space-y-px">
-            {options.map((opt) => {
-              const isSelected = value === opt.value;
-              return (
-                <button
-                  key={opt.value}
-                  type="button"
-                  onClick={() => {
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger className={triggerCls} aria-label={picked.length ? `${label}: ${picked.map((p) => p.label).join(", ")}` : `Фільтр: ${label}`}>
+        {content}
+      </PopoverTrigger>
+      <PopoverContent align="start" side="bottom" sideOffset={6} className="w-56 p-1">
+        <div role="listbox" aria-label={label} aria-multiselectable={multiple || undefined} className="max-h-72 overflow-y-auto">
+          {choices.map((opt) => {
+            const isSelected = picked.some((p) => p.value === opt.value);
+            return (
+              <button
+                key={opt.value}
+                type="button"
+                role="option"
+                aria-selected={isSelected}
+                onClick={() => {
+                  if (multiple) {
+                    const cur = values ?? [];
+                    onValuesChange?.(isSelected ? cur.filter((v) => v !== opt.value) : [...cur, opt.value]);
+                  } else {
                     onSelect?.(opt.value);
                     setOpen(false);
-                  }}
-                  className={cn(
-                    "flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm transition-colors",
-                    isSelected
-                      ? "bg-primary/8 text-primary font-medium"
-                      : "text-foreground hover:bg-muted"
-                  )}
-                >
-                  {opt.color && (
-                    <span
-                      className="size-2 rounded-full shrink-0"
-                      style={{ backgroundColor: opt.color }}
-                    />
-                  )}
-                  <span className="flex-1 text-left truncate">{opt.label}</span>
-                  {isSelected && <Check className="size-3.5 shrink-0 text-primary" />}
-                </button>
-              );
-            })}
-          </div>
-        </PopoverContent>
-      </Popover>
-      {clearButton}
-    </div>
+                  }
+                }}
+                className={cn(
+                  "flex min-h-9 w-full items-center gap-2.5 rounded-md px-2.5 text-sm transition-colors hover:bg-muted",
+                  isSelected && "font-medium text-primary",
+                )}
+              >
+                <span className={cn("flex size-4 shrink-0 items-center justify-center border", multiple ? "rounded-[4px]" : "rounded-full", isSelected ? "border-primary bg-primary text-primary-foreground" : "border-border")}>
+                  {isSelected && <Check className="size-3" />}
+                </span>
+                {opt.color && <span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: opt.color }} aria-hidden="true" />}
+                <span className="flex-1 truncate text-left">{opt.label}</span>
+              </button>
+            );
+          })}
+        </div>
+        {isActive && (multiple ? onValuesChange : onClear) && (
+          <>
+            <div className="-mx-1 my-1 h-px bg-border" />
+            <button
+              type="button"
+              onClick={() => { clear(); setOpen(false); }}
+              className="flex min-h-9 w-full items-center justify-center rounded-md px-2.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+            >
+              {multiple && picked.length > 1 ? `Скинути (${picked.length})` : "Скинути"}
+            </button>
+          </>
+        )}
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+/** Sort control: always shows the current order; sorting is not a filter, so it never shows as "active". */
+export function AdminSort({
+  value,
+  options,
+  onChange,
+}: {
+  value: string;
+  options: { value: string; label: string }[];
+  onChange: (value: string) => void;
+}) {
+  const [open, setOpen] = React.useState(false);
+  const current = options.find((o) => o.value === value) ?? options[0];
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger
+        aria-label={`Сортування: ${current?.label ?? ""}`}
+        className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-border px-3 text-sm font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <ArrowUpDown className="size-4 text-muted-foreground" aria-hidden="true" />
+        <span className="hidden text-muted-foreground sm:inline">Сортування:</span>
+        <span>{current?.label}</span>
+      </PopoverTrigger>
+      <PopoverContent align="start" side="bottom" sideOffset={6} className="w-52 p-1">
+        <div role="listbox" aria-label="Сортування">
+          {options.map((o) => (
+            <button
+              key={o.value}
+              type="button"
+              role="option"
+              aria-selected={o.value === current?.value}
+              onClick={() => { onChange(o.value); setOpen(false); }}
+              className={cn("flex min-h-9 w-full items-center gap-2 rounded-md px-2.5 text-sm hover:bg-muted", o.value === current?.value && "font-medium text-primary")}
+            >
+              <span className="flex-1 text-left">{o.label}</span>
+              {o.value === current?.value && <Check className="size-4" />}
+            </button>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+/** "Скинути фільтри" — shown only while at least one filter is active. */
+export function AdminFilterReset({ active, onReset }: { active: boolean; onReset: () => void }) {
+  if (!active) return null;
+  return (
+    <button
+      type="button"
+      onClick={onReset}
+      className="inline-flex h-9 items-center gap-1 rounded-lg px-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+    >
+      Скинути
+      <X className="size-3.5" aria-hidden="true" />
+    </button>
   );
 }
 

@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Separator } from "@/components/ui/separator";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -65,13 +64,13 @@ export function DashboardPage({
     <div className={cn("flex h-full flex-col overflow-hidden bg-background", className)}>
       {/* ── One header per page: sidebar toggle, breadcrumbs + title, actions; optional tabs below ── */}
       <header className={cn("shrink-0 bg-background", !toolbar && "border-b border-border")}>
-        <div className="flex min-h-16 items-center gap-3 px-4 py-3 md:px-6">
-          <SidebarTrigger className="-ml-1.5 size-9 shrink-0 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground" />
-          <Separator orientation="vertical" className="h-5" />
+        {/* Fixed 64px row so its bottom rule lines up with the sidebar header (h-16). */}
+        <div className="flex h-16 items-center gap-2 px-4 md:px-6">
+          <SidebarTrigger className="-ml-2 size-9 shrink-0 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground" />
 
           <div className="min-w-0 flex-1">
             {trail.length > 0 && (
-              <nav aria-label="Навігація сторінкою" className="mb-0.5 flex min-w-0 items-center gap-1 text-xs text-muted-foreground">
+              <nav aria-label="Навігація сторінкою" className="flex min-w-0 items-center gap-1 text-xs text-muted-foreground">
                 {trail.map((crumb, i) => (
                   <React.Fragment key={i}>
                     {i > 0 && <ChevronRight className="size-3 shrink-0 opacity-50" aria-hidden="true" />}
@@ -87,7 +86,7 @@ export function DashboardPage({
               </nav>
             )}
             {eyebrow && !trail.length && (
-              <p className="mb-0.5 text-xs font-medium text-muted-foreground">{eyebrow}</p>
+              <p className="text-xs font-medium text-muted-foreground">{eyebrow}</p>
             )}
             <div className="flex min-w-0 items-center gap-2.5">
               {backHref && trail.length === 0 && (
@@ -99,12 +98,13 @@ export function DashboardPage({
                   <ChevronLeft className="size-4" />
                 </Link>
               )}
-              <h1 className="truncate text-lg font-semibold leading-tight tracking-tight text-foreground md:text-xl">
+              <h1 className="shrink-0 truncate text-lg font-semibold leading-tight tracking-tight text-foreground md:text-xl">
                 {title}
               </h1>
               {titleAccessory && <div className="min-w-0 shrink">{titleAccessory}</div>}
+              {/* Subtitle sits on the title line (md+) so the header keeps its height. */}
+              {subtitle && <p className="hidden min-w-0 truncate text-sm text-muted-foreground md:block">{subtitle}</p>}
             </div>
-            {subtitle && <p className="mt-0.5 truncate text-sm text-muted-foreground">{subtitle}</p>}
           </div>
 
           {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
@@ -114,8 +114,9 @@ export function DashboardPage({
       </header>
 
       <div className={cn("flex-1 overflow-y-auto", contentClassName)}>
-        <div className={cn("mx-auto flex h-full flex-col", maxWidthClass[maxWidth] ?? "max-w-full")}>
-          <div className="flex-1">{children}</div>
+        {/* w-full: auto margins in a flex column would otherwise shrink-wrap and centre the content. */}
+        <div className={cn("mx-auto flex h-full w-full flex-col", maxWidthClass[maxWidth] ?? "max-w-full")}>
+          <div className="flex min-h-0 flex-1 flex-col">{children}</div>
         </div>
       </div>
     </div>

@@ -85,7 +85,7 @@ export function AuthField({
         <Input
           id={id}
           className={cn(
-            "h-12 rounded-xl border-border bg-background px-4 text-base transition-shadow focus-visible:ring-primary/20 md:text-base",
+            "h-12 rounded-lg border-border bg-background px-4 text-base transition-shadow focus-visible:ring-primary/20 md:text-base",
             endAction && "pr-14",
             className,
           )}
