@@ -12,6 +12,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { EmptyState } from "@/components/empty-state";
 import { CategoryDialog } from "./CategoryDialog";
 import type { Category } from "@udo-craft/shared";
+import { LogoLoader } from "@udo-craft/ui";
 
 export interface CategoriesTabProps {
   categories: Category[];
@@ -148,13 +149,7 @@ export function CategoriesTab({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <TableRow key={i}>
-                {[4, 8, 8, 40, 24, 8].map((w, j) => (
-                  <TableCell key={j}><div className={`h-4 w-${w} bg-muted rounded animate-pulse`} /></TableCell>
-                ))}
-              </TableRow>
-            ))}
+            <TableRow className="hover:bg-transparent"><TableCell colSpan={6}><LogoLoader variant="block" /></TableCell></TableRow>
           </TableBody>
         </Table>
         </AdminTablePanel>

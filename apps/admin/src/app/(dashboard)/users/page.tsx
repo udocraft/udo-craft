@@ -4,7 +4,6 @@ import { Suspense, useDeferredValue, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { RefreshCw, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AdminEmptyState, AdminSearch, AdminTablePanel, AdminToolbar } from "@/components/admin-layout";
 import { ListPage } from "@/components/page-templates";
@@ -12,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { UserRow } from "./_components/UserRow";
 import { useUsers } from "./_components/useUsers";
 import { type Role, TABS, normalizeRole } from "./_components/user-utils";
+import { LogoLoader } from "@udo-craft/ui";
 
 function UsersContent() {
   const router = useRouter();
@@ -63,9 +63,7 @@ function UsersContent() {
           </TableHeader>
           <TableBody>
             {loading ? (
-              Array.from({ length: 6 }).map((_, i) => (
-                <TableRow key={i} className="hover:bg-transparent"><TableCell colSpan={6}><Skeleton className="h-8 w-full" /></TableCell></TableRow>
-              ))
+              <TableRow className="hover:bg-transparent"><TableCell colSpan={6}><LogoLoader variant="block" /></TableCell></TableRow>
             ) : filtered.length === 0 ? (
               <TableRow className="hover:bg-transparent"><TableCell colSpan={6}><AdminEmptyState icon={Users} title="Немає користувачів" /></TableCell></TableRow>
             ) : (

@@ -11,6 +11,7 @@ import { EmptyState } from "@/components/empty-state";
 import { DashboardPage } from "@/components/dashboard-page";
 import { AdminToolbar, AdminFilter } from "@/components/admin-layout";
 import { cn } from "@/lib/utils";
+import { LogoLoader } from "@udo-craft/ui";
 
 // ─── Date Range Types ─────────────────────────────────────────────────────────
 
@@ -394,16 +395,7 @@ export default function AnalyticsPage() {
     setRange({ preset: key, from, to });
   };
 
-  const skeletonRows = (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="bg-card border border-border/50 rounded-xl p-6 h-32 animate-pulse" />
-        ))}
-      </div>
-      <div className="bg-card border border-border/50 rounded-xl h-[400px] animate-pulse" />
-    </div>
-  );
+  const skeletonRows = <LogoLoader variant="block" className="min-h-[60vh]" />;
 
   const d = data;
 
