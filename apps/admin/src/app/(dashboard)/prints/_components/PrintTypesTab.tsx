@@ -160,7 +160,7 @@ export default function PrintTypesTab({ onCreateActionReady }: { onCreateActionR
                     <TableCell className="hidden font-mono text-xs text-muted-foreground md:table-cell">{type.id}</TableCell>
                     <TableCell className="hidden max-w-[320px] truncate text-muted-foreground lg:table-cell">{type.description || "—"}</TableCell>
                     <TableCell className="text-right tabular-nums">
-                      <Link href={`/prices?type=${type.id}`} className="text-primary hover:underline">
+                      <Link href={`/prints?tab=prices&type=${type.id}`} className="text-primary hover:underline">
                         {type.price_count}
                       </Link>
                     </TableCell>
@@ -184,7 +184,7 @@ export default function PrintTypesTab({ onCreateActionReady }: { onCreateActionR
                           <DropdownMenuItem onClick={() => { setCodeTouched(true); setDraft({ ...type, isNew: false }); }}>
                             <Pencil className="size-4" />Редагувати
                           </DropdownMenuItem>
-                          <DropdownMenuItem render={<Link href={`/prices?type=${type.id}`} />}>
+                          <DropdownMenuItem render={<Link href={`/prints?tab=prices&type=${type.id}`} />}>
                             Ціни ({type.price_count})
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
