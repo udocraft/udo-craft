@@ -1534,7 +1534,15 @@
       "accent": "verfijnd",
       "title2": "tot in detail",
       "desc": "Zwaar katoen, precieze print en borduurwerk die honderden wasbeurten doorstaan. Kies de basis, wij doen de rest.",
-      "from": "vanaf {price} ₴"
+      "clothing": {
+        "title": "Kleding op maat",
+        "desc": "T-shirts, hoodies, sweaters en meer met jouw ontwerp."
+      },
+      "souvenirs": {
+        "title": "Souvenirs",
+        "desc": "Mokken, tassen, stickers en andere merch.",
+        "soon": "Binnenkort"
+      }
     }
   }
 }

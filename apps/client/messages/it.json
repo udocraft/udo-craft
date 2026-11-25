@@ -1534,7 +1534,15 @@
       "accent": "curato",
       "title2": "nei dettagli",
       "desc": "Cotone pesante, stampa precisa e ricamo che resistono a centinaia di lavaggi. Scegli la base, al resto pensiamo noi.",
-      "from": "da {price} ₴"
+      "clothing": {
+        "title": "Abbigliamento personalizzato",
+        "desc": "T-shirt, felpe e altro con il tuo design."
+      },
+      "souvenirs": {
+        "title": "Souvenir",
+        "desc": "Tazze, shopper, adesivi e altro merch.",
+        "soon": "In arrivo"
+      }
     }
   }
 }

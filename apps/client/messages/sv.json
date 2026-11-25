@@ -1534,7 +1534,15 @@
       "accent": "fulländat",
       "title2": "in i detalj",
       "desc": "Tjock bomull, exakt tryck och brodyr som klarar hundratals tvättar. Välj basen, vi fixar resten.",
-      "from": "från {price} ₴"
+      "clothing": {
+        "title": "Kläder med eget tryck",
+        "desc": "T-shirts, hoodies, sweatshirts och mer med din design."
+      },
+      "souvenirs": {
+        "title": "Souvenirer",
+        "desc": "Muggar, tygpåsar, klistermärken och annan merch.",
+        "soon": "Kommer snart"
+      }
     }
   }
 }

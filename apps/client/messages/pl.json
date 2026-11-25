@@ -1534,7 +1534,15 @@
       "accent": "dopracowane",
       "title2": "w każdym detalu",
       "desc": "Gruba bawełna, precyzyjny druk i haft, które wytrzymują setki prań. Wybierz bazę, resztą zajmiemy się my.",
-      "from": "od {price} ₴"
+      "clothing": {
+        "title": "Odzież na zamówienie",
+        "desc": "T-shirty, bluzy z kapturem i więcej z Twoim projektem."
+      },
+      "souvenirs": {
+        "title": "Pamiątki",
+        "desc": "Kubki, torby, naklejki i inny merch.",
+        "soon": "Wkrótce"
+      }
     }
   }
 }

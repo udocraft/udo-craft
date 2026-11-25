@@ -1534,7 +1534,15 @@
       "accent": "soigné",
       "title2": "jusqu’au détail",
       "desc": "Coton épais, impression précise et broderie qui résistent à des centaines de lavages. Choisissez la base, on s’occupe du reste.",
-      "from": "dès {price} ₴"
+      "clothing": {
+        "title": "Vêtements personnalisés",
+        "desc": "T-shirts, hoodies, sweats et plus avec votre design."
+      },
+      "souvenirs": {
+        "title": "Souvenirs",
+        "desc": "Mugs, tote bags, stickers et autres goodies.",
+        "soon": "Bientôt"
+      }
     }
   }
 }

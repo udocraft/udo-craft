@@ -1534,7 +1534,15 @@
       "accent": "perfektioniert",
       "title2": "bis ins Detail",
       "desc": "Schwere Baumwolle, präziser Druck und Stickerei, die Hunderte Wäschen hält. Wähle die Basis, den Rest machen wir.",
-      "from": "ab {price} ₴"
+      "clothing": {
+        "title": "Individuelle Kleidung",
+        "desc": "T-Shirts, Hoodies, Sweatshirts und mehr mit deinem Design."
+      },
+      "souvenirs": {
+        "title": "Souvenirs",
+        "desc": "Tassen, Stofftaschen, Sticker und weiteres Merch.",
+        "soon": "Demnächst"
+      }
     }
   }
 }

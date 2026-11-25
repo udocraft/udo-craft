@@ -1534,7 +1534,15 @@
       "accent": "cuidado",
       "title2": "al detalle",
       "desc": "Algodón grueso, impresión precisa y bordado que aguantan cientos de lavados. Elige la base, nosotros hacemos el resto.",
-      "from": "desde {price} ₴"
+      "clothing": {
+        "title": "Ropa personalizada",
+        "desc": "Camisetas, sudaderas y más con tu diseño."
+      },
+      "souvenirs": {
+        "title": "Souvenirs",
+        "desc": "Tazas, tote bags, pegatinas y más merch.",
+        "soon": "Próximamente"
+      }
     }
   }
 }

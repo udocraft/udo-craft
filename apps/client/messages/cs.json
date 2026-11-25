@@ -1534,7 +1534,15 @@
       "accent": "vyladěno",
       "title2": "do detailu",
       "desc": "Silná bavlna, přesný tisk a výšivka, které vydrží stovky praní. Vyberte základ, zbytek zařídíme my.",
-      "from": "od {price} ₴"
+      "clothing": {
+        "title": "Oblečení na míru",
+        "desc": "Trička, mikiny a další s vaším designem."
+      },
+      "souvenirs": {
+        "title": "Suvenýry",
+        "desc": "Hrnky, tašky, samolepky a další merch.",
+        "soon": "Již brzy"
+      }
     }
   }
 }

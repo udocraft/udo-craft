@@ -1534,7 +1534,15 @@
       "accent": "perfected",
       "title2": "in every detail",
       "desc": "Heavy cotton, precise print and embroidery that lasts hundreds of washes. Pick the base, we handle the rest.",
-      "from": "from ₴{price}"
+      "clothing": {
+        "title": "Custom Clothing",
+        "desc": "T-shirts, hoodies, sweatshirts and more with your design."
+      },
+      "souvenirs": {
+        "title": "Souvenirs",
+        "desc": "Mugs, tote bags, stickers and other merch.",
+        "soon": "Coming soon"
+      }
     }
   }
 }
