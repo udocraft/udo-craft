@@ -1,5 +1,6 @@
 "use client";
 
+import { canTransitionLead } from "@udo-craft/shared";
 import { useRouter } from "next/navigation";
 import {
   Mail, Phone, Building2, Package, ArrowRight, CreditCard, Truck,
@@ -173,6 +174,7 @@ export function OrderQuickSheet({ lead, open, onClose, onStatusChange }: OrderQu
                   return (
                     <DropdownMenuItem
                       key={s}
+                      disabled={s !== status && !canTransitionLead(status, s)}
                       onClick={() => { if (s !== status) onStatusChange(id, s); }}
                       className={cn("gap-2.5", s === status && "font-semibold")}
                     >

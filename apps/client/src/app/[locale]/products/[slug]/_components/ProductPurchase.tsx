@@ -1,5 +1,6 @@
 "use client";
 
+import { DEFAULT_DISCOUNT_GRID, discountPctForQty } from "@udo-craft/shared";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -37,9 +38,6 @@ export interface PurchaseProps {
 
 const fmtPrice = (cents: number) => `₴${(cents / 100).toFixed(0)}`;
 
-function discountFor(grid: PurchaseProps["discountGrid"], qty: number) {
-  return [...grid].sort((a, b) => b.qty - a.qty).find((t) => qty >= t.qty)?.discount_pct ?? 0;
-}
 
 /**
  * Client island for the product page: gallery, colour/size/quantity pickers,
@@ -64,9 +62,10 @@ export function ProductPurchase(p: PurchaseProps) {
   const activeUrl = activeKey ? images[activeKey] : "";
   const step = (delta: number) => setImageKey(keys[(keys.indexOf(activeKey) + delta + keys.length) % keys.length]);
 
-  const discountPct = discountFor(p.discountGrid, quantity);
+  // Same discount rules as checkout and the server (packages/shared/src/orders.ts).
+  const discountPct = discountPctForQty(p.discountGrid, quantity);
   const unitCents = Math.round(p.basePriceCents * (1 - discountPct / 100));
-  const tiers = [...p.discountGrid].sort((a, b) => a.qty - b.qty);
+  const tiers = [...(p.discountGrid.length ? p.discountGrid : DEFAULT_DISCOUNT_GRID)].sort((a, b) => a.qty - b.qty);
   const nextTier = tiers.find((tier) => quantity < tier.qty);
   const sliderMax = Math.max(100, p.minOrderQty, quantity, tiers[tiers.length - 1]?.qty ?? 0);
   const marks = Array.from(new Set([1, p.minOrderQty, ...tiers.map((t) => t.qty), sliderMax])).sort((a, b) => a - b);

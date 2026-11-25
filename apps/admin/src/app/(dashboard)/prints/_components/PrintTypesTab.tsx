@@ -1,5 +1,6 @@
 "use client";
 
+import { DEFAULT_DISCOUNT_GRID } from "@udo-craft/shared";
 import { useState } from "react";
 import { Pencil, Eye, EyeOff } from "lucide-react";
 import { AdminCardGrid, AdminSection, AdminTablePanel } from "@/components/admin-layout";
@@ -18,12 +19,13 @@ const DEFAULT_PRINT_TYPES = [
   { id: "patch",       label: "Нашивка",        color: "#10b981", desc: "Тканинна нашивка", is_active: true },
 ];
 
-const DISCOUNT_TIERS = [
-  { min: 1,   max: 9,        pct: 0  },
-  { min: 10,  max: 49,       pct: 5  },
-  { min: 50,  max: 99,       pct: 12 },
-  { min: 100, max: Infinity, pct: 15 },
-];
+// Default volume discount from the shared order contract; products can override it
+// with their own discount grid.
+const DISCOUNT_TIERS = [{ qty: 1, discount_pct: 0 }, ...DEFAULT_DISCOUNT_GRID].map((tier, i, all) => ({
+  min: tier.qty,
+  max: all[i + 1] ? all[i + 1].qty - 1 : Infinity,
+  pct: tier.discount_pct,
+}));
 
 type PrintType = typeof DEFAULT_PRINT_TYPES[number] & { is_active: boolean };
 

@@ -1,19 +1,31 @@
 import { CreateLeadRequestSchema } from "@udo-craft/shared";
 import { parseJsonBody } from "@/lib/api/request";
 import { createServiceClient } from "@/lib/supabase/service";
-import { getSupabasePublicEnv, getSupabaseServiceEnv } from "@/lib/supabase/env";
+import { getSupabaseServiceEnv } from "@/lib/supabase/env";
 import { sendOrderConfirmation, sendContactNotification } from "@/lib/email";
 import { rateLimit } from "@/lib/rate-limit";
-import { lineTotalCents } from "@/lib/order-pricing";
-import { createClient } from "@supabase/supabase-js";
+import { priceOrderLine, type PricedLayer, type PrintPricingRow } from "@udo-craft/shared";
 import { NextRequest, NextResponse } from "next/server";
 
 // SERVICE ROLE JUSTIFICATION:
 // This is a public endpoint — customers submit orders without being authenticated.
 // There is no user session to derive a Supabase client from, so the session-based
-// createClient() cannot be used here. Prefer the service role key when configured;
-// if it is missing in a deploy target, fall back to the anon insert policies.
+// createClient() cannot be used here. The service role key is required.
 // The honeypot check and rate limiting below mitigate abuse of this open endpoint.
+
+/** Print layers as the checkout stores them in technical_metadata.layers. */
+function layersFromMetadata(meta: Record<string, unknown> | null | undefined): PricedLayer[] {
+  const layers = meta?.layers;
+  if (!Array.isArray(layers)) return [];
+  return layers.map((l) => {
+    const layer = (l ?? {}) as Record<string, unknown>;
+    return {
+      type: typeof layer.type === "string" ? layer.type : undefined,
+      sizeLabel: typeof layer.sizeLabel === "string" ? layer.sizeLabel : undefined,
+      isComboChild: layer.isComboChild === true,
+    };
+  });
+}
 
 export async function POST(request: NextRequest) {
   const { success } = await rateLimit(request, { scope: "leads", limit: 5, window: 60 });
@@ -23,17 +35,21 @@ export async function POST(request: NextRequest) {
 
   const parsedBody = await parseJsonBody(request, CreateLeadRequestSchema);
   if (!parsedBody.ok) return parsedBody.response;
-  const { status, customer_data: rawCustomer, order_items, initial_message, visitor_id, session_id } = parsedBody.data;
+  // `status` and client-sent amounts are ignored: public orders always start as `new`
+  // and are priced from the catalogue below.
+  const { customer_data: rawCustomer, order_items, initial_message, visitor_id, session_id, client_request_id } = parsedBody.data;
   // Stored lower-case so the customer cabinet finds the order whatever case was typed.
   const customer_data = rawCustomer.email ? { ...rawCustomer, email: rawCustomer.email.trim().toLowerCase() } : rawCustomer;
 
   try {
     const serviceEnv = getSupabaseServiceEnv();
-    const publicEnv = getSupabasePublicEnv();
-    const hasServiceRoleKey = Boolean(serviceEnv.serviceRoleKey);
-    const supabase = hasServiceRoleKey
-      ? createServiceClient()
-      : createClient(publicEnv.url, publicEnv.anonKey);
+    if (!serviceEnv.serviceRoleKey) {
+      // Anonymous insert policies on leads were removed (rls_hardening migration), so
+      // this endpoint cannot work without the service role key.
+      console.error("POST /api/leads: SUPABASE_SERVICE_ROLE_KEY is not configured");
+      return NextResponse.json({ error: "Сервіс тимчасово недоступний" }, { status: 503 });
+    }
+    const supabase = createServiceClient();
 
     // Honeypot check — bots fill this field, real users don't
     if (customer_data.website) {
@@ -42,57 +58,65 @@ export async function POST(request: NextRequest) {
 
     const attachments = customer_data.attachments ?? [];
 
-    // Prices are recalculated from the catalogue; client-sent amounts and unit prices are ignored.
     const orderItemsInput = order_items ?? [];
-    const basePriceById = new Map<string, number>();
+    let pricedItems: { item: (typeof orderItemsInput)[number]; price: ReturnType<typeof priceOrderLine> }[] = [];
     if (orderItemsInput.length > 0) {
-      const { data: products, error: productsError } = await supabase
-        .from("products")
-        .select("id, base_price_cents")
-        .in("id", [...new Set(orderItemsInput.map((item) => item.product_id))]);
-      if (productsError) {
-        console.error("Product price lookup error:", productsError);
+      const productIds = [...new Set(orderItemsInput.map((item) => item.product_id))];
+      const [{ data: products, error: productsError }, { data: printPricing, error: pricingError }] = await Promise.all([
+        supabase.from("products").select("id, base_price_cents, discount_grid").in("id", productIds),
+        supabase.from("print_type_pricing").select("print_type, size_label, qty_tiers").eq("is_active", true),
+      ]);
+      if (productsError || pricingError) {
+        console.error("Price lookup error:", productsError ?? pricingError);
         return NextResponse.json({ error: "Не вдалося перевірити ціни" }, { status: 500 });
       }
-      for (const product of products ?? []) basePriceById.set(product.id, product.base_price_cents);
-    }
-    for (const item of orderItemsInput) {
-      if (!basePriceById.has(item.product_id) || !Number.isInteger(item.quantity) || item.quantity < 1) {
-        return NextResponse.json({ error: "Некоректна позиція замовлення" }, { status: 400 });
+      const productById = new Map((products ?? []).map((p) => [p.id as string, p]));
+      for (const item of orderItemsInput) {
+        if (!productById.has(item.product_id)) {
+          return NextResponse.json({ error: "Некоректна позиція замовлення" }, { status: 400 });
+        }
       }
+      pricedItems = orderItemsInput.map((item) => {
+        const product = productById.get(item.product_id)!;
+        return {
+          item,
+          price: priceOrderLine({
+            basePriceCents: product.base_price_cents,
+            quantity: item.quantity,
+            discountGrid: product.discount_grid,
+            layers: layersFromMetadata(item.technical_metadata),
+            printPricing: (printPricing ?? []) as PrintPricingRow[],
+          }),
+        };
+      });
     }
-    const serverTotalCents = Math.round(
-      orderItemsInput.reduce(
-        (sum, item) =>
-          sum + lineTotalCents(basePriceById.get(item.product_id)!, item.quantity),
-        0,
-      ),
-    );
+    const serverTotalCents = pricedItems.reduce((sum, { price }) => sum + price.lineTotalCents, 0);
 
-    const leadId = crypto.randomUUID();
+    // A client-generated id makes retries idempotent: a second submit of the same
+    // checkout hits the primary key and gets the existing order back.
+    const leadId = client_request_id ?? crypto.randomUUID();
     const leadPayload = {
       id: leadId,
-      status,
+      status: "new" as const,
       customer_data,
       total_amount_cents: serverTotalCents,
       visitor_id,
       session_id,
     };
 
-    const { data: lead, error: leadError } = hasServiceRoleKey
-      ? await supabase.from("leads").insert(leadPayload).select().single()
-      : {
-          data: leadPayload,
-          error: (await supabase.from("leads").insert(leadPayload)).error,
-        };
+    const { data: lead, error: leadError } = await supabase.from("leads").insert(leadPayload).select().single();
 
+    if (leadError?.code === "23505" && client_request_id) {
+      const { data: existing } = await supabase.from("leads").select().eq("id", client_request_id).single();
+      if (existing) return NextResponse.json(existing, { status: 200 });
+    }
     if (leadError || !lead) {
       console.error("Lead insert error:", leadError);
-      return NextResponse.json({ error: leadError?.message ?? "Помилка створення" }, { status: 500 });
+      return NextResponse.json({ error: "Помилка створення замовлення" }, { status: 500 });
     }
 
-    if (orderItemsInput.length > 0) {
-      const items = orderItemsInput.map((item) => ({
+    if (pricedItems.length > 0) {
+      const items = pricedItems.map(({ item, price }) => ({
         lead_id: lead.id,
         product_id: item.product_id,
         size: item.size,
@@ -100,15 +124,24 @@ export async function POST(request: NextRequest) {
         quantity: item.quantity,
         custom_print_url: item.custom_print_url ?? null,
         mockup_url: item.mockup_url ?? null,
-        technical_metadata: item.technical_metadata ?? {},
-        unit_price_cents: basePriceById.get(item.product_id) ?? null,
+        technical_metadata: {
+          ...(item.technical_metadata ?? {}),
+          unit_price_cents: price.unitPriceCents,
+          print_cost_cents: price.printCostCents,
+          discount_pct: price.discountPct,
+        },
+        unit_price_cents: price.unitPriceCents,
+        print_cost_cents: price.printCostCents,
       }));
 
       const { error: itemsError } = await supabase.from("order_items").insert(items);
 
       if (itemsError) {
         console.error("Order items insert error:", itemsError);
-        return NextResponse.json({ error: itemsError.message }, { status: 500 });
+        // Do not leave an order without its lines behind.
+        const { error: cleanupError } = await supabase.from("leads").delete().eq("id", lead.id);
+        if (cleanupError) console.error("Lead cleanup after items failure failed:", cleanupError);
+        return NextResponse.json({ error: "Помилка збереження позицій замовлення" }, { status: 500 });
       }
     }
 
@@ -121,13 +154,15 @@ export async function POST(request: NextRequest) {
           : null,
       ].filter(Boolean).join("\n\n");
 
-      await supabase.from("messages").insert({
+      const { error: messageError } = await supabase.from("messages").insert({
         lead_id: lead.id,
         body: messageBody,
         sender: "client",
         sender_email: customer_data.email,
         attachments,
       });
+      // The order itself is saved; a missing first message must not fail checkout.
+      if (messageError) console.error("Initial message insert error:", messageError);
     }
 
     // Send order confirmation email

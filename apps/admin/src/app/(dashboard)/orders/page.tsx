@@ -1,6 +1,8 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState, useCallback } from "react";
+import { LEAD_STATUSES, LEAD_STATUS_LABELS, canTransitionLead, leadStatusLabel } from "@udo-craft/shared";
+import { updateLeadStatus } from "@/lib/leads/status";
+import { Suspense, useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 import { PREDEFINED_TAGS } from "@udo-craft/shared";
@@ -42,11 +44,8 @@ import type { Lead as SharedLead } from "@udo-craft/shared";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type RealtimeLeadPayload = { eventType: "INSERT" | "UPDATE" | "DELETE"; new: SharedLead; old: Partial<SharedLead> };
 
-const STATUSES = ["draft", "new", "in_progress", "production", "completed", "archived"] as const;
-const STATUS_LABELS: Record<string, string> = {
-  draft: "Чернетка", new: "Новий", in_progress: "В роботі",
-  production: "Виробництво", completed: "Завершено", archived: "Архів",
-};
+const STATUSES = LEAD_STATUSES;
+const STATUS_LABELS: Record<string, string> = LEAD_STATUS_LABELS;
 const DATE_FILTER_LABELS: Record<DateFilter, string> = {
   all: "Весь час",
   today: "Сьогодні",
@@ -190,18 +189,29 @@ function OrdersBoard() {
       .catch(() => {});
   }, []);
 
+  // Leads with a status request in flight; a second drop or click on the same
+  // order is ignored until the first one settles.
+  const statusInFlight = useRef(new Set<string>());
   const handleStatusChange = useCallback(async (lead: Lead, newStatus: string) => {
+    if (statusInFlight.current.has(lead.id) || lead.status === newStatus) return;
+    if (!canTransitionLead(lead.status, newStatus)) {
+      toast.error(`Не можна змінити статус: ${leadStatusLabel(lead.status)} → ${leadStatusLabel(newStatus)}`);
+      return;
+    }
+    statusInFlight.current.add(lead.id);
     const updated = { ...lead, status: newStatus as Lead["status"] };
     setLeads((p) => p.map((l) => (l.id === lead.id ? updated : l)));
     setSelectedLead((c) => c?.id === lead.id ? updated : c);
     try {
-      const r = await fetch(`/api/leads/${lead.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: newStatus }) });
-      if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || `HTTP ${r.status}`);
+      await updateLeadStatus(lead.id, lead.status, newStatus);
     } catch (err) {
-      setLeads((p) => p.map((l) => (l.id === lead.id ? lead : l)));
-      setSelectedLead((c) => c?.id === lead.id ? lead : c);
+      // Roll back only this field so concurrent realtime edits to the lead survive.
+      setLeads((p) => p.map((l) => (l.id === lead.id ? { ...l, status: lead.status } : l)));
+      setSelectedLead((c) => c?.id === lead.id ? { ...c, status: lead.status } : c);
       console.error("[orders] update lead status failed", err);
-      toast.error("Не вдалося оновити статус. Зміну скасовано, спробуйте ще раз.");
+      toast.error(err instanceof Error ? err.message : "Не вдалося оновити статус");
+    } finally {
+      statusInFlight.current.delete(lead.id);
     }
   }, []);
 

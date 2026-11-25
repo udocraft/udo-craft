@@ -6,19 +6,7 @@ export const PREDEFINED_TAGS = [
   { id: "new_client", label: "Новий клієнт",  color: "#0284c7", bg: "#e0f2fe" },
 ] as const;
 
-export const DISCOUNT_TIERS = [
-  { min: 10, max: 49,   pct: 5  },
-  { min: 50, max: 99,   pct: 12 },
-  { min: 100, max: null, pct: 15 },
-];
-
 export const DELIVERY_OPTIONS = [
   { id: "nova_poshta", label: "Нова Пошта",  desc: "2–3 робочих дні" },
   { id: "pickup",      label: "Самовивіз",   desc: "Львів, Джерельна, 69, офіс 10" },
 ];
-
-export function getDiscount(qty: number): number {
-  return DISCOUNT_TIERS.find(
-    (t) => qty >= t.min && (t.max === null || qty <= t.max)
-  )?.pct ?? 0;
-}

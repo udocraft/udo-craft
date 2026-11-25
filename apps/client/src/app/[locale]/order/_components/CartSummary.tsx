@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MockupViewer } from "@/components/MockupViewer";
 import { Button } from "@/components/ui/button";
 import { generateInvoicePDF } from "@/lib/generate-invoice";
@@ -80,6 +80,10 @@ export function CartSummary({ cart, contact, setContact, setStep, onEditCartItem
   const errors = checkoutErrors(contact, { required: tErr("required"), phone: tErr("phone"), email: tErr("email"), branch: t("np.required") });
   const [submitting, setSubmitting] = useState(false);
   const [generatingPdf, setGeneratingPdf] = useState(false);
+  // Idempotency key: reused if the same cart is resubmitted after a network error,
+  // so a retry returns the order already saved instead of creating a duplicate.
+  const requestIdRef = useRef<string | null>(null);
+  useEffect(() => { requestIdRef.current = null; }, [cart]);
 
   const totalCents = cart.reduce(
     (sum, item) => sum + (item.unitPriceCents + item.printCostCents) * item.quantity,
@@ -87,7 +91,9 @@ export function CartSummary({ cart, contact, setContact, setStep, onEditCartItem
   );
 
   const handleSubmit = async () => {
+    if (submitting) return;
     setSubmitting(true);
+    requestIdRef.current ??= crypto.randomUUID();
     sound.button();
     try {
       let attachmentUrls: string[] = [];
@@ -99,15 +105,17 @@ export function CartSummary({ cart, contact, setContact, setStep, onEditCartItem
       }
 
       const orderItems = cart.map((item) => {
-        const layerUrls: { url: string; type: string; side: string; kind?: string; textContent?: string; sizeLabel?: string; sizeMinCm?: number; sizeMaxCm?: number; priceCents?: number }[] = [];
+        const layerUrls: { url: string; type: string; side: string; kind?: string; textContent?: string; sizeLabel?: string; sizeMinCm?: number; sizeMaxCm?: number; priceCents?: number; isComboChild?: boolean }[] = [];
         for (const layer of (item.layers ?? [])) {
+          // isComboChild is sent so the server prices combo prints once, as the editor does.
+          const isComboChild = layer.isComboChild || undefined;
           if (layer.kind === "text") {
-            layerUrls.push({ url: "", type: layer.type, side: layer.side, kind: "text", textContent: layer.textContent, sizeLabel: layer.sizeLabel, sizeMinCm: layer.sizeMinCm, sizeMaxCm: layer.sizeMaxCm, priceCents: layer.priceCents });
+            layerUrls.push({ url: "", type: layer.type, side: layer.side, kind: "text", textContent: layer.textContent, sizeLabel: layer.sizeLabel, sizeMinCm: layer.sizeMinCm, sizeMaxCm: layer.sizeMaxCm, priceCents: layer.priceCents, isComboChild });
             continue;
           }
           const url = layer.uploadedUrl;
           if (!url) continue;
-          layerUrls.push({ url, type: layer.type, side: layer.side, sizeLabel: layer.sizeLabel, sizeMinCm: layer.sizeMinCm, sizeMaxCm: layer.sizeMaxCm, priceCents: layer.priceCents });
+          layerUrls.push({ url, type: layer.type, side: layer.side, sizeLabel: layer.sizeLabel, sizeMinCm: layer.sizeMinCm, sizeMaxCm: layer.sizeMaxCm, priceCents: layer.priceCents, isComboChild });
         }
         return {
           product_id: item.productId,
@@ -155,6 +163,7 @@ export function CartSummary({ cart, contact, setContact, setStep, onEditCartItem
           order_items: orderItems,
           visitor_id: getVisitorId(),
           session_id: getSessionId(),
+          client_request_id: requestIdRef.current,
           initial_message: [
             contact.comment ? `Коментар: ${contact.comment}` : null,
             contact.source ? `Як дізнались: ${contact.source}${contact.sourceDetails ? ` — ${contact.sourceDetails}` : ""}` : null,

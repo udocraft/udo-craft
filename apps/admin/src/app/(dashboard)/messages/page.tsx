@@ -1,5 +1,7 @@
 "use client";
 
+import { LEAD_STATUS_LABELS } from "@udo-craft/shared";
+import { updateLeadStatus } from "@/lib/leads/status";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -76,10 +78,7 @@ const SOURCE_CONFIG = {
 } as const;
 
 const STATUSES = ["new", "in_progress", "production", "completed", "archived"] as const;
-const STATUS_LABELS: Record<string, string> = {
-  new: "Новий", in_progress: "В роботі", production: "Виробництво",
-  completed: "Завершено", archived: "Архів",
-};
+const STATUS_LABELS: Record<string, string> = LEAD_STATUS_LABELS;
 
 function initials(name: string) {
   return (name || "?").split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
@@ -243,23 +242,18 @@ export default function MessagesPage() {
   const handleStatusChange = async (newStatus: string) => {
     if (!selectedLead) return;
     const prev = selectedLead.status;
+    if (prev === newStatus) return;
+    const leadId = selectedLead.id;
     setSelectedLead(s => s ? { ...s, status: newStatus } : s);
-    setLeads(ls => ls.map(l => l.id === selectedLead.id ? { ...l, status: newStatus } : l));
+    setLeads(ls => ls.map(l => l.id === leadId ? { ...l, status: newStatus } : l));
     try {
-      const r = await fetch(`/api/leads/${selectedLead.id}`, {
-        method: "PATCH", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
-      });
-      if (!r.ok) throw new Error();
-      const sysBody = `Статус змінено: ${STATUS_LABELS[prev] || prev} → ${STATUS_LABELS[newStatus] || newStatus}`;
-      const sysMsg: Message = { id: `sys-${Date.now()}`, lead_id: selectedLead.id, body: sysBody, sender: "manager", created_at: new Date().toISOString(), attachments: [] };
-      setMessages(ms => [...ms, sysMsg]);
-      const msgRes = await fetch("/api/messages", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ lead_id: selectedLead.id, body: sysBody, attachments: [] }) });
-      if (msgRes.ok) { const realMsg = await msgRes.json() as Message; setMessages(ms => ms.map(m => m.id === sysMsg.id ? realMsg : m)); }
-    } catch {
-      setSelectedLead(s => s ? { ...s, status: prev } : s);
-      setLeads(ls => ls.map(l => l.id === selectedLead.id ? { ...l, status: prev } : l));
-      toast.error("Помилка зміни статусу");
+      // The server checks the move and writes the "Статус змінено" note.
+      await updateLeadStatus(leadId, prev, newStatus);
+      fetchMessages(leadId);
+    } catch (err) {
+      setSelectedLead(s => s?.id === leadId ? { ...s, status: prev } : s);
+      setLeads(ls => ls.map(l => l.id === leadId ? { ...l, status: prev } : l));
+      toast.error(err instanceof Error ? err.message : "Помилка зміни статусу");
     }
   };
 
