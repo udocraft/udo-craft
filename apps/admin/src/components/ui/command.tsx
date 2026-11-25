@@ -11,10 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./dialog"
-import {
-  InputGroup,
-  InputGroupAddon,
-} from "@udo-craft/ui"
 import { Search, Check } from "lucide-react"
 
 function Command({
@@ -39,28 +35,37 @@ function CommandDialog({
   children,
   className,
   showCloseButton = false,
+  shouldFilter,
   ...props
 }: Omit<React.ComponentProps<typeof Dialog>, "children"> & {
   title?: string
   description?: string
   className?: string
   showCloseButton?: boolean
+  /** Pass false when results are filtered by you (e.g. server search). */
+  shouldFilter?: boolean
   children: React.ReactNode
 }) {
   return (
     <Dialog {...props}>
-      <DialogHeader className="sr-only">
-        <DialogTitle>{title}</DialogTitle>
-        <DialogDescription>{description}</DialogDescription>
-      </DialogHeader>
       <DialogContent
+        maxWidth="xl"
         className={cn(
-          "top-[12vh] max-w-2xl translate-y-0 overflow-hidden rounded-2xl! border-border/80 p-0 shadow-2xl",
+          "top-[12vh] translate-y-0 gap-0 overflow-hidden rounded-2xl! border-border/80 p-0 shadow-2xl",
           className
         )}
         showCloseButton={showCloseButton}
       >
-        <Command className="[&_[data-slot=command-input-wrapper]_svg]:size-5 [&_[data-slot=command-input]]:h-10 [&_[data-slot=command-empty]]:py-10 [&_[data-slot=command-group-heading]]:px-3 [&_[data-slot=command-group-heading]]:font-semibold [&_[data-slot=command-group-heading]]:uppercase [&_[data-slot=command-group-heading]]:tracking-[0.16em] [&_[data-slot=command-group-heading]]:text-muted-foreground [&_[data-slot=command-group]]:px-1 [&_[data-slot=command-group]_+[data-slot=command-group]]:pt-0 [&_[data-slot=command-group]]:mt-1 [&_[data-slot=command-separator]]:mx-2 [&_[data-slot=command-item]]:rounded-xl [&_[data-slot=command-item]_svg]:size-5">
+        {/* Title/description live inside the popup so the dialog is labelled for screen readers */}
+        <DialogHeader className="sr-only">
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
+        <Command
+          shouldFilter={shouldFilter}
+          loop
+          className="rounded-none! p-0 [&_[data-slot=command-group-heading]]:px-3 [&_[data-slot=command-group-heading]]:pb-1.5 [&_[data-slot=command-group-heading]]:pt-3 [&_[data-slot=command-group-heading]]:text-xs [&_[data-slot=command-group-heading]]:font-medium [&_[data-slot=command-group-heading]]:text-muted-foreground"
+        >
           {children}
         </Command>
       </DialogContent>
@@ -68,25 +73,24 @@ function CommandDialog({
   )
 }
 
+/** Palette search row: icon left, input with real padding, optional trailing slot (spinner, esc hint). */
 function CommandInput({
   className,
+  trailing,
   ...props
-}: React.ComponentProps<typeof CommandPrimitive.Input>) {
+}: React.ComponentProps<typeof CommandPrimitive.Input> & { trailing?: React.ReactNode }) {
   return (
-    <div data-slot="command-input-wrapper">
-      <InputGroup className="h-10! rounded-xl! border-input/60 bg-muted/40 shadow-none! *:data-[slot=input-group-addon]:pl-3!">
-        <CommandPrimitive.Input
-          data-slot="command-input"
-          className={cn(
-            "w-full text-sm outline-hidden placeholder:text-muted-foreground/70 disabled:cursor-not-allowed disabled:opacity-50",
-            className
-          )}
-          {...props}
-        />
-        <InputGroupAddon>
-          <Search className="size-4 shrink-0 opacity-50" />
-        </InputGroupAddon>
-      </InputGroup>
+    <div data-slot="command-input-wrapper" className="flex h-14 items-center gap-3 border-b border-border px-4">
+      <Search className="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
+      <CommandPrimitive.Input
+        data-slot="command-input"
+        className={cn(
+          "h-full min-w-0 flex-1 bg-transparent text-base outline-hidden placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+          className
+        )}
+        {...props}
+      />
+      {trailing}
     </div>
   )
 }

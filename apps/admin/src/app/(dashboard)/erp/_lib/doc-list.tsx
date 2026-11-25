@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AlertCircle, type LucideIcon } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/empty-state";
 import { AdminTablePanel } from "@/components/admin-layout";
 import { cn } from "@/lib/utils";
+import { LogoLoader } from "@udo-craft/ui";
 
 export interface DocColumn<T> {
   header: string;
@@ -45,15 +45,7 @@ export function DocList<T extends { id: string }>({
   if (loading) {
     return (
       <AdminTablePanel>
-        <div className="divide-y" aria-busy="true" aria-label="Завантаження">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-4 px-4 py-3.5">
-              {columns.map((c, j) => (
-                <Skeleton key={j} className={cn("h-3.5", j === 0 ? "w-20" : "flex-1", c.hideOnMobile && "hidden md:block")} />
-              ))}
-            </div>
-          ))}
-        </div>
+        <LogoLoader variant="block" />
       </AdminTablePanel>
     );
   }

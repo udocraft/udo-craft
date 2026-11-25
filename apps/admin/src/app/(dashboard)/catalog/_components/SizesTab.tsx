@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { SizeChartModal } from "@/components/size-chart-modal";
 import { toast } from "sonner";
+import { LogoLoader } from "@udo-craft/ui";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -87,9 +88,7 @@ export default function SizesTab({
         </CardHeader>
         <CardContent>
           {chartsLoading ? (
-            <div className="space-y-2">
-              {[1, 2].map(i => <div key={i} className="h-12 bg-muted rounded-lg animate-pulse" />)}
-            </div>
+            <LogoLoader variant="block" className="min-h-[120px] py-6" markClassName="w-16" />
           ) : charts.length === 0 ? (
             <div className="text-center py-8 text-sm text-muted-foreground">
               <Ruler className="w-8 h-8 mx-auto mb-2 opacity-30" />
