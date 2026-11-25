@@ -109,11 +109,11 @@ export default function SizesTab({
                     </div>
                   </div>
                   <div className="flex gap-1 shrink-0">
-                    <Button variant="ghost" size="icon"
+                    <Button aria-label="Редагувати" variant="ghost" size="icon"
                       onClick={() => { setEditChartId(chart.id); setEditModalOpen(true); }}>
                       <Pencil className="w-3.5 h-3.5" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive"
+                    <Button aria-label="Видалити" variant="ghost" size="icon" className="text-destructive hover:text-destructive"
                       onClick={() => setDeleteTarget(chart)}>
                       <Trash2 className="w-3.5 h-3.5" />
                     </Button>

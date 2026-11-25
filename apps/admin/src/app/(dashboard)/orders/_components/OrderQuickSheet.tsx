@@ -134,7 +134,7 @@ export function OrderQuickSheet({ lead, open, onClose, onStatusChange }: OrderQu
             <p className="text-xs text-muted-foreground mt-0.5">{cd.name}</p>
           </div>
           <div className="flex items-center gap-1">
-            <Button
+            <Button aria-label="Відкрити замовлення в новій вкладці"
               variant="ghost"
               size="icon-sm"
               className="text-muted-foreground hover:text-foreground"

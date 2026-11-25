@@ -100,10 +100,10 @@ export function MaterialsManager() {
                 </div>
               </div>
               <div className="flex items-center gap-1 opacity-60 hover:opacity-100 transition-opacity">
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-600 rounded-full" onClick={() => { setEditingId(m.id); setForm({ name: m.name, hex_code: m.hex_code, is_active: m.is_active }); }}>
+                <Button aria-label="Редагувати" variant="ghost" size="icon" className="h-8 w-8 text-blue-600 rounded-full" onClick={() => { setEditingId(m.id); setForm({ name: m.name, hex_code: m.hex_code, is_active: m.is_active }); }}>
                   <Pencil className="w-4 h-4" />
                 </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600 rounded-full hover:bg-red-50" onClick={() => handleDelete(m.id)}>
+                <Button aria-label="Видалити" variant="ghost" size="icon" className="h-8 w-8 text-red-600 rounded-full hover:bg-red-50" onClick={() => handleDelete(m.id)}>
                   <Trash2 className="w-4 h-4" />
                 </Button>
               </div>
@@ -116,7 +116,7 @@ export function MaterialsManager() {
           <div className="bg-card border rounded-xl p-5 sticky top-24 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-bold">{editingId === "new" ? "Новий колір" : "Редагувати колір"}</h3>
-              <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={() => { setEditingId(null); setForm(EMPTY_FORM); }}><X className="w-4 h-4" /></Button>
+              <Button aria-label="Закрити" variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={() => { setEditingId(null); setForm(EMPTY_FORM); }}><X className="w-4 h-4" /></Button>
             </div>
             <form onSubmit={handleSave} className="space-y-4">
               <div className="space-y-1.5">

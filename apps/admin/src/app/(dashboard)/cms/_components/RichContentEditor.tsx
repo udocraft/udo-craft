@@ -78,10 +78,10 @@ export function RichContentEditor({ slug, pageTitle, description }: RichContentE
           {description && <p className="text-sm text-muted-foreground">{description}</p>}
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" onClick={load}>
+          <Button aria-label="Оновити" variant="outline" size="icon" onClick={load}>
             <RefreshCw className="size-4" />
           </Button>
-          <Button variant="outline" size="icon" onClick={() => setPreview((p) => !p)}>
+          <Button aria-label="Перемкнути попередній перегляд" aria-pressed={preview} variant="outline" size="icon" onClick={() => setPreview((p) => !p)}>
             {preview ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
           </Button>
           <Button onClick={handleSave} disabled={saving}>

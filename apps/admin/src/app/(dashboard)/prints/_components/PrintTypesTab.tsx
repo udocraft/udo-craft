@@ -58,10 +58,10 @@ export default function PrintTypesTab() {
                     <p className="text-xs text-muted-foreground mt-1">{type.desc}</p>
                   </div>
                   <div className="flex gap-1 shrink-0">
-                    <Button variant="ghost" size="icon" onClick={() => handleToggle(type.id)}>
+                    <Button aria-label="Увімкнути або вимкнути тип друку" variant="ghost" size="icon" onClick={() => handleToggle(type.id)}>
                       {type.is_active ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5 text-muted-foreground" />}
                     </Button>
-                    <Button variant="ghost" size="icon" onClick={() => { setEditingType(type); setEditDialogOpen(true); }}>
+                    <Button aria-label="Редагувати" variant="ghost" size="icon" onClick={() => { setEditingType(type); setEditDialogOpen(true); }}>
                       <Pencil className="w-3.5 h-3.5" />
                     </Button>
                   </div>

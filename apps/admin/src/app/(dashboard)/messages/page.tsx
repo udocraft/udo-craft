@@ -402,7 +402,7 @@ export default function MessagesPage() {
                         <p className="text-[11px] text-muted-foreground truncate flex-1 leading-relaxed">
                           {last ? (
                             <>{last.sender === "manager" && <span className="font-medium text-foreground/60">Ви: </span>}
-                            {last.attachments?.length && !last.body ? "📎 Вкладення" : last.body.slice(0, 50)}</>
+                            {last.attachments?.length && !last.body ? "Вкладення" : last.body.slice(0, 50)}</>
                           ) : lead.customer_data?.message?.slice(0, 50)}
                         </p>
                         {isUnread && <span className="size-1.5 rounded-full bg-primary shrink-0 mb-0.5" />}
@@ -455,7 +455,7 @@ export default function MessagesPage() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                   <Separator orientation="vertical" className="h-4" />
-                  <Button variant={showInfo ? "secondary" : "ghost"} size="icon-sm"
+                  <Button aria-label="Деталі замовлення" variant={showInfo ? "secondary" : "ghost"} size="icon-sm"
                     className={cn("transition-colors", showInfo && "text-primary")}
                     onClick={() => setShowInfo((v) => !v)}>
                     <Info className="size-4" />
@@ -584,7 +584,7 @@ export default function MessagesPage() {
                     disabled={sending}
                     className="flex-1 h-9 text-sm"
                   />
-                  <Button onClick={handleSend} disabled={sending || uploading || (!replyText.trim() && !pendingFiles.length)} size="icon" className="size-9 shrink-0">
+                  <Button aria-label="Надіслати" onClick={handleSend} disabled={sending || uploading || (!replyText.trim() && !pendingFiles.length)} size="icon" className="size-9 shrink-0">
                     {sending || uploading ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
                   </Button>
                 </div>
@@ -597,10 +597,10 @@ export default function MessagesPage() {
                 <div className="flex items-center justify-between px-4 py-3 border-b border-border/60 shrink-0">
                   <span className="text-sm font-semibold">Деталі</span>
                   <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="icon-sm" className="text-destructive/60 hover:text-destructive hover:bg-destructive/10" onClick={() => handleDeleteLead(selectedLead)}>
+                    <Button aria-label="Видалити чат" variant="ghost" size="icon-sm" className="text-destructive/60 hover:text-destructive hover:bg-destructive/10" onClick={() => handleDeleteLead(selectedLead)}>
                       <Trash2 className="size-3.5" />
                     </Button>
-                    <Button variant="ghost" size="icon-sm" className="text-muted-foreground" onClick={() => setShowInfo(false)}>
+                    <Button aria-label="Закрити деталі" variant="ghost" size="icon-sm" className="text-muted-foreground" onClick={() => setShowInfo(false)}>
                       <X className="size-4" />
                     </Button>
                   </div>

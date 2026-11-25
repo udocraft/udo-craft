@@ -268,14 +268,14 @@ export function ProductColorVariantsList({ productId }: { productId: string }) {
                 </div>
 
                 <div className="flex gap-1">
-                  <Button variant="ghost" size="icon" className="size-8"
+                  <Button aria-label="Редагувати" variant="ghost" size="icon" className="size-8"
                     onClick={() => setEditing(v)}>
                     <Pencil className="w-3.5 h-3.5" />
                   </Button>
 
                   <AlertDialog open={deleteTargetId === v.id} onOpenChange={(open) => !open && setDeleteTargetId(null)}>
                     <AlertDialogTrigger asChild>
-                      <Button
+                      <Button aria-label="Видалити"
                         variant="ghost" size="icon" className="size-8 text-destructive hover:text-destructive"
                         onClick={() => setDeleteTargetId(v.id)}
                       >
