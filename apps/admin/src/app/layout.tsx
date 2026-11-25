@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { ClarityInit } from "@/components/clarity";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { BootSplash } from "@udo-craft/ui";
 import "./globals.css";
 
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <Toaster theme="light" toastOptions={{ style: { background: "var(--color-popover)", border: "1px solid var(--color-border)", color: "var(--color-popover-foreground)" } }} />
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
