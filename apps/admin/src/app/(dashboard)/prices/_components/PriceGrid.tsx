@@ -368,7 +368,7 @@ export default function PriceGrid({
                       <DropdownMenu>
                         <DropdownMenuTrigger
                           aria-label={`Дії для ${row.size_label}`}
-                          className="inline-flex size-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+                          className="inline-flex size-9 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
                         >
                           <MoreHorizontal className="size-4" />
                         </DropdownMenuTrigger>

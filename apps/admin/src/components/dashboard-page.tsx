@@ -63,11 +63,12 @@ export function DashboardPage({
   return (
     <div className={cn("flex h-full flex-col overflow-hidden bg-background", className)}>
       {/* ── One header per page: sidebar toggle, breadcrumbs + title, actions; optional tabs below ── */}
-      <header className={cn("shrink-0 bg-background", !toolbar && "border-b border-border")}>
-        {/* Fixed 64px row so its bottom rule lines up with the sidebar header (h-16). */}
-        <div className="flex h-16 items-center gap-2 px-4 md:px-6">
+      <header className="shrink-0 bg-background">
+        {/* 64px row with its rule inside (border-box), exactly like the sidebar header (h-16),
+            so both bottom lines sit at the same pixel. With tabs, the tabs' rule closes the header. */}
+        <div className={cn("flex h-16 items-center gap-2 px-4 md:px-6", !toolbar && "border-b border-border")}>
           {/* Desktop toggles from the sidebar header; on phones the sidebar is a sheet, so it opens from here. */}
-          <SidebarTrigger className="-ml-2 size-9 min-h-0 min-w-0 shrink-0 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground md:hidden" />
+          <SidebarTrigger className="-ml-2 size-9 min-h-0 min-w-0 shrink-0 rounded-full bg-transparent text-muted-foreground hover:bg-transparent hover:text-foreground md:hidden" />
 
           <div className="min-w-0 flex-1">
             {trail.length > 0 && (
@@ -94,7 +95,7 @@ export function DashboardPage({
                 <Link
                   href={backHref}
                   aria-label={backLabel}
-                  className="-ml-1 flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  className="-ml-1 flex size-8 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                 >
                   <ChevronLeft className="size-4" />
                 </Link>

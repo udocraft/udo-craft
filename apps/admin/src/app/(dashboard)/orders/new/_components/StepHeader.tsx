@@ -28,12 +28,12 @@ export function StepHeader({ step, cartLength, contactComplete, onNavigate }: St
 
   return (
     <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-3 border-b border-border bg-background px-4 md:px-6">
-      <SidebarTrigger className="-ml-1.5 z-10 size-9 min-h-0 min-w-0 shrink-0 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground md:hidden" />
+      <SidebarTrigger className="-ml-1.5 z-10 size-9 min-h-0 min-w-0 shrink-0 rounded-full bg-transparent text-muted-foreground hover:bg-transparent hover:text-foreground md:hidden" />
       <button
         type="button"
         onClick={() => router.push("/orders")}
         aria-label="Назад до замовлень"
-        className="z-10 flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        className="z-10 flex size-8 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
       >
         <ArrowLeft className="size-4" />
       </button>

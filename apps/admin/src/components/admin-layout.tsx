@@ -142,7 +142,7 @@ export function AdminFilter({
   const clear = () => (multiple ? onValuesChange?.([]) : onClear?.());
 
   const triggerCls = cn(
-    "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-sm font-medium transition-colors",
+    "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3.5 text-sm font-medium transition-colors",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
     isActive
       ? "border-primary/40 bg-primary/5 text-foreground hover:bg-primary/10"
@@ -248,7 +248,7 @@ export function AdminSort({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         aria-label={`Сортування: ${current?.label ?? ""}`}
-        className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-border px-3 text-sm font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-border px-3.5 text-sm font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <ArrowUpDown className="size-4 text-muted-foreground" aria-hidden="true" />
         <span className="hidden text-muted-foreground sm:inline">Сортування:</span>
@@ -282,7 +282,7 @@ export function AdminFilterReset({ active, onReset }: { active: boolean; onReset
     <button
       type="button"
       onClick={onReset}
-      className="inline-flex h-9 items-center gap-1 rounded-lg px-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+      className="inline-flex h-9 items-center gap-1 rounded-full px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
     >
       Скинути
       <X className="size-3.5" aria-hidden="true" />

@@ -384,18 +384,19 @@ export function AppSidebar({ user }: AppSidebarProps) {
         {/* Brand header: U:DO mark + Admin label */}
         {/* Brand header: logo + Admin label and the collapse button. Collapsed, the logo
             gives way to the open button. */}
-        <SidebarHeader className="h-16 shrink-0 flex-row items-center justify-between gap-2 border-b border-sidebar-border px-3 py-0 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2">
+        <SidebarHeader className="relative h-16 shrink-0 flex-row items-center justify-between gap-2 border-b border-sidebar-border px-3 py-0 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2">
           <Link
             href="/"
             aria-label="U:DO Admin — на головну"
-            className="flex h-10 min-w-0 items-center gap-2.5 rounded-lg px-2 outline-hidden ring-sidebar-ring focus-visible:ring-2 group-data-[collapsible=icon]:hidden"
+            className="flex h-10 min-w-0 shrink-0 items-center gap-2.5 whitespace-nowrap rounded-full px-2 outline-hidden ring-sidebar-ring transition-opacity duration-200 focus-visible:ring-2 motion-reduce:transition-none group-data-[collapsible=icon]:pointer-events-none group-data-[collapsible=icon]:absolute group-data-[collapsible=icon]:opacity-0"
+            tabIndex={state === "collapsed" && !isMobile ? -1 : undefined}
           >
             <BrandLogoFull className="h-5 w-auto shrink-0 text-primary" color="var(--color-primary)" />
             <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-primary">
               Admin
             </span>
           </Link>
-          <SidebarTrigger className="size-9 min-h-0 min-w-0 shrink-0 rounded-lg text-muted-foreground hover:bg-sidebar-accent hover:text-foreground" />
+          <SidebarTrigger className="size-9 min-h-0 min-w-0 shrink-0 rounded-full bg-transparent text-muted-foreground hover:bg-transparent hover:text-foreground active:bg-transparent aria-expanded:bg-transparent" />
         </SidebarHeader>
 
         <SidebarContent id="admin-sidebar-nav" role="navigation" aria-label="Основна навігація" className="gap-4 px-3 py-3 group-data-[collapsible=icon]:px-2.5">
@@ -410,7 +411,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                     onClick={(e) => { if (!handleNavClick("/orders/new", pathname === "/orders/new")) e.preventDefault(); }}
                     className={cn(
                       itemH,
-                      "justify-center gap-2 rounded-lg bg-primary px-3 font-medium text-primary-foreground shadow-sm hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground data-active:bg-primary data-active:text-primary-foreground group-data-[collapsible=icon]:justify-center",
+                      "justify-center gap-2 rounded-full bg-primary px-3 font-medium text-primary-foreground shadow-sm hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground data-active:bg-primary data-active:text-primary-foreground group-data-[collapsible=icon]:justify-center",
                     )}
                   >
                     <Plus />
