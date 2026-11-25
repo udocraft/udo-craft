@@ -74,7 +74,7 @@ export function AdminSearch({
   ...props
 }: Omit<React.ComponentProps<typeof Input>, "type">) {
   return (
-    <div className={cn("relative w-full max-w-xs", className)}>
+    <div className={cn("relative w-full sm:max-w-xs", className)}>
       <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
       <Input
         type="search"
@@ -88,9 +88,9 @@ export function AdminSearch({
 }
 
 // ── AdminFilter ───────────────────────────────────────────────────────────────
-// Faceted filter chip (shadcn data-table pattern), single choice:
+// Faceted filter chip (shadcn data-table pattern), single or multiple choice:
 //  - inactive: dashed outline "+ Статус"
-//  - active:   solid chip "Статус | Новий"
+//  - active:   solid chip "Статус | Новий" (multiple: "Статус | Новий, В роботі" or "3 вибрано")
 // The popover lists options with a check on the chosen one and a "Скинути" row.
 // An option with value "all" is treated as "no filter" and is not listed.
 
@@ -113,6 +113,10 @@ interface AdminFilterProps {
   /** Toggle chips without options (e.g. "Лише непрочитані"). */
   onClick?: () => void;
   icon?: React.ComponentType<{ className?: string }>;
+  /** Multiple choice: checkboxes, popover stays open; use `values` + `onValuesChange`. */
+  multiple?: boolean;
+  values?: string[];
+  onValuesChange?: (values: string[]) => void;
 }
 
 export function AdminFilter({
@@ -124,11 +128,18 @@ export function AdminFilter({
   onClear,
   onClick,
   icon: Icon,
+  multiple,
+  values,
+  onValuesChange,
 }: AdminFilterProps) {
   const [open, setOpen] = React.useState(false);
   const choices = React.useMemo(() => (options ?? []).filter((o) => o.value !== "all"), [options]);
-  const selected = value && value !== "all" ? choices.find((o) => o.value === value) : undefined;
-  const isActive = active ?? Boolean(selected);
+  const picked = multiple
+    ? choices.filter((o) => values?.includes(o.value))
+    : value && value !== "all" ? choices.filter((o) => o.value === value) : [];
+  const selected = picked[0];
+  const isActive = active ?? picked.length > 0;
+  const clear = () => (multiple ? onValuesChange?.([]) : onClear?.());
 
   const triggerCls = cn(
     "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-sm font-medium transition-colors",
@@ -146,11 +157,13 @@ export function AdminFilter({
         <Plus className="size-4 shrink-0" aria-hidden="true" />
       )}
       <span>{label}</span>
-      {selected && (
+      {picked.length > 0 && (
         <>
           <span className="mx-0.5 h-4 w-px bg-border" aria-hidden="true" />
-          {selected.color && <span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: selected.color }} aria-hidden="true" />}
-          <span className="max-w-[140px] truncate font-semibold text-primary">{selected.label}</span>
+          {picked.length === 1 && selected.color && <span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: selected.color }} aria-hidden="true" />}
+          <span className="max-w-[160px] truncate font-semibold text-primary">
+            {picked.length === 1 ? selected.label : picked.length === 2 ? picked.map((p) => p.label).join(", ") : `${picked.length} вибрано`}
+          </span>
         </>
       )}
     </>
@@ -166,26 +179,34 @@ export function AdminFilter({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger className={triggerCls} aria-label={selected ? `${label}: ${selected.label}` : `Фільтр: ${label}`}>
+      <PopoverTrigger className={triggerCls} aria-label={picked.length ? `${label}: ${picked.map((p) => p.label).join(", ")}` : `Фільтр: ${label}`}>
         {content}
       </PopoverTrigger>
       <PopoverContent align="start" side="bottom" sideOffset={6} className="w-56 p-1">
-        <div role="listbox" aria-label={label} className="max-h-72 overflow-y-auto">
+        <div role="listbox" aria-label={label} aria-multiselectable={multiple || undefined} className="max-h-72 overflow-y-auto">
           {choices.map((opt) => {
-            const isSelected = selected?.value === opt.value;
+            const isSelected = picked.some((p) => p.value === opt.value);
             return (
               <button
                 key={opt.value}
                 type="button"
                 role="option"
                 aria-selected={isSelected}
-                onClick={() => { onSelect?.(opt.value); setOpen(false); }}
+                onClick={() => {
+                  if (multiple) {
+                    const cur = values ?? [];
+                    onValuesChange?.(isSelected ? cur.filter((v) => v !== opt.value) : [...cur, opt.value]);
+                  } else {
+                    onSelect?.(opt.value);
+                    setOpen(false);
+                  }
+                }}
                 className={cn(
                   "flex min-h-9 w-full items-center gap-2.5 rounded-md px-2.5 text-sm transition-colors hover:bg-muted",
                   isSelected && "font-medium text-primary",
                 )}
               >
-                <span className={cn("flex size-4 shrink-0 items-center justify-center rounded-full border", isSelected ? "border-primary bg-primary text-primary-foreground" : "border-border")}>
+                <span className={cn("flex size-4 shrink-0 items-center justify-center border", multiple ? "rounded-[4px]" : "rounded-full", isSelected ? "border-primary bg-primary text-primary-foreground" : "border-border")}>
                   {isSelected && <Check className="size-3" />}
                 </span>
                 {opt.color && <span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: opt.color }} aria-hidden="true" />}
@@ -194,15 +215,15 @@ export function AdminFilter({
             );
           })}
         </div>
-        {isActive && onClear && (
+        {isActive && (multiple ? onValuesChange : onClear) && (
           <>
             <div className="-mx-1 my-1 h-px bg-border" />
             <button
               type="button"
-              onClick={() => { onClear(); setOpen(false); }}
+              onClick={() => { clear(); setOpen(false); }}
               className="flex min-h-9 w-full items-center justify-center rounded-md px-2.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
             >
-              Скинути
+              {multiple && picked.length > 1 ? `Скинути (${picked.length})` : "Скинути"}
             </button>
           </>
         )}
@@ -230,7 +251,7 @@ export function AdminSort({
         className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-border px-3 text-sm font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <ArrowUpDown className="size-4 text-muted-foreground" aria-hidden="true" />
-        <span className="text-muted-foreground">Сортування:</span>
+        <span className="hidden text-muted-foreground sm:inline">Сортування:</span>
         <span>{current?.label}</span>
       </PopoverTrigger>
       <PopoverContent align="start" side="bottom" sideOffset={6} className="w-52 p-1">

@@ -57,19 +57,12 @@ const DATE_FILTER_LABELS: Record<DateFilter, string> = {
 const UNASSIGNED_TAG_VALUE = "__untagged__";
 const CUSTOM_TAG_VALUE = "__custom__";
 
-type StatusFilter = "all" | (typeof STATUSES)[number];
-type TagFilter = "all" | typeof UNASSIGNED_TAG_VALUE | typeof CUSTOM_TAG_VALUE | (typeof PREDEFINED_TAGS)[number]["id"];
+type StatusValue = (typeof STATUSES)[number];
+type TagValue = typeof UNASSIGNED_TAG_VALUE | typeof CUSTOM_TAG_VALUE | (typeof PREDEFINED_TAGS)[number]["id"];
 type DateFilter = "all" | "today" | "week" | "month";
 type AmountFilter = "all" | "with_amount" | "without_amount";
 type SortFilter = "newest" | "oldest" | "amount_desc" | "amount_asc" | "updated";
 type ViewMode = "kanban" | "list";
-
-function getTagFilterLabel(filter: TagFilter) {
-  if (filter === "all") return "Всі теги";
-  if (filter === UNASSIGNED_TAG_VALUE) return "Без тегів";
-  if (filter === CUSTOM_TAG_VALUE) return "Інші теги";
-  return PREDEFINED_TAGS.find((tag) => tag.id === filter)?.label ?? filter;
-}
 
 function getDateStart(filter: DateFilter) {
   const now = new Date();
@@ -168,8 +161,9 @@ function OrdersBoard() {
   const [loading, setLoading] = useState(true);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
-  const [tagFilter, setTagFilter] = useState<TagFilter>("all");
+  // Multiple choice: an order matches if it has any of the picked statuses / tags.
+  const [statusFilter, setStatusFilter] = useState<StatusValue[]>([]);
+  const [tagFilter, setTagFilter] = useState<TagValue[]>([]);
   const [dateFilter, setDateFilter] = useState<DateFilter>("all");
   const [amountFilter, setAmountFilter] = useState<AmountFilter>("all");
   const [sortFilter, setSortFilter] = useState<SortFilter>("newest");
@@ -317,15 +311,15 @@ function OrdersBoard() {
 
     return leads
       .filter((lead) => matchesSearch(lead, search))
-      .filter((lead) => statusFilter === "all" || lead.status === statusFilter)
+      .filter((lead) => statusFilter.length === 0 || statusFilter.includes(lead.status as StatusValue))
       .filter((lead) => {
+        if (tagFilter.length === 0) return true;
         const tags = lead.tags ?? [];
-        if (tagFilter === "all") return true;
-        if (tagFilter === UNASSIGNED_TAG_VALUE) return tags.length === 0;
-        if (tagFilter === CUSTOM_TAG_VALUE) {
-          return tags.some((tag) => !PREDEFINED_TAGS.some((predefined) => predefined.id === tag));
-        }
-        return tags.includes(tagFilter);
+        return tagFilter.some((f) => {
+          if (f === UNASSIGNED_TAG_VALUE) return tags.length === 0;
+          if (f === CUSTOM_TAG_VALUE) return tags.some((tag) => !PREDEFINED_TAGS.some((predefined) => predefined.id === tag));
+          return tags.includes(f);
+        });
       })
       .filter((lead) => {
         if (!dateStart) return true;
@@ -356,22 +350,22 @@ function OrdersBoard() {
   }, [filteredLeads]);
 
   const visibleStatuses = useMemo(() => {
-    if (statusFilter !== "all") return STATUSES.filter((status) => status === statusFilter);
+    if (statusFilter.length) return STATUSES.filter((status) => statusFilter.includes(status));
     return STATUSES;
   }, [statusFilter]);
 
   const hasFilters =
     search.trim() ||
-    statusFilter !== "all" ||
-    tagFilter !== "all" ||
+    statusFilter.length > 0 ||
+    tagFilter.length > 0 ||
     dateFilter !== "all" ||
     amountFilter !== "all" ||
     sortFilter !== "newest";
 
   const resetFilters = useCallback(() => {
     setSearch("");
-    setStatusFilter("all");
-    setTagFilter("all");
+    setStatusFilter([]);
+    setTagFilter([]);
     setDateFilter("all");
     setAmountFilter("all");
     setSortFilter("newest");
@@ -453,13 +447,13 @@ function OrdersBoard() {
         <AdminSearch value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Номер, клієнт, email…" />
 
         {/* Filters */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-1.5">
           <AdminFilter
             label="Статус"
-            active={statusFilter !== "all"}
-            value={statusFilter === "all" ? undefined : statusFilter}
+            multiple
+            values={statusFilter}
+            onValuesChange={(v) => setStatusFilter(v as StatusValue[])}
             options={[
-              { value: "all", label: "Всі статуси" },
               { value: "draft", label: "Чернетка", color: "#94a3b8" },
               { value: "new", label: "Новий", color: "#3b82f6" },
               { value: "in_progress", label: "В роботі", color: "#f59e0b" },
@@ -467,22 +461,18 @@ function OrdersBoard() {
               { value: "completed", label: "Завершено", color: "#10b981" },
               { value: "archived", label: "Архів", color: "#94a3b8" },
             ]}
-            onSelect={(v) => setStatusFilter(v as StatusFilter)}
-            onClear={() => setStatusFilter("all")}
             icon={RefreshCw}
           />
           <AdminFilter
             label="Тег"
-            active={tagFilter !== "all"}
-            value={tagFilter === "all" ? undefined : tagFilter}
+            multiple
+            values={tagFilter}
+            onValuesChange={(v) => setTagFilter(v as TagValue[])}
             options={[
-              { value: "all", label: "Всі теги" },
               { value: UNASSIGNED_TAG_VALUE, label: "Без тегів" },
               ...PREDEFINED_TAGS.map((t) => ({ value: t.id, label: t.label, color: t.color })),
               { value: CUSTOM_TAG_VALUE, label: "Інші теги" },
             ]}
-            onSelect={(v) => setTagFilter(v as TagFilter)}
-            onClear={() => setTagFilter("all")}
             icon={Tag}
           />
           <AdminFilter
@@ -503,7 +493,7 @@ function OrdersBoard() {
 
         <AdminFilterReset active={Boolean(hasFilters)} onReset={resetFilters} />
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="flex w-full items-center justify-between gap-2 sm:ml-auto sm:w-auto">
           <span className="text-sm text-muted-foreground tabular-nums" aria-live="polite">
             {loading ? "" : `${filteredLeads.length} замовлень`}
           </span>

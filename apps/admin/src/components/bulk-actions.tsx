@@ -69,26 +69,27 @@ export function BulkActionBar({
     <div
       role="region"
       aria-label="Дії з вибраними"
-      className="fixed bottom-6 left-1/2 z-40 flex -translate-x-1/2 items-center gap-1 rounded-xl border border-border bg-background p-1.5 pl-4 shadow-lg animate-in fade-in slide-in-from-bottom-2 md:left-[calc(50%+var(--sidebar-width,0px)/2)]"
+      className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 flex items-center gap-0.5 rounded-xl border border-border bg-background p-1.5 pl-3 shadow-lg animate-in fade-in slide-in-from-bottom-2 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 sm:gap-1 sm:pl-4 md:left-[calc(50%+var(--sidebar-width,0px)/2)]"
     >
-      <span className="mr-2 whitespace-nowrap text-sm font-medium tabular-nums" aria-live="polite">
-        Вибрано {noun(count)}
+      <span className="mr-auto min-w-0 truncate whitespace-nowrap text-sm font-medium tabular-nums sm:mr-2" aria-live="polite">
+        <span className="hidden sm:inline">Вибрано </span>{noun(count)}
       </span>
-      <Button variant="ghost" size="sm" onClick={onExportCsv} className="gap-1.5">
-        <Download className="size-4" />CSV
+      <Button variant="ghost" size="sm" onClick={onExportCsv} className="gap-1.5 px-2.5 sm:px-3" aria-label="Експорт у CSV">
+        <Download className="size-4" /><span className="hidden sm:inline">CSV</span>
       </Button>
       <Button
         variant="ghost"
         size="sm"
-        className="gap-1.5"
+        className="gap-1.5 px-2.5 sm:px-3"
+        aria-label="Експорт у PDF"
         disabled={pdfBusy}
         onClick={async () => { setPdfBusy(true); try { await onExportPdf(); } finally { setPdfBusy(false); } }}
       >
-        {pdfBusy ? <Loader2 className="size-4 animate-spin" /> : <FileText className="size-4" />}PDF
+        {pdfBusy ? <Loader2 className="size-4 animate-spin" /> : <FileText className="size-4" />}<span className="hidden sm:inline">PDF</span>
       </Button>
       {onDelete && (
-        <Button variant="ghost" size="sm" onClick={onDelete} className="gap-1.5 text-destructive hover:bg-destructive/10 hover:text-destructive">
-          <Trash2 className="size-4" />Видалити
+        <Button variant="ghost" size="sm" onClick={onDelete} aria-label="Видалити вибрані" className="gap-1.5 px-2.5 text-destructive hover:bg-destructive/10 hover:text-destructive sm:px-3">
+          <Trash2 className="size-4" /><span className="hidden sm:inline">Видалити</span>
         </Button>
       )}
       <span className="mx-1 h-5 w-px bg-border" aria-hidden="true" />

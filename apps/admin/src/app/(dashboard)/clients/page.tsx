@@ -115,7 +115,7 @@ export default function ClientsPage() {
             onClear={() => setSourceFilter("all")}
           />
           <AdminFilterReset active={sourceFilter !== "all" || search.trim() !== ""} onReset={() => { setSourceFilter("all"); setSearch(""); }} />
-          <div className="ml-auto flex items-center gap-3">
+          <div className="flex w-full items-center justify-between gap-3 sm:ml-auto sm:w-auto">
             <span className="text-sm text-muted-foreground tabular-nums">{loading ? "" : `${filtered.length} клієнтів`}</span>
             <AdminSort
               value={sortFilter}
@@ -154,11 +154,11 @@ export default function ClientsPage() {
                   />
                 </TableHead>
                 <TableHead>Клієнт</TableHead>
-                <TableHead>Джерело</TableHead>
-                <TableHead>Замовлень</TableHead>
-                <TableHead>Загальна сума</TableHead>
-                <TableHead>Оплачено</TableHead>
-                <TableHead>Останнє замовлення</TableHead>
+                <TableHead className="hidden md:table-cell">Джерело</TableHead>
+                <TableHead className="hidden sm:table-cell">Замовлень</TableHead>
+                <TableHead className="text-right sm:text-left">Сума</TableHead>
+                <TableHead className="hidden lg:table-cell">Оплачено</TableHead>
+                <TableHead className="hidden sm:table-cell">Останнє замовлення</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -180,13 +180,13 @@ export default function ClientsPage() {
                     <p className="text-sm font-medium">{c.name}</p>
                     <p className="text-xs text-muted-foreground">{c.email || c.phone || "Без контактів"}</p>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="hidden md:table-cell">
                     <Badge variant={c.keycrmOrders > 0 ? "info" : "outline"} className="h-5 text-[10px] normal-case tracking-normal">{c.keycrmOrders > 0 ? "KeyCRM" : "Вручну"}</Badge>
                   </TableCell>
-                  <TableCell className="text-sm tabular-nums">{c.ordersCount}</TableCell>
-                  <TableCell className="text-sm font-medium tabular-nums">{fmtMoney(c.totalSpent)}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground tabular-nums">{fmtMoney(c.paidTotal)}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{fmtDate(c.lastOrderAt)}</TableCell>
+                  <TableCell className="hidden text-sm tabular-nums sm:table-cell">{c.ordersCount}</TableCell>
+                  <TableCell className="text-right text-sm font-medium tabular-nums sm:text-left">{fmtMoney(c.totalSpent)}</TableCell>
+                  <TableCell className="hidden text-sm text-muted-foreground tabular-nums lg:table-cell">{fmtMoney(c.paidTotal)}</TableCell>
+                  <TableCell className="hidden text-sm text-muted-foreground sm:table-cell">{fmtDate(c.lastOrderAt)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
