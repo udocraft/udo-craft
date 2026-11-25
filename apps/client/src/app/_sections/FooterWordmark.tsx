@@ -6,7 +6,7 @@ import { BrandLogoFull } from "@/components/brand-logo";
 import { SIGNATURE_SHAPES, SIGNATURE_STROKES, SIGNATURE_VIEWBOX } from "./signature-data";
 import styles from "./FooterWordmark.module.css";
 
-/** Logo reveal (right to left, with a shimmer band riding the edge). */
+/** Logo reveal (top to bottom, with a shimmer band riding the edge). */
 const REVEAL_S = 1.1;
 /** The lettering starts just before the reveal ends. */
 const WRITE_START_S = 1.0;
@@ -35,7 +35,7 @@ const WRITE_END_S = TIMING[TIMING.length - 1].delay + TIMING[TIMING.length - 1].
 type Phase = "idle" | "armed" | "play";
 
 /**
- * Closing footer wordmark: the faint, full U:DO logo is revealed right to left with a
+ * Closing footer wordmark: the faint, full U:DO logo is revealed top to bottom with a
  * shimmer, then "what you love ♥" is written over it stroke by stroke.
  *
  * The server renders the finished state ("idle"), so without JS or with reduced motion nothing
