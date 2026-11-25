@@ -3,10 +3,10 @@
 import { useId, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { Instagram, Send, ArrowRight, Check, Loader2 } from "lucide-react";
-import { BrandLogoFull } from "@/components/brand-logo";
 import { useLocale, useTranslations } from "next-intl";
 import { resetConsent } from "@/lib/consent";
 import { Button } from "@udo-craft/ui";
+import { FooterWordmark } from "./FooterWordmark";
 
 interface FooterSectionProps {
   tagline: string; copyright: string; instagram: string; telegram: string;
@@ -205,12 +205,12 @@ export function FooterSection({ tagline, copyright, instagram, telegram, showCta
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Closing wordmark: the footer ends on the brand, edge to edge */}
-      <Link href="/" aria-label={t("homeLink")} className="block px-gutter pb-6 focus-visible:outline-none focus-visible:opacity-80 sm:pb-10">
-        <BrandLogoFull className="block h-auto w-full" color="currentColor" />
-      </Link>
+        {/* Closing wordmark: faint full logo revealed top to bottom, then "what you love ♥" written across it. The lettering is taller than the logo, so the margins leave room for it. */}
+        <Link href="/" aria-label={t("homeLink")} className="mt-8 block pb-8 focus-visible:outline-none focus-visible:opacity-80 sm:mt-14 sm:pb-14">
+          <FooterWordmark />
+        </Link>
+      </div>
     </footer>
   );
 }

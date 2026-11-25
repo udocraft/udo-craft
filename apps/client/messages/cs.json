@@ -1091,6 +1091,13 @@
     "biz": {
       "heading": "Merch pro tým nebo akci?",
       "text": "Firemní oblečení, pop-up stánky a branding — na samostatné stránce pro firmy."
+    },
+    "testimonials": {
+      "eyebrow": "Recenze",
+      "heading": "Lidé, kteří už nosí to své",
+      "listLabel": "Recenze zákazníků",
+      "prev": "Předchozí recenze",
+      "next": "Další recenze"
     }
   },
   "auth": {
@@ -1523,7 +1530,6 @@
   },
   "editorial": {
     "statement": {
-      "eyebrow": "U:DO CRAFT",
       "part1": "Spojujeme řemeslo s technologií, aby oblečení s vaším návrhem",
       "part2": "se nosilo, a ne leželo ve skříni —",
       "part3": "kousky, na které jste hrdí každý den.",
@@ -1534,7 +1540,15 @@
       "accent": "vyladěno",
       "title2": "do detailu",
       "desc": "Silná bavlna, přesný tisk a výšivka, které vydrží stovky praní. Vyberte základ, zbytek zařídíme my.",
-      "from": "od {price} ₴"
+      "clothing": {
+        "title": "Oblečení na míru",
+        "desc": "Trička, mikiny a další s vaším designem."
+      },
+      "souvenirs": {
+        "title": "Suvenýry",
+        "desc": "Hrnky, tašky, samolepky a další merch.",
+        "soon": "Již brzy"
+      }
     }
   }
 }

@@ -1091,6 +1091,13 @@
     "biz": {
       "heading": "Merch voor je team of evenement?",
       "text": "Bedrijfskleding, pop-upstands en branding — op een aparte pagina voor bedrijven."
+    },
+    "testimonials": {
+      "eyebrow": "Reviews",
+      "heading": "Mensen die hun eigen ontwerp al dragen",
+      "listLabel": "Klantreviews",
+      "prev": "Vorige review",
+      "next": "Volgende review"
     }
   },
   "auth": {
@@ -1523,7 +1530,6 @@
   },
   "editorial": {
     "statement": {
-      "eyebrow": "U:DO CRAFT",
       "part1": "We combineren vakmanschap met technologie, zodat kleding met jouw ontwerp",
       "part2": "gedragen wordt en niet in de kast blijft —",
       "part3": "items waar je elke dag trots op bent.",
@@ -1534,7 +1540,15 @@
       "accent": "verfijnd",
       "title2": "tot in detail",
       "desc": "Zwaar katoen, precieze print en borduurwerk die honderden wasbeurten doorstaan. Kies de basis, wij doen de rest.",
-      "from": "vanaf {price} ₴"
+      "clothing": {
+        "title": "Kleding op maat",
+        "desc": "T-shirts, hoodies, sweaters en meer met jouw ontwerp."
+      },
+      "souvenirs": {
+        "title": "Souvenirs",
+        "desc": "Mokken, tassen, stickers en andere merch.",
+        "soon": "Binnenkort"
+      }
     }
   }
 }

@@ -20,6 +20,7 @@ import { Contact } from "./Contact";
 import { BizBand } from "./BizBand";
 import { Statement } from "./Statement";
 import { FeaturedPair } from "./FeaturedPair";
+import { Testimonials } from "./Testimonials";
 
 /** Sections on the shopper home. The CMS `home_layout` still orders and hides them. */
 const B2C_SECTIONS: readonly HomeSectionId[] = ["hero", "collections", "demo", "process", "faq"];
@@ -35,8 +36,9 @@ function renderB2c(id: HomeSectionId, ctx: HomeCtx, faqItems: FaqItems): ReactNo
     case "collections": return <><FeaturedPair ctx={ctx} /><Collections ctx={ctx} /></>;
     case "demo": return <LiveDemo ctx={ctx} />;
     case "process": return <Steps locale={ctx.locale} />;
+    // Customer stories sit right before the FAQ; they render nothing until real entries exist.
     case "faq":
-      return <HomeFaq locale={ctx.locale} items={faqItems} telegram={cmsValue(ctx, "home_contact", "telegram", "https://t.me/udostore")} />;
+      return <><Testimonials locale={ctx.locale} /><HomeFaq locale={ctx.locale} items={faqItems} telegram={cmsValue(ctx, "home_contact", "telegram", "https://t.me/udostore")} /></>;
     default: return null;
   }
 }

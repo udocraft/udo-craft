@@ -12,8 +12,7 @@ export async function Statement({ ctx }: { ctx: HomeCtx }) {
 
   return (
     <section aria-labelledby="statement-heading" className="py-section">
-      <div className="mx-auto flex w-full max-w-5xl flex-col items-center px-gutter text-center">
-        <p className="mb-8 rounded-full border border-border px-4 py-1.5 text-sm text-muted-foreground">{t("eyebrow")}</p>
+      <div className="mx-auto flex w-full max-w-6xl flex-col items-center px-gutter text-center">
         <StatementFill headingId="statement-heading" chunks={[t("part1"), t("part2"), t("part3")]} images={images} />
         <Link href="/order" prefetch={false} className={buttonVariants({ variant: "primary", size: "lg", className: "mt-14" })}>
           {t("cta")} <ArrowRight aria-hidden="true" />

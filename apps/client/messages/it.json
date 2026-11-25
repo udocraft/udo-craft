@@ -1091,6 +1091,13 @@
     "biz": {
       "heading": "Merch per il tuo team o evento?",
       "text": "Abbigliamento aziendale, stand pop-up e branding: in una pagina dedicata alle aziende."
+    },
+    "testimonials": {
+      "eyebrow": "Recensioni",
+      "heading": "Chi indossa già il proprio",
+      "listLabel": "Recensioni dei clienti",
+      "prev": "Recensione precedente",
+      "next": "Recensione successiva"
     }
   },
   "auth": {
@@ -1523,7 +1530,6 @@
   },
   "editorial": {
     "statement": {
-      "eyebrow": "U:DO CRAFT",
       "part1": "Uniamo artigianato e tecnologia perché i capi con il tuo design",
       "part2": "vengano indossati, non dimenticati nell’armadio —",
       "part3": "capi di cui vai fiero ogni giorno.",
@@ -1534,7 +1540,15 @@
       "accent": "curato",
       "title2": "nei dettagli",
       "desc": "Cotone pesante, stampa precisa e ricamo che resistono a centinaia di lavaggi. Scegli la base, al resto pensiamo noi.",
-      "from": "da {price} ₴"
+      "clothing": {
+        "title": "Abbigliamento personalizzato",
+        "desc": "T-shirt, felpe e altro con il tuo design."
+      },
+      "souvenirs": {
+        "title": "Souvenir",
+        "desc": "Tazze, shopper, adesivi e altro merch.",
+        "soon": "In arrivo"
+      }
     }
   }
 }

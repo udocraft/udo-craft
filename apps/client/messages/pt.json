@@ -1091,6 +1091,13 @@
     "biz": {
       "heading": "Merch para a sua equipa ou evento?",
       "text": "Roupa corporativa, stands pop-up e personalização — numa página própria para empresas."
+    },
+    "testimonials": {
+      "eyebrow": "Opiniões",
+      "heading": "Quem já veste o seu",
+      "listLabel": "Opiniões de clientes",
+      "prev": "Opinião anterior",
+      "next": "Próxima opinião"
     }
   },
   "auth": {
@@ -1523,7 +1530,6 @@
   },
   "editorial": {
     "statement": {
-      "eyebrow": "U:DO CRAFT",
       "part1": "Juntamos artesanato e tecnologia para que a roupa com o seu design",
       "part2": "seja usada, não guardada no armário —",
       "part3": "peças de que se orgulha todos os dias.",
@@ -1534,7 +1540,15 @@
       "accent": "aperfeiçoado",
       "title2": "ao detalhe",
       "desc": "Algodão espesso, impressão precisa e bordado que aguentam centenas de lavagens. Escolha a base, nós tratamos do resto.",
-      "from": "desde {price} ₴"
+      "clothing": {
+        "title": "Roupa personalizada",
+        "desc": "T-shirts, hoodies, sweatshirts e mais com o seu design."
+      },
+      "souvenirs": {
+        "title": "Lembranças",
+        "desc": "Canecas, sacos, autocolantes e outro merch.",
+        "soon": "Em breve"
+      }
     }
   }
 }

@@ -1091,6 +1091,13 @@
     "biz": {
       "heading": "Merch for your team or event?",
       "text": "Corporate clothing, pop-up stands and branding — on a separate page for companies."
+    },
+    "testimonials": {
+      "eyebrow": "Reviews",
+      "heading": "People already wearing their own",
+      "listLabel": "Customer reviews",
+      "prev": "Previous review",
+      "next": "Next review"
     }
   },
   "auth": {
@@ -1523,7 +1530,6 @@
   },
   "editorial": {
     "statement": {
-      "eyebrow": "U:DO CRAFT",
       "part1": "We blend craft with technology so clothing with your design",
       "part2": "gets worn, not stored in a drawer —",
       "part3": "pieces you are proud of every day.",
@@ -1534,7 +1540,15 @@
       "accent": "perfected",
       "title2": "in every detail",
       "desc": "Heavy cotton, precise print and embroidery that lasts hundreds of washes. Pick the base, we handle the rest.",
-      "from": "from ₴{price}"
+      "clothing": {
+        "title": "Custom Clothing",
+        "desc": "T-shirts, hoodies, sweatshirts and more with your design."
+      },
+      "souvenirs": {
+        "title": "Souvenirs",
+        "desc": "Mugs, tote bags, stickers and other merch.",
+        "soon": "Coming soon"
+      }
     }
   }
 }

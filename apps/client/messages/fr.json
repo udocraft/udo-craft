@@ -1091,6 +1091,13 @@
     "biz": {
       "heading": "Du merch pour votre équipe ou votre événement ?",
       "text": "Vêtements d'entreprise, stands pop-up et personnalisation : sur une page dédiée aux entreprises."
+    },
+    "testimonials": {
+      "eyebrow": "Avis",
+      "heading": "Ceux qui portent déjà le leur",
+      "listLabel": "Avis clients",
+      "prev": "Avis précédent",
+      "next": "Avis suivant"
     }
   },
   "auth": {
@@ -1523,7 +1530,6 @@
   },
   "editorial": {
     "statement": {
-      "eyebrow": "U:DO CRAFT",
       "part1": "Nous allions artisanat et technologie pour que les vêtements à votre design",
       "part2": "soient portés, pas rangés au placard —",
       "part3": "des pièces dont vous êtes fier chaque jour.",
@@ -1534,7 +1540,15 @@
       "accent": "soigné",
       "title2": "jusqu’au détail",
       "desc": "Coton épais, impression précise et broderie qui résistent à des centaines de lavages. Choisissez la base, on s’occupe du reste.",
-      "from": "dès {price} ₴"
+      "clothing": {
+        "title": "Vêtements personnalisés",
+        "desc": "T-shirts, hoodies, sweats et plus avec votre design."
+      },
+      "souvenirs": {
+        "title": "Souvenirs",
+        "desc": "Mugs, tote bags, stickers et autres goodies.",
+        "soon": "Bientôt"
+      }
     }
   }
 }

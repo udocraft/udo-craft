@@ -1091,6 +1091,13 @@
     "biz": {
       "heading": "Merch dla zespołu lub na wydarzenie?",
       "text": "Odzież firmowa, stoiska pop-up i branding — na osobnej stronie dla firm."
+    },
+    "testimonials": {
+      "eyebrow": "Opinie",
+      "heading": "Ci, którzy już noszą swoje",
+      "listLabel": "Opinie klientów",
+      "prev": "Poprzednia opinia",
+      "next": "Następna opinia"
     }
   },
   "auth": {
@@ -1523,7 +1530,6 @@
   },
   "editorial": {
     "statement": {
-      "eyebrow": "U:DO CRAFT",
       "part1": "Łączymy rzemiosło z technologią, żeby ubrania z twoim projektem",
       "part2": "były noszone, a nie leżały w szafie —",
       "part3": "rzeczy, z których jesteś dumny każdego dnia.",
@@ -1534,7 +1540,15 @@
       "accent": "dopracowane",
       "title2": "w każdym detalu",
       "desc": "Gruba bawełna, precyzyjny druk i haft, które wytrzymują setki prań. Wybierz bazę, resztą zajmiemy się my.",
-      "from": "od {price} ₴"
+      "clothing": {
+        "title": "Odzież na zamówienie",
+        "desc": "T-shirty, bluzy z kapturem i więcej z Twoim projektem."
+      },
+      "souvenirs": {
+        "title": "Pamiątki",
+        "desc": "Kubki, torby, naklejki i inny merch.",
+        "soon": "Wkrótce"
+      }
     }
   }
 }
