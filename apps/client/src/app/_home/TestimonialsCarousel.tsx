@@ -3,28 +3,29 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { SectionHeader } from "@udo-craft/ui";
+import { Button, SectionHeader } from "@udo-craft/ui";
 import type { Testimonial } from "./testimonials-data";
 
 interface Labels { eyebrow: string; heading: string; list: string; prev: string; next: string }
 
-const arrowClass =
-  "grid size-12 place-items-center rounded-full border border-border text-foreground transition-colors duration-fast hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-35";
-
 /**
  * Edge-to-edge row of square photos, no gaps or card chrome, with the quote over the
- * bottom of each photo. Chevrons move one photo at a time; swipe and trackpad scroll work too.
+ * bottom of each photo. The pager below matches the catalogue's (outline icon buttons, a
+ * position counter, disabled at the ends, no looping) and follows swipe/trackpad scrolling.
  */
 export function TestimonialsCarousel({ items, labels }: { items: Testimonial[]; labels: Labels }) {
   const track = useRef<HTMLUListElement>(null);
-  const [atStart, setAtStart] = useState(true);
-  const [atEnd, setAtEnd] = useState(false);
+  // Position of the first visible photo, and how many positions the row can scroll through.
+  const [pos, setPos] = useState(0);
+  const [positions, setPositions] = useState(items.length);
 
   const sync = useCallback(() => {
     const el = track.current;
-    if (!el) return;
-    setAtStart(el.scrollLeft <= 1);
-    setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 1);
+    const item = el?.firstElementChild as HTMLElement | null;
+    if (!el || !item) return;
+    const w = item.offsetWidth;
+    setPositions(Math.max(1, Math.round((el.scrollWidth - el.clientWidth) / w) + 1));
+    setPos(Math.round(el.scrollLeft / w));
   }, []);
 
   useEffect(() => {
@@ -48,16 +49,6 @@ export function TestimonialsCarousel({ items, labels }: { items: Testimonial[]; 
           titleId="reviews-heading"
           eyebrow={labels.eyebrow}
           title={labels.heading}
-          action={
-            <div className="flex gap-3">
-              <button type="button" onClick={() => step(-1)} disabled={atStart} aria-label={labels.prev} aria-controls="reviews-track" className={arrowClass}>
-                <ChevronLeft className="size-5" aria-hidden="true" />
-              </button>
-              <button type="button" onClick={() => step(1)} disabled={atEnd} aria-label={labels.next} aria-controls="reviews-track" className={arrowClass}>
-                <ChevronRight className="size-5" aria-hidden="true" />
-              </button>
-            </div>
-          }
         />
       </div>
       <ul
@@ -68,13 +59,13 @@ export function TestimonialsCarousel({ items, labels }: { items: Testimonial[]; 
         className="flex snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item) => (
-          <li key={item.image} className="relative aspect-square w-[85%] shrink-0 snap-start sm:w-1/2 lg:w-1/3 xl:w-1/4">
+          <li key={item.image} className="relative aspect-square w-[92%] shrink-0 snap-start sm:w-1/2 lg:w-1/3">
             <figure className="absolute inset-0 flex flex-col justify-end bg-muted">
               <Image
                 src={item.image}
                 alt={item.name}
                 fill
-                sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 85vw"
+                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 92vw"
                 className="object-cover"
               />
               <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
@@ -89,6 +80,19 @@ export function TestimonialsCarousel({ items, labels }: { items: Testimonial[]; 
           </li>
         ))}
       </ul>
+      {positions > 1 && (
+        <nav className="mt-10 flex items-center justify-center gap-4" aria-label={labels.heading}>
+          <Button variant="outline" size="icon" aria-label={labels.prev} aria-controls="reviews-track" disabled={pos === 0} onClick={() => step(-1)}>
+            <ChevronLeft aria-hidden="true" />
+          </Button>
+          <span className="text-sm tabular-nums text-muted-foreground" aria-live="polite">
+            {pos + 1} / {positions}
+          </span>
+          <Button variant="outline" size="icon" aria-label={labels.next} aria-controls="reviews-track" disabled={pos >= positions - 1} onClick={() => step(1)}>
+            <ChevronRight aria-hidden="true" />
+          </Button>
+        </nav>
+      )}
     </>
   );
 }
