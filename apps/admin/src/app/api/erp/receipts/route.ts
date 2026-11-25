@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { apiError, requireErpUser } from "../_lib";
+import { adjustMaterialStock, apiError, requireErpUser } from "../_lib";
 
 const ReceiptLine = z.object({
   erp_material_id: z.string().uuid(),
@@ -60,32 +60,21 @@ export async function POST(req: NextRequest) {
     if (linesError) return apiError(linesError);
 
     if (parsed.post) {
-      // One read for all materials, one update per distinct material, one insert for
-      // all movements. Lines for the same material are summed first.
-      // Note: stock is still read-then-written; an atomic increment needs a DB function.
-      const materialIds = [...new Set(lines.map((l) => l.erp_material_id))];
-      const { data: materials, error: materialsError } = await service!
-        .from("erp_materials")
-        .select("id, stock_quantity")
-        .in("id", materialIds);
-      if (materialsError) return apiError(materialsError);
-      const stockById = new Map((materials ?? []).map((m) => [m.id as string, Number(m.stock_quantity || 0)]));
+      // Lines for the same material are summed, then each material changes in one
+      // atomic update (see adjustMaterialStock).
       const addById = new Map<string, { qty: number; unitCost: number }>();
       for (const line of lines) {
         const prev = addById.get(line.erp_material_id);
         // The last line's unit cost wins, as it did when lines were applied one by one.
         addById.set(line.erp_material_id, { qty: (prev?.qty ?? 0) + Number(line.quantity), unitCost: line.unit_cost_cents });
       }
-      const updates = await Promise.all(
-        [...addById].map(([id, { qty, unitCost }]) =>
-          service!
-            .from("erp_materials")
-            .update({ stock_quantity: (stockById.get(id) ?? 0) + qty, unit_cost_cents: unitCost })
-            .eq("id", id),
-        ),
-      );
-      const updateError = updates.find((u) => u.error)?.error;
-      if (updateError) return apiError(updateError);
+      try {
+        for (const [id, { qty, unitCost }] of addById) {
+          await adjustMaterialStock(service!, id, qty, unitCost);
+        }
+      } catch (err) {
+        return apiError(err);
+      }
       const { error: movementsError } = await service!.from("erp_stock_movements").insert(
         lines.map((line) => ({
           erp_material_id: line.erp_material_id,

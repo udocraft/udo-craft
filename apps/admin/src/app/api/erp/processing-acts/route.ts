@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { apiError, requireErpUser } from "../_lib";
+import { addFinishedGoods, adjustMaterialStock, apiError, requireErpUser } from "../_lib";
+import { syncLeadFromWorkflow } from "@/lib/leads/server";
 
 const ActPayload = z.object({
   production_order_id: z.string().uuid(),
@@ -47,59 +48,73 @@ export async function POST(req: NextRequest) {
     if (actError) return apiError(actError);
 
     if (parsed.post) {
-      for (const line of order.lines ?? []) {
-        for (const req of line.material_requirements ?? []) {
-          const materialId = req.erp_material_id;
-          const qty = Number(req.required_quantity || 0);
-          if (!materialId || qty <= 0) continue;
-          const { data: material } = await service!
-            .from("erp_materials")
-            .select("stock_quantity, unit_cost_cents")
-            .eq("id", materialId)
-            .single();
-          await service!
-            .from("erp_materials")
-            .update({ stock_quantity: Number(material?.stock_quantity || 0) - qty })
-            .eq("id", materialId);
-          await service!.from("erp_stock_movements").insert({
-            erp_material_id: materialId,
+      // Consume materials and add finished goods with atomic updates, then record
+      // all stock movements in one insert.
+      const requirements = (order.lines ?? []).flatMap((line: any) =>
+        (line.material_requirements ?? [])
+          .map((req: any) => ({ materialId: req.erp_material_id as string, qty: Number(req.required_quantity || 0) }))
+          .filter((r: { materialId: string; qty: number }) => r.materialId && r.qty > 0),
+      ) as { materialId: string; qty: number }[];
+      const materialIds = [...new Set(requirements.map((r) => r.materialId))];
+      const { data: materials, error: materialsError } = materialIds.length
+        ? await service!.from("erp_materials").select("id, unit_cost_cents").in("id", materialIds)
+        : { data: [], error: null };
+      if (materialsError) return apiError(materialsError);
+      const costById = new Map((materials ?? []).map((m) => [m.id as string, Number(m.unit_cost_cents || 0)]));
+
+      try {
+        for (const req of requirements) {
+          await adjustMaterialStock(service!, req.materialId, -req.qty);
+        }
+        for (const line of order.lines ?? []) {
+          if (line.variant_sku_id) {
+            await addFinishedGoods(service!, line.variant_sku_id, parsed.warehouse_id ?? null, Number(line.quantity || 0));
+          }
+        }
+      } catch (err) {
+        return apiError(err);
+      }
+
+      if (requirements.length) {
+        const { error: movementsError } = await service!.from("erp_stock_movements").insert(
+          requirements.map((req) => ({
+            erp_material_id: req.materialId,
             production_order_id: parsed.production_order_id,
             processing_act_id: act.id,
             warehouse_id: parsed.warehouse_id,
             movement_type: "production_consume",
-            quantity: -qty,
-            unit_cost_cents: Number(material?.unit_cost_cents || 0),
+            quantity: -req.qty,
+            unit_cost_cents: costById.get(req.materialId) ?? 0,
             note: parsed.comment,
             created_by: user!.id,
-          });
-        }
-
-        if (line.variant_sku_id) {
-          const { data: existing } = await service!
-            .from("erp_finished_goods")
-            .select("id, quantity")
-            .eq("variant_sku_id", line.variant_sku_id)
-            .eq("warehouse_id", parsed.warehouse_id)
-            .maybeSingle();
-          if (existing) {
-            await service!
-              .from("erp_finished_goods")
-              .update({ quantity: Number(existing.quantity || 0) + Number(line.quantity || 0) })
-              .eq("id", existing.id);
-          } else {
-            await service!.from("erp_finished_goods").insert({
-              variant_sku_id: line.variant_sku_id,
-              warehouse_id: parsed.warehouse_id,
-              quantity: line.quantity,
-            });
-          }
-        }
+          })),
+        );
+        if (movementsError) return apiError(movementsError);
       }
 
-      await service!
+      const { error: doneError } = await service!
         .from("erp_production_orders")
         .update({ status: "done", actual_finish_at: new Date().toISOString() })
         .eq("id", parsed.production_order_id);
+      if (doneError) return apiError(doneError);
+
+      // Tell the linked order. When every production document for it is finished
+      // the order gets a note; the status is left to staff, because "completed"
+      // counts as paid revenue in analytics and production done is not payment.
+      if (order.lead_id) {
+        const { data: open } = await service!
+          .from("erp_production_orders")
+          .select("id")
+          .eq("lead_id", order.lead_id)
+          .not("status", "in", "(done,cancelled)");
+        const docNo = `#${String(parsed.production_order_id).slice(0, 8).toUpperCase()}`;
+        await syncLeadFromWorkflow(service!, order.lead_id, {
+          note: open && open.length === 0
+            ? `Виробництво завершено (акт пошиття, документ ${docNo}). Замовлення готове до відвантаження`
+            : `Проведено акт пошиття за документом ${docNo}`,
+          actorEmail: user?.email,
+        });
+      }
     }
 
     return NextResponse.json(act, { status: 201 });
