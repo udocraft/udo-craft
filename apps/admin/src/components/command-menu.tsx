@@ -4,6 +4,7 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowRight,
+  BadgeDollarSign,
   BarChart3,
   Clock,
   CornerDownLeft,
@@ -83,6 +84,7 @@ const PAGES: LocalCommand[] = [
   { id: "nav:visitors", title: "Відвідувачі", subtitle: "Поведінка на сайті", url: "/visitors", icon: Globe, keywords: "visitors трафік" },
   { id: "nav:catalog", title: "Каталог", subtitle: "Товари, категорії, кольори", url: "/catalog?tab=products", icon: Tag, keywords: "catalog products товари" },
   { id: "nav:prints", title: "Принти", subtitle: "Бібліотека і технології друку", url: "/prints?tab=prints", icon: ImagePlus, keywords: "prints друк" },
+  { id: "nav:prices", title: "Ціни", subtitle: "Ціни друку і знижки за кількість", url: "/prices", icon: BadgeDollarSign, keywords: "prices ціни тарифи знижки" },
   { id: "nav:stock", title: "Склад", subtitle: "Залишки, постачання, виробництво", url: "/erp/stock", icon: ShelvingUnit, keywords: "erp warehouse склад залишки" },
   { id: "nav:cms", title: "Контент (CMS)", subtitle: "Сторінки сайту", url: "/cms", icon: FileEdit, keywords: "cms content контент" },
   { id: "nav:users", title: "Користувачі", subtitle: "Доступи команди", url: "/users", icon: UserCog, keywords: "users admin доступ" },

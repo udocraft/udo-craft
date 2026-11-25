@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { StatusBadge } from "@/components/status-badge";
 import { Badge } from "@/components/ui/badge";
@@ -38,7 +39,6 @@ import { KanbanColumn } from "./_components/KanbanColumn";
 import { OrderQuickSheet } from "./_components/OrderQuickSheet";
 import { useKanbanDrag, type Lead } from "./_components/useKanbanDrag";
 import type { Lead as SharedLead } from "@udo-craft/shared";
-import { LogoLoader } from "@udo-craft/ui";
 
 // Typed Supabase Realtime payload for leads table
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -489,7 +489,11 @@ function OrdersBoard() {
       {/* ── Content ─────────────────────────────────────────────────────── */}
       <div className={cn("flex-1 flex flex-col", viewMode === "kanban" ? "overflow-x-auto overflow-y-hidden" : "overflow-auto")}>
         {loading ? (
-          <OrdersLoading />
+          viewMode === "kanban" ? (
+            <KanbanSkeleton />
+          ) : (
+            <TableSkeleton />
+          )
         ) : filteredLeads.length === 0 ? (
           leads.length === 0 ? (
             /* True empty — no orders exist at all */
@@ -604,8 +608,127 @@ function ViewModeButton({
   );
 }
 
-function OrdersLoading() {
-  return <LogoLoader variant="block" className="min-h-[60vh]" />;
+// ── KanbanSkeleton ────────────────────────────────────────────────────────────
+function KanbanSkeleton() {
+  const COLS = 6; // mirrors STATUSES.length
+  const CARDS_PER_COL = [3, 4, 2, 3, 1, 2];
+
+  return (
+    <div className="flex h-full gap-4 px-6 py-6" style={{ width: "max-content", minWidth: "100%" }}>
+      {Array.from({ length: COLS }).map((_, colIdx) => (
+        <div
+          key={colIdx}
+          className="flex w-[280px] shrink-0 flex-col rounded-xl border border-border bg-muted/20 p-3"
+        >
+          {/* Column header */}
+          <div className="mb-3 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Skeleton className="size-2 rounded-full" />
+              <Skeleton className="h-3.5 w-20" />
+            </div>
+            <Skeleton className="h-5 w-7 rounded-full" />
+          </div>
+          {/* Cards */}
+          <div className="flex flex-col gap-2">
+            {Array.from({ length: CARDS_PER_COL[colIdx] ?? 2 }).map((_, cardIdx) => (
+              <div
+                key={cardIdx}
+                className="rounded-lg border border-border bg-background p-3 space-y-2.5"
+              >
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-3 w-16" />
+                  <Skeleton className="h-5 w-14 rounded-full" />
+                </div>
+                <Skeleton className="h-3 w-3/4" />
+                <Skeleton className="h-3 w-1/2" />
+                <div className="flex items-center justify-between pt-1">
+                  <Skeleton className="h-3 w-10" />
+                  <Skeleton className="h-3 w-14" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── TableSkeleton ─────────────────────────────────────────────────────────────
+function TableSkeleton() {
+  // Column widths mirror OrdersListView headers (px values compressed to tailwind)
+  const COL_WIDTHS = ["w-[46px]", "w-[124px]", "w-[116px]", "w-[136px]", "w-[132px]", "w-[148px]", "w-[190px]", "w-[188px]", "w-[250px]", "w-[118px]", "w-[110px]"];
+
+  return (
+    <div>
+      <div className="overflow-hidden border-b border-border bg-background [&_th:first-child]:pl-4 [&_td:first-child]:pl-4 md:[&_th:first-child]:pl-6 md:[&_td:first-child]:pl-6">
+        <Table className="min-w-[1280px] table-fixed">
+          <TableHeader>
+            <TableRow className="h-11 hover:bg-transparent">
+              <TableHead className="w-[46px] px-3">
+                <Skeleton className="size-4 rounded" />
+              </TableHead>
+              {[
+                { w: "w-[124px]", label: "№ замовлення" },
+                { w: "w-[116px]", label: "Джерело" },
+                { w: "w-[136px]", label: "Час створення" },
+                { w: "w-[132px]", label: "Статус" },
+                { w: "w-[148px]", label: "Менеджер" },
+                { w: "w-[190px]", label: "Покупець" },
+                { w: "w-[188px]", label: "Доставка" },
+                { w: "w-[250px]", label: "Товари" },
+                { w: "w-[118px]", label: "Оплата" },
+                { w: "w-[110px]", label: "Сума" },
+              ].map(({ w, label }) => (
+                <TableHead key={label} className={w}>
+                  <Skeleton className="h-3 w-2/3" />
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {Array.from({ length: 8 }).map((_, rowIdx) => (
+              <TableRow key={rowIdx} className="h-[74px] align-top">
+                <TableCell className="px-3">
+                  <Skeleton className="size-4 rounded" />
+                </TableCell>
+                <TableCell><Skeleton className="h-3.5 w-16" /></TableCell>
+                <TableCell><Skeleton className="h-3.5 w-14" /></TableCell>
+                <TableCell><Skeleton className="h-3 w-24" /></TableCell>
+                <TableCell><Skeleton className="h-6 w-20 rounded-full" /></TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="size-8 rounded-full shrink-0" />
+                    <Skeleton className="h-3 w-20" />
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="space-y-1.5">
+                    <Skeleton className="h-3.5 w-28" />
+                    <Skeleton className="h-3 w-20" />
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="space-y-1.5">
+                    <Skeleton className="h-3.5 w-28" />
+                    <Skeleton className="h-3 w-16" />
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="space-y-1.5">
+                    <Skeleton className="h-3.5 w-36" />
+                    <Skeleton className="h-3 w-12" />
+                  </div>
+                </TableCell>
+                <TableCell><Skeleton className="h-6 w-20 rounded-md" /></TableCell>
+                <TableCell className="text-right"><Skeleton className="ml-auto h-3.5 w-16" /></TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+  );
 }
 
 function OrdersListView({
@@ -618,11 +741,11 @@ function OrdersListView({
   onOrderClick: (lead: Lead) => void;
 }) {
   return (
-    <div className="px-6 py-5 animate-in">
-      <div className="overflow-hidden rounded-md border border-border bg-background shadow-sm">
+    <div className="animate-in">
+      <div className="overflow-hidden border-b border-border bg-background [&_th:first-child]:pl-4 [&_td:first-child]:pl-4 md:[&_th:first-child]:pl-6 md:[&_td:first-child]:pl-6 [&_th:last-child]:pr-4 [&_td:last-child]:pr-4 md:[&_th:last-child]:pr-6 md:[&_td:last-child]:pr-6">
         <Table className="min-w-[1280px] table-fixed">
           <TableHeader>
-            <TableRow className="h-11 bg-muted/30 hover:bg-muted/30">
+            <TableRow className="h-11 hover:bg-transparent">
               <TableHead className="w-[46px] px-3">
                 <Checkbox aria-label="Вибрати всі замовлення" />
               </TableHead>

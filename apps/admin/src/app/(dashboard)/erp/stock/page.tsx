@@ -62,7 +62,7 @@ export default function StockListPage() {
       {loading ? (
         <div className="flex h-64 items-center justify-center"><Loader2 className="size-6 animate-spin text-muted-foreground" /></div>
       ) : (
-        <AdminTablePanel>
+        <AdminTablePanel bleed>
           <Table className="min-w-[960px]">
             <TableHeader>
               <TableRow className="border-b hover:bg-transparent">

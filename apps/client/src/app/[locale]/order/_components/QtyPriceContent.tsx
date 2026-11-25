@@ -1,6 +1,7 @@
 "use client";
 
-import { DEFAULT_DISCOUNT_GRID } from "@udo-craft/shared";
+import { DEFAULT_DISCOUNT_GRID, findPrintType } from "@udo-craft/shared";
+import { usePrintTypes } from "@/lib/use-print-types";
 import { useTranslations } from "next-intl";
 
 import React from "react";
@@ -70,6 +71,7 @@ export function QtyPriceContent({
   hideButton = false,
 }: QtyPriceContentProps) {
   const t = useTranslations("editor");
+  const printTypes = usePrintTypes();
   const [noteOpen, setNoteOpen] = React.useState(false);
   const sortedDiscounts = [...(product.discount_grid?.length ? product.discount_grid : DEFAULT_DISCOUNT_GRID)].sort((a, b) => a.qty - b.qty);
 
@@ -173,7 +175,7 @@ export function QtyPriceContent({
             basePriceCents,
             hasDiscount: hasDiscount && discountPctPrint > 0,
             discountPctPrint,
-            label: printTypeLabels[layer.type] ?? layer.type,
+            label: printTypeLabels[layer.type] ?? findPrintType(layer.type, printTypes).label,
           };
         });
 

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,7 +27,6 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { StatusIndicator } from "@/components/ui/status-indicator";
 import { SettingsCard } from "@/components/settings-card";
-import { LogoLoader } from "@udo-craft/ui";
 
 // ── Table Groups for Hard Reset ───────────────────────────────────────────────
 
@@ -152,7 +152,21 @@ function DeploymentCard({ deployment }: { deployment: AdminHealthResponse["admin
 // ── Loading Skeleton ──────────────────────────────────────────────────────────
 
 function LoadingSkeleton() {
-  return <LogoLoader variant="block" className="min-h-[280px] rounded-xl border border-border bg-card" />;
+  return (
+    <div className="space-y-4">
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="rounded-xl border border-border bg-card p-4 space-y-3">
+          <Skeleton className="h-3 w-24" />
+          {[1, 2, 3].map((j) => (
+            <div key={j} className="flex items-center justify-between py-2">
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-4 w-16" />
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
 }
 
 // ── Main Component ────────────────────────────────────────────────────────────

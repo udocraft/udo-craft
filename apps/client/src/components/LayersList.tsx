@@ -4,7 +4,8 @@ import { useTranslations } from "next-intl";
 
 import React, { useRef, useState, useEffect } from "react";
 import { GripVertical, Trash2, Type, Copy } from "lucide-react";
-import { PRINT_TYPES, type PrintLayer, type PrintTypeId } from "@udo-craft/shared";
+import { findPrintType, printTypeBg, type PrintLayer, type PrintTypeDef, type PrintTypeId } from "@udo-craft/shared";
+import { usePrintTypes } from "@/lib/use-print-types";
 import { CHECKER_LIGHT, INK_BLACK } from "@/lib/canvas-colors";
 
 export interface PrintTypePricingRow {
@@ -27,11 +28,11 @@ function calcPrice(tiers: { min_qty: number; price_cents: number }[], qty: numbe
   return (sorted.find((t) => qty >= t.min_qty) ?? sorted[sorted.length - 1]).price_cents;
 }
 
-function PrintTypeBadge({ typeId, small }: { typeId: string; small?: boolean }) {
-  const t = PRINT_TYPES.find((x) => x.id === typeId) ?? PRINT_TYPES[0];
+function PrintTypeBadge({ typeId, small, types }: { typeId: string; small?: boolean; types: readonly PrintTypeDef[] }) {
+  const t = findPrintType(typeId, types);
   return (
     <span className={`inline-flex items-center font-semibold rounded-full ${small ? "text-xs px-1.5 py-0.5" : "text-xs px-2 py-0.5"}`}
-      style={{ color: t.color, backgroundColor: t.bg }}>{t.label}</span>
+      style={{ color: t.color, backgroundColor: printTypeBg(t) }}>{t.label}</span>
   );
 }
 
@@ -59,6 +60,7 @@ export default function LayersList({
   pricing = [], quantity = 1, layerScales = {}, pxToMmRatio = 0,
 }: LayersListProps) {
   const t = useTranslations("editor");
+  const printTypes = usePrintTypes();
   const sideLayers = layers.filter((l) => l.side === activeSide);
   const dragItem = useRef<number | null>(null);
   const [dropTarget, setDropTarget] = useState<number | null>(null);
@@ -187,7 +189,7 @@ export default function LayersList({
           .sort((a, b) => (a.size_min_cm + a.size_max_cm) / 2 - (b.size_min_cm + b.size_max_cm) / 2)
           .slice(0, 5);
         const isText = layer.kind === "text";
-        const currentType = PRINT_TYPES.find(t => t.id === layer.type) ?? PRINT_TYPES[0];
+        const currentType = findPrintType(layer.type, printTypes);
 
         return (
           <div key={layer.id} data-layer-idx={idx}>
@@ -234,7 +236,7 @@ export default function LayersList({
                         <Type className="size-2.5" /> {t("tabs.text")}
                       </span>
                     ) : (
-                      <PrintTypeBadge typeId={layer.type} small />
+                      <PrintTypeBadge typeId={layer.type} small types={printTypes} />
                     )}
                   </div>
                 </div>
@@ -283,7 +285,7 @@ export default function LayersList({
                   <div className="space-y-1.5">
                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t("layers.printType")}</label>
                     <div className="flex flex-wrap gap-1.5">
-                      {PRINT_TYPES.map((t) => (
+                      {printTypes.map((t) => (
                         <button
                           key={t.id}
                           type="button"

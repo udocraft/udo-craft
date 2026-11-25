@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AlertCircle, type LucideIcon } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/empty-state";
 import { AdminTablePanel } from "@/components/admin-layout";
 import { cn } from "@/lib/utils";
-import { LogoLoader } from "@udo-craft/ui";
 
 export interface DocColumn<T> {
   header: string;
@@ -44,15 +44,23 @@ export function DocList<T extends { id: string }>({
 
   if (loading) {
     return (
-      <AdminTablePanel>
-        <LogoLoader variant="block" />
+      <AdminTablePanel bleed>
+        <div className="divide-y" aria-busy="true" aria-label="Завантаження">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="flex items-center gap-4 px-4 py-3.5">
+              {columns.map((c, j) => (
+                <Skeleton key={j} className={cn("h-3.5", j === 0 ? "w-20" : "flex-1", c.hideOnMobile && "hidden md:block")} />
+              ))}
+            </div>
+          ))}
+        </div>
       </AdminTablePanel>
     );
   }
 
   if (error) {
     return (
-      <AdminTablePanel>
+      <AdminTablePanel bleed>
         <div role="alert" className="flex flex-col items-center gap-3 px-6 py-14 text-center">
           <AlertCircle className="size-6 text-destructive" aria-hidden="true" />
           <div className="space-y-1">
@@ -67,7 +75,7 @@ export function DocList<T extends { id: string }>({
 
   if (items.length === 0) {
     return (
-      <AdminTablePanel>
+      <AdminTablePanel bleed>
         <EmptyState
           icon={empty.icon}
           title={empty.title}
@@ -83,7 +91,7 @@ export function DocList<T extends { id: string }>({
   return (
     <>
       {/* md and up: table */}
-      <AdminTablePanel className="hidden md:block">
+      <AdminTablePanel bleed className="hidden md:block">
         <div className="overflow-x-auto">
           <Table className={minWidth}>
             <TableHeader>

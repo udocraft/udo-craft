@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { PageTracker } from "@/components/PageTracker";
+import { BootSplash } from "@udo-craft/ui";
 import { Toaster } from "@/components/ui/sonner";
 import { ConsentBanner } from "@/components/consent/ConsentBanner";
 import { ConsentScripts } from "@/components/consent/ConsentScripts";
@@ -90,6 +91,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <body className="min-h-screen bg-background text-foreground antialiased" suppressHydrationWarning>
+        <BootSplash />
         <a href="#main" className="skip-link">
           {tNav("skipToContent")}
         </a>

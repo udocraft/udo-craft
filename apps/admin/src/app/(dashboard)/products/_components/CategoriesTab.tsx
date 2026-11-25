@@ -12,7 +12,6 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { EmptyState } from "@/components/empty-state";
 import { CategoryDialog } from "./CategoryDialog";
 import type { Category } from "@udo-craft/shared";
-import { LogoLoader } from "@udo-craft/ui";
 
 export interface CategoriesTabProps {
   categories: Category[];
@@ -140,7 +139,7 @@ export function CategoriesTab({
       >
 
       {loading ? (
-        <AdminTablePanel>
+        <AdminTablePanel bleed>
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -149,7 +148,13 @@ export function CategoriesTab({
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow className="hover:bg-transparent"><TableCell colSpan={6}><LogoLoader variant="block" /></TableCell></TableRow>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <TableRow key={i}>
+                {[4, 8, 8, 40, 24, 8].map((w, j) => (
+                  <TableCell key={j}><div className={`h-4 w-${w} bg-muted rounded animate-pulse`} /></TableCell>
+                ))}
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
         </AdminTablePanel>
@@ -161,7 +166,7 @@ export function CategoriesTab({
           action={<Button size="sm" onClick={openCreate}><Plus className="w-3.5 h-3.5 mr-1" /> Нова категорія</Button>}
         />
       ) : (
-        <AdminTablePanel>
+        <AdminTablePanel bleed>
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">

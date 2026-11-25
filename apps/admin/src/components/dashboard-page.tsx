@@ -58,98 +58,64 @@ export function DashboardPage({
     full: "max-w-full",
   };
 
-  // Build breadcrumb trail
-  const crumbs: BreadcrumbItem[] = breadcrumbs ?? (backHref ? [{ label: backLabel, href: backHref }, { label: title }] : []);
+  // Only ancestors are shown as breadcrumbs; the current page is the h1.
+  const trail: BreadcrumbItem[] = breadcrumbs ? breadcrumbs.slice(0, -1) : [];
 
   return (
-    <div className={cn("flex h-full flex-col overflow-hidden bg-surface", className)}>
+    <div className={cn("flex h-full flex-col overflow-hidden bg-background", className)}>
+      {/* ── One header per page: sidebar toggle, breadcrumbs + title, actions; optional tabs below ── */}
+      <header className={cn("shrink-0 bg-background", !toolbar && "border-b border-border")}>
+        <div className="flex min-h-16 items-center gap-3 px-4 py-3 md:px-6">
+          <SidebarTrigger className="-ml-1.5 size-9 shrink-0 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground" />
+          <Separator orientation="vertical" className="h-5" />
 
-      {/* ── White header zone: top bar + title + tabs (stroke aligns with sidebar header) ── */}
-      <div className={cn("shrink-0 bg-background", !toolbar && "border-b border-border")}>
-        <header className="flex h-14 items-center gap-1.5 border-b border-border bg-background px-3 md:px-4">
-          <SidebarTrigger className="shrink-0 -ml-1 size-8 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors" />
-
-          <Separator orientation="vertical" className="h-4 mx-0.5" />
-
-          {crumbs.length > 0 ? (
-            <nav aria-label="breadcrumb" className="flex items-center gap-1 min-w-0">
-              {crumbs.map((crumb, i) => {
-                const isLast = i === crumbs.length - 1;
-                return (
+          <div className="min-w-0 flex-1">
+            {trail.length > 0 && (
+              <nav aria-label="Навігація сторінкою" className="mb-0.5 flex min-w-0 items-center gap-1 text-xs text-muted-foreground">
+                {trail.map((crumb, i) => (
                   <React.Fragment key={i}>
-                    {i > 0 && (
-                      <ChevronRight className="size-3.5 text-muted-foreground/40 shrink-0" />
-                    )}
-                    {crumb.href && !isLast ? (
-                      <Link
-                        href={crumb.href}
-                        className="text-xs text-muted-foreground hover:text-foreground transition-colors truncate max-w-[120px]"
-                      >
+                    {i > 0 && <ChevronRight className="size-3 shrink-0 opacity-50" aria-hidden="true" />}
+                    {crumb.href ? (
+                      <Link href={crumb.href} className="max-w-[180px] truncate rounded transition-colors hover:text-foreground">
                         {crumb.label}
                       </Link>
                     ) : (
-                      <span className={cn(
-                        "text-xs truncate max-w-[180px]",
-                        isLast ? "text-foreground font-medium" : "text-muted-foreground"
-                      )}>
-                        {crumb.label}
-                      </span>
+                      <span className="max-w-[180px] truncate">{crumb.label}</span>
                     )}
                   </React.Fragment>
-                );
-              })}
-            </nav>
-          ) : (
-            <span className="text-xs font-medium text-muted-foreground/70 truncate">{title}</span>
-          )}
-        </header>
-
-        <div className="flex items-start justify-between gap-4 px-4 md:px-6 pt-6 pb-5">
-          <div className="min-w-0 flex-1 space-y-1">
-            {eyebrow && (
-              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-muted-foreground/50">
-                {eyebrow}
-              </p>
+                ))}
+              </nav>
             )}
-            <div className="flex min-w-0 items-center gap-3">
-              {backHref && (
+            {eyebrow && !trail.length && (
+              <p className="mb-0.5 text-xs font-medium text-muted-foreground">{eyebrow}</p>
+            )}
+            <div className="flex min-w-0 items-center gap-2.5">
+              {backHref && trail.length === 0 && (
                 <Link
                   href={backHref}
                   aria-label={backLabel}
-                  className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border/60 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  className="-ml-1 flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                 >
                   <ChevronLeft className="size-4" />
                 </Link>
               )}
-              <h1 className="text-xl font-semibold tracking-tight text-foreground md:text-2xl leading-none">
+              <h1 className="truncate text-lg font-semibold leading-tight tracking-tight text-foreground md:text-xl">
                 {title}
               </h1>
-              {titleAccessory && (
-                <div className="min-w-0 shrink">{titleAccessory}</div>
-              )}
+              {titleAccessory && <div className="min-w-0 shrink">{titleAccessory}</div>}
             </div>
-            {subtitle && (
-              <p className="text-sm text-muted-foreground leading-snug">{subtitle}</p>
-            )}
+            {subtitle && <p className="mt-0.5 truncate text-sm text-muted-foreground">{subtitle}</p>}
           </div>
 
-          {actions && (
-            <div className="flex shrink-0 items-center gap-2 pt-0.5">
-              {actions}
-            </div>
-          )}
+          {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
         </div>
 
-        {/* Optional tabs row; its own bottom border is the zone's closing stroke */}
         {toolbar}
-      </div>
+      </header>
 
-      {/* ── Scrollable gray content ── */}
       <div className={cn("flex-1 overflow-y-auto", contentClassName)}>
-        <div className={cn("mx-auto h-full flex flex-col", maxWidthClass[maxWidth] ?? "max-w-full")}>
-          <div className="flex-1">
-            {children}
-          </div>
+        <div className={cn("mx-auto flex h-full flex-col", maxWidthClass[maxWidth] ?? "max-w-full")}>
+          <div className="flex-1">{children}</div>
         </div>
       </div>
     </div>

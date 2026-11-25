@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useState } from "react";
+import { DashboardPage } from "@/components/dashboard-page";
 import { ChevronUp, Menu, BarChart3, ClipboardList, FileText, HelpCircle, Home, LayoutTemplate, Lock, PanelBottom, Phone, Search, ShieldCheck, Sparkles, Tent, Wrench } from "lucide-react";
 import { CmsTreeSidebar, CmsTreeDrawer, type TreeNode } from "./_components/CmsTree";
 import { LandingSectionEditor, type SectionConfig } from "./_components/LandingSectionEditor";
@@ -262,7 +263,8 @@ export default function CmsPage() {
   ) : null;
 
   return (
-    <div className="flex h-[calc(100svh-3.5rem)] overflow-hidden">
+    <DashboardPage title="Контент сайту" subtitle="Тексти й секції клієнтського сайту з живим переглядом" contentClassName="overflow-hidden">
+    <div className="flex h-full overflow-hidden">
       {/* Desktop sidebar — hidden on mobile */}
       <CmsTreeSidebar nodes={TREE} selected={selected} onSelect={setSelected} />
 
@@ -278,11 +280,11 @@ export default function CmsPage() {
       {/* Right panel with split layout */}
       <div className="flex-1 flex overflow-hidden">
         {/* Editor area */}
-        <main className="flex-1 overflow-y-auto bg-white border-r border-border" aria-label="Редактор контенту">
+        <section className="flex-1 overflow-y-auto bg-white border-r border-border" aria-label="Редактор контенту">
           <div className="max-w-3xl mx-auto pb-16 md:pb-0 bg-white min-h-full">
             {editorContent}
           </div>
-        </main>
+        </section>
 
         {/* Live Preview area */}
         <PreviewPane
@@ -313,6 +315,7 @@ export default function CmsPage() {
         </div>
       </div>
     </div>
+    </DashboardPage>
   );
 }
 

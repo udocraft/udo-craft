@@ -1,59 +1,56 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AdminTabs } from "@/components/admin-layout";
 import { DashboardPage } from "@/components/dashboard-page";
 import PrintPresetsTab from "@/components/print-presets-tab";
 import PrintTypesTab from "./_components/PrintTypesTab";
-import PrintSizesTab from "./_components/PrintSizesTab";
 
-type PrintsTab = "prints" | "types" | "sizes";
+type PrintsTab = "prints" | "types";
 
 const TABS = [
-  { key: "prints", label: "Пресети" },
-  { key: "types", label: "Типи" },
-  { key: "sizes", label: "Розміри" },
+  { key: "prints", label: "Бібліотека" },
+  { key: "types", label: "Типи друку" },
 ] as const;
 
-export default function PrintsPage() {
+function PrintsInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const tab = (searchParams.get("tab") || "prints") as PrintsTab;
+  const rawTab = searchParams.get("tab");
+  const tab: PrintsTab = rawTab === "types" ? "types" : "prints";
+  // Old links to the former "sizes" tab now live on the Prices page.
+  useEffect(() => { if (rawTab === "sizes") router.replace("/prices"); }, [rawTab, router]);
   const [presetCreate, setPresetCreate] = useState<(() => void) | null>(null);
-  const [sizeCreate, setSizeCreate] = useState<(() => void) | null>(null);
+  const [typeCreate, setTypeCreate] = useState<(() => void) | null>(null);
 
-  const setPresetCreateHandler = useCallback((handler: () => void) => {
-    setPresetCreate(() => handler);
-  }, []);
+  const onPresetReady = useCallback((handler: () => void) => setPresetCreate(() => handler), []);
+  const onTypeReady = useCallback((handler: () => void) => setTypeCreate(() => handler), []);
 
-  const setSizeCreateHandler = useCallback((handler: () => void) => {
-    setSizeCreate(() => handler);
-  }, []);
-
-  const createConfig = {
-    prints: { label: "Додати принт", onClick: presetCreate },
-    types: null,
-    sizes: { label: "Додати розмір", onClick: sizeCreate },
-  }[tab];
+  const create = tab === "prints"
+    ? { label: "Додати принт", onClick: presetCreate }
+    : { label: "Додати тип", onClick: typeCreate };
 
   return (
     <DashboardPage
-      title="Бібліотека принтів"
-      toolbar={<AdminTabs tabs={TABS} value={tab} onValueChange={(next) => router.push(`/prints?tab=${next}`)} className="px-4 md:px-6" />}
-      actions={
-
-        createConfig?.onClick ? (
-          <Button size="sm" onClick={createConfig.onClick}>
-            {createConfig.label}
-          </Button>
-        ) : undefined
-      }
+      title="Принти"
+      toolbar={<AdminTabs tabs={TABS} value={tab} onValueChange={(next) => router.replace(`/prints?tab=${next}`)} className="px-4 md:px-6" />}
+      actions={create.onClick ? <Button size="sm" onClick={create.onClick}><Plus className="size-4" />{create.label}</Button> : undefined}
     >
-      {tab === "prints" && <PrintPresetsTab onCreateActionReady={setPresetCreateHandler} showHeaderAction={false} />}
-      {tab === "types" && <PrintTypesTab />}
-      {tab === "sizes" && <PrintSizesTab onCreateActionReady={setSizeCreateHandler} showSectionAction={false} />}
+      <div className={tab === "types" ? "pt-4" : undefined}>
+        {tab === "prints" && <PrintPresetsTab onCreateActionReady={onPresetReady} showHeaderAction={false} />}
+        {tab === "types" && <PrintTypesTab onCreateActionReady={onTypeReady} />}
+      </div>
     </DashboardPage>
+  );
+}
+
+export default function PrintsPage() {
+  return (
+    <Suspense>
+      <PrintsInner />
+    </Suspense>
   );
 }

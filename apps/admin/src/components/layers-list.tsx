@@ -2,13 +2,15 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import { GripVertical, Trash2, Type, Copy } from "lucide-react";
-import { PRINT_TYPES, type PrintLayer, type PrintTypeId } from "./print-types";
+import { findPrintType, printTypeBg, type PrintTypeDef } from "@udo-craft/shared";
+import { type PrintLayer, type PrintTypeId } from "./print-types";
+import { useActivePrintTypes } from "@/hooks/use-print-types";
 
-function PrintTypeBadge({ typeId, small }: { typeId: string; small?: boolean }) {
-  const t = PRINT_TYPES.find((x) => x.id === typeId) ?? PRINT_TYPES[0];
+function PrintTypeBadge({ typeId, small, types }: { typeId: string; small?: boolean; types: readonly PrintTypeDef[] }) {
+  const t = findPrintType(typeId, types);
   return (
     <span className={`inline-flex items-center font-semibold rounded-full ${small ? "text-[10px] px-1.5 py-0.5" : "text-xs px-2 py-0.5"}`}
-      style={{ color: t.color, backgroundColor: t.bg }}>{t.label}</span>
+      style={{ color: t.color, backgroundColor: printTypeBg(t) }}>{t.label}</span>
   );
 }
 
@@ -48,6 +50,7 @@ export default function LayersList({
 }: LayersListProps) {
   const sideLayers = layers.filter((l) => l.side === activeSide);
   const dragItem = useRef<number | null>(null);
+  const printTypes = useActivePrintTypes();
   const [dropTarget, setDropTarget] = useState<number | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
 
@@ -140,7 +143,7 @@ export default function LayersList({
           .sort((a, b) => (a.size_min_cm + a.size_max_cm) / 2 - (b.size_min_cm + b.size_max_cm) / 2)
           .slice(0, 5);
         const isText = layer.kind === "text";
-        const currentType = PRINT_TYPES.find(t => t.id === layer.type) ?? PRINT_TYPES[0];
+        const currentType = findPrintType(layer.type, printTypes);
 
         return (
           <div key={layer.id} data-layer-idx={idx}>
@@ -187,7 +190,7 @@ export default function LayersList({
                         <Type className="size-2.5" /> Текст
                       </span>
                     ) : (
-                      <PrintTypeBadge typeId={layer.type} small />
+                      <PrintTypeBadge typeId={layer.type} small types={printTypes} />
                     )}
                     <span className="text-[10px] text-muted-foreground/60">{layer.side}</span>
                   </div>
@@ -237,7 +240,7 @@ export default function LayersList({
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">Тип нанесення</label>
                     <div className="flex flex-wrap gap-1.5">
-                      {PRINT_TYPES.map((t) => (
+                      {printTypes.map((t) => (
                         <button
                           key={t.id}
                           type="button"
