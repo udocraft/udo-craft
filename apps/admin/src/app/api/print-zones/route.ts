@@ -33,8 +33,12 @@ export async function POST(request: NextRequest) {
   if (error || !user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await request.json();
-  const { product_id, side = "front", x, y, width, height, allowed_print_types } = body;
+  const { product_id, side = "front", x, y, width, height, allowed_print_types, label, sort_order, width_mm, height_mm, print_area_id } = body;
   if (!product_id) return NextResponse.json({ error: "product_id required" }, { status: 400 });
+  if (typeof side !== "string" || !/^[a-z][a-z0-9_]{0,31}$/.test(side)) {
+    return NextResponse.json({ error: "invalid side" }, { status: 400 });
+  }
+  const num = (v: unknown) => (v === null || v === undefined || v === "" || !Number.isFinite(Number(v)) ? null : Number(v));
 
   // Upsert: delete existing zone for this product+side, then insert
   await svc().from("print_zones").delete().eq("product_id", product_id).eq("side", side);
@@ -43,7 +47,13 @@ export async function POST(request: NextRequest) {
     .from("print_zones")
     .insert({
       product_id, side,
-      x: x ?? 100, y: y ?? 100, width: width ?? 200, height: height ?? 250,
+      x: Math.round(Number(x ?? 100)), y: Math.round(Number(y ?? 100)),
+      width: Math.max(1, Math.round(Number(width ?? 200))), height: Math.max(1, Math.round(Number(height ?? 250))),
+      label: typeof label === "string" && label.trim() ? label.trim() : null,
+      sort_order: Math.round(num(sort_order) ?? 0),
+      width_mm: num(width_mm),
+      height_mm: num(height_mm),
+      print_area_id: print_area_id || null,
       allowed_print_types: allowed_print_types ?? ["dtf"],
     })
     .select()

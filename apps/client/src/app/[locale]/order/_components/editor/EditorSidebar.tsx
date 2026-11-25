@@ -24,7 +24,7 @@ const TABS: { id: SidebarTabId; Icon: React.ElementType }[] = [
 export default function EditorSidebar({ activeTab, onTabChange, onBack, layerCount = 0 }: EditorSidebarProps) {
   const t = useTranslations("editor");
   return (
-    <aside className="hidden lg:flex flex-col w-14 shrink-0 h-full bg-card" aria-label={t("tabs.toolsLabel")}>
+    <aside data-tour="tools" className="hidden lg:flex flex-col w-14 shrink-0 h-full bg-card" aria-label={t("tabs.toolsLabel")}>
       {/* Back button */}
       <div className="flex items-center justify-center pt-2 pb-1 px-1">
         <button
@@ -49,6 +49,7 @@ export default function EditorSidebar({ activeTab, onTabChange, onBack, layerCou
             <button
               key={id}
               type="button"
+              data-tour={id === "layers" ? "layers" : undefined}
               aria-label={label}
               aria-pressed={isActive}
               onClick={() => onTabChange(activeTab === id ? null : id)}

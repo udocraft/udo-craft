@@ -4,10 +4,10 @@ import { createServiceClient } from "@/lib/supabase/service";
 import { jsonLdHtml, localizedUrl, pageMetadata } from "@/lib/seo";
 import { cache } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ArrowRight, BadgeCheck, Clock3, Shield } from "lucide-react";
-import { Container, Section } from "@udo-craft/ui";
+import { ArrowRight, BadgeCheck, Clock3, ShieldCheck, Star } from "lucide-react";
+import { Section } from "@udo-craft/ui";
 import { buttonVariants } from "@udo-craft/ui/components/ui/button-variants";
-import { normalizeProductMarketingMeta, DEFAULT_PRODUCT_FEATURE_GROUPS, type Material, type Product, type ProductColorVariant } from "@udo-craft/shared";
+import { normalizeProductMarketingMeta, type Material, type Product, type ProductColorVariant } from "@udo-craft/shared";
 import { getAllImages, resolveProductImages } from "@udo-craft/shared/product-images";
 import { Link } from "@/i18n/navigation";
 import { localizedField } from "@/lib/localized-field";
@@ -15,9 +15,11 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { ProductCardDetailed } from "@/components/ProductCardDetailed";
 import { FooterSection } from "@/app/_sections/FooterSection";
 import type { ProductWithMeta } from "./_types";
-import { InfoTabs } from "./_components/InfoTabs";
 import { ProductPurchase, type PurchaseColor } from "./_components/ProductPurchase";
-import { RichText } from "./_components/RichText";
+import { DetailRow, FeatureGrid, GuideLink, RichText, iconFor } from "./_details";
+import { MaterialSection } from "./_material";
+import { SectionNav } from "./_section-nav";
+import { SizeTable, type SizeChartData } from "./_size-table";
 
 // Product pages are ISR: rebuilt in the background at most every 5 minutes.
 export const revalidate = 300;
@@ -109,6 +111,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
     return { id: v.id, name: mat?.name ?? "—", hex: mat?.hex_code ?? "transparent", images: getAllImages(own.length ? own : productImgs) };
   });
 
+  // Size chart rendered inline in "Розміри" (the buy column keeps the modal for quick lookup).
+  let sizeChart: SizeChartData | null = null;
+  if (prod.size_chart_id) {
+    const { data: chart } = await supabase.from("size_charts").select("name, rows").eq("id", prod.size_chart_id).maybeSingle();
+    if (chart && Array.isArray(chart.rows) && chart.rows.length > 0) sizeChart = { name: chart.name, rows: chart.rows as Record<string, string>[] };
+  }
+
   const similar = prodList.filter((p) => p.id !== prod.id && p.category_id === prod.category_id && p.is_active).slice(0, 4);
 
   const description =
@@ -149,109 +158,137 @@ export default async function ProductDetailPage({ params }: PageProps) {
       ],
     },
   ];
-  const deliveryBadges = [
-    { icon: Clock3, label: `${meta.delivery_min_days}–${meta.delivery_max_days} днів виробництво` },
-    { icon: Shield, label: "Контроль якості" },
-  ];
+  // Lead time is only shown when the data has it (some products carry 0/0).
+  const leadMin = meta.delivery_min_days;
+  const leadMax = meta.delivery_max_days;
+  const leadLabel = leadMax > 0 ? (leadMin > 0 && leadMin < leadMax ? `${leadMin}–${leadMax} дн.` : `${leadMax} дн.`) : null;
+  // The normalized defaults (4.8 / 128) are placeholders: only the raw values count as a rating.
+  const rawMeta = prod.marketing_meta;
+  const hasRating = (rawMeta?.rating_avg ?? 0) > 0 && (rawMeta?.rating_count ?? 0) > 0;
 
-  const tabs = [
-    { id: "description", label: "Опис", panel: <div className="max-w-4xl"><RichText text={description} /></div> },
-    {
-      id: "delivery",
-      label: "Доставка",
-      panel: (
-        <div className="grid max-w-5xl gap-6 md:grid-cols-[1.2fr_0.8fr]">
-          <RichText text={meta.delivery_note || ""} />
-          <ul className="grid gap-3 sm:grid-cols-3 md:grid-cols-1">
-            {deliveryBadges.map(({ icon: Icon, label }) => (
-              <li key={label} className="flex items-center gap-3 rounded-card border border-border bg-muted/40 p-4">
-                <Icon className="size-5 text-primary" strokeWidth={1.7} aria-hidden="true" />
-                <span className="text-sm font-semibold">{label}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ),
-    },
-    {
-      id: "files",
-      label: "Інструкції щодо файлів",
-      panel: (
-        <div className="max-w-4xl">
-          <RichText text={meta.file_guidelines || ""} />
-          <Link href={meta.guide_url || "/biz#contact"} className="mt-6 inline-flex min-h-11 items-center gap-2 font-semibold text-primary hover:underline">
-            Перейти до консультації <ArrowRight className="size-4" aria-hidden="true" />
-          </Link>
-        </div>
-      ),
-    },
-  ];
+  const groups = meta.feature_groups ?? [];
+  const isMaterial = (title: string) => /матеріал|material|тканин/i.test(title);
+  const materialGroup = groups.find((g) => isMaterial(g.title));
+  const specGroups = groups.filter((g) => g !== materialGroup).slice(0, 3);
+  const materialProps = (materialGroup?.items ?? []).slice(0, 5).map((i) => ({ icon: iconFor(i.title), label: i.title }));
+  const materialBody = (materialGroup?.items ?? [])
+    .map((i) => i.description?.trim())
+    .filter((d): d is string => !!d)
+    .map((d) => (/[.!?]$/.test(d) ? d : `${d}.`))
+    .join(" ");
+  const materialImage = Object.values(colors.find((c) => Object.keys(c.images).length > 1)?.images ?? {})[1] ?? Object.values(getAllImages(productImgs))[1] ?? colors[0]?.images.front;
+  const hasMaterial = !!materialGroup && (materialProps.length > 0 || !!materialBody);
+  const hasSpecs = !!description.trim() || specGroups.length > 0;
+  const hasFiles = !!meta.file_guidelines?.trim();
+  const hasDelivery = !!meta.delivery_note?.trim() || !!leadLabel;
+
+  const navItems = [
+    hasSpecs && { id: "specs", label: "Характеристики" },
+    hasMaterial && { id: "material", label: "Матеріал" },
+    !!sizeChart && { id: "sizes", label: "Розміри" },
+    hasDelivery && { id: "delivery", label: "Доставка" },
+    hasFiles && { id: "files", label: "Файли" },
+    similar.length > 0 && { id: "similar", label: "Схожі товари" },
+  ].filter((i): i is { id: string; label: string } => !!i);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdHtml(jsonLd) }} />
       <SiteHeader />
 
-      <main id="main" className="flex-1 pt-24">
-        <Container className="pb-4">
-          <nav className="flex items-center gap-1.5 text-sm text-muted-foreground" aria-label="Breadcrumb">
+      <main id="main" className="flex-1 pt-14 lg:pt-24">
+        <ProductPurchase
+          productId={prod.id}
+          slug={prod.slug}
+          name={name}
+          basePriceCents={prod.base_price_cents ?? 0}
+          sizes={prod.available_sizes ?? []}
+          sizeChartId={prod.size_chart_id ?? null}
+          discountGrid={prod.discount_grid ?? []}
+          minOrderQty={meta.min_order_qty}
+          promoNote={meta.promo_note}
+          guideUrl={meta.guide_url || "/biz#contact"}
+          colors={colors}
+          defaultImages={getAllImages(productImgs)}
+          leadLabel={leadLabel}
+        >
+          <nav className="mb-6 hidden items-center gap-1.5 text-sm text-muted-foreground lg:flex" aria-label="Breadcrumb">
             <Link href="/" className="inline-flex min-h-6 items-center hover:text-foreground">Головна</Link>
             <span aria-hidden="true">/</span>
             <Link href="/#catalog" className="inline-flex min-h-6 items-center hover:text-foreground">Каталог</Link>
             <span aria-hidden="true">/</span>
             <span className="truncate font-medium text-foreground" aria-current="page">{name}</span>
           </nav>
-        </Container>
-
-        <Container className="pb-16">
-          <ProductPurchase
-            productId={prod.id}
-            slug={prod.slug}
-            name={name}
-            basePriceCents={prod.base_price_cents ?? 0}
-            sizes={prod.available_sizes ?? []}
-            sizeChartId={prod.size_chart_id ?? null}
-            discountGrid={prod.discount_grid ?? []}
-            minOrderQty={meta.min_order_qty}
-            promoNote={meta.promo_note}
-            guideUrl={meta.guide_url || "/biz#contact"}
-            colors={colors}
-            defaultImages={getAllImages(productImgs)}
-          >
-            <h1 className="text-h1 font-semibold text-balance">{name}</h1>
-            <ul className="mt-3 flex flex-wrap items-center gap-2">
+          <h1 className="text-h1 font-medium text-balance">{name}</h1>
+          {hasRating && (
+            <p className="mt-3 flex items-center gap-1.5 text-sm">
+              <Star className="size-4 fill-current" aria-hidden="true" />
+              <span className="font-semibold">{rawMeta?.rating_avg}</span>
+              <span className="text-muted-foreground">· {rawMeta?.rating_count} відгуків</span>
+            </p>
+          )}
+          <p className="mt-3 flex items-center gap-2 text-sm text-foreground/85">
+            <span aria-hidden="true" className="size-2 rounded-full bg-success" /> Доступно під замовлення
+          </p>
+          {(meta.badges ?? []).length > 0 && (
+            <ul className="mt-4 flex flex-wrap items-center gap-2">
               {(meta.badges ?? []).slice(0, 2).map((badge) => (
                 <li key={badge.label} className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
                   <BadgeCheck className="size-3" strokeWidth={1.8} aria-hidden="true" /> {badge.label}
                 </li>
               ))}
             </ul>
-          </ProductPurchase>
-        </Container>
+          )}
+        </ProductPurchase>
 
-        <Container className="pb-14">
-          <InfoTabs label="Інформація про товар" tabs={tabs} />
-        </Container>
+        <div className="mt-8 lg:mt-12">
+          <SectionNav items={navItems} />
 
-        <section className="border-y border-border bg-muted/40" aria-label="Деталі товару">
-          <Container className="py-12">
-            <div className="grid gap-px overflow-hidden rounded-card border border-border bg-border md:grid-cols-3">
-              {(meta.feature_groups ?? DEFAULT_PRODUCT_FEATURE_GROUPS).slice(0, 3).map((group) => (
-                <div key={group.title} className="bg-background p-5">
-                  <h2 className="border-b border-border pb-3 text-eyebrow">{group.title}</h2>
-                  <ul className="mt-4 space-y-3">
-                    {group.items.map((item) => (
-                      <li key={`${group.title}-${item.title}`} className="border-b border-border/70 pb-3 last:border-0 last:pb-0">
-                        <p className="text-sm font-semibold leading-snug">{item.title}</p>
-                        {item.description && <p className="mt-0.5 text-sm text-muted-foreground">{item.description}</p>}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </Container>
-        </section>
+          {hasSpecs && (
+            <DetailRow id="specs" title="Характеристики">
+              <div className="space-y-12">
+                {description.trim() && <RichText text={description} />}
+                {specGroups.map((group) => (
+                  <div key={group.title}>
+                    <h3 className="mb-6 text-eyebrow text-muted-foreground">{group.title}</h3>
+                    <FeatureGrid items={group.items.map((i) => ({ icon: iconFor(i.title), title: i.title, description: i.description }))} />
+                  </div>
+                ))}
+              </div>
+            </DetailRow>
+          )}
+
+          {hasMaterial && (
+            <MaterialSection id="material" eyebrow={name} title="Тканина, що тримає форму і принт" body={materialBody} imageUrl={materialImage} properties={materialProps} />
+          )}
+
+          {sizeChart && (
+            <DetailRow id="sizes" title="Розміри">
+              <SizeTable chart={sizeChart} />
+            </DetailRow>
+          )}
+
+          {hasDelivery && (
+            <DetailRow id="delivery" title="Доставка">
+              <div className="space-y-8">
+                {meta.delivery_note?.trim() && <RichText text={meta.delivery_note} />}
+                <ul className="flex flex-wrap gap-x-10 gap-y-4 text-base font-medium">
+                  {leadLabel && (
+                    <li className="flex items-center gap-3"><Clock3 className="size-6" strokeWidth={1.4} aria-hidden="true" /> Виробництво {leadLabel}</li>
+                  )}
+                  <li className="flex items-center gap-3"><ShieldCheck className="size-6" strokeWidth={1.4} aria-hidden="true" /> Контроль якості</li>
+                </ul>
+              </div>
+            </DetailRow>
+          )}
+
+          {hasFiles && (
+            <DetailRow id="files" title="Файли для друку">
+              <RichText text={meta.file_guidelines} />
+              <GuideLink href={meta.guide_url || "/biz#contact"}>Перейти до консультації</GuideLink>
+            </DetailRow>
+          )}
+        </div>
 
         <Section tone="inverse" className="py-12 md:py-12" aria-labelledby="bulk-cta-heading">
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
@@ -266,7 +303,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
         </Section>
 
         {similar.length > 0 && (
-          <Section aria-labelledby="similar-heading">
+          <Section id="similar" aria-labelledby="similar-heading" className="scroll-mt-40">
             <div className="mb-8 flex items-end justify-between gap-4">
               <div>
                 <h2 id="similar-heading" className="text-h2 font-semibold">Схожі товари</h2>

@@ -475,7 +475,18 @@
     },
     "privacy": "Soukromí",
     "terms": "Podmínky",
-    "cookies": "Cookies"
+    "cookies": "Cookies",
+    "newsletter": {
+      "title": "−{pct} % na první objednávku",
+      "desc": "Přihlaste se k odběru: nové kousky, nápady na potisky a limitované edice jednou měsíčně. Bez spamu.",
+      "placeholder": "Váš e-mail",
+      "label": "E-mail pro newsletter",
+      "submit": "Přihlásit",
+      "success": "Hotovo. Kód na {pct} % je na cestě.",
+      "error": "Přihlášení se nezdařilo. Zkuste to znovu.",
+      "invalid": "Zkontrolujte e-mail.",
+      "consent": "Přihlášením souhlasíte se zásadami ochrany soukromí."
+    }
   },
   "cart": {
     "title": "Košík",
@@ -1418,7 +1429,10 @@
         "front": "Přední",
         "back": "Zadní",
         "left": "Levá",
-        "right": "Pravá"
+        "right": "Pravá",
+        "neck_inner": "Vnitřní štítek",
+        "sleeve_left": "Levý rukáv",
+        "sleeve_right": "Pravý rukáv"
       }
     },
     "layers": {
@@ -1435,6 +1449,70 @@
       "register": "Zaregistrovat se",
       "login": "Přihlásit se",
       "skip": "Pokračovat bez účtu"
+    },
+    "mode": {
+      "label": "Režim zobrazení",
+      "edit": "Návrh",
+      "preview": "Náhled"
+    },
+    "tour": {
+      "replay": "Zobrazit tipy",
+      "counter": "{n} z {total}",
+      "close": "Zavřít",
+      "back": "Zpět",
+      "next": "Další",
+      "done": "Hotovo",
+      "tools": {
+        "title": "Nástroje návrhu",
+        "body": "Nahrajte vlastní soubor, vyberte hotový potisk, přidejte text nebo něco nakreslete. Tady všechno začíná."
+      },
+      "canvas": {
+        "title": "Plátno",
+        "body": "Přetahujte, měňte velikost a otáčejte prvky přímo na oblečení. Tlačítka pod ním přepínají stranu: předek, záda, rukávy."
+      },
+      "layers": {
+        "title": "Vrstvy",
+        "body": "Všechny prvky návrhu v jednom seznamu. Měňte pořadí, duplikujte, mažte. Vybraná vrstva má vlastní lištu nad plátnem."
+      },
+      "mode": {
+        "title": "Návrh a náhled",
+        "body": "Přepněte na Náhled a uvidíte oblečení z několika úhlů bez editačních nástrojů."
+      },
+      "price": {
+        "title": "Množství a cena",
+        "body": "Vyberte barvu, velikost a množství. Cena zahrnuje množstevní slevu a cenu tisku každého prvku."
+      },
+      "actions": {
+        "title": "Objednávka a sdílení",
+        "body": "Až bude návrh hotový, přidejte ho do objednávky nebo pošlete odkaz pro komentáře."
+      }
+    },
+    "preview": {
+      "close": "Zavřít",
+      "prev": "Předchozí",
+      "next": "Další",
+      "withPrint": "S vaším potiskem",
+      "noPrint": "Bez potisku",
+      "sides": {
+        "front": "Předek",
+        "back": "Záda",
+        "chest": "Hruď",
+        "neck_inner": "Vnitřní štítek",
+        "sleeve_left": "Levý rukáv",
+        "sleeve_right": "Pravý rukáv"
+      },
+      "tiles": {
+        "zone": "Potisk zblízka",
+        "zoneHint": "Oblast tisku",
+        "collar": "Límec a střih",
+        "collarHint": "Detail",
+        "flat": "Naplocho",
+        "flatHint": "Flat lay"
+      },
+      "emptyTitle": "Tady se zobrazí vaše oblečení",
+      "emptyBody": "Přidejte v režimu návrhu obrázek, text nebo potisk a ukážeme oblečení z několika úhlů.",
+      "backToDesign": "Zpět k návrhu",
+      "readOnly": "Pouze náhled."
     }
   },
   "sizeChart": {
@@ -1442,5 +1520,21 @@
     "empty": "Tabulka je prázdná",
     "schemeAlt": "{name}: schéma velikostí",
     "note": "Všechny rozměry jsou v centimetrech. Pokud jste mezi dvěma velikostmi, zvolte větší."
+  },
+  "editorial": {
+    "statement": {
+      "eyebrow": "U:DO CRAFT",
+      "part1": "Spojujeme řemeslo s technologií, aby oblečení s vaším návrhem",
+      "part2": "se nosilo, a ne leželo ve skříni —",
+      "part3": "kousky, na které jste hrdí každý den.",
+      "cta": "Vytvořit návrh"
+    },
+    "pair": {
+      "title1": "Stvořeno k nošení,",
+      "accent": "vyladěno",
+      "title2": "do detailu",
+      "desc": "Silná bavlna, přesný tisk a výšivka, které vydrží stovky praní. Vyberte základ, zbytek zařídíme my.",
+      "from": "od {price} ₴"
+    }
   }
 }

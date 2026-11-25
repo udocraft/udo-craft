@@ -1,16 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { localizedField } from "@/lib/localized-field";
-import { ChevronLeft, ChevronRight, CircleSlash, ToolCase } from "lucide-react";
+import { Plus } from "lucide-react";
 import type { Product, ProductColorVariant, Material } from "@udo-craft/shared";
 import { resolveProductImages, getAllImages } from "@udo-craft/shared/product-images";
-import { FALLBACK_GARMENT_COLORS, NEUTRAL_SWATCH, isLightSwatch } from "@/lib/canvas-colors";
-import { Button } from "@udo-craft/ui";
+import { NEUTRAL_SWATCH, isLightSwatch } from "@/lib/canvas-colors";
 
 interface ProductCardDetailedProps {
   product: Product;
@@ -21,249 +20,159 @@ interface ProductCardDetailedProps {
   onAddWithoutPrint?: (product: Product, size: string | null, color: string | null, variant: ProductColorVariant | null) => void;
 }
 
+const MAX_SWATCHES = 6;
+
 function pickMiddleSize(sizes: string[]): string | null {
-  if (!sizes.length) return null;
-  return sizes[Math.floor(sizes.length / 2)];
+  return sizes.length ? sizes[Math.floor(sizes.length / 2)] : null;
 }
 
+/**
+ * Product card with no container: only the image sits on a surface.
+ * Name, price and swatches live on the page. The name is a stretched link over
+ * the whole card; swatches and quick actions sit above it (z-10), never inside it.
+ */
 export function ProductCardDetailed({
   product, colorVariants, materials, imagePriority = false, onCustomize, onAddWithoutPrint,
 }: ProductCardDetailedProps) {
   const t = useTranslations("collections");
   const locale = useLocale();
-  const productName = localizedField(product.name, product.name_en, locale);
-  const productDescription = localizedField(product.description ?? "", product.description_en, locale);
   const router = useRouter();
+  const productName = localizedField(product.name, product.name_en, locale);
+  const href = `/products/${product.slug || product.id}`;
   const isOutOfStock = !product.is_active;
-  const hasVariants = colorVariants && colorVariants.length > 0;
+  const variants = colorVariants ?? [];
 
-  const [activeVariantId, setActiveVariantId] = useState<string | null>(
-    hasVariants ? colorVariants[0].id : null
-  );
+  const [activeVariantId, setActiveVariantId] = useState<string | null>(variants[0]?.id ?? null);
   const [hoveredVariantId, setHoveredVariantId] = useState<string | null>(null);
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [descExpanded, setDescExpanded] = useState(false);
-  const [imgIndex, setImgIndex] = useState(0);
+  const activeVariant = variants.find((v) => v.id === activeVariantId) ?? null;
+  const shownVariant = variants.find((v) => v.id === (hoveredVariantId ?? activeVariantId)) ?? null;
 
-  const displayVariantId = hoveredVariantId ?? activeVariantId;
-  const activeVariant = hasVariants
-    ? colorVariants.find((v) => v.id === displayVariantId) ?? null
-    : null;
+  // Product images, else the shown colour's images (many products only have variant images).
+  const images = useMemo(() => {
+    const own = resolveProductImages(product.product_images, product.images);
+    const variantImgs = shownVariant ? resolveProductImages(shownVariant.variant_images, shownVariant.images) : [];
+    return Object.values(getAllImages(variantImgs.length ? variantImgs : own)).filter(Boolean);
+  }, [product, shownVariant]);
+  const primary = images[0] ?? "";
+  const secondary = images[1] ?? "";
 
-  // Resolve images using new model with legacy fallback
-  const productImgs = resolveProductImages((product as any).product_images, product.images);
-  const variantImgs = activeVariant ? resolveProductImages((activeVariant as any).variant_images, activeVariant.images) : null;
-  const currentImageSet = variantImgs?.length ? variantImgs : productImgs;
-  const currentImages = getAllImages(currentImageSet);
-  const availableImages = useMemo(() => Object.values(currentImages).filter(Boolean), [currentImages]);
-  const imageUrl = availableImages[imgIndex % availableImages.length] ?? "";
-
-  useEffect(() => {
-    setImgIndex(0);
-  }, [displayVariantId, product.id]);
-
-  const colorDots =
-    hasVariants && materials
-      ? colorVariants.map((v) => {
-          const mat = materials.find((m) => m.id === v.material_id);
-          const hex = mat?.hex_code || NEUTRAL_SWATCH;
-          return { id: v.id, name: mat?.name || "Standard", hex, border: isLightSwatch(hex) };
-        })
-      : FALLBACK_GARMENT_COLORS.map((c) => ({ id: c.name, name: c.name, hex: c.hex, border: c.border }));
+  const swatches = variants.map((v) => {
+    const mat = materials?.find((m) => m.id === v.material_id);
+    const hex = mat?.hex_code || NEUTRAL_SWATCH;
+    return { id: v.id, name: mat?.name || "Standard", hex, light: isLightSwatch(hex) };
+  });
 
   const sizes = product.available_sizes || [];
-  const visibleSizes = sizes.slice(0, 8);
-  const hiddenSizeCount = Math.max(0, sizes.length - visibleSizes.length);
-  const actionsVisible = sizes.length === 0 || selectedSize !== null;
+  const sizeRange = sizes.length > 1 ? `${sizes[0]}–${sizes[sizes.length - 1]}` : sizes[0] ?? "";
+  const priceLabel = product.base_price_cents > 0
+    ? t("fromPrice", { price: (product.base_price_cents / 100).toFixed(0) })
+    : t("priceOnRequest");
+  const activeColor = activeVariant ? materials?.find((m) => m.id === activeVariant.material_id)?.name ?? null : null;
 
-  const getActiveColor = () => {
-    if (!activeVariantId || !hasVariants) return null;
-    return materials?.find((m) => m.id === colorVariants?.find((v) => v.id === activeVariantId)?.material_id)?.name ?? null;
-  };
-
-  const resolveSize = () => selectedSize ?? pickMiddleSize(sizes);
-
-  const handleAddPrint = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const go = (mode: "customize" | "add") => {
     if (isOutOfStock) return;
-    const size = resolveSize();
-    if (onCustomize) { onCustomize(product, size, getActiveColor(), activeVariant); return; }
-    const params = new URLSearchParams({ product: product.slug || product.id, customize: "1" });
+    const size = pickMiddleSize(sizes);
+    if (mode === "customize" && onCustomize) return onCustomize(product, size, activeColor, activeVariant);
+    if (mode === "add" && onAddWithoutPrint) return onAddWithoutPrint(product, size, activeColor, activeVariant);
+    const params = new URLSearchParams({ product: product.slug || product.id, [mode === "customize" ? "customize" : "add"]: "1" });
     if (size) params.set("size", size);
-    const color = getActiveColor();
-    if (color) params.set("color", color);
-    if (activeVariant?.id) params.set("variant", activeVariant.id);
-    router.push(`/order?${params.toString()}`);
-  };
-
-  const handleAddWithoutPrint = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (isOutOfStock) return;
-    const size = resolveSize();
-    if (onAddWithoutPrint) { onAddWithoutPrint(product, size, getActiveColor(), activeVariant); return; }
-    const params = new URLSearchParams({ product: product.slug || product.id, add: "1" });
-    if (size) params.set("size", size);
-    const color = getActiveColor();
-    if (color) params.set("color", color);
+    if (activeColor) params.set("color", activeColor);
     if (activeVariant?.id) params.set("variant", activeVariant.id);
     router.push(`/order?${params.toString()}`);
   };
 
   return (
-    <article
-      className={`relative bg-muted rounded-card overflow-hidden flex flex-col h-full has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-ring has-[a:focus-visible]:ring-offset-2 ${isOutOfStock ? "opacity-60 pointer-events-none" : ""}`}
-    >
-      {/* Image */}
-      <div className="p-3 sm:p-4 w-full flex items-center justify-center aspect-square flex-shrink-0 relative overflow-hidden group/img">
-        {imageUrl ? (
-          <div className="relative w-full h-full">
+    <article className={`group/card relative flex h-full flex-col ${isOutOfStock ? "pointer-events-none opacity-60" : ""}`}>
+      {/* Media: the only surface in the card */}
+      <div className="relative aspect-[4/5] overflow-hidden rounded-card bg-muted">
+        {primary ? (
+          <>
             <Image
-              src={imageUrl}
-              alt={productName}
+              src={primary}
+              alt=""
               fill
               sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, 50vw"
               priority={imagePriority}
-              className="object-contain"
+              className={`object-contain p-[8%] transition-[opacity,transform] duration-500 ease-out group-hover/card:scale-[1.03] ${secondary ? "group-hover/card:opacity-0" : ""}`}
             />
-            {availableImages.length > 1 && (
-              <div className="absolute inset-y-0 inset-x-1 flex items-center justify-between opacity-0 group-hover/img:opacity-100 transition-opacity pointer-events-none z-10">
-                <button
-                  type="button"
-                  onClick={(e) => { e.stopPropagation(); setImgIndex((prev) => (prev - 1 + availableImages.length) % availableImages.length); }}
-                  className="size-7 rounded-full bg-background/80 hover:bg-background text-foreground flex items-center justify-center shadow-md backdrop-blur-sm transition-transform hover:scale-105 active:scale-95 pointer-events-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                  aria-label={t("prevPage")}
-                >
-                  <ChevronLeft className="size-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={(e) => { e.stopPropagation(); setImgIndex((prev) => (prev + 1) % availableImages.length); }}
-                  className="size-7 rounded-full bg-background/80 hover:bg-background text-foreground flex items-center justify-center shadow-md backdrop-blur-sm transition-transform hover:scale-105 active:scale-95 pointer-events-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                  aria-label={t("nextPage")}
-                >
-                  <ChevronRight className="size-4" />
-                </button>
-              </div>
+            {secondary && (
+              <Image
+                src={secondary}
+                alt=""
+                fill
+                sizes="(min-width: 1024px) 25vw, 50vw"
+                className="object-contain p-[8%] opacity-0 transition-opacity duration-500 group-hover/card:opacity-100"
+              />
             )}
-          </div>
+          </>
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-muted-foreground/30">
-            <svg className="w-16 h-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1}
-                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
+          <span className="absolute inset-0 grid place-items-center px-4 text-center text-sm text-muted-foreground">{productName}</span>
+        )}
+
+        {/* Quick actions: on hover/focus with a pointer, always visible on touch */}
+        {!isOutOfStock && (
+          <div className="absolute inset-x-3 bottom-3 z-10 flex gap-2 transition-opacity duration-fast [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover/card:opacity-100 [@media(hover:hover)]:group-focus-within/card:opacity-100">
+            <button
+              type="button"
+              onClick={() => go("customize")}
+              className="inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-full bg-foreground px-4 text-sm font-medium text-background shadow-lg transition-transform active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              <Plus className="size-4" aria-hidden="true" />
+              {t("addPrint")}
+            </button>
+            <button
+              type="button"
+              onClick={() => go("add")}
+              className="hidden min-h-11 items-center justify-center rounded-full bg-background/90 px-4 text-sm font-medium text-foreground shadow-lg backdrop-blur transition-transform active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:inline-flex"
+            >
+              {t("withoutPrint")}
+            </button>
           </div>
         )}
       </div>
 
-      {/* Bottom */}
-      <div className="px-3 pb-3 sm:px-4 sm:pb-4 flex flex-col gap-2">
-        {/* Name + price + description */}
-        <div className="flex flex-col gap-1">
-          <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-0.5">
-            {/* Stretched link: the whole card opens the product; controls sit above it (z-10). */}
-            <Link
-              href={`/products/${product.slug || product.id}`}
-              aria-disabled={isOutOfStock || undefined}
-              tabIndex={isOutOfStock ? -1 : undefined}
-              className="min-w-0 text-sm font-semibold text-foreground leading-tight [overflow-wrap:anywhere] outline-none after:absolute after:inset-0 after:rounded-card focus-visible:after:ring-2 focus-visible:after:ring-ring focus-visible:after:ring-offset-2"
-            >
-              {productName}
-            </Link>
-            <p className="text-sm font-bold text-primary shrink-0 whitespace-nowrap">
-              {product.base_price_cents > 0
-                ? t("fromPrice", { price: (product.base_price_cents / 100).toFixed(0) })
-                : t("priceOnRequest")}
-            </p>
-          </div>
-          {productDescription && (
-            <div className="mt-1">
-              <p className={`text-xs text-muted-foreground ${descExpanded ? "" : "line-clamp-2"}`}>
-                {productDescription}
-              </p>
-              {productDescription.length > 80 && (
-                <button 
-                  type="button"
-                  onClick={(e) => { e.stopPropagation(); setDescExpanded(!descExpanded); }}
-                  className="relative z-10 inline-flex min-h-6 items-center text-xs text-primary font-semibold hover:underline mt-0.5 touch-manipulation cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
-                >
-                  {descExpanded ? t("collapse") : t("expand")}
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Sizes + Colors */}
-        <div className="relative z-10 flex flex-col gap-3">
-          {sizes.length > 0 && (
-            <div className="grid grid-cols-4 gap-1.5">
-              {visibleSizes.map((size) => (
-                <button
-                  key={size}
-                  type="button"
-                  aria-pressed={selectedSize === size}
-                  aria-label={size}
-                  onClick={(e) => { e.stopPropagation(); setSelectedSize(selectedSize === size ? null : size); }}
-                  className={`h-11 min-w-0 rounded-md border px-1 text-xs font-semibold transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${
-                    selectedSize === size
-                      ? "bg-foreground text-background border-foreground"
-                      : "bg-background text-muted-foreground border-border hover:border-foreground/40 hover:text-foreground"
-                  }`}
-                >
-                  <span className="block truncate">{size}</span>
-                </button>
-              ))}
-              {hiddenSizeCount > 0 && (
-                <span className="flex h-8 items-center justify-center rounded-md border border-border bg-background px-1 text-xs font-semibold text-muted-foreground">
-                  +{hiddenSizeCount}
-                </span>
-              )}
-            </div>
-          )}
-          <div className="flex items-center gap-2 flex-wrap">
-            {colorDots.map((c) => (
+      {/* Details: no container */}
+      <div className="flex flex-col gap-2 pt-3">
+        {swatches.length > 0 && (
+          <div className="relative z-10 flex items-center gap-1.5" role="group" aria-label={productName}>
+            {swatches.slice(0, MAX_SWATCHES).map((c) => (
               <button
                 key={c.id}
                 type="button"
                 aria-label={c.name}
-                aria-pressed={hasVariants && displayVariantId === c.id}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (!hasVariants) return;
-                  setActiveVariantId(c.id === activeVariantId ? null : c.id);
-                }}
-                onMouseEnter={() => hasVariants && setHoveredVariantId(c.id)}
+                aria-pressed={activeVariantId === c.id}
+                title={c.name}
+                onClick={() => setActiveVariantId(c.id)}
+                onMouseEnter={() => setHoveredVariantId(c.id)}
                 onMouseLeave={() => setHoveredVariantId(null)}
-                className={`hit-44 w-8 h-8 rounded-full shrink-0 touch-manipulation transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${c.border ? "ring-1 ring-border" : ""} ${
-                  hasVariants && displayVariantId === c.id ? "ring-2 ring-offset-2 ring-foreground scale-110" : ""
-                }`}
+                onFocus={() => setHoveredVariantId(c.id)}
+                onBlur={() => setHoveredVariantId(null)}
+                className={`hit-44 size-4 shrink-0 rounded-full transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+                  c.light ? "ring-1 ring-inset ring-border" : ""
+                } ${activeVariantId === c.id ? "ring-2 ring-foreground ring-offset-2 ring-offset-background" : ""}`}
                 style={{ backgroundColor: c.hex }}
               />
             ))}
+            {swatches.length > MAX_SWATCHES && (
+              <span className="text-xs text-muted-foreground">+{swatches.length - MAX_SWATCHES}</span>
+            )}
           </div>
+        )}
+
+        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+          {/* Stretched link: the whole card opens the product. */}
+          <Link
+            href={href}
+            aria-disabled={isOutOfStock || undefined}
+            tabIndex={isOutOfStock ? -1 : undefined}
+            className="min-w-0 text-base font-medium leading-snug text-foreground [overflow-wrap:anywhere] outline-none after:absolute after:inset-0 after:rounded-card hover:underline hover:underline-offset-4 focus-visible:after:ring-2 focus-visible:after:ring-ring focus-visible:after:ring-offset-2"
+          >
+            {productName}
+          </Link>
+          <p className="shrink-0 whitespace-nowrap text-base tabular-nums text-foreground">{priceLabel}</p>
         </div>
 
-        {/* Action buttons */}
-        <div
-          className={`relative z-10 grid grid-cols-1 gap-2 overflow-hidden transition-all duration-200 ease-out ${
-            actionsVisible ? "max-h-28 opacity-100 mt-1" : "max-h-0 opacity-0 pointer-events-none"
-          }`}
-        >
-          <Button type="button" onClick={handleAddPrint} disabled={isOutOfStock} variant="primary" className="w-full">
-            <ToolCase className="mr-2 inline size-5 align-[-5px]" />
-            {t("addPrint")}
-          </Button>
-          <button
-            type="button"
-            onClick={handleAddWithoutPrint}
-            disabled={isOutOfStock}
-            className="w-full min-h-11 py-2.5 rounded-full border border-border bg-background text-foreground text-xs font-bold hover:border-foreground/40 hover:bg-muted active:scale-[0.98] transition-all duration-150 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
-          >
-            <CircleSlash className="mr-2 inline size-5 align-[-5px]" />
-            {t("withoutPrint")}
-          </button>
-        </div>
+        {sizeRange && <p className="text-sm text-muted-foreground">{sizeRange}</p>}
       </div>
     </article>
   );
