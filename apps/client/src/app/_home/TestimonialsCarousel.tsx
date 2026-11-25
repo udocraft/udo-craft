@@ -58,8 +58,8 @@ export function TestimonialsCarousel({ items, labels }: { items: Testimonial[]; 
         aria-label={labels.list}
         className="flex snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {items.map((item) => (
-          <li key={item.image} className="relative aspect-square w-[92%] shrink-0 snap-start sm:w-1/2 lg:w-1/3">
+        {items.map((item, i) => (
+          <li key={`${item.image}-${i}`} className="relative aspect-square w-[92%] shrink-0 snap-start sm:w-1/2 lg:w-1/3">
             <figure className="absolute inset-0 flex flex-col justify-end bg-muted">
               <Image
                 src={item.image}
