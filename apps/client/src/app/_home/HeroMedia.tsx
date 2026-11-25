@@ -29,6 +29,10 @@ export function HeroMedia() {
   const closeRef = useRef<HTMLButtonElement>(null);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const [showLoop, setShowLoop] = useState(false);
+  // Background loop and full video are the same 11 s footage (640×480 vs 1280×960),
+  // so the full video starts where the loop is, and the loop resumes where it stopped.
+  const loopRef = useRef<HTMLVideoElement>(null);
+  const fullRef = useRef<HTMLVideoElement | null>(null);
   // The play button loads as an icon, opens into "Show the process" once the hero is
   // on screen, then closes back to the icon. Hover and focus open it again.
   const [phase, setPhase] = useState<"idle" | "open" | "done">("idle");
@@ -56,15 +60,12 @@ export function HeroMedia() {
     };
   }, [phase]);
 
-  // The background loop is decoration: only load it on wide screens, when the
-  // visitor has not asked for reduced motion or reduced data. No bytes otherwise.
+  // The background loop (muted) plays on wide screens, also with reduced motion on:
+  // it is a slow, low-contrast backdrop and a product decision. It is skipped on
+  // phones and with data saver, so no video bytes are spent there.
   useEffect(() => {
     const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-    const ok =
-      window.matchMedia("(min-width: 768px)").matches &&
-      !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
-      !conn?.saveData;
-    setShowLoop(ok);
+    setShowLoop(window.matchMedia("(min-width: 768px)").matches && !conn?.saveData);
   }, []);
 
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
@@ -79,6 +80,13 @@ export function HeroMedia() {
   };
 
   const closeCinema = useCallback(() => {
+    // Hand the playhead back to the background loop.
+    const full = fullRef.current;
+    const loop = loopRef.current;
+    if (full && loop && Number.isFinite(full.currentTime)) {
+      loop.currentTime = full.currentTime % (loop.duration || full.duration || 11);
+      void loop.play().catch(() => {});
+    }
     setStage((cur) => (cur === "open" || cur === "enter" ? "exit" : cur));
     timers.current.push(
       setTimeout(() => {
@@ -108,13 +116,21 @@ export function HeroMedia() {
 
   // Stable ref: an inline callback would re-run play() on every render.
   const playFullVideo = useCallback((el: HTMLVideoElement | null) => {
+    fullRef.current = el;
     if (!el) return;
-    el.muted = false;
-    el.volume = 0.8;
-    el.play().catch(() => {
-      el.muted = true;
-      el.play().catch(() => {});
-    });
+    // Continue from where the background loop is now.
+    const start = loopRef.current?.currentTime ?? 0;
+    const seekAndPlay = () => {
+      if (start > 0 && start < (el.duration || Infinity)) el.currentTime = start;
+      el.muted = false;
+      el.volume = 0.8;
+      el.play().catch(() => {
+        el.muted = true;
+        el.play().catch(() => {});
+      });
+    };
+    if (el.readyState >= 1) seekAndPlay();
+    else el.addEventListener("loadedmetadata", seekAndPlay, { once: true });
   }, []);
 
   const shown = stage === "open";
@@ -122,8 +138,10 @@ export function HeroMedia() {
   return (
     <>
       {showLoop && (
+      <>
       <video
-        className="pointer-events-none absolute inset-0 size-full object-cover opacity-15"
+        ref={loopRef}
+        className="pointer-events-none absolute inset-0 size-full object-cover opacity-50"
         src="/hero-bg.mp4"
         poster="/hero-poster.jpg"
         autoPlay
@@ -136,6 +154,12 @@ export function HeroMedia() {
         preload="auto"
         aria-hidden="true"
       />
+      {/* Scrim: keeps the white headline readable over the brighter video. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,rgb(0_0_0/0.45),rgb(0_0_0/0.15)_70%,transparent)]"
+      />
+      </>
       )}
 
       {cinema && (
@@ -161,6 +185,7 @@ export function HeroMedia() {
             }}
             src="/hero-video.mp4"
             poster="/hero-poster.jpg"
+            preload="auto"
             loop
             playsInline
             controls={false}
