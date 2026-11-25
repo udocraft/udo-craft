@@ -7,7 +7,7 @@ const PAGE_NAMESPACES: Record<string, Namespace[]> = {
     "collections", "process", "boxOfTouch", "popupStand",
     "subscription", "designer", "customizer", "trust",
     "comparison", "faq", "finalCta", "contact", "footer",
-    "howItWorks", "stats", "langSwitcher", "services",
+    "howItWorks", "stats", "langSwitcher", "services", "editorial",
   ],
   "/order": [
     "nav", "cart", "checkout", "footer", "langSwitcher",

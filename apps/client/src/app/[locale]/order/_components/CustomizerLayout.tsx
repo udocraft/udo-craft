@@ -32,6 +32,8 @@ interface CustomizerLayoutProps {
   onPriceOpen?: () => void;
   /** @deprecated use sidebar + panel instead */
   leftPanel?: React.ReactNode;
+  /** Top bar above the canvas (mode switch, help) */
+  topBar?: React.ReactNode;
   canvas: React.ReactNode;
   rightPanel: React.ReactNode;
   stickyButton?: React.ReactNode;
@@ -48,7 +50,7 @@ interface CustomizerLayoutProps {
 export function CustomizerLayout({
   productName, total, mobileSheet, setMobileSheet, addingToCart, removingBg, onCancelRemoveBg,
   sidebar, panel, activeTab, onTabChange, onPriceOpen,
-  leftPanel, canvas, rightPanel, stickyButton,
+  leftPanel, topBar, canvas, rightPanel, stickyButton,
   mobileTabSheet, mobilePriceSheet,
   onClose, layerCount = 0,
 }: CustomizerLayoutProps) {
@@ -81,11 +83,12 @@ export function CustomizerLayout({
               <p className="text-xs font-semibold truncate max-w-[140px]">{productName}</p>
               <p className="text-xs font-bold text-primary shrink-0">{total.toFixed(0)} ₴</p>
             </div>
+            {topBar && <div className="w-full mb-3 shrink-0">{topBar}</div>}
             {canvas}
           </div>
 
           {/* Right panel — desktop */}
-          <div className="hidden lg:flex lg:flex-col h-full overflow-hidden border-l border-border bg-card">
+          <div data-tour="price" className="hidden lg:flex lg:flex-col h-full overflow-hidden border-l border-border bg-card">
             <div className="flex-1 overflow-y-auto overflow-x-hidden p-4">
               <div className="space-y-5">
                 <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Тираж та ціна</p>
@@ -137,11 +140,12 @@ export function CustomizerLayout({
       {/* ── Mobile bottom nav ── */}
       {isNewLayout ? (
         /* New layout: 5 tool tabs + Тираж */
-        <div className="lg:hidden relative z-[9999] shrink-0 border-t border-border bg-card overflow-hidden">
+        <div data-tour="tools" className="lg:hidden relative z-[9999] shrink-0 border-t border-border bg-card overflow-hidden">
           <div className="flex">
             {MOBILE_TABS.map((tab) => (
               <button
                 key={tab.id}
+                data-tour={tab.id === "layers" ? "layers" : undefined}
                 onClick={() => onTabChange?.(activeTab === tab.id ? null : tab.id)}
                 aria-label={tab.label}
                 aria-pressed={activeTab === tab.id}
@@ -160,6 +164,7 @@ export function CustomizerLayout({
             ))}
             <button
               onClick={onPriceOpen}
+              data-tour="price"
               aria-label="Тираж та ціна"
               className="flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-semibold transition-colors min-h-[44px] text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
             >

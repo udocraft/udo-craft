@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { fabric } from "fabric";
-import { Product, PrintZone, PRINT_TYPES, TEXT_FONTS, type PrintLayer, type PrintTypeId, type TextFontId, resolveProductImages, getCustomizableImages } from "@udo-craft/shared";
+import { Product, PrintZone, PrintZonesMap, PRINT_TYPES, TEXT_FONTS, type PrintLayer, type PrintTypeId, type TextFontId, resolveProductImages, getCustomizableImages } from "@udo-craft/shared";
 import { AlignCenter, AlignLeft, AlignRight, Bold, Copy, Eraser, Focus, Italic, Loader2, Pencil, RotateCcw, RotateCw, Shirt, Trash2 } from "lucide-react";
 import { removeBgClient } from "@/lib/remove-bg-client";
 import { toast } from "sonner";
@@ -145,7 +145,7 @@ function buildWaveGroup(
 
 interface ProductCanvasProps {
   product: Product;
-  printZones: { front?: PrintZone | null; back?: PrintZone | null };
+  printZones: PrintZonesMap;
   layers: PrintLayer[];
   activeSide: string;
   onSideChange?: (side: string) => void;
@@ -213,6 +213,7 @@ export default function ProductCanvas({
   const [removingBg, setRemovingBg] = useState(false);
   const [backgroundLoaded, setBackgroundLoaded] = useState(false);
   const [isCentered, setIsCentered] = useState(false);
+  const [canvasHovered, setCanvasHovered] = useState(false);
   const loadingIds = useRef<Set<string>>(new Set());
   const layerTransforms = useRef<Record<string, { left: number; top: number; scaleX: number; scaleY: number; angle: number; flipX: boolean }>>({});
   const backgroundUrlRef = useRef<string | null>(null);
@@ -493,6 +494,8 @@ export default function ProductCanvas({
   const getLayerSizeSignature = (layer: PrintLayer) => `${layer.sizeLabel ?? ""}:${layer.sizeMinCm ?? ""}:${layer.sizeMaxCm ?? ""}`;
 
   const getPrintZone = (side: string) => {
+    const exact = printZones[side];
+    if (exact) return exact;
     if (side === "back") return printZones.back ?? printZones.front ?? null;
     return printZones.front ?? printZones.back ?? null;
   };
@@ -1300,10 +1303,41 @@ export default function ProductCanvas({
       })()}
 
       <div ref={containerRef} className="w-full" style={{ height: canvasSize }}>
-        <div className="relative mx-auto" style={{ width: canvasSize, height: canvasSize }}>
+        <div
+          className="relative mx-auto"
+          style={{ width: canvasSize, height: canvasSize }}
+          onPointerEnter={() => setCanvasHovered(true)}
+          onPointerLeave={() => setCanvasHovered(false)}
+        >
           <div className="rounded-2xl overflow-hidden shadow-lg border border-border/60 w-full h-full">
             <canvas ref={canvasRef} />
           </div>
+          {/* Print area: dashed rectangle, size label on hover or while a layer is selected */}
+          {(() => {
+            const zone = printZones[activeSide];
+            if (!zone || !backgroundLoaded) return null;
+            const k = canvasSize / CANVAS_SIZE;
+            const ratio = product.px_to_mm_ratio || 0;
+            const wMm = zone.width_mm ?? (ratio ? zone.width / ratio : null);
+            const hMm = zone.height_mm ?? (ratio ? zone.height / ratio : null);
+            const cm = (v: number) => (Math.round(v) / 10).toString().replace(".", ",");
+            const showLabel = canvasHovered || !!activeLayerId;
+            return (
+              <div
+                aria-hidden="true"
+                className="absolute z-[5] pointer-events-none rounded-[3px] border border-dashed border-foreground/35"
+                style={{ left: zone.x * k, top: zone.y * k, width: zone.width * k, height: zone.height * k }}
+              >
+                {wMm && hMm && (
+                  <span
+                    className={`absolute -top-5 left-0 rounded bg-foreground/80 px-1.5 py-0.5 text-[10px] font-medium leading-none text-background whitespace-nowrap transition-opacity ${showLabel ? "opacity-100" : "opacity-0"}`}
+                  >
+                    {cm(wMm)} × {cm(hMm)} см
+                  </span>
+                )}
+              </div>
+            );
+          })()}
           {/* Skeleton overlay — shown until background image is loaded */}
           {!backgroundLoaded && (
             <div className="absolute inset-0 rounded-2xl overflow-hidden z-10 pointer-events-none bg-muted/60">
@@ -1324,9 +1358,19 @@ export default function ProductCanvas({
         const images = variantImages && Object.keys(variantImages).length > 0
           ? variantImages
           : getCustomizableImages(productImgs);
-        const keys = Object.keys(images).filter((key) => images[key]);
+        const order = ["front", "back", "neck_inner", "sleeve_left", "sleeve_right"];
+        const keys = Array.from(new Set([
+          ...Object.keys(images).filter((key) => images[key]),
+          ...Object.keys(printZones).filter((key) => printZones[key]),
+        ])).sort((a, b) => {
+          const ia = order.indexOf(a), ib = order.indexOf(b);
+          return (ia === -1 ? order.length : ia) - (ib === -1 ? order.length : ib);
+        });
         if (keys.length <= 1) return null;
-        const labelMap: Record<string, string> = { front: "Перед", back: "Зад", left: "Ліво", right: "Право" };
+        const labelMap: Record<string, string> = {
+          front: "Перед", back: "Зад", left: "Ліво", right: "Право",
+          neck_inner: "Внутрішня бірка", sleeve_left: "Лівий рукав", sleeve_right: "Правий рукав",
+        };
         return (
           <div className="flex items-center gap-2 justify-center flex-wrap overflow-x-auto max-w-full pb-0.5">
             {keys.map((key) => (
@@ -1339,7 +1383,7 @@ export default function ProductCanvas({
                   activeSide === key ? "bg-primary text-primary-foreground border-primary" : "bg-background text-muted-foreground border-border hover:border-primary/50"
                 }`}
               >
-                {labelMap[key] ?? key}
+                {printZones[key]?.label || labelMap[key] || key}
               </button>
             ))}
           </div>

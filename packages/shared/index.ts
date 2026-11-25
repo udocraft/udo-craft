@@ -4,7 +4,9 @@ import { z } from "zod";
 export const PX_TO_MM_RATIO = 0.5; // Example ratio
 
 // Enums
-export const PrintZoneSideEnum = z.enum(["front", "back"]);
+export const PRINT_ZONE_SIDES = ["front", "back", "neck_inner", "sleeve_left", "sleeve_right"] as const;
+// Sides are free-form strings in the DB (text); the list above is the well-known set.
+export const PrintZoneSideEnum = z.string().min(1);
 export const LeadStatusEnum = z.enum(["draft", "new", "in_progress", "production", "completed", "archived"]);
 
 // ── Product image model ─────────────────────────────────────────────────────
@@ -236,6 +238,11 @@ export const PrintZoneSchema = z.object({
   width: z.number().int(),
   height: z.number().int(),
   allowed_print_types: z.array(z.string()).default(["dtf"]).optional(),
+  label: z.string().nullable().optional(),
+  sort_order: z.number().int().optional(),
+  width_mm: z.number().nullable().optional(),
+  height_mm: z.number().nullable().optional(),
+  print_area_id: z.string().uuid().nullable().optional(),
 });
 
 export const LeadSchema = z.object({
@@ -284,6 +291,8 @@ export type Lead = z.infer<typeof LeadSchema>;
 export type OrderItem = z.infer<typeof OrderItemSchema>;
 export type LeadStatus = z.infer<typeof LeadStatusEnum>;
 export type PrintZoneSide = z.infer<typeof PrintZoneSideEnum>;
+/** Zones keyed by side. Backward compatible with the old `{ front?, back? }` shape. */
+export type PrintZonesMap = Record<string, PrintZone | null | undefined>;
 
 // ── Catalog hierarchy ───────────────────────────────────────────────────────
 

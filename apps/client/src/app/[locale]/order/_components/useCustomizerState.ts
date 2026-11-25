@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useCustomizer, type PrintLayer, type SidebarTabId } from "@udo-craft/shared";
-import type { Product, PrintZone, Material, ProductColorVariant } from "@udo-craft/shared";
+import type { Product, PrintZonesMap, Material, ProductColorVariant } from "@udo-craft/shared";
 import { type PrintTypePricingRow } from "@/components/LayersPanel";
 import { toast } from "sonner";
 import { useLayerHandlers } from "./useLayerHandlers";
@@ -18,7 +18,7 @@ interface ProductWithConfig extends Product {
 
 interface UseCustomizerStateProps {
   product: ProductWithConfig;
-  printZones: { front?: PrintZone | null; back?: PrintZone | null };
+  printZones: PrintZonesMap;
   materials: Material[];
   variants: ProductColorVariant[];
   onAdd: (item: CartItem) => void;
@@ -141,8 +141,8 @@ export function useCustomizerState({
     const images = selectedVariant?.images && Object.keys(selectedVariant.images).length > 0
       ? selectedVariant.images : product.images ?? {};
     const keys = Object.keys(images).filter((key) => (images as Record<string, string>)[key]);
-    if (keys.length > 0 && !(images as Record<string, string>)[activeSide]) setActiveSide(keys[0]);
-  }, [selectedVariant, product.images, activeSide]);
+    if (keys.length > 0 && !(images as Record<string, string>)[activeSide] && !printZones[activeSide]) setActiveSide(keys[0]);
+  }, [selectedVariant, product.images, activeSide, printZones]);
 
   // Derived pricing values
   const discountPct = (() => {

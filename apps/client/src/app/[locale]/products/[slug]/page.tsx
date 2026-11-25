@@ -57,6 +57,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const allVariants = (vars ?? []) as ProductColorVariant[];
   const materialsList = (mats ?? []) as Material[];
 
+  const { data: chartRow } = prod.size_chart_id
+    ? await supabase.from("size_charts").select("name, rows").eq("id", prod.size_chart_id).maybeSingle()
+    : { data: null };
+  const sizeChart = chartRow && Array.isArray(chartRow.rows) && chartRow.rows.length > 0
+    ? { name: String(chartRow.name ?? ""), rows: chartRow.rows as Record<string, string>[] }
+    : null;
+
   const imgs = resolveProductImages((prod as any).product_images, prod.images as Record<string, string>);
   const imageMap = getAllImages(imgs);
   const imageUrl = imageMap.front || Object.values(imageMap)[0] || "";
@@ -97,6 +104,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
         variants={prodVariants}
         allVariants={allVariants}
         materials={materialsList}
+        sizeChart={sizeChart}
       />
     </>
   );

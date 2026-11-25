@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Product, Material, ProductColorVariant } from "@udo-craft/shared";
 import { useCms } from "@/hooks/useCms";
 import { useSoundInit } from "@/hooks/useSoundInit";
+import { getAllImages, resolveProductImages } from "@udo-craft/shared";
 
 import { SiteHeader } from "@/components/SiteHeader";
 
@@ -27,6 +28,8 @@ const ComparisonSection = dynamic(() => import("@/app/_sections/ComparisonSectio
 const FaqSection = dynamic(() => import("@/app/_sections/FaqSection").then(m => m.FaqSection), { ssr: true });
 const FinalCtaSection = dynamic(() => import("@/app/_sections/FinalCtaSection").then(m => m.FinalCtaSection), { ssr: true });
 const ContactSection = dynamic(() => import("@/app/_sections/ContactSection").then(m => m.ContactSection), { ssr: true });
+const StatementSection = dynamic(() => import("@/app/_sections/StatementSection").then(m => m.StatementSection), { ssr: true });
+const FeaturedPairSection = dynamic(() => import("@/app/_sections/FeaturedPairSection").then(m => m.FeaturedPairSection), { ssr: true });
 const FooterSection = dynamic(() => import("@/app/_sections/FooterSection").then(m => m.FooterSection), { ssr: true });
 
 interface Category {
@@ -58,7 +61,7 @@ export function HomeClient({
 
   useSoundInit();
 
-  const layout = (cms.home_layout?.sections as unknown as any[]) || [
+  const baseLayout = (cms.home_layout?.sections as unknown as any[]) || [
     { id: "hero", visible: "true" },
     { id: "social", visible: "true" },
     { id: "problems", visible: "true" },
@@ -77,6 +80,28 @@ export function HomeClient({
     { id: "contact", visible: "true" },
   ];
 
+  // Editorial sections are new; slot them in even when the CMS layout predates them.
+  const layout = [...baseLayout];
+  if (!layout.some((s) => s.id === "statement")) {
+    const at = layout.findIndex((s) => s.id === "hero");
+    layout.splice(at + 1, 0, { id: "statement", visible: "true" });
+  }
+  if (!layout.some((s) => s.id === "pair")) {
+    const at = layout.findIndex((s) => s.id === "collections");
+    layout.splice(at < 0 ? layout.length : at, 0, { id: "pair", visible: "true" });
+  }
+
+  // Product image, falling back to the first colour variant (many products only have variant images).
+  const coverImage = (p: ProductWithCategory) => {
+    const pick = (m: Record<string, string>) => m.front ?? Object.values(m)[0] ?? "";
+    const own = pick(getAllImages(resolveProductImages((p as any).product_images, p.images)));
+    if (own) return own;
+    const v = colorVariants.find((cv) => cv.product_id === p.id);
+    return v ? pick(getAllImages(resolveProductImages((v as any).variant_images, v.images))) : "";
+  };
+  const covers = products.filter((p) => p.is_active).map((p) => ({ product: p, image: coverImage(p) })).filter((c) => c.image);
+  const pillImages = covers.slice(0, 3).map((c) => c.image);
+
   const renderSection = (id: string) => {
     switch (id) {
       case "hero":
@@ -90,6 +115,8 @@ export function HomeClient({
             ctaSecondaryText={tHero("contactCta")}
           />
         );
+      case "statement": return <StatementSection key="statement" images={pillImages} />;
+      case "pair": return <FeaturedPairSection key="pair" items={covers.slice(0, 2)} />;
       case "social": return <SocialProofBar key="social" />;
       case "problems": return <ProblemSolutionSection key="problems" />;
       case "stats":

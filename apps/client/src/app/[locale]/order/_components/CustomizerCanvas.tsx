@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import type { Product, PrintZone, PrintLayer } from "@udo-craft/shared";
+import type { Product, PrintZonesMap, PrintLayer } from "@udo-craft/shared";
 import type { TextLayerPatch } from "./editor/TextPanel";
 import dynamic from "next/dynamic";
 
@@ -14,7 +14,7 @@ interface ProductWithConfig extends Product {
 
 interface CustomizerCanvasProps {
   product: ProductWithConfig;
-  printZones: { front?: PrintZone | null; back?: PrintZone | null };
+  printZones: PrintZonesMap;
   layers: PrintLayer[];
   activeSide: string;
   activeLayerId: string | null;

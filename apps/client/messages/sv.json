@@ -452,7 +452,20 @@
     },
     "privacy": "Integritet",
     "terms": "Villkor",
-    "cookies": "Cookies"
+    "cookies": "Cookies",
+    "newsletter": {
+      "title": "Get {pct}% off your first order",
+      "desc": "Join the newsletter: new blanks, brand case studies and limited runs once a month. No spam.",
+      "placeholder": "Your email",
+      "label": "Newsletter email",
+      "submit": "Subscribe",
+      "success": "Done. Your {pct}% code is on its way.",
+      "error": "Could not subscribe. Please try again.",
+      "invalid": "Please check your email.",
+      "consent": "By subscribing you agree to the privacy policy."
+    },
+    "socialTitle": "Follow us",
+    "contactTitle": "Contact"
   },
   "cart": {
     "title": "Kundvagn",
@@ -870,5 +883,24 @@
     "privacy": "Integritetspolicy",
     "terms": "Villkor",
     "cookieSettings": "Cookieinställningar"
+  },
+  "editorial": {
+    "statement": {
+      "eyebrow": "U:DO CRAFT",
+      "before1": "We blend",
+      "after1": "craft with technology so your merch",
+      "after2": "gets worn, not stored in a drawer —",
+      "after3": "clothing your team",
+      "after4": "is proud of every day.",
+      "cta": "About us"
+    },
+    "pair": {
+      "title1": "Made for teams,",
+      "accent": "perfected",
+      "title2": "in every detail",
+      "desc": "Heavy cotton, precise print and embroidery that survives hundreds of washes. Pick the base, we handle the rest.",
+      "from": "from {price} ₴",
+      "explore": "Explore"
+    }
   }
 }
